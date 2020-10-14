@@ -2,7 +2,7 @@
 
 ## Add new, MVC structured folders
 
-´´´bash
+ˇˇˇbash
 ├─ app
 │   ├─ controller
 │   ├─ core
@@ -11,4 +11,4 @@
 │
 └─ public
     └─ index.php
-´´´
+ˇˇˇ
