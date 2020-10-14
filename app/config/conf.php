@@ -1,0 +1,27 @@
+<?php
+$version = "RolOffice 4.1.19";
+$root = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . "/../";
+
+// required classes
+require_once $root . 'app/classes/Database.class.php'; // new class for Database
+require_once $root . 'app/classes/DB.class.php'; // old class for Database
+require_once $root . 'app/classes/Conf.class.php';
+require_once $root . 'src/client/classes/Client.class.php';
+require_once $root . 'src/client/classes/Contact.class.php';
+require_once $root . 'src/pidb/classes/Pidb.class.php';
+require_once $root . 'src/article/classes/Article.class.php';
+require_once $root . 'src/material/classes/Material.class.php';
+require_once $root . 'src/procuring/classes/Order.class.php';
+require_once $root . 'src/project/classes/Project.class.php';
+require_once $root . 'src/cutting/classes/Cutting.class.php';
+require_once $root . 'src/admin/classes/Admin.class.php';
+
+// folders with CSS, JS, ...
+switch($page){
+    case ("home"):
+        $stylesheet = ".lib/";
+        break;
+    default:
+        $stylesheet = "../.lib/";
+        break;
+}
