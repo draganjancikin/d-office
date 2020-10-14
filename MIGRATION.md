@@ -1,6 +1,6 @@
 # Migration from v4 to v5
 
-## Add new, MVC structured folders
+## Add new, MVC structured, folders
 
 ```bash
 ├─ app
