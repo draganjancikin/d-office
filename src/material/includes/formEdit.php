@@ -8,8 +8,8 @@
 
       <div class="form-group row">
         <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
-        <div class="col-sm-6">
-          <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $material_data['name']; ?>" maxlength="64">
+        <div class="col-sm-9">
+          <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $material_data['name']; ?>" maxlength="96">
         </div>
       </div>
 
