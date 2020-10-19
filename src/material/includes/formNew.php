@@ -16,7 +16,7 @@
       <div class="form-group row">
         <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
         <div class="col-sm-9 col-lg-10">
-          <input id="inputName" class="form-control" name="name" maxlength="64" placeholder="broj karaktera ograničen na 64" required="required" />
+          <input id="inputName" class="form-control" name="name" maxlength="96" placeholder="broj karaktera ograničen na 64" required="required" />
         </div>
       </div>
 
