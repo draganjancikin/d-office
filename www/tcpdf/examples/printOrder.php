@@ -231,6 +231,9 @@ switch ($order_data['supplier_id']) {
     case 113:
         $folder = "STUBLINA/";
         break;
+    case 81:
+        $folder = "TEHNI/";
+        break;
     case 116:
         $folder = "TEHNOMARKET/";
         break;
