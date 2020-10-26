@@ -17,7 +17,6 @@ require 'export.php';
         $pidb_data = $pidb->getPidb($pidb_id);
         $client_data = $client->getClient($pidb_data['client_id']);
         $articles = $article->getArticles();
-
         // in view case show edit button
         if(isset($_GET['view'])):
           ?>
@@ -115,7 +114,14 @@ require 'export.php';
             <?php
           }                      
         endif;
-        
+
+        // Payment option
+        ?>
+        <!-- Button trigger modal za evidenciju uplata -->
+        <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addPayment" title="Evidencija plaćanja">
+          <i class="fas fa-hand-holding-usd"></i>
+        </button>
+        <?php
       endif;
       ?>
     </div>

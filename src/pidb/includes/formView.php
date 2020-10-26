@@ -143,16 +143,22 @@ switch ($pidb_data['tip_id']) {
           endforeach;
           ?>
           <tr class="table-<?php echo $style; ?>">
-            <td colspan="3" rowspan="4"><td colspan="3">ukupno poreska osnovica</td><td class="text-right"><?php echo number_format($total_tax_base*$conf->getKurs(), 2, ",", ".") ?></td><td colspan="5"></td>
+            <td colspan="3" rowspan="6"><td colspan="3">ukupno poreska osnovica</td><td class="text-right"><?php echo number_format($total_tax_base*$conf->getKurs(), 2, ",", ".") ?></td><td colspan="5"></td>
           </tr>
           <tr class="table-<?php echo $style; ?>">
             <td colspan="5">ukupno iznos PDV-a</td><td class="text-right"><?php echo number_format($total_tax_amount*$conf->getKurs(), 2, ",", ".") ?></td><td colspan="3"></td>
           </tr>
           <tr class="table-<?php echo $style; ?>">
-            <td colspan="5"><b>UKUPNO ZA UPLATU</b></td><td class="text-right"><b>RSD</b></td><td class="text-right""><b><?php echo number_format($total*$conf->getKurs(), 2, ",", ".") ?></b></td><td colspan="2"></td>
+            <td colspan="5">UKUPNO</td><td class="text-right"></td><td class="text-right""><?php echo number_format($total*$conf->getKurs(), 2, ",", ".") ?></td><td colspan="2"></td>
           </tr>
           <tr class="table-<?php echo $style; ?>">
-            <td colspan="5"></td><td class="text-right">(eur </td><td class="text-right"><?php echo number_format(($total), 2, ",", ".") ?>)</td><td colspan="2"></td>
+            <td colspan="5">Avans</td><td class="text-right"></td><td class="text-right""><?php echo  number_format(($avans = $pidb->getAvans($pidb_id))*$conf->getKurs(), 2, ",", ".") ?></td><td colspan="2"></td>
+          </tr>
+          <tr class="table-<?php echo $style; ?>">
+            <td colspan="5"><b>OSTALO ZA UPLATU</b></td><td class="text-right"><b>RSD</b></td><td class="text-right""><b><?php echo number_format(($total-$avans)*$conf->getKurs(), 2, ",", ".") ?></b></td><td colspan="2"></td>
+          </tr>
+          <tr class="table-<?php echo $style; ?>">
+            <td colspan="5"></td><td class="text-right">(eur </td><td class="text-right"><?php echo number_format($total-$avans, 2, ",", ".") ?>)</td><td colspan="2"></td>
           </tr>
         </tbody>            
       </table>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of  Pidb class
+ * Description of Pidb class
  *
  * @author Dragan Jancikin
  */
@@ -141,8 +141,8 @@ class Pidb {
     }
     
     
-    //metoda koja vraća sve dokumente (račune)
-    public function getPidbs(){
+    // method that give all documents by type_id
+    public function getPidbs($type_id){
         
         $pidbs = array();
         $pidb = array();
@@ -151,7 +151,7 @@ class Pidb {
                                          . "FROM pidb "
                                          . "JOIN client "
                                          . "ON (pidb.client_id = client.id)"
-                                         . "WHERE pidb.tip_id = 3 ") or die(mysqli_error($this->connection));
+                                         . "WHERE pidb.tip_id = $type_id ") or die(mysqli_error($this->connection));
         while($row = mysqli_fetch_array($result)):
             $id = $row['id'];
             $y_id = $row['y_id'];
@@ -470,7 +470,14 @@ class Pidb {
         return $tip_id;
     }
     
-    
+    // method that give avans by pidb_id
+    public function getAvans($pidb_id){
+        $result = $this->connection->query("SELECT * FROM payment WHERE pidb_id = '$pidb_id' AND payment_type_id = 1 ") or die(mysqli_error($this->connection));
+        $row = mysqli_fetch_array($result);
+        $avans = $row['amount'];
+        return $avans;
+    }
+
     // metoda koja daje sva potraživana<->uplate vezane za odreženi dokument $pidb_id
     public function getPayments($pidb_id){
         

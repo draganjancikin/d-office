@@ -73,6 +73,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleInPidb"]) ) {
     die('<script>location.href = "?edit&pidb_id='.$pidb_id.'&pidb_tip_id='.$pidb_tip_id.'" </script>');
 }
 
+// add payment
+if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
+    
+    $date = date('Y-m-d h:i:s');
+
+    $pidb_id = htmlspecialchars($_POST["pidb_id"]);
+
+    $payment_type_id = htmlspecialchars($_POST["payment_type_id"]);
+    $amount = htmlspecialchars($_POST["amount"]);
+    $note = htmlspecialchars($_POST["note"]);
+
+    $db = new DB();
+    $connection = $db->connectDB();
+
+    $connection->query("INSERT INTO payment (date, pidb_id, payment_type_id, amount, note) " 
+                    . " VALUES ('$date', '$pidb_id', '$payment_type_id', '$amount', '$note' )") or die(mysqli_error($connection));
+                    
+    die('<script>location.href = "?view&pidb_id='.$pidb_id.' " </script>');
+}
+
 // duplicate article in document
 if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["duplicateArticleInPidb"])) {
     
