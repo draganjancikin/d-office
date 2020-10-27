@@ -1,22 +1,30 @@
 <?php
-
 // add client
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newClient"])) {
+    
+    
     
     $user_id = $_SESSION['user_id'];
     $date = date('Y-m-d h:i:s');
     
-    $vps_id = htmlspecialchars($_POST["vps_id"]);
-    $name = htmlspecialchars($_POST["name"]);
-    $name_note = htmlspecialchars($_POST["name_note"]);
-    $is_supplier = htmlspecialchars($_POST["is_supplier"]);
-    $state_id = htmlspecialchars($_POST["state_id"]);
-    $city_id = htmlspecialchars($_POST["city_id"]);
-    $street_id = htmlspecialchars($_POST["street_id"]);
-    $home_number = htmlspecialchars($_POST["home_number"]);
-    $adress_note = htmlspecialchars($_POST["adress_note"]);
-    $note = htmlspecialchars($_POST["note"]);
+    $vps_id = $_POST["vps_id"];
+    $name = trim(htmlspecialchars($_POST["name"]));
+    $name_note = trim(htmlspecialchars($_POST["name_note"]));
+    if(isset($_POST["is_supplier"])) {
+        $is_supplier = $_POST["is_supplier"];
+    } else {
+        $is_supplier = 0;
+    }
+    $state_id = $_POST["state_id"];
+    $city_id = $_POST["city_id"];
+    $street_id = $_POST["street_id"];
+    $home_number = trim(htmlspecialchars($_POST["home_number"]));
+    $adress_note = trim(htmlspecialchars($_POST["adress_note"]));
+    $note = trim(htmlspecialchars($_POST["note"]));
     
+    echo "Evo nas";
+    exit();
+
     $db = new DB();
     $connect_db = $db->connectDB();
     
@@ -57,8 +65,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newContact"])) {
     
     $client_id = htmlspecialchars($_POST["client_id"]);
     $type_id = htmlspecialchars($_POST["contacttype_id"]);
-    $number = htmlspecialchars($_POST["number"]);
-    $note = htmlspecialchars($_POST["note"]);
+    $number = trim(htmlspecialchars($_POST["number"]));
+    $note = trim(htmlspecialchars($_POST["note"]));
     
     $db = new DB();
     $connection = $db->connectDB();
@@ -75,7 +83,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newContact"])) {
 if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["addSCS"])) {
 
     $action = htmlspecialchars($_POST["action"]);
-    $name = htmlspecialchars($_POST["name"]);
+    $name = trim(htmlspecialchars($_POST["name"]));
 
     $db = new DB();
     $connect_db = $db->connectDB();
