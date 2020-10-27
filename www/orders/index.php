@@ -1,5 +1,5 @@
 ﻿<?php
-$page = "nabavka";
+$page = "orders";
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
 session_start();
 if(isset($_SESSION['username'])):
@@ -14,7 +14,7 @@ if(isset($_SESSION['username'])):
     $order = new Order();
     $project = new Project();
 
-    include '../../src/procuring/index.php';
+    include '../../src/orders/index.php';
 else:
     header('Location: /');
 endif;
