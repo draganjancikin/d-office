@@ -678,61 +678,79 @@ if($page == "projects"):
     ?>
     <h3>Rezultati pretrage projekata</h3>
     <div class="card mb-4">
-      <div class="card-header p-2">
-        <h6 class="d-inline m-0 text-dark">Aktivni projekti</h6>
-    </div>
-    <div class="card-body p-2">
-      <div class="table-responsive">
-          <table class="dataTable table table-hover" id="" width="100%" cellspacing="0">
-              <thead class="thead-light">
-                  <tr>
-                      <th class="w-25 text-center">projekti</th>
-                      <th class="w-25 text-center">za realizaciju</th>
-                      <th class="w-25 text-center">u realizaciji</th>
-                      <th class="w-25 text-center">realizovano</th>
-                  </tr>
-              </thead>
-              <tfoot class="thead-light">
-                  <tr>
-                      <th class="w-25 text-center">projekti</th>
-                      <th class="w-25 text-center">za realizaciju</th>
-                      <th class="w-25 text-center">u realizaciji</th>
-                      <th class="w-25 text-center">realizovano</th>
-                  </tr>
-              </tfoot>
-              <tbody>
-                  <?php
-                  foreach( $project_list as $project_item):
-                      if ($project_item['status'] == 1):
-                          $project_id = $project_item['id'];
-                          $project_tasks = $project->projectTasks($project_id);
-                          ?>
-                          <tr>
-                              <td>
-                                  <a href="?view&project_id=<?php echo $project_item['id']; ?>" class="d-block card-link" title='<?php echo date('d M Y', strtotime($project_item['date']));?>'>
-                                    #<?php echo str_pad($project_item['pr_id'], 4, "0", STR_PAD_LEFT).' - '.$project_item['title']; ?>
-                                  </a>
-                                  <?php echo $project_item['client_name']. ', <span style="font-size: 0.9em;">' .$project_item['client_city_name']. '</span>'; ?>
-                              </td>
-
-                              <td>
-                                  <?php
-                                  $count1 = 0;
-                                  foreach($project_tasks as $project_task):
-                                      if($project_task['status_id'] == 1):
-                                          ?>
-                                          <a href="?editTask&task_id=<?php echo $project_task['id']; ?>&project_id=<?php echo $project_id; ?>">
-                                              <span class="badge badge-<?php echo $project_task['class']; ?>">
-                                                  <?php echo $project_task['tip']; ?>
-                                              </span>
-                                              <?php echo $project_task['title']; ?>
-                                          </a>
-                                          <br />
-                                          <?php
-                                          $count1 ++;
-                                          if ($count1 == 4):
-                                              ?>
-                                              <a class="" data-toggle="collapse" href="#collapseExample1<?php echo $project_id?>" role="button" aria-expanded="false" aria-controls="collapseExample1">
+        <div class="card-header p-2">
+            <h6 class="d-inline m-0 text-dark">Aktivni projekti</h6>
+        </div>
+        <div class="card-body p-2">
+            <div class="table-responsive">
+                <table class="dataTable table table-hover" id="" width="100%" cellspacing="0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="w-25 text-center">projekti</th>
+                            <th class="px-1 text-center order-status" title="Status projekta">s</th>
+                            <th class="w-25 text-center">za realizaciju</th>
+                            <th class="w-25 text-center">u realizaciji</th>
+                            <th class="w-25 text-center">realizovano</th>
+                        </tr>
+                    </thead>
+                    <tfoot class="thead-light">
+                        <tr>
+                            <th class="w-25 text-center">projekti</th>
+                            <th class="px-1 text-center order-status" title="Status projekta">s</th>
+                            <th class="w-25 text-center">za realizaciju</th>
+                            <th class="w-25 text-center">u realizaciji</th>
+                            <th class="w-25 text-center">realizovano</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                    <?php
+                    foreach( $project_list as $project_item):
+                        if ($project_item['status'] == 1 || $project_item['status'] == 2):
+                            $project_id = $project_item['id'];
+                            $project_tasks = $project->projectTasks($project_id);
+                            ?>
+                            <tr>
+                                <td>
+                                    <a href="?view&project_id=<?php echo $project_item['id']; ?>" class="d-block card-link" title='<?php echo date('d M Y', strtotime($project_item['date']));?>'>
+                                        #<?php echo str_pad($project_item['pr_id'], 4, "0", STR_PAD_LEFT).' - '.$project_item['title']; ?>
+                                    </a>
+                                    <?php echo $project_item['client_name']. ', <span style="font-size: 0.9em;">' .$project_item['client_city_name']. '</span>'; ?>
+                                </td>
+                                <td class="px-1 order-status text-center">
+                                    <?php
+                                    switch ($project_item['status']) {
+                                        case 1:
+                                            echo '<span class="badge badge-pill badge-light">A</span>';
+                                            break;
+                                        case 2:
+                                            echo '<span class="badge badge-pill badge-warning">Č</span>';
+                                            break;
+                                        case 3:
+                                            echo '<span class="badge badge-pill badge-secondary">Z</span>';
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    $count1 = 0;
+                                    foreach($project_tasks as $project_task):
+                                        if($project_task['status_id'] == 1):
+                                            ?>
+                                            <a href="?editTask&task_id=<?php echo $project_task['id']; ?>&project_id=<?php echo $project_id; ?>">
+                                                <span class="badge badge-<?php echo $project_task['class']; ?>">
+                                                    <?php echo $project_task['tip']; ?>
+                                                </span>
+                                                <?php echo $project_task['title']; ?>
+                                            </a>
+                                            <br />
+                                            <?php
+                                            $count1 ++;
+                                            if ($count1 == 4):
+                                                ?>
+                                                <a class="" data-toggle="collapse" href="#collapseExample1<?php echo $project_id?>" role="button" aria-expanded="false" aria-controls="collapseExample1">
                                                   <i class="fas fa-caret-down"></i>
                                               </a>
                                               <div class="collapse" id="collapseExample1<?php echo $project_id?>">
@@ -813,6 +831,7 @@ if($page == "projects"):
     </div>
     <!-- End Card Body -->
     
+    <!--
     <div class="card-header p-2">
         <h6 class="d-inline m-0 text-dark">Projekti na čekanju</h6>
     </div>
@@ -946,6 +965,7 @@ if($page == "projects"):
 
         </div>
     </div>
+                -->
     <!-- End Card Body -->
 
     <div class="card-header p-2">
