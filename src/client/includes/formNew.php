@@ -30,6 +30,9 @@
         <div class="col-sm-4">
           <input class="form-control" id="inputName" type="text" name="name_note" placeholder="Unesite belešku uz naziv klijenta" >
         </div>
+        <div class="col-sm-12">
+          <?php if (isset($_GET['name_error'])) echo 'Ime mora biti upisano' ?>
+        </div>
       </div>
       
       <div id="pib"></div>

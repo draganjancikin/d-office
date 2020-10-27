@@ -6,7 +6,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newClient"])) {
     $date = date('Y-m-d h:i:s');
     
     $vps_id = $_POST["vps_id"];
-    $name = trim(htmlspecialchars($_POST["name"]));
+
+    if (empty($_POST['name'])) {
+        $nameError = 'Ime mora biti upisano';
+        die('<script>location.href = "?new&name_error" </script>');
+	} else {
+		$name = trim(htmlspecialchars($_POST['name']));
+    }
+    
     $name_note = trim(htmlspecialchars($_POST["name_note"]));
     if(isset($_POST["is_supplier"])) {
         $is_supplier = $_POST["is_supplier"];
