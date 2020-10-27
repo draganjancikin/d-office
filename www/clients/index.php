@@ -1,5 +1,5 @@
 ﻿<?php
-$page = "client";
+$page = "clients";
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
 session_start();
 if(isset($_SESSION['username'])):
@@ -8,7 +8,7 @@ if(isset($_SESSION['username'])):
     $database = new Database();
     $client = new Client();
     $contact = new Contact();
-    include '../../src/client/index.php';
+    include '../../src/clients/index.php';
 else:
     header('Location: /');
 endif;

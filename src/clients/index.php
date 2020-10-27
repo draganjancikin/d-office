@@ -35,24 +35,24 @@
           <div class="row">
             
             <!-- Tools Meni -->
-            <?php include '../../src/client/includes/toolsMenu.php'; ?>
+            <?php include '../../src/clients/includes/toolsMenu.php'; ?>
             <!-- End of Tools Meni -->
           
             <div class="col-lg-12 col-xl-10 px-2">
             <?php
               if (empty($_GET)): // ako je $_GET prazan
-                include '../../src/client/includes/listLast.php';
+                include '../../src/clients/includes/listLast.php';
               else:
-                if(isset($_GET['view'])) include '../../src/client/includes/formView.php';
-                if(isset($_GET['new'])) include '../../src/client/includes/formNew.php';
-                if(isset($_GET['edit'])) include '../../src/client/includes/formEdit.php';
+                if(isset($_GET['view'])) include '../../src/clients/includes/formView.php';
+                if(isset($_GET['new'])) include '../../src/clients/includes/formNew.php';
+                if(isset($_GET['edit'])) include '../../src/clients/includes/formEdit.php';
                 
                 if(isset($_GET['search'])) include '../../app/includes/search.php';
-                if(isset($_GET['advancedSearch'])) include '../../src/client/includes/advancedSearch.php';
+                if(isset($_GET['advancedSearch'])) include '../../src/clients/includes/advancedSearch.php';
 
-                if(isset($_GET['addstate'])) include '../../src/client/includes/formAddState.php';
-                if(isset($_GET['addcity'])) include '../../src/client/includes/formAddCity.php';
-                if(isset($_GET['addstreet'])) include '../../src/client/includes/formAddStreet.php';
+                if(isset($_GET['addstate'])) include '../../src/clients/includes/formAddState.php';
+                if(isset($_GET['addcity'])) include '../../src/clients/includes/formAddCity.php';
+                if(isset($_GET['addstreet'])) include '../../src/clients/includes/formAddStreet.php';
 
                 if(isset($_GET['alert'])) include '../../app/includes/alerts.php';
                 
@@ -61,7 +61,7 @@
             </div>
 
             <!-- Modals -->
-            <?php include '../../src/client/includes/modals.php'; ?>
+            <?php include '../../src/clients/includes/modals.php'; ?>
             <!-- End of Modals -->
 
           </div>

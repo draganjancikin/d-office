@@ -6,8 +6,8 @@ $root = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . "/../";
 require_once $root . 'app/classes/Database.class.php'; // new class for Database
 require_once $root . 'app/classes/DB.class.php'; // old class for Database
 require_once $root . 'app/classes/Conf.class.php';
-require_once $root . 'src/client/classes/Client.class.php';
-require_once $root . 'src/client/classes/Contact.class.php';
+require_once $root . 'src/clients/classes/Client.class.php';
+require_once $root . 'src/clients/classes/Contact.class.php';
 require_once $root . 'src/pidb/classes/Pidb.class.php';
 require_once $root . 'src/article/classes/Article.class.php';
 require_once $root . 'src/material/classes/Material.class.php';

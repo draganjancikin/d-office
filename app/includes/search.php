@@ -1,5 +1,5 @@
 <?php
-if($page == "client"):
+if($page == "clients"):
     $name = filter_input(INPUT_GET, 'search');
     ?>
     <div class="card mb-4">
