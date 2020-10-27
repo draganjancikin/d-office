@@ -1,5 +1,5 @@
 ﻿<?php
-$page = "material";
+$page = "materials";
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
 session_start();
 if(isset($_SESSION['username'])):
@@ -11,7 +11,7 @@ if(isset($_SESSION['username'])):
     $client = new Client();
     $material = new Material();
 
-    include '../../src/material/index.php';
+    include '../../src/materials/index.php';
 else:
     header('Location: /');
 endif;

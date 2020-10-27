@@ -10,7 +10,7 @@ require_once $root . 'src/clients/classes/Client.class.php';
 require_once $root . 'src/clients/classes/Contact.class.php';
 require_once $root . 'src/pidb/classes/Pidb.class.php';
 require_once $root . 'src/articles/classes/Article.class.php';
-require_once $root . 'src/material/classes/Material.class.php';
+require_once $root . 'src/materials/classes/Material.class.php';
 require_once $root . 'src/orders/classes/Order.class.php';
 require_once $root . 'src/project/classes/Project.class.php';
 require_once $root . 'src/cutting/classes/Cutting.class.php';

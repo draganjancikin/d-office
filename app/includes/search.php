@@ -369,7 +369,7 @@ if($page == "cutting"):
     <?php
 endif;
 
-if($page == "material"):
+if($page == "materials"):
     $name = filter_input(INPUT_GET, 'search');
     ?>
     <div class="card mb-4">
