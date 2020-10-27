@@ -2,8 +2,6 @@
 // add client
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newClient"])) {
     
-    
-    
     $user_id = $_SESSION['user_id'];
     $date = date('Y-m-d h:i:s');
     
@@ -22,9 +20,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newClient"])) {
     $adress_note = trim(htmlspecialchars($_POST["adress_note"]));
     $note = trim(htmlspecialchars($_POST["note"]));
     
-    echo "Evo nas";
-    exit();
-
     $db = new DB();
     $connect_db = $db->connectDB();
     
