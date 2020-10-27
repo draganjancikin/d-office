@@ -3,9 +3,9 @@
         <h6 class="d-inline m-0 text-dark">Aktivni projekti</h6>
         <div class="float-right">
             <form method="get">
-       	        <div class="form-group row">
+                <div class="form-group row">
                     <div class="col-sm-7">
-              	        <select class="form-control" name="city_id">
+                        <select class="form-control" name="city_id">
                             <option value="">Izaberi naselje</option>
                             <?php
                             $citys = $project->getCitysByActiveProject();
@@ -13,14 +13,12 @@
                                 echo '<option value="' .$city['id']. '">' .$city['name']. '</option>';
                             }
                             ?>
-              	        </select>
+                        </select>
                     </div>
-
                     <div class="col-sm-5">
                         <button type="submit" class="btn btn-sm btn-outline-secondary">Prikaži projekte</button>
                     </div>
-          	    </div>             
-
+                </div>
             </form>
         </div>
     </div>
@@ -58,7 +56,6 @@
                                 </a>
                                 <?php echo $project_item['client_name']. ', <span style="font-size: 0.9em;">' .$project_item['client_city_name']. '</span>'; ?>
                             </td>
-
                             <td>
                                 <?php
                                 $count1 = 0;
@@ -86,7 +83,6 @@
                                 if($count1 > 3) echo '</div>';
                                 ?>
                             </td>
-
                             <td>
                                 <?php
                                 $count2 = 0;
@@ -114,7 +110,6 @@
                                 if($count2 > 3) echo '</div>';
                                 ?>
                             </td>
-
                             <td>
                                 <?php
                                 $count3 = 0;
@@ -153,7 +148,6 @@
     <!-- End Card Body -->
 </div>
 <!-- End Card -->
-
 
 <div class="card mb-4">
     <div class="card-header p-2">
@@ -276,7 +270,7 @@
                             </td>
                         </tr>
                         <?php
-                    endforeach;
+                        endforeach;
                     ?>
                 </tbody>
             </table>
