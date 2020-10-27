@@ -52,7 +52,7 @@ require 'del.php';
         </a>
 
         <!-- Open new project with client data -->
-        <a href="/project/index.php?new&client_id=<?php echo $client_id ?>">
+        <a href="/projects/index.php?new&client_id=<?php echo $client_id ?>">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog projekta!">
             <i class="fas fa-arrow-right"> </i> Projekat
           </button>
