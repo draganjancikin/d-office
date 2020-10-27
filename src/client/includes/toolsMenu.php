@@ -11,7 +11,7 @@ require 'del.php';
   <div class="card mb-2">
     <div class="card-body p-1">
     
-      <a href="/client/index.php?new">
+      <a href="/clients/index.php?new">
         <button type="button" class="btn btn-sm btn-outline-secondary" title="Upis novog klijenta!">
           <i class="fas fa-plus"> </i><i class="fas fa-user"> </i>
         </button>

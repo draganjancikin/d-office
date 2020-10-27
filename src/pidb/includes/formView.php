@@ -39,7 +39,7 @@ switch ($pidb_data['tip_id']) {
     <dl class="row mb-0">
       <dt class="col-sm-3 col-md-2">klijent:</dt>
       <dd class="col-sm-9 col-md-10">
-        <a href="/client/?view&client_id=<?php echo $client_data['id']; ?>" title="Pregled svih podataka o: <?php echo $client_data['name']; ?>">
+        <a href="/clients/?view&client_id=<?php echo $client_data['id']; ?>" title="Pregled svih podataka o: <?php echo $client_data['name']; ?>">
           <?php echo $client_data['name']; ?>
         </a>
       </dd>

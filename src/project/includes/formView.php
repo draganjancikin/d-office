@@ -30,7 +30,7 @@ else:
             <dd class="col-sm-8 col-md-9"><?php echo date('d-M-Y', strtotime($project_data['date'])); ?></dd>
 
             <dt class="col-sm-4 col-md-3">klijent</dt>
-            <dd class="col-sm-8 col-md-9"><a href="/client/index.php?view&client_id=<?php echo $client_data['id'] ?>"><?php echo $client_data['name']; ?></a></dd>
+            <dd class="col-sm-8 col-md-9"><a href="/clients/index.php?view&client_id=<?php echo $client_data['id'] ?>"><?php echo $client_data['name']; ?></a></dd>
 
             <dt class="col-sm-4 col-md-3">adresa</dt>
             <dd class="col-sm-8 col-md-9"><?php echo $client_data['street_name'] . ' ' . $client_data['home_number'] . ($client_data['city_name']<>""?", ".$client_data['city_name'] : "") . ', ' . $client_data['state_name'] . '<br/>' . $client_data['adress_note']; ?></dd>
