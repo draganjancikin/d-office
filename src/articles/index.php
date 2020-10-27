@@ -35,19 +35,19 @@
           <div class="row">
 
             <!-- Tools Meni -->
-            <?php include '../../src/article/includes/toolsMenu.php'; ?>
+            <?php include '../../src/articles/includes/toolsMenu.php'; ?>
             <!-- End of Tools Meni -->
 
             <div class="col-lg-12 px-2">
               <?php 
                 if (empty($_GET)): // ako je $_GET prazan
-                  include '../../src/article/includes/listLast.php';
+                  include '../../src/articles/includes/listLast.php';
                 else:
-                  if(isset($_GET['view'])) include '../../src/article/includes/formView.php';
-                  if(isset($_GET['edit'])) include '../../src/article/includes/formEdit.php';
-                  if(isset($_GET['new'])) include '../../src/article/includes/formNew.php';
+                  if(isset($_GET['view'])) include '../../src/articles/includes/formView.php';
+                  if(isset($_GET['edit'])) include '../../src/articles/includes/formEdit.php';
+                  if(isset($_GET['new'])) include '../../src/articles/includes/formNew.php';
 
-                  if(isset($_GET['priceList'])) include '../../src/article/includes/priceList.php';
+                  if(isset($_GET['priceList'])) include '../../src/articles/includes/priceList.php';
                   
                   if(isset($_GET['search'])) include '../../app/includes/search.php';
                 endif;
@@ -55,7 +55,7 @@
             </div>
             
             <!-- Modals -->
-            <?php include '../../src/article/includes/modals.php'; ?>
+            <?php include '../../src/articles/includes/modals.php'; ?>
             <!-- End of Modals -->
 
           </div>

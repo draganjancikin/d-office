@@ -11,7 +11,7 @@ if(isset($_SESSION['username'])):
     $article = new Article();
     $material = new Material();
     
-    include '../../src/article/index.php';
+    include '../../src/articles/index.php';
 else:
     header('Location: /');
 endif;

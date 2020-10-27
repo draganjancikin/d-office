@@ -109,8 +109,8 @@
         </a>
         <div id="proizvodi" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="/article/">Proizvodi</a>
-                <a class="collapse-item" href="/article/index.php?new"><i class="fas fa-plus"></i> Novi proizvod</a>
+                <a class="collapse-item" href="/articles/">Proizvodi</a>
+                <a class="collapse-item" href="/articles/index.php?new"><i class="fas fa-plus"></i> Novi proizvod</a>
             </div>
         </div>
     </li>
