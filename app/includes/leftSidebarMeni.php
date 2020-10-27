@@ -145,9 +145,9 @@
         </a>
         <div id="projekti" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="/project/">Projekti</a>
-                <a class="collapse-item" href="/project/index.php?new"><i class="fas fa-plus"></i> Novi Projekat</a>
-                <a class="collapse-item" href="/project/index.php?advancedSearch"><i class="fa fa-search"></i> Detajna pretraga</a>
+                <a class="collapse-item" href="/projects/">Projekti</a>
+                <a class="collapse-item" href="/projects/index.php?new"><i class="fas fa-plus"></i> Novi Projekat</a>
+                <a class="collapse-item" href="/projects/index.php?advancedSearch"><i class="fa fa-search"></i> Detajna pretraga</a>
             </div>
         </div>
     </li>
