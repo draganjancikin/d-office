@@ -751,83 +751,82 @@ if($page == "projects"):
                                             if ($count1 == 4):
                                                 ?>
                                                 <a class="" data-toggle="collapse" href="#collapseExample1<?php echo $project_id?>" role="button" aria-expanded="false" aria-controls="collapseExample1">
-                                                  <i class="fas fa-caret-down"></i>
-                                              </a>
-                                              <div class="collapse" id="collapseExample1<?php echo $project_id?>">
-                                              <?php
-                                          endif;
-                                      endif;
-                                  endforeach;
-                                  if($count1 > 3) echo '</div>';
-                                  ?>
-                              </td>
-
-                              <td>
-                                  <?php
-                                  $count2 = 0;
-                                  foreach($project_tasks as $project_task):
-                                      if($project_task['status_id'] == 2):
-                                          ?>
-                                          <a href="?editTask&task_id=<?php echo $project_task['id']; ?>&project_id=<?php echo $project_id; ?>">
-                                              <span class="badge badge-<?php echo $project_task['class']; ?>">
-                                                  <?php echo $project_task['tip']; ?>
-                                              </span>
-                                              <?php echo $project_task['title']; ?>
-                                          </a>
-                                          <br />
-                                          <?php
-                                          $count2 ++;
-                                          if ($count2 == 4):
-                                              ?>
-                                              <a class="" data-toggle="collapse" href="#collapseExample2<?php echo $project_id?>" role="button" aria-expanded="false" aria-controls="collapseExample2">
-                                                  <i class="fas fa-caret-down"></i>
-                                              </a>
-                                              <div class="collapse" id="collapseExample2<?php echo $project_id?>">
-                                              <?php
-                                          endif;
-                                      endif;
-                                  endforeach;
-                                  if($count2 > 3) echo '</div>';
-                                  ?>
-                              </td>
-
-                              <td>
-                                  <?php
-                                  $count3 = 0;
-                                  foreach($project_tasks as $project_task):
-                                      if($project_task['status_id'] == 3):
-                                        ?>
-                                        <a href="?editTask&task_id=<?php echo $project_task['id']; ?>&project_id=<?php echo $project_id; ?>">
-                                            <span class="badge badge-<?php echo $project_task['class']; ?>">
-                                                <?php echo $project_task['tip']; ?>
-                                            </span>
-                                          <?php echo $project_task['title']; ?>
-                                        </a><br />
-                                        <?php
-                                        $count3 ++;
-                                        if ($count3 == 4):
-                                            ?>
-                                            <a class="" data-toggle="collapse" href="#collapseExample3<?php echo $project_id?>" role="button" aria-expanded="false" aria-controls="collapseExample3">
-                                                <i class="fas fa-caret-down"></i>
-                                            </a>
-                                            <div class="collapse" id="collapseExample3<?php echo $project_id?>">
-                                            <?php
+                                                    <i class="fas fa-caret-down"></i>
+                                                </a>
+                                                <div class="collapse" id="collapseExample1<?php echo $project_id?>">
+                                                <?php
+                                            endif;
                                         endif;
-                                      endif;
-                                  endforeach;
-                                  if($count3 > 3) echo '</div>';
-                                  ?>
-                              </td>
-                          
-                          </tr>
-                          <?php
-                      endif;
-                  endforeach;
-                  ?>
-              </tbody>
-          </table>
+                                    endforeach;
+                                    if($count1 > 3) echo '</div>';
+                                    ?>
+                                </td>
+                                
+                                <td>
+                                    <?php
+                                    $count2 = 0;
+                                    foreach($project_tasks as $project_task):
+                                        if($project_task['status_id'] == 2):
+                                            ?>
+                                            <a href="?editTask&task_id=<?php echo $project_task['id']; ?>&project_id=<?php echo $project_id; ?>">
+                                                <span class="badge badge-<?php echo $project_task['class']; ?>">
+                                                    <?php echo $project_task['tip']; ?>
+                                                </span>
+                                                <?php echo $project_task['title']; ?>
+                                            </a><br />
+                                            <?php
+                                            $count2 ++;
+                                            if ($count2 == 4):
+                                                ?>
+                                                <a class="" data-toggle="collapse" href="#collapseExample2<?php echo $project_id?>" role="button" aria-expanded="false" aria-controls="collapseExample2">
+                                                    <i class="fas fa-caret-down"></i>
+                                                </a>
+                                                <div class="collapse" id="collapseExample2<?php echo $project_id?>">
+                                                <?php
+                                            endif;
+                                        endif;
+                                    endforeach;
+                                    if($count2 > 3) echo '</div>';
+                                    ?>
+                                </td>
+                                
+                                <td>
+                                    <?php
+                                    $count3 = 0;
+                                    foreach($project_tasks as $project_task):
+                                        if($project_task['status_id'] == 3):
+                                            ?>
+                                            <a href="?editTask&task_id=<?php echo $project_task['id']; ?>&project_id=<?php echo $project_id; ?>">
+                                                <span class="badge badge-<?php echo $project_task['class']; ?>">
+                                                    <?php echo $project_task['tip']; ?>
+                                                </span>
+                                                <?php echo $project_task['title']; ?>
+                                            </a><br />
+                                            <?php
+                                            $count3 ++;
+                                            if ($count3 == 4):
+                                                ?>
+                                                <a class="" data-toggle="collapse" href="#collapseExample3<?php echo $project_id?>" role="button" aria-expanded="false" aria-controls="collapseExample3">
+                                                    <i class="fas fa-caret-down"></i>
+                                                </a>
+                                                <div class="collapse" id="collapseExample3<?php echo $project_id?>">
+                                                <?php
+                                            endif;
+                                        endif;
+                                    endforeach;
+                                    if($count3 > 3) echo '</div>';
+                                    ?>
+                                </td>
+                                
+                            </tr>
+                            <?php
+                        endif;
+                    endforeach;
+                    ?>
+                </tbody>
+            </table>
         
-      </div>
+        </div>
     </div>
     <!-- End Card Body -->
     
@@ -1016,8 +1015,7 @@ if($page == "projects"):
                                                     <?php echo $project_task['tip']; ?>
                                                 </span>
                                                 <?php echo $project_task['title']; ?>
-                                            </a>
-                                            <br />
+                                            </a><br />
                                             <?php
                                             $count1 ++;
                                             if ($count1 == 4):
@@ -1045,8 +1043,7 @@ if($page == "projects"):
                                                   <?php echo $project_task['tip']; ?>
                                               </span>
                                               <?php echo $project_task['title']; ?>
-                                          </a>
-                                          <br />
+                                          </a><br />
                                           <?php
                                           $count2 ++;
                                           if ($count2 == 4):
