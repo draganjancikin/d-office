@@ -1,4 +1,7 @@
 <?php
+function basicValidation($str){
+  return trim(htmlspecialchars($str));
+}
 require 'add.php';
 require 'edit.php';
 require 'del.php';

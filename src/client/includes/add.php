@@ -1,7 +1,4 @@
 <?php
-function basicValidation($str){
-    return trim(htmlspecialchars($str));
-}
 // add client
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newClient"])) {
     
