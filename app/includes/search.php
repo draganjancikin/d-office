@@ -426,8 +426,8 @@ if($page == "material"):
     <?php
 endif;
 
-if($page == "nabavka"):
-    require '../../src/procuring/includes/del.php';
+if($page == "orders"):
+    require '../../src/orders/includes/del.php';
     $name = filter_input(INPUT_GET, 'search');
     $orders = $order->search($name);
     ?>
