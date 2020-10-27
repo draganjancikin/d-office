@@ -599,7 +599,7 @@ if($page == "orders"):
     <?php
 endif;
 
-if($page == "article"):
+if($page == "articles"):
     $name = filter_input(INPUT_GET, 'search');
     ?>
     
