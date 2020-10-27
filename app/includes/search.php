@@ -687,7 +687,7 @@ if($page == "projects"):
                     <thead class="thead-light">
                         <tr>
                             <th class="w-25 text-center">projekti</th>
-                            <th class="px-1 text-center order-status" title="Status projekta">s</th>
+                            <!--<th class="px-1 text-center order-status" title="Status projekta">s</th>-->
                             <th class="w-25 text-center">za realizaciju</th>
                             <th class="w-25 text-center">u realizaciji</th>
                             <th class="w-25 text-center">realizovano</th>
@@ -696,7 +696,7 @@ if($page == "projects"):
                     <tfoot class="thead-light">
                         <tr>
                             <th class="w-25 text-center">projekti</th>
-                            <th class="px-1 text-center order-status" title="Status projekta">s</th>
+                            <!--<th class="px-1 text-center order-status" title="Status projekta">s</th>-->
                             <th class="w-25 text-center">za realizaciju</th>
                             <th class="w-25 text-center">u realizaciji</th>
                             <th class="w-25 text-center">realizovano</th>
@@ -716,7 +716,7 @@ if($page == "projects"):
                                     </a>
                                     <?php echo $project_item['client_name']. ', <span style="font-size: 0.9em;">' .$project_item['client_city_name']. '</span>'; ?>
                                 </td>
-                                <td class="px-1 order-status text-center">
+                                <!--<td class="px-1 order-status text-center">
                                     <?php
                                     switch ($project_item['status']) {
                                         case 1:
@@ -732,7 +732,7 @@ if($page == "projects"):
                                             break;
                                     }
                                     ?>
-                                </td>
+                                </td>-->
                                 <td>
                                     <?php
                                     $count1 = 0;
