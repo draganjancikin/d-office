@@ -35,7 +35,7 @@
           <div class="row">
 
             <!-- Tools Meni -->
-            <?php include '../../src/project/includes/toolsMenu.php'; ?>
+            <?php include '../../src/projects/includes/toolsMenu.php'; ?>
             <!-- End of Tools Meni -->
             
             <div class="col-lg-12 px-2">
@@ -44,26 +44,26 @@
                       
                 if(isset($_GET['city_id']) AND !$_GET['city_id']==""){ // ako postoji $_GET['city_id'] i nije jednak nuli
                   $city_id = $_GET['city_id'];
-                  include '../../src/project/includes/listProjectsByCity.php';
+                  include '../../src/projects/includes/listProjectsByCity.php';
                 }else{
-                  include '../../src/project/includes/listActiveProjects.php';
+                  include '../../src/projects/includes/listActiveProjects.php';
                 }
                       
               else:
                       
-                if(isset($_GET['new'])) include '../../src/project/includes/formNew.php';
-                if(isset($_GET['view']) && isset($_GET['project_id'])) include '../../src/project/includes/formView.php';
-                if(isset($_GET['edit']) && isset($_GET['project_id'])) include '../../src/project/includes/formEdit.php';
-                if(isset($_GET['editTask'])) include '../../src/project/includes/formEditTask.php';
+                if(isset($_GET['new'])) include '../../src/projects/includes/formNew.php';
+                if(isset($_GET['view']) && isset($_GET['project_id'])) include '../../src/projects/includes/formView.php';
+                if(isset($_GET['edit']) && isset($_GET['project_id'])) include '../../src/projects/includes/formEdit.php';
+                if(isset($_GET['editTask'])) include '../../src/projects/includes/formEditTask.php';
                       
                 if(isset($_GET['search'])) include '../../app/includes/search.php';
-                if(isset($_GET['advancedSearch'])) include '../../src/project/includes/advancedSearch.php';
+                if(isset($_GET['advancedSearch'])) include '../../src/projects/includes/advancedSearch.php';
                       
               endif;
               ?>
             </div>
             <!-- Modals -->
-            <?php include '../../src/project/includes/modals.php'; ?>
+            <?php include '../../src/projects/includes/modals.php'; ?>
             <!-- End of Modals -->
 
           </div>

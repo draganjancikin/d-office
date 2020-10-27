@@ -12,7 +12,7 @@ require_once $root . 'src/pidb/classes/Pidb.class.php';
 require_once $root . 'src/articles/classes/Article.class.php';
 require_once $root . 'src/materials/classes/Material.class.php';
 require_once $root . 'src/orders/classes/Order.class.php';
-require_once $root . 'src/project/classes/Project.class.php';
+require_once $root . 'src/projects/classes/Project.class.php';
 require_once $root . 'src/cutting/classes/Cutting.class.php';
 require_once $root . 'src/admin/classes/Admin.class.php';
 

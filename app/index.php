@@ -170,7 +170,7 @@
 
             <!-- Card Projects  -->
             <div class="col-xl-3 col-md-6 mb-4">
-                <a href="project" class="card-link">
+                <a href="projects" class="card-link">
                     <div class="card border-left-warning shadow h-100 py-2">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
@@ -179,7 +179,6 @@
                                     <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $database->numRows('project') ?></div>
                                 </div>
                                 <div class="col-auto">
-                                    <!-- <i class="fas fa-folder fa-2x text-warning"></i> -->
                                     <i class="fas fa-project-diagram fa-2x text-warning"></i>
                                 </div>
                             </div>

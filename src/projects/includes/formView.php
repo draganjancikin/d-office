@@ -1,6 +1,6 @@
 <?php
 if($project_data['id']=='0'):
-  die('<script>location.href = "/project/" </script>');
+  die('<script>location.href = "/projects/" </script>');
 else:
   $client_data = $client->getClient($project_data['client_id']);
   ?>
@@ -80,7 +80,7 @@ else:
                   <i class="fa fa-plus"></i> <i class="fas fa-pencil-alt"> </i>
                 </button>
                 <!-- Pregled i štampanje radnog naloga sa beleškama uz projekat -->
-                <a href="../tcpdf/examples/printProjectTaskWithNotes.php?project_id=<?php echo $project_id; ?>" title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank">
+                <a href="/tcpdf/examples/printProjectTaskWithNotes.php?project_id=<?php echo $project_id; ?>" title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank">
                   <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
                     <i class="fa fa-print"></i> Beleške
                   </button>
@@ -135,7 +135,7 @@ else:
                 $orders = $order->getOrdersByProjectId($project_id);
                 foreach ($orders as $order):
                   ?>
-                  <a href="/procuring/?view&order_id=<?php echo $order['id'] ?>">
+                  <a href="/orders/?view&order_id=<?php echo $order['id'] ?>">
                     <?php echo str_pad($order['o_id'], 4, "0", STR_PAD_LEFT) . '_' . date('m_Y', strtotime($order['date'])) ?>
                   </a>
                   <span style="display: inline-block; width: 50px; text-align: center;">
@@ -368,7 +368,7 @@ else:
           <div class="row row-cols-4">
           
             <?php
-            $dir = $_SERVER["DOCUMENT_ROOT"] . '/project/upload/project_id_'.$project_id;
+            $dir = $_SERVER["DOCUMENT_ROOT"] . '/projects/upload/project_id_'.$project_id;
             if(is_dir($dir)) {
               if ($handle = opendir($dir)) {
                 while (false !== ($entry = readdir($handle))) {	
@@ -378,9 +378,9 @@ else:
                         
                       <div class="card">
                         
-                        <a href="/project/upload/project_id_<?php echo $project_id.'/'.$entry; ?>" target="_blank" class="p-1">
+                        <a href="/projects/upload/project_id_<?php echo $project_id.'/'.$entry; ?>" target="_blank" class="p-1">
 
-                          <img src="/project/upload/project_id_<?php echo $project_id. '/'.$entry; ?>" alt="Attachment" class="card-img-top">
+                          <img src="/projects/upload/project_id_<?php echo $project_id. '/'.$entry; ?>" alt="Attachment" class="card-img-top">
                             
                           <i class="fas fa-camera"></i> <?php echo $entry; ?>
                         </a>

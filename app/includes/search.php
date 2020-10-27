@@ -672,7 +672,7 @@ if($page == "articles"):
     <?php
 endif;
 
-if($page == "project"):
+if($page == "projects"):
     $name = filter_input(INPUT_GET, 'search');
     $project_list = $project->search($name);
     ?>
@@ -709,7 +709,7 @@ if($page == "project"):
                           ?>
                           <tr>
                               <td>
-                                  <a href="../project/?view&project_id=<?php echo $project_item['id']; ?>" class="d-block card-link" title='<?php echo date('d M Y', strtotime($project_item['date']));?>'>
+                                  <a href="?view&project_id=<?php echo $project_item['id']; ?>" class="d-block card-link" title='<?php echo date('d M Y', strtotime($project_item['date']));?>'>
                                     #<?php echo str_pad($project_item['pr_id'], 4, "0", STR_PAD_LEFT).' - '.$project_item['title']; ?>
                                   </a>
                                   <?php echo $project_item['client_name']. ', <span style="font-size: 0.9em;">' .$project_item['client_city_name']. '</span>'; ?>
@@ -844,7 +844,7 @@ if($page == "project"):
                             ?>
                             <tr>
                                 <td>
-                                    <a href="../project/?view&project_id=<?php echo $project_item['id']; ?>" class="d-block card-link" title='<?php echo date('d M Y', strtotime($project_item['date']));?>'>
+                                    <a href="?view&project_id=<?php echo $project_item['id']; ?>" class="d-block card-link" title='<?php echo date('d M Y', strtotime($project_item['date']));?>'>
                                         #<?php echo str_pad($project_item['pr_id'], 4, "0", STR_PAD_LEFT).' - '.$project_item['title']; ?>
                                     </a>
                                     <?php echo $project_item['client_name']. ', <span style="font-size: 0.9em;">' .$project_item['client_city_name']. '</span>'; ?>
@@ -979,7 +979,7 @@ if($page == "project"):
                             ?>
                             <tr>
                                 <td>
-                                    <a href="../project/?view&project_id=<?php echo $project_item['id']; ?>" class="d-block card-link" title='<?php echo date('d M Y', strtotime($project_item['date']));?>'>
+                                    <a href="?view&project_id=<?php echo $project_item['id']; ?>" class="d-block card-link" title='<?php echo date('d M Y', strtotime($project_item['date']));?>'>
                                         #<?php echo str_pad($project_item['pr_id'], 4, "0", STR_PAD_LEFT).' - '.$project_item['title']; ?>
                                     </a>
                                     <?php echo $project_item['client_name']. ', <span style="font-size: 0.9em;">' .$project_item['client_city_name']. '</span>'; ?>
