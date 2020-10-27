@@ -84,7 +84,7 @@ require 'export.php';
               </button>
             </a>
 
-            <a href="/project/index.php?new&client_id=<?php echo $pidb_data['client_id'] ?>&pidb_id=<?php echo $pidb_id ?>">
+            <a href="/projects/index.php?new&client_id=<?php echo $pidb_data['client_id'] ?>&pidb_id=<?php echo $pidb_id ?>">
               <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Novi projekat!">
                 <i class="fas fa-share"> </i> <i class="fas fa-project-diagram"></i> <!-- Projekat -->
               </button>
