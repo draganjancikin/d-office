@@ -1,8 +1,8 @@
 <?php
 /**
- * Description of Contact
+ * Description of class Contact
  *
- * @author Server
+ * @author Dragan Jancikin
  */
 
 class Contact {
@@ -39,15 +39,13 @@ class Contact {
         $contacts = array();
         
         // izlistavanje iz baze slih kontakata klijenata sa client_id
-        
         $result = mysqli_query($this->connection,"SELECT client_contacts.contact_id, contacts.id, contacts.type_id, contacts.number, contacts.note, contacttypes.id, contacttypes.name  "
                                                 . "FROM client_contacts "
                                                 . "JOIN (contacts, contacttypes)"
                                                 . "ON (client_contacts.contact_id = contacts.id AND contacts.type_id = contacttypes.id )"
                                                 . "WHERE client_contacts.client_id = $id "
                                                 . "ORDER BY contacttypes.id ") or die(mysqli_error($this->connection));
-         
-         while($row = mysqli_fetch_array($result)):
+        while($row = $result->fetch_assoc()):
          
             $id = $row['contact_id'];
             $type_id = $row['type_id'];
@@ -79,7 +77,7 @@ class Contact {
         
         // sada treba isčitati sva naselja iz tabele city
         $result = mysqli_query($this->connection, "SELECT id, name FROM contacttypes ORDER BY id" ) or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)){
+        while($row = $result->fetch_assoc()){
          
             $id = $row['id'];
             $name = $row['name'];
