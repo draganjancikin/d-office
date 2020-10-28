@@ -2,7 +2,7 @@
 /**
  * Description of Client class
  *
- * @author Server
+ * @author Dragan Jancikin
  */
 
 class Client {
@@ -67,12 +67,10 @@ class Client {
     
     // metoda koja daje vps_id klijenata
     public function getVpses (){
-        
         $vpses = array(
             array('id'=>'1', 'name'=>'Fizičko lice'),
             array('id'=>'2', 'name'=>'Pravno lice'),
         );
-        
         return $vpses;
     }
     
@@ -85,8 +83,7 @@ class Client {
         
         // sada treba isčitati sve države iz tabele state
         $result = $this->connection->query("SELECT id, state_name FROM state ORDER BY state_name" ) or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)){
-            
+        while($row = $result->fetch_assoc()){    
             $id = $row['id'];
             $state_name = $row['state_name'];
             
@@ -110,7 +107,7 @@ class Client {
         
         // sada treba isčitati sva naselja iz tabele city
         $result = $this->connection->query("SELECT id, city_name FROM city ORDER BY city_name" ) or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)){
+        while($row = $result->fetch_assoc()){
             
             $id = $row['id'];
             $city_name = $row['city_name'];
@@ -126,32 +123,26 @@ class Client {
         return $citys;
     }
     
-    
-    // metoda koja daje sva naselja
+
+    // metoda koja daje naselje
     public function getCity ($id){
-        
-        $city = array();
-        $citys = array();
         
         // sada treba isčitati sva naselja iz tabele city
         $result = $this->connection->query("SELECT id, city_name FROM city WHERE id = $id ORDER BY city_name" ) or die(mysqli_error($this->connection));
-        $row = mysqli_fetch_array($result);
+        $row = $result->fetch_assoc();
             
             $id = $row['id'];
             $city_name = $row['city_name'];
-
         
         return $city_name;
     }
     
     
-    // metoda proverava da li ostoji naselje sa dati id-em
+    // metoda proverava da li postoji naselje sa dati id-em
     public function checkCity ($id){
         
         $result = $this->connection->query("SELECT city_name FROM city WHERE id = $id") or die(mysqli_error($this->connection));
-            $row = mysqli_fetch_array($result);
-            
-            // var_dump($row);
+            $row = $result->fetch_assoc();
             
             if (empty($row)) {
                 $rezultat = false;
@@ -160,7 +151,6 @@ class Client {
             }
 
         return $rezultat;
-                
     }
     
     
@@ -172,7 +162,7 @@ class Client {
         
         // sada treba isčitati sve ulice iz tabele street
         $result = $this->connection->query("SELECT id, street_name FROM street ORDER BY street_name" ) or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)){
+        while($row = $result->fetch_assoc()){
             
             $id = $row['id'];
             $street_name = $row['street_name'];
@@ -202,7 +192,7 @@ class Client {
                                          . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
                                          . "WHERE (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%') "
                                          . "ORDER BY client.name ") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)):
+        while($row = $result->fetch_assoc()):
             $id = $row['id'];
             $name = $row['name'];
             $street_name = $row['street_name'];
@@ -234,50 +224,50 @@ class Client {
         } else {
             // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
             $result = $this->connection->query("SELECT client.id, client.vps_id, client.name, client.name_note, client.lb, client.is_supplier, client.state_id, client.city_id, client.street_id, state.state_name, city.city_name, street.street_name, client.home_number, client.adress_note, client.note "
-            . "FROM client "
-            . "JOIN (street, city, state)"
-            . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
-            . "WHERE client.id = $id ") or die(mysqli_error($this->connection));
-            $row = mysqli_fetch_array($result);
-            $id = $row['id'];
-            $vps_id = $row['vps_id'];
-            if($vps_id == 1){
-            $vps_name = "Fizičko lice";
-            }else{
-            $vps_name = "Pravno lice";
-            }
-            $name = $row['name'];
-            $name_note = $row['name_note'];
-            $pib = $row['lb'];
-            $is_supplier = $row['is_supplier'];
-            $street_id = $row['street_id'];
-            $street_name = $row['street_name'];
-            $home_number = $row['home_number'];
-            $city_id = $row['city_id'];
-            $city_name = $row['city_name'];
-            $state_id = $row['state_id'];
-            $state_name = $row['state_name'];
-            $adress_note = $row['adress_note'];
-            $note = $row['note'];
+                                            . "FROM client "
+                                            . "JOIN (street, city, state)"
+                                            . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
+                                            . "WHERE client.id = $id ") or die(mysqli_error($this->connection));
+            $row = $result->fetch_assoc();
+                $id = $row['id'];
+                $vps_id = $row['vps_id'];
+                if($vps_id == 1){
+                    $vps_name = "Fizičko lice";
+                }else{
+                    $vps_name = "Pravno lice";
+                }
+                $name = $row['name'];
+                $name_note = $row['name_note'];
+                $pib = $row['lb'];
+                $is_supplier = $row['is_supplier'];
+                $street_id = $row['street_id'];
+                $street_name = $row['street_name'];
+                $home_number = $row['home_number'];
+                $city_id = $row['city_id'];
+                $city_name = $row['city_name'];
+                $state_id = $row['state_id'];
+                $state_name = $row['state_name'];
+                $adress_note = $row['adress_note'];
+                $note = $row['note'];
 
-            $client = array(
-            'id' => $id,
-            'vps_id' => $vps_id,
-            'vps_name' => $vps_name,
-            'name' => $name,
-            'name_note' => $name_note,
-            'pib' => $pib,
-            'is_supplier' => $is_supplier,
-            'state_id' => $state_id,
-            'state_name' => $state_name,
-            'city_id' => $city_id,
-            'city_name' => $city_name,
-            'street_id' => $street_id,
-            'street_name' => $street_name,
-            'home_number' => $home_number,
-            'adress_note' => $adress_note,
-            'note' => $note
-            );
+                $client = array(
+                    'id' => $id,
+                    'vps_id' => $vps_id,
+                    'vps_name' => $vps_name,
+                    'name' => $name,
+                    'name_note' => $name_note,
+                    'pib' => $pib,
+                    'is_supplier' => $is_supplier,
+                    'state_id' => $state_id,
+                    'state_name' => $state_name,
+                    'city_id' => $city_id,
+                    'city_name' => $city_name,
+                    'street_id' => $street_id,
+                    'street_name' => $street_name,
+                    'home_number' => $home_number,
+                    'adress_note' => $adress_note,
+                    'note' => $note
+                );
 
             return $client;
         }
@@ -294,7 +284,7 @@ class Client {
                                         . "JOIN (street, city, state)"
                                         . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id AND client.is_supplier = 1)"
                                         . "WHERE client.id = $id ") or die(mysqli_error($this->connection));
-        $row = mysqli_fetch_array($result);
+        $row = $result->fetch_assoc();
             $id = $row['id'];
             $vps_id = $row['vps_id'];
             if($vps_id == 1){
@@ -351,7 +341,7 @@ class Client {
                                          . "JOIN (city) "
                                          . "ON (client.city_id = city.id) "
                                          . "ORDER BY name" ) or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)){
+        while($row = $result->fetch_assoc()){
             
             $id = $row['id'];
             $vps_id = $row['vps_id'];
@@ -384,7 +374,7 @@ class Client {
                                             . "JOIN (city) "
                                             . "ON (client.city_id = city.id AND client.is_supplier = 1) "
                                             . "ORDER BY name" ) or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)){
+        while($row = $result->fetch_assoc()){
             
             $id = $row['id'];
             $vps_id = $row['vps_id'];
@@ -418,7 +408,7 @@ class Client {
                                          . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
                                          
                                          . "ORDER BY client.id DESC LIMIT $limit") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)):
+        while($row = $result->fetch_assoc()):
             $id = $row['id'];
             $name = $row['name'];
             $street_name = $row['street_name'];
