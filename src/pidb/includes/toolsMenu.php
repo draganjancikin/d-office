@@ -79,7 +79,7 @@ require 'export.php';
           if($pidb_data['tip_id'] == 1):
             ?>
             <a href="?edit&pidb_id=<?php echo $pidb_id ?>&exportProformaToDispatch">
-              <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Izvezi u otpremnicu!">
+              <button type="button" class="btn btn-sm btn-outline-secondary mr-1" <?php echo ($pidb_data['archived'] == 1 ? 'title="Predračun je arhiviran i nije ga moguće izvesti u otpremnicu" disabled' : 'title="Izvezi u otpremnicu" ' ) ?> >
                 <i class="fas fa-share"> </i> Otpremnica
               </button>
             </a>
