@@ -10,6 +10,7 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
     $db = new DB();
     $connection = $db->connectDB();
 
+    // get proforma data
     $result_pidbs = $connection->query("SELECT * FROM pidb WHERE id = '$pidb_id' ") or die(mysqli_error($connection));
         $row_pidb = mysqli_fetch_array($result_pidbs);
         $client_id = $row_pidb['client_id'];
@@ -17,11 +18,13 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
         $title = $row_pidb['title'];
         $note = $row_pidb['note'];
     
+    // save data to dispatch
     $connection->query("INSERT INTO pidb (tip_id, date, client_id, parent_id, project_id, title, note) VALUES ('$pidb_tip_id', '$date', '$client_id', '$pidb_id', '$project_id', '$title', '$note')") or die(mysqli_error($connection));
     
     $pidb_id_last = $connection->insert_id;
     $y_id = $pidb->setYid($pidb_tip_id);    
     
+    // get articles from proforma and save to dispatch
     $result_pidb_articles = $connection->query("SELECT * FROM pidb_article WHERE pidb_id = '$pidb_id'") or die(mysqli_error($connection));
     while($row_pidb_article = mysqli_fetch_array($result_pidb_articles)){
         $pidb_article_id = $row_pidb_article['id'];
@@ -51,6 +54,9 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
         }
     
     }
+
+    // proforma go to archive
+    $connection->query("UPDATE pidb SET archived='1' WHERE id = '$pidb_id' ") or die(mysqli_error($connection));
 
     die('<script>location.href = "?view&pidb_id='.$pidb_id_last.'&pidb_tip_id='.$pidb_tip_id.'" </script>');
 }
