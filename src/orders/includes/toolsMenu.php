@@ -7,7 +7,7 @@ require 'del.php';
   <div class="card mb-2">
     <div class="card-body py-1 px-2">
 
-      <a href="/procuring/index.php?new" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove narudžbenice!">
+      <a href="/orders/index.php?new" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove narudžbenice!">
         <i class="fas fa-plus"> </i> <i class="fas fa-th"> </i>
       </a>
 
