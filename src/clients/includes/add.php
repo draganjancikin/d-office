@@ -91,18 +91,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["addSCS"])) {
     $connect_db = $db->connectDB();
 
     // citamo iz baze, iz tabele $action sve zapise gde je name=$name
-    $str = 'SELECT * FROM ' . $action . ' WHERE ' . $action . '_name="' . $name . '" ';
+    $str = 'SELECT * FROM ' . $action . ' WHERE name="' . $name . '" ';
     $provera_upit = $connect_db->query( $str );
 
     // brojimo koliko ima zapisa
     $broj_naziva = mysqli_num_rows($provera_upit);
 
     if ($broj_naziva>0){
-      die('<script>location.href = "?add' . $action . '&alert&ob=2" </script>'); 
+        die('<script>location.href = "?add' . $action . '&alert&ob=2" </script>'); 
     }else{
-      $quer = "INSERT INTO ". $action . " (" . $action. "_name) VALUES ('" . $name. "') ";
-      $connect_db->query($quer) or die(mysqli_error($connect_db));	
-      die('<script>location.href = "/client/" </script>');	
+        $quer = "INSERT INTO ". $action . " (name) VALUES ('" . $name. "') ";
+        $connect_db->query($quer) or die(mysqli_error($connect_db));	
+        die('<script>location.href = "/clients/" </script>');	
     }
 
   }
