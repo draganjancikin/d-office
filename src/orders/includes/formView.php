@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">
       Narudžbenica: 
       <strong><?php echo str_pad($order_data['o_id'], 4, "0", STR_PAD_LEFT). ' - ' .date('m', strtotime($order_data['date'])) . ' <span class="font-weight-normal">(' . date('d-M-Y', strtotime($order_data['date'])). ')</span>'; ?> </strong>
-      - za projekat: <?php  echo ( isset($project_data['id']) ? '<a href="/project/?view&project_id='.$project_data['id'].'">'.$project_data['pr_id'].' '.$project_data['client_name'].' - '.$project_data['title'].'</a>' : '___' ) ?>
+      - za projekat: <?php  echo ( isset($project_data['id']) ? '<a href="/projects/?view&project_id='.$project_data['id'].'">'.$project_data['pr_id'].' '.$project_data['client_name'].' - '.$project_data['title'].'</a>' : '___' ) ?>
     </h6>
   </div>
   <div class="card-body p-2">
