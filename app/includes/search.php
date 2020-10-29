@@ -501,7 +501,7 @@ if($page == "orders"):
                                     <?php 
                                     if($project_data['id']):
                                         ?>
-                                        <a href="/project/?view&project_id=<?php echo $project_data['id'] ?>">
+                                        <a href="/projects/?view&project_id=<?php echo $project_data['id'] ?>">
                                             <?php echo $project_data['pr_id'] .' '. $project_data['client_name'] .' - '. $project_data['title']; ?>
                                         </a>
                                         <?php 
