@@ -117,7 +117,7 @@ $html = '
 
 <table border="0">
   <tr><td width="80px">klijent:</td> <td width="auto">'.$client_data['name'] . ($client_data['name_note']<>""?', '.$client_data['name_note']:"").'</td></tr>
-  <tr><td>adresa:</td>               <td>'.$client_data['street_name'].' '.$client_data['home_number'].', '.$client_data['city_name'].', '.$client_data['state_name'].', '.$client_data['adress_note'].'</td></tr>
+  <tr><td>adresa:</td>               <td>'.$client_data['street_name'].' '.$client_data['home_number'].', '.$client_data['city_name'].', '.$client_data['state_name'].', '.$client_data['address_note'].'</td></tr>
   <tr><td></td>                      <td>' .$phone1. ', ' .$phone1_note. '</td></tr>
   ' .( $phone2=="" ? "" : '<tr><td></td><td>' .$phone2. ', ' .$phone2_note. '</td></tr>' ). '
   
