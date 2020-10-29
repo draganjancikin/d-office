@@ -1,5 +1,5 @@
 <?php
-$page = "project";
+$page = 'projects';
 require_once('../config/lang/srp.php');
 require_once('../tcpdf.php');
 
@@ -37,17 +37,13 @@ $pdf->setLanguageArray($l);
 // set font
 $pdf->SetFont('dejavusans', '', 10);
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// ---------------------------------------------------------
 
 // add a page
 $pdf->AddPage();
 
 // potreban je konfiguracioni fajl aplikacije
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
-
-// generisanje potrebnih objekata
-
-
 
 $html = '
   <img src="../images/logo.png" >
@@ -98,9 +94,9 @@ $pdf->lastPage();
 
 // ---------------------------------------------------------
 
+ob_end_clean();
 //Close and output PDF document
 $pdf->Output('test_name.pdf', 'I');
-
 
 //============================================================+
 // END OF FILE                                                
