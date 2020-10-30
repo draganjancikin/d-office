@@ -250,7 +250,7 @@ class Client {
         $clients = array();
 
         // sada treba isčitati sve klijente iz tabele client
-        $result = $this->conn->query("SELECT client.id, client.vps_id, client.name, city.city_name "
+        $result = $this->conn->query("SELECT client.id, client.vps_id, client.name, city.name as city_name "
                                          . "FROM client "
                                          . "JOIN (city) "
                                          . "ON (client.city_id = city.id) "
