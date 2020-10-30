@@ -17,6 +17,7 @@ class DB {
             // stop execution after error message
             exit();
         }
+        // echo "con <br>";
         return $conn;
     }
     
