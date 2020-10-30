@@ -1,5 +1,5 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/config.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/dbConfig.php';
 session_start();
 
 $table = "admin";    // the table that this script will set up and use.
