@@ -69,7 +69,7 @@
                         <option value="<?php echo $client_data['state_id'] ?>"><?php echo $client_data['state_name'] ?></option>
                         <?php
                         $states = $client->getStates();
-                        foreach ($states as $state): ?>
+                        foreach ($states as $state):
                             ?>
                             <option value="<?php echo $state['id'] ?>"><?php echo $state['name'] ?></option>
                             <?php
@@ -86,11 +86,11 @@
                         <option value="<?php echo $client_data['city_id'] ?>"><?php echo $client_data['city_name'] ?></option>
                         <?php
                         $citys = $client->getCitys();
-                        foreach ($citys as $city):
+                        foreach ($citys as $city) :
                             ?>
                             <option value="<?php echo $city['id'] ?>"><?php echo $city['name'] ?></option>
                             <?php
-                        foreach;
+                        endforeach
                         ?>
                     </select>
                 </div>
@@ -107,7 +107,7 @@
                             ?>
                             <option value="<?php echo $street['id'] ?>"><?php echo $street['name'] ?></option>
                             <?php
-                        foreach;
+                        endforeach;
                         ?>
                     </select>
                 </div>
