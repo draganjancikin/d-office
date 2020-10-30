@@ -1,5 +1,4 @@
 <?php
-// echo "Database.class.php";
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/config.php';
 /**
  * Description of Database class
@@ -9,7 +8,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/confi
 
 class Database {
   
-    public $mysqli;
+    protected $mysqli;
 
     public function __construct() {
         $this->db_connect();
