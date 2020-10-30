@@ -1,31 +1,20 @@
 <?php
+require_once '/server/app/classes/DBconnection.class.php';
 /**
+ * Order.class.php
+ * 
  * Description of Order class
  *
- * @author Dragan Jancikin
+ * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
+class Order extends DBconnection {
 
-class Order {
-    //put your code here
-    
-    
-    // metoda koja se automatski izvršava pri generisanju objekta Client
-    public function __construct() {
-        // treba konektovati na bazu preko klase koja vrši konekciju
-        $db = new DB();
-        $this->connection = $db->connectDB();
-        
-        $conf = new Conf();
-        $this->kurs = $conf->getKurs();
-    }
-    
-    
     //metoda koja daje zadnjih $number narudžbeica upisanih u bazu
     public function getLastOrders($limit){
-        
+
         $order = array();
         $orders = array();
-        
+
         // izlistavanje zadnjih $limit materijala
         $result = $this->connection->query("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name "
                                          . "FROM orderm "
@@ -33,188 +22,154 @@ class Order {
                                          . "ON (orderm.supplier_id = client.id) "
                                          . "ORDER BY orderm.id DESC LIMIT $limit") or die(mysqli_error($this->connection));
         while($row = mysqli_fetch_array($result)):
-            $id = $row['id'];
-            $o_id = $row['o_id'];
-            $date = $row['date'];
-            $title = $row['title'];
-            $status = $row['status'];
-            $is_archived = $row['is_archived'];
-            $supplier_name = $row['name'];
-            $project_id = $row['project_id'];
             $order = array(
-                'id' => $id,
-                'o_id' => $o_id,
-                'date' => $date,
-                'project_id' => $project_id,
-                'title' => $title,
-                'status' => $status,
-                'is_archived' => $is_archived,
-                'supplier_name' => $supplier_name
+                'id' => $row['id'],
+                'o_id' => $row['o_id'],
+                'date' => $row['date'],
+                'project_id' => $row['project_id'],
+                'title' => $row['title'],
+                'status' => $row['status'],
+                'is_archived' => $row['is_archived'],
+                'supplier_name' => $row['name']
             );
-            
             array_push($orders, $order);
-            
         endwhile;
-        
+    
         return $orders;
-        
     }
-    
-    
+
+
     // metoda koja definiše i dodeljuje vrednost o_id 
     public function setOid(){
-        
+
         // čitamo iz baze, iz tabele order sve zapise 
         $result = $this->connection->query("SELECT * FROM orderm ORDER BY id DESC") or die(mysqli_error($this->connection));
 
         // brojimo koliko ima zapisa
         $num = mysqli_num_rows($result); // broj kolona u tabeli $table
-        
+
         $row = mysqli_fetch_array($result);
         $last_id = $row['id'];
         $year_last = date('Y', strtotime($row['date']));
-        
+
         $row = mysqli_fetch_array($result);
         $year_before_last = date('Y', strtotime($row['date']));
-        
+
         $o_id_before_last = $row['o_id'];
-        
+
         if($num ==0){  // prvi slučaj kada je tabela $table prazna
-            
+
             return die("Tabela task je prazna!");
-            
+
         }elseif($num ==1){  // drugi slučaj - kada postoji jedan unos u tabeli $table
-            
+
             $o_id = 1; // pošto postoji samo jedan unos u tabelu $table $b_on dobija vrednost '1'
-            
+
         }else{  // svi ostali slučajevi kada ima više od jednog unosa u tabeli $table
-            
+
             if($year_last < $year_before_last){
-                
+
                 return die("Godina zadnjeg unosa je manja od godine predzadnjeg unosa! Verovarno datum nije podešen");
-                
+
             }elseif($year_last == $year_before_last){ //nema promene godine
-                
+
                 $o_id = $o_id_before_last + 1;
-                
+
             }else{  // došlo je do promene godine
-                
+
                 $o_id = 1;
-                
+
             }
-            
+
         }
-        
+
         $this->connection->query("UPDATE orderm SET o_id = '$o_id' WHERE id = '$last_id' ") or die(mysqli_error($this->connection));
-        
+
     }
-    
-    
+
+
     //metoda koja vraća podatke o dokumentu u zaisnosti od id dokumenta
     public function getOrder($order_id){
-        
+    
         $result = $this->connection->query("SELECT orderm.id, orderm.o_id, orderm.date, orderm.supplier_id, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, orderm.note, client.name "
                                          . "FROM orderm "
                                          . "JOIN client "
                                          . "ON (orderm.supplier_id = client.id) "
                                          . "WHERE orderm.id = $order_id ") or die(mysqli_error($this->connection));
-        
         $row = mysqli_fetch_array($result);
-            $id = $row['id'];
-            $o_id = $row['o_id'];
-            $date = $row['date'];
-            $supplier_id = $row['supplier_id'];
-            $project_id = $row['project_id'];
-            $title = $row['title'];
-            $status = $row['status'];
-            $is_archived = $row['is_archived'];
-            $note = $row['note'];
-            
             $order = array(
-                'id' => $id,
-                'o_id' => $o_id,
-                'date' => $date,
-                'project_id' => $project_id,
-                'supplier_id' => $supplier_id,
-                'title' => $title,
-                'status' => $status,
-                'is_archived' => $is_archived,
-                'note' => $note,
-                
+                'id' => $row['id'],
+                'o_id' => $row['o_id'],
+                'date' => $row['date'],
+                'project_id' => $row['project_id'],
+                'supplier_id' => $row['supplier_id'],
+                'title' => $row['title'],
+                'status' => $row['status'],
+                'is_archived' => $row['is_archived'],
+                'note' => $row['note'],
             );
-            
+
         return $order;
-        
-        
     }
-    
-        
+
+
     // metoda koja daje artikle narudžbenice
     public function getMaterialsOnOrder($order_id){
-        
+
         $material = array();
         $materials = array();
-        
-        
-        
+
         // niz $propertys bi mogli iskoristiti da se spakuju svi property-ji jednog artikla
-        
-        
-        $result = $this->connection->query("SELECT material.name, material.unit_id, material.min_obrac_mera, orderm_material.id, orderm_material.material_id, orderm_material.note, orderm_material.pieces, orderm_material.price, orderm_material.discounts, orderm_material.tax, unit.unit_name "
+        $result = $this->connection->query("SELECT material.name, material.unit_id, material.min_obrac_mera, orderm_material.id, orderm_material.material_id, orderm_material.note, orderm_material.pieces, orderm_material.price, orderm_material.discounts, orderm_material.tax, unit.name as unit_name "
                                          . "FROM orderm_material "
                                          . "JOIN (material, unit) "
                                          . "ON (orderm_material.material_id = material.id AND material.unit_id = unit.id)"
                                          . "WHERE orderm_material.order_id = $order_id "
                                          . "ORDER BY orderm_material.id") or die(mysqli_error($this->connection));
-        
-        
         while($row = mysqli_fetch_array($result)){
-            
+
             $id = $row['id'];
             $material_id = $row['material_id'];
             $material_min_obrac_mera = $row['min_obrac_mera'];
             $name = $row['name'];
-                
+
             // treba izčitati sve property-e artikla iz tabele pidb_article_property
             $property = "";
             $temp_quantity = 1;
-            
+
             $propertys = array();
-            
+
             $result_propertys = $this->connection->query("SELECT orderm_material_property.quantity, property.name "
                     . "FROM orderm_material_property "
                     . "JOIN (property) "
                     . "ON (orderm_material_property.property_id = property.id) "
                     . "WHERE orderm_material_id = $id" ) or die(mysqli_error($this->connection));
-
-            
-            
             while($row_property = mysqli_fetch_array($result_propertys)){
                 $property_name = $row_property['name'];
                 $property_quantity = $row_property['quantity'];
-                
+
                 $property = $property . $property_name . ' <input class="input-box-50" type="text" name="' .$property_name. '" value="' .$property_quantity. '" placeholder="(cm)" /> ';
-                
+
                 $property_niz = array(
                     'property_name' => $property_name,
                     'property_quantity' => $property_quantity
                 );
-                
+
                 array_push($propertys, $property_niz);
-                
+
                 $temp_quantity = $temp_quantity * ( $property_quantity/100 );
-                
+
             }
-            
+
             if($temp_quantity < $material_min_obrac_mera) $temp_quantity = $material_min_obrac_mera;
-            
+
             $unit_id = $row['unit_id'];
             $unit_name = $row['unit_name'];
             $note = $row['note'];
             $pieces = $row['pieces'];
-            
+
             $quantity = round($pieces * $temp_quantity, 2);
-            
+
             $price = $row['price'];
             $discounts = $row['discounts'];
             // $tax_base = ($quantity * $price * $this->kurs) - ($quantity * $price * $this->kurs) * ($discounts/100);
@@ -222,7 +177,7 @@ class Order {
             $tax = $row['tax'];
             $tax_amount = $tax_base * ($tax/100);
             $sub_total = $tax_base + $tax_amount;
-            
+
         $material = array(
                 'id' => $id,
                 'material_id' => $material_id,
@@ -240,34 +195,30 @@ class Order {
                 'tax_amount' => $tax_amount,
                 'sub_total' => $sub_total
             );
-        array_push($materials, $material);
-        
+            array_push($materials, $material);
         }
-        
+
         return $materials;
-        
-        
     }
 
 
     // metoda koja daje material narudžbenice
     public function getMaterialInOrder($order_material_id){
-        
+
         $material = array();
-        
+
         // need: order_id, material_id, note, pieces, price, discount, tax, weight, propertys
         $result = $this->connection->query("SELECT orderm_material.id, orderm_material.order_id, orderm_material.material_id, orderm_material.note, orderm_material.pieces, orderm_material.price, orderm_material.discounts, orderm_material.tax, orderm_material.weight "
                                          . "FROM orderm_material "
                                          . "JOIN (material, unit) "
                                          . "ON (orderm_material.material_id = material.id AND material.unit_id = unit.id)"
                                          . "WHERE orderm_material.id = $order_material_id ") or die(mysqli_error($this->connection));
-        
         $row = mysqli_fetch_array($result);
-        
+
             $id = $row['id'];
             $order_id = $row['order_id'];
             $material_id = $row['material_id'];
-                               
+   
             // treba izčitati sve property-e materiala iz tabele orderm_material_property
             $property = "";
             $temp_quantity = 1;
@@ -277,23 +228,23 @@ class Order {
                                                        . "JOIN (property)"
                                                        . "ON (orderm_material_property.property_id = property.id)"
                                                        . "WHERE orderm_material_id = $id" ) or die(mysqli_error($this->connection));
-            
+
             while($row_property = mysqli_fetch_array($result_propertys)){
                 $property_name = $row_property['name'];
                 $property_quantity = $row_property['quantity'];
-                
+
                 $property = $property . $property_name . ' <input class="input-box-50" type="text" name="' .$property_name. '" value="' .$property_quantity. '" placeholder="(cm)" /> ';
-                
+
                 $property_niz = array(
                     'property_name' => $property_name,
                     'property_quantity' => $property_quantity
                 );
-                
+
                 array_push($propertys, $property_niz);
-                
+
                 $temp_quantity = $temp_quantity * ( $property_quantity/100 );
             }
-            
+
             $note = $row['note'];
             $pieces = $row['pieces'];
             $quantity = round($pieces * $temp_quantity, 2);
@@ -301,7 +252,6 @@ class Order {
             $discounts = $row['discounts'];
             $tax = $row['tax'];
             $weight  = $row['weight'];
-            
         $material = array(
                 'id' => $id,
                 'order_id' => $order_id,
@@ -315,82 +265,67 @@ class Order {
                 'tax' => $tax,
                 'weight' => $weight,
             );
-            
+
         return $material;
-        
     }
-    
-        
+
+
     //metoda koja vraća narudžbenice u zavisnosti od datog pojma u pretrazi
     public function search($name){
-        
-        
+
         $orders = array();
         $order = array();
-        
+
         $result = $this->connection->query("SELECT id FROM orderm ORDER by id desc") or die(mysqli_error($this->connection));
             $row = mysqli_fetch_array($result);
             $last_id = $row['id'];
-        
+
         // izlistavanje iz baze predračuna, računa, otpremnica i povratnica klijenata sa nazivom koji je sličan $name
-        
         $result = $this->connection->query("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, client.name, orderm.title, orderm.status, orderm.is_archived "
                                          . "FROM orderm JOIN (client)"
                                          . "ON (orderm.supplier_id = client.id)"
                                          . "WHERE (client.name LIKE '%$name%' ) "
                                          . "ORDER BY orderm.id desc  ") or die(mysqli_error($this->connection));
-        
         while($row = mysqli_fetch_array($result)):
-            $id = $row['id'];
-            $o_id = $row['o_id'];
-            $date = $row['date'];
-            $project_id = $row['project_id'];
-            $supplier_name = $row['name'];
-            $title = $row['title'];
-            $status = $row['status'];
-            $is_archived = $row['is_archived'];
             $order = array(
-                'id' => $id,
+                'id' => $row['id'],
                 'last_id' => $last_id,
-                'o_id' => $o_id,
-                'date' => $date,
-                'project_id' => $project_id,
-                'supplier_name' => $supplier_name,
-                'title' => $title,
-                'status' => $status,
-                'is_archived' => $is_archived,
+                'o_id' => $row['o_id'],
+                'date' => $row['date'],
+                'project_id' => $row['project_id'],
+                'supplier_name' => $row['name'],
+                'title' => $row['title'],
+                'status' => $row['status'],
+                'is_archived' => $row['is_archived'],
             );
             array_push($orders, $order);
-                
         endwhile;
 
         return $orders;
-        
-        
     }
-    
-    
+
+
     // metoda koja briše materijal iz narudžbenice
     public function delMaterialFromOrder($orderm_material_id){
-        
+
         $this->connection->query("DELETE FROM orderm_material WHERE id='$orderm_material_id' ") or die(mysqli_error($this->connection));
-        
+
         $result_propertys = $this->connection->query("SELECT * FROM orderm_material_property WHERE orderm_material_id = $orderm_material_id ") or die(mysqli_error($this->connection));
         while($row = mysqli_fetch_array($result_propertys)):
             $id = $row['id'];
-            
+
             $this->connection->query("DELETE FROM orderm_material_property WHERE id='$id' ") or die(mysqli_error($this->connection));
-            
+
         endwhile;;
     }
-    
+
 
     // metoda koja daje sve narudžbenice datog projekta
     public function getOrdersByProjectId($project_id) {
-        
+
         $order = array();
         $orders = array();
-        
+
         // izlistavanje svi narudžbenica datog projekta
         $result = $this->connection->query("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name "
                                          . "FROM orderm "
@@ -399,29 +334,19 @@ class Order {
                                          . "WHERE (orderm.project_id = $project_id) "
                                          . "ORDER BY orderm.id DESC ") or die(mysqli_error($this->connection));
         while($row = mysqli_fetch_array($result)):
-            $id = $row['id'];
-            $o_id = $row['o_id'];
-            $date = $row['date'];
-            $title = $row['title'];
-            $status = $row['status'];
-            $is_archived = $row['is_archived'];
-            $supplier_name = $row['name'];
-            $project_id = $row['project_id'];
             $order = array(
-                'id' => $id,
-                'o_id' => $o_id,
-                'date' => $date,
-                'project_id' => $project_id,
-                'title' => $title,
-                'status' => $status,
-                'is_archived' => $is_archived,
-                'supplier_name' => $supplier_name
+                'id' => $row['id'],
+                'o_id' => $row['o_id'],
+                'date' => $row['date'],
+                'project_id' => $row['project_id'],
+                'title' => $row['title'],
+                'status' => $row['status'],
+                'is_archived' => $row['is_archived'],
+                'supplier_name' => $row['name']
             );
-            
             array_push($orders, $order);
-            
         endwhile;
-        
+
         return $orders;
     }
 
@@ -431,7 +356,7 @@ class Order {
 
         // get material by $order_material_id
         $materialInOrder = $this->getMaterialInOrder($order_material_id);
-        
+
         $order_id = $materialInOrder['order_id'];
         $material_id = $materialInOrder['material_id'];
         $note = $materialInOrder['note'];
@@ -453,14 +378,14 @@ class Order {
         //insert property-a materiala u tabelu orderm_material_property
         $propertys = $this->connection->query( "SELECT * FROM material_property WHERE material_id ='$material_id'");
         while($row_property = mysqli_fetch_array($propertys)){
-        
+
             $property_id = $row_property['property_id'];
             $quantity = 0;
 
             $this->connection->query("INSERT INTO orderm_material_property (orderm_material_id, property_id, quantity) " 
                             . " VALUES ('$order_material_id', '$property_id', '$quantity' )") or die(mysqli_error($this->connection));
         }
-    
+
     }
-    
+
 }
