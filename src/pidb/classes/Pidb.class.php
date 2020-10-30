@@ -288,7 +288,7 @@ class Pidb {
         
         // niz $propertys bi mogli iskoristiti da se spakuju svi property-ji jednog artikla
                 
-        $result = $this->connection->query("SELECT article.name, article.unit_id, article.min_obrac_mera, pidb_article.id, pidb_article.article_id, pidb_article.note, pidb_article.pieces, pidb_article.price, pidb_article.discounts, pidb_article.tax, unit.unit_name "
+        $result = $this->connection->query("SELECT article.name, article.unit_id, article.min_obrac_mera, pidb_article.id, pidb_article.article_id, pidb_article.note, pidb_article.pieces, pidb_article.price, pidb_article.discounts, pidb_article.tax, unit.name as unit_name "
                                          . "FROM pidb_article "
                                          . "JOIN (article, unit) "
                                          . "ON (pidb_article.article_id = article.id AND article.unit_id = unit.id)"
