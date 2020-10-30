@@ -1,11 +1,14 @@
 <?php
+require_once '/server/app/classes/DBconnection.class.php';
 /**
- * Description of Client class
+ * Client.class.php
+ * 
+ * Client class
  *
- * @author Dragan Jancikin
+ * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
 
-class Client {
+class Client extends DBconnection {
 
     protected $id;
     protected $vps_id;
@@ -23,13 +26,6 @@ class Client {
     protected $modified_at_date;
     protected $modified_at_user_id;
 
-    // metoda koja se automatski izvršava pri generisanju objekta Client
-    public function __construct() {
-        // treba konektovati na bazu preko klase koja vrši konekciju
-        $db = new DB();
-        $this->conn = $db->connectDB();
-    }
-
 
     // get client types
     public function getVpses (){
@@ -40,9 +36,6 @@ class Client {
         return $vpses;
     }
 
-    public function get(){
-
-    }
 
     // get all states from database
     public function getStates (){
@@ -51,7 +44,7 @@ class Client {
         $states = array();
 
         // sada treba isčitati sve države iz tabele state
-        $result = $this->conn->query("SELECT id, name FROM state ORDER BY name" ) or die(mysqli_error($this->conn));
+        $result = $this->connection->query("SELECT id, name FROM state ORDER BY name" ) or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()){    
             $state = array(
                 'id' => $row['id'],
@@ -71,7 +64,7 @@ class Client {
         $citys = array();
 
         // sada treba isčitati sva naselja iz tabele city
-        $result = $this->conn->query("SELECT * FROM city ORDER BY name" ) or die(mysqli_error($this->conn));
+        $result = $this->connection->query("SELECT * FROM city ORDER BY name" ) or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()){
             $city = array(
                 'id' => $row['id'],
@@ -88,7 +81,7 @@ class Client {
     public function getCity ($id){
 
         // sada treba isčitati sva naselja iz tabele city
-        $result = $this->conn->query("SELECT id, name FROM city WHERE id = $id ORDER BY name" ) or die(mysqli_error($this->conn));
+        $result = $this->connection->query("SELECT id, name FROM city WHERE id = $id ORDER BY name" ) or die(mysqli_error($this->connection));
         $row = $result->fetch_assoc();
             $id = $row['id'];
             $city_name = $row['name'];
@@ -99,7 +92,7 @@ class Client {
     // metoda proverava da li postoji naselje sa dati id-em
     public function checkCity ($id){
 
-        $result = $this->conn->query("SELECT name FROM city WHERE id = $id") or die(mysqli_error($this->conn));
+        $result = $this->connection->query("SELECT name FROM city WHERE id = $id") or die(mysqli_error($this->connection));
             $row = $result->fetch_assoc();
 
             if (empty($row)) {
@@ -119,7 +112,7 @@ class Client {
         $streets = array();
 
         // sada treba isčitati sve ulice iz tabele street
-        $result = $this->conn->query("SELECT id, name FROM street ORDER BY name" ) or die(mysqli_error($this->conn));
+        $result = $this->connection->query("SELECT id, name FROM street ORDER BY name" ) or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()){
             $street = array(
                 'id' => $row['id'],
@@ -139,12 +132,12 @@ class Client {
         $clients = array();
 
         // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
-        $result = $this->conn->query("SELECT client.id, client.name, client.name_note, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number "
+        $result = $this->connection->query("SELECT client.id, client.name, client.name_note, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number "
                                          . "FROM client "
                                          . "JOIN (street, city, state)"
                                          . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
                                          . "WHERE (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%') "
-                                         . "ORDER BY client.name ") or die(mysqli_error($this->conn));
+                                         . "ORDER BY client.name ") or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()):
             $client = array(
                 'id' => $row['id'],
@@ -167,11 +160,11 @@ class Client {
 
         } else {
             // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
-            $result = $this->conn->query("SELECT client.id, client.vps_id, client.name, client.name_note, client.lb, client.is_supplier, client.state_id, client.city_id, client.street_id, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number, client.address_note, client.note "
+            $result = $this->connection->query("SELECT client.id, client.vps_id, client.name, client.name_note, client.lb, client.is_supplier, client.state_id, client.city_id, client.street_id, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number, client.address_note, client.note "
                                             . "FROM client "
                                             . "JOIN (street, city, state)"
                                             . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
-                                            . "WHERE client.id = $id ") or die(mysqli_error($this->conn));
+                                            . "WHERE client.id = $id ") or die(mysqli_error($this->connection));
             $row = $result->fetch_assoc();
                 $vps_id = $row['vps_id'];
                 if($vps_id == 1){
@@ -208,11 +201,11 @@ class Client {
     public function getSupplier($id){
 
         // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
-        $result = $this->conn->query("SELECT client.id, client.vps_id, client.name, client.name_note, client.lb, client.is_supplier, client.state_id, client.city_id, client.street_id, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number, client.address_note, client.note "
+        $result = $this->connection->query("SELECT client.id, client.vps_id, client.name, client.name_note, client.lb, client.is_supplier, client.state_id, client.city_id, client.street_id, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number, client.address_note, client.note "
                                         . "FROM client "
                                         . "JOIN (street, city, state)"
                                         . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id AND client.is_supplier = 1)"
-                                        . "WHERE client.id = $id ") or die(mysqli_error($this->conn));
+                                        . "WHERE client.id = $id ") or die(mysqli_error($this->connection));
         $row = $result->fetch_assoc();
             $vps_id = $row['vps_id'];
             if($vps_id == 1){
@@ -250,11 +243,11 @@ class Client {
         $clients = array();
 
         // sada treba isčitati sve klijente iz tabele client
-        $result = $this->conn->query("SELECT client.id, client.vps_id, client.name, city.name as city_name "
+        $result = $this->connection->query("SELECT client.id, client.vps_id, client.name, city.name as city_name "
                                          . "FROM client "
                                          . "JOIN (city) "
                                          . "ON (client.city_id = city.id) "
-                                         . "ORDER BY name" ) or die(mysqli_error($this->conn));
+                                         . "ORDER BY name" ) or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()){
             $client = array(
                 'id' => $row['id'],
@@ -276,11 +269,11 @@ class Client {
         $clients = array();
 
         // sada treba isčitati sve klijente iz tabele client
-        $result = $this->conn->query("SELECT client.id, client.vps_id, client.name, client.is_supplier, city.name as city_name "
+        $result = $this->connection->query("SELECT client.id, client.vps_id, client.name, client.is_supplier, city.name as city_name "
                                             . "FROM client "
                                             . "JOIN (city) "
                                             . "ON (client.city_id = city.id AND client.is_supplier = 1) "
-                                            . "ORDER BY name" ) or die(mysqli_error($this->conn));
+                                            . "ORDER BY name" ) or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()):
             $client = array(
                 'id' => $row['id'],
@@ -302,12 +295,12 @@ class Client {
         $clients = array();
 
         // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
-        $result = $this->conn->query("SELECT client.id, client.name, client.name_note, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number "
+        $result = $this->connection->query("SELECT client.id, client.name, client.name_note, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number "
                                          . "FROM client "
                                          . "JOIN (street, city, state)"
                                          . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
                                          
-                                         . "ORDER BY client.id DESC LIMIT $limit") or die(mysqli_error($this->conn));
+                                         . "ORDER BY client.id DESC LIMIT $limit") or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()):
             $client = array(
                 'id' => $row['id'],
