@@ -7,51 +7,21 @@
 
 class Client {
 
-    // client id
-    private $id;
-
-    // type of client (person or company)
-    private $vps_id;
-
-    // client name
-    private $name;
-
-    // name note
-    private $name_note;
-
-    // personal number or companu tax number 
-    private $lb;
-
-    // client state id
-    private $state_id;
-
-    // client city id
-    private $city_id;
-
-    // client street id
-    private $street_id;
-
-    // home number
-    private $home_number;
-
-    // address note
-    private $address_note;
-
-    // $note je beleška uz klijenta
-    private $note;
-
-    // $created_at_date je datum-vreme kada je klijent kreiran
-    private $created_at_date;
-
-    // $created_at_user_id id usewr-a koji je kreirao klijenta
-    private $created_at_user_id;
-
-    // $modified_at_date je datum-vreme kada je klijent menjan
-    private $modified_at_date;
-
-    // $modified_at_user_id id user-a koji je menjao klijenta
-    private $modified_at_user_id;
-
+    protected $id;
+    protected $vps_id;
+    protected $name;
+    protected $name_note;
+    protected $lb;
+    protected $state_id;
+    protected $city_id;
+    protected $street_id;
+    protected $home_number;
+    protected $address_note;
+    protected $note;
+    protected $created_at_date;
+    protected $created_at_user_id;
+    protected $modified_at_date;
+    protected $modified_at_user_id;
 
     // metoda koja se automatski izvršava pri generisanju objekta Client
     public function __construct() {
@@ -70,6 +40,9 @@ class Client {
         return $vpses;
     }
 
+    public function get(){
+
+    }
 
     // get all states from database
     public function getStates (){
@@ -117,10 +90,8 @@ class Client {
         // sada treba isčitati sva naselja iz tabele city
         $result = $this->conn->query("SELECT id, name FROM city WHERE id = $id ORDER BY name" ) or die(mysqli_error($this->conn));
         $row = $result->fetch_assoc();
-
             $id = $row['id'];
             $city_name = $row['name'];
-
         return $city_name;
     }
 
@@ -353,3 +324,84 @@ class Client {
     }
 
 }
+
+/*
+class Products extends DbConnect {
+
+    protected $id;
+    protected $sku;
+    protected $name;
+    protected $price;
+    protected $type;
+    protected $attributes;
+
+    public function __construct($name) {
+        $this->name = $name;
+    }
+
+    public function select() {
+        $query = "SELECT * FROM products";
+        $result = $this->connect()->query($query);
+
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+        $this->id = $row['Id'];
+        $this->sku = $row['SKU'];
+        $this->name = $row['Name'];
+        $this->price = $row['Price'];
+        $this->type = $row['Type'];
+        $this->attributes = $row['Attributes'];
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getSKU() {
+        return $this->sku;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getPrice() {
+        return $this->price;
+    }
+
+    public function getType() {
+        return $this->type;
+    }
+
+    public function getAttributes() {
+        return $this->attributes;
+    }
+
+}
+
+
+
+PHP
+
+class Person{
+    private $firstname = null;
+    public function setFirstName($aFirstName){
+         $this->firstname = $aFirstName;
+    }
+
+    public function getFirstName(){
+         return $this->firstname;
+    }
+}
+
+$person = new Person();
+
+if(isset($_POST['submit'])){
+    $person->setFirstName($_POST['firstname']);
+}
+HTML
+
+<form action="" method="post">
+    First Name: <input type="text" name="firstname" value="<?php if($person->getFirstName() != null){ echo $person->getFirstName(); } ?>"/>
+    <input type="submit" name="submit" value="Submit" />
+</form>
+*/
