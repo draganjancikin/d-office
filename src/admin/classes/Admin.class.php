@@ -1,9 +1,11 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/config.php';
+require_once '/server/app/classes/DBconnection.class.php';
 /**
- * Description of Admin class
+ * Admin.class.php
+ * 
+ * Admin class
  *
- * @author Dragan Jancikin
+ * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
 class Admin {
 
