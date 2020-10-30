@@ -57,7 +57,7 @@ class Material extends DBconnection {
     // metoda koja daje vrednost poreza
     public function getTax(){
         $results = $this->connection->query("SELECT * FROM preferences WHERE id = '1' ") or die(mysqli_error($this->connection));
-            $row = $result->fetch_assoc();
+            $row = $results->fetch_assoc();
         return $row['tax'];
     }
 
