@@ -24,25 +24,24 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editClient"])) {
     $address_note = basicValidation($_POST["address_note"]);
     $note = basicValidation($_POST["note"]);
 
-    $db = new DB();
-    $connection = $db->connectDB();
-
+    $db = new DBconnection();
+    
     if ($vps_id == 1){
-        $connection->query(" UPDATE client " 
+        $db->connection->query(" UPDATE client " 
                          . " SET vps_id='$vps_id', name='$name', name_note='$name_note', is_supplier='$is_supplier', state_id='$state_id', city_id='$city_id', street_id='$street_id', home_number='$home_number', address_note='$address_note', note='$note', modified_at_date='$date', modified_at_user_id='$user_id' "
-                         . " WHERE id = '$client_id' ") or die(mysqli_error($connection));
+                         . " WHERE id = '$client_id' ") or die(mysqli_error($db->connection));
     }
 
     if ($vps_id == 2){
         if ( $vps_id == 2 AND !isset($_POST["pib"]) ) {
-            $connection->query("UPDATE client "
+            $db->connection->query("UPDATE client "
                             . " SET vps_id='$vps_id', name='$name', name_note='$name_note', is_supplier='$is_supplier', state_id='$state_id', city_id='$city_id', street_id='$street_id', home_number='$home_number', address_note='$address_note', note='$note', modified_at_date='$date', modified_at_user_id='$user_id' "
-                            . " WHERE id = '$client_id' ") or die(mysqli_error($connection));
+                            . " WHERE id = '$client_id' ") or die(mysqli_error($db->connection));
         }else{
             $lb = basicValidation($_POST["pib"]);
-            $connection->query("UPDATE client "
+            $db->connection->query("UPDATE client "
                             . " SET vps_id='$vps_id', name='$name', name_note='$name_note', lb='$lb', is_supplier='$is_supplier', state_id='$state_id', city_id='$city_id', street_id='$street_id', home_number='$home_number', address_note='$address_note', note='$note', modified_at_date='$date', modified_at_user_id='$user_id' "
-                            . " WHERE id = '$client_id' ") or die(mysqli_error($connection));
+                            . " WHERE id = '$client_id' ") or die(mysqli_error($db->connection));
         }
     }
 
@@ -58,12 +57,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editContact"])) {
     $number = basicValidation($_POST["number"]);
     $note = basicValidation($_POST["note"]);
 
-    $db = new DB();
-    $connection = $db->connectDB();
-
-    $connection->query("UPDATE contacts "
+    $db = new DBconnection();
+    
+    $db->connection->query("UPDATE contacts "
                     . " SET type_id='$contacttype_id', number='$number', note='$note' "
-                    . " WHERE id = '$contact_id' ") or die(mysqli_error($connection));
+                    . " WHERE id = '$contact_id' ") or die(mysqli_error($db->connection));
 
     die('<script>location.href = "?view&client_id='.$client_id.'" </script>');
 }

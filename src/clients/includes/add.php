@@ -27,11 +27,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newClient"])) {
     $address_note = basicValidation($_POST["address_note"]);
     $note = basicValidation($_POST["note"]);
 
-    $db = new DB();
-    $connect_db = $db->connectDB();
-
+    $db = new DBconnection();
+    
     // citamo iz baze, iz tabele client sve zapise gde je name=$name
-    $provera_upit = $connect_db->query( "SELECT name FROM client WHERE name='$name'");
+    $provera_upit = $db->connection->query( "SELECT name FROM client WHERE name='$name'");
 
     // count number of rows
     $broj_naziva = mysqli_num_rows($provera_upit);
@@ -42,20 +41,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newClient"])) {
 
         if ($vps_id == 1){
             //MySqli Insert Query
-            $insert_row = $connect_db->query( " INSERT INTO client (vps_id, name, name_note, is_supplier, state_id, city_id, street_id, home_number, address_note, note, created_at_date, created_at_user_id) "
+            $insert_row = $db->connection->query( " INSERT INTO client (vps_id, name, name_note, is_supplier, state_id, city_id, street_id, home_number, address_note, note, created_at_date, created_at_user_id) "
                                             . " VALUES ('$vps_id', '$name', '$name_note', '$is_supplier', '$state_id', '$city_id', '$street_id', '$home_number', '$address_note', '$note', '$date', '$user_id') ") or die(mysqli_error($connect_db));
         } elseif ($vps_id == 2){
             $lb = basicValidation($_POST["pib"]);
             //MySqli Insert Query
-            $insert_row = $connect_db->query( " INSERT INTO client (vps_id, name, name_note, lb, is_supplier, state_id, city_id, street_id, home_number, address_note, note, created_at_date, created_at_user_id) "
+            $insert_row = $db->connection->query( " INSERT INTO client (vps_id, name, name_note, lb, is_supplier, state_id, city_id, street_id, home_number, address_note, note, created_at_date, created_at_user_id) "
                                             . " VALUES ('$vps_id', '$name', '$name_note', '$lb', '$is_supplier', '$state_id', '$city_id', '$street_id', '$home_number', '$address_note', '$note', '$date', '$user_id') ") or die(mysqli_error($connect_db));
         }
 
         if($insert_row){
-            $client_id = $connect_db->insert_id;
+            $client_id = $db->connection->insert_id;
             die('<script>location.href = "?view&client_id='.$client_id.'" </script>');
         }else{
-            die('Error : ('. $connect_db->errno .') '. $connect_db->error);
+            die('Error : ('. $db->connection->errno .') '. $db->connection->error);
         }
 
     }
@@ -70,13 +69,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newContact"])) {
     $number = basicValidation($_POST["number"]);
     $note = basicValidation($_POST["note"]);
 
-    $db = new DB();
-    $connection = $db->connectDB();
+    $db = new DBconnection();
 
-    $connection->query("INSERT INTO contacts (type_id, number, note) VALUES ('$type_id', '$number', '$note') ") or die(mysqli_error($connection));
+    $db->connection->query("INSERT INTO contacts (type_id, number, note) VALUES ('$type_id', '$number', '$note') ") or die(mysqli_error($db->connection));
 
-    $contact_id = $connection->insert_id;
-    $connection->query("INSERT INTO client_contacts (client_id, contact_id) VALUES ('$client_id', '$contact_id') ") or die(mysqli_error($connection));
+    $contact_id = $db->connection->insert_id;
+    $db->connection->query("INSERT INTO client_contacts (client_id, contact_id) VALUES ('$client_id', '$contact_id') ") or die(mysqli_error($db->connection));
 
     die('<script>location.href = "?view&client_id='.$client_id.'" </script>');
 }
@@ -87,12 +85,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["addSCS"])) {
     $action = basicValidation($_POST["action"]);
     $name = basicValidation($_POST["name"]);
 
-    $db = new DB();
-    $connect_db = $db->connectDB();
+    $db = new DBconnection();
 
     // citamo iz baze, iz tabele $action sve zapise gde je name=$name
     $str = 'SELECT * FROM ' . $action . ' WHERE name="' . $name . '" ';
-    $provera_upit = $connect_db->query( $str );
+    $provera_upit = $db->connection->query( $str );
 
     // brojimo koliko ima zapisa
     $broj_naziva = mysqli_num_rows($provera_upit);
@@ -101,7 +98,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["addSCS"])) {
         die('<script>location.href = "?add' . $action . '&alert&ob=2" </script>'); 
     }else{
         $quer = "INSERT INTO ". $action . " (name) VALUES ('" . $name. "') ";
-        $connect_db->query($quer) or die(mysqli_error($connect_db));	
+        $db->connection->query($quer) or die(mysqli_error($connect_db));	
         die('<script>location.href = "/clients/" </script>');	
     }
 
