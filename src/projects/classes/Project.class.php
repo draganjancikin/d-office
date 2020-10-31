@@ -1,35 +1,29 @@
 <?php
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';
 /**
+ * Project.class.php
+ * 
  * Description of Project class
  *
- * @author Dragan Jancikin
+ * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
-
-class Project {
+class Project extends DBconnection {
 
     // $id je id projekta
     public $id;
 
 
-    // metoda koja se automatski izvršava pri generisanju objekta Project
-    public function __construct() {
-        // treba konektovati na bazu preko klase koja vrši konekciju
-        $db = new DB();
-        $this->conn = $db->connectDB();
-    }
-
-
     // metoda koja daje naziv naselja klijenta $client_id
     public function getCityName($client_id){
 
-        $result_client = $this->conn->query("SELECT client.city_id, city.name as city_name "
+        $result = $this->connection->query("SELECT client.city_id, city.name "
                                             . "FROM client "
                                             . "JOIN (city)"
                                             . "ON (client.city_id = city.id )"
-                                            . "WHERE client.id = $client_id ") or die(mysqli_error($this->conn));
-        $row_client = mysqli_fetch_array($result_client);
-            $client_city_name = $row_client['city_name'];
-        return $client_city_name;
+                                            . "WHERE client.id = $client_id ") or die(mysqli_error($this->connection));
+        $row = $result->fetch_assoc();
+
+        return $row['name'];
     }
 
 
@@ -37,20 +31,20 @@ class Project {
     public function setPrId(){
 
         // čitamo iz baze, iz tabele project sve zapise 
-        $result = $this->conn->query("SELECT * FROM project ORDER BY id DESC") or die(mysqli_error($this->conn));
+        $result = $this->connection->query("SELECT * FROM project ORDER BY id DESC") or die(mysqli_error($this->connection));
 
         // brojimo koliko ima zapisa
         $num = mysqli_num_rows($result); // broj kolona u tabeli $table
-        
-        $row = mysqli_fetch_array($result);
+
+        $row = $result->fetch_assoc();
         $last_id = $row['id'];
         $year_last = date('Y', strtotime($row['date']));
-        
-        $row = mysqli_fetch_array($result);
+
+        $row = $result->fetch_assoc();
         $year_before_last = date('Y', strtotime($row['date']));
-        
+
         $pr_id_before_last = $row['pr_id'];
-        
+
         if($num ==0){  // prvi slučaj kada je tabela $table prazna
 
             return die("Tabela project je prazna!");
@@ -71,27 +65,27 @@ class Project {
 
         }
 
-        $this->conn->query("UPDATE project SET pr_id = '$pr_id' WHERE id = '$last_id' ") or die(mysqli_error($this->conn));
+        $this->connection->query("UPDATE project SET pr_id = '$pr_id' WHERE id = '$last_id' ") or die(mysqli_error($this->connection));
     }
 
 
     // metoda koja daje podatke o projektu
     public function getProject ($project_id){
 
-        $result = $this->conn->query("SELECT project.id, project.pr_id, project.date, project.client_id, project.title, project.priority_id, project.status, project.note, project.created_at_user_id, client.name as client_name "
+        $result = $this->connection->query("SELECT project.id, project.pr_id, project.date, project.client_id, project.title, project.priority_id, project.status, project.note, project.created_at_user_id, client.name as client_name "
                                     . "FROM project "
                                     . "JOIN (client) "
                                     . "ON (project.client_id = client.id ) "
-                                    . "WHERE project.id = $project_id ") or die(mysqli_error($this->conn));
-        $row = mysqli_fetch_array($result);
+                                    . "WHERE project.id = $project_id ") or die(mysqli_error($this->connection));
+        $row = $result->fetch_assoc();
             $id = $row['id'];
             // check is project exist
             if(!empty($id)){
                 $created_at_user_id = $row['created_at_user_id'];
-                $result_user_created = $this->conn->query("SELECT admin.username "
+                $result_user_created = $this->connection->query("SELECT admin.username "
                                                       . "FROM admin "
-                                                      . "WHERE admin.id = $created_at_user_id ") or die(mysqli_error($this->conn));
-                $row_user_created = mysqli_fetch_array($result_user_created);
+                                                      . "WHERE admin.id = $created_at_user_id ") or die(mysqli_error($this->connection));
+                $row_user_created = $result_user_created->fetch_assoc();
                 $project = array(
                     'id' => $id,
                     'pr_id' => $row['pr_id'],
@@ -125,12 +119,12 @@ class Project {
         $projects = array();
 
         // sada treba isčitati sve klijente iz tabele client
-        $result = $this->conn->query("SELECT project.id, project.pr_id, project.client_id, project.title, client.name "
+        $result = $this->connection->query("SELECT project.id, project.pr_id, project.client_id, project.title, client.name "
                                     . "FROM project "
                                     . "JOIN (client) "
                                     . "ON (project.client_id = client.id) "
-                                    . "ORDER BY id" ) or die(mysqli_error($this->conn));
-        while($row = mysqli_fetch_array($result)){
+                                    . "ORDER BY id" ) or die(mysqli_error($this->connection));
+        while($row = $result->fetch_assoc()){
             $project = array(
                 'id' => $row['id'],
                 'pr_id' => $row['pr_id'],
@@ -167,12 +161,12 @@ class Project {
         $projects = array();
 
         // listamo sve projekte koji nisu arhivirani, tj, status <> '9'
-        $result = $this->conn->query("SELECT project.id, project.pr_id, project.date, project.title, project.status, project.client_id, client.name "
+        $result = $this->connection->query("SELECT project.id, project.pr_id, project.date, project.title, project.status, project.client_id, client.name "
                                     . "FROM project "
                                     . "JOIN client "
                                     . "ON project.client_id=client.id "
-                                    . "WHERE status <> '9' AND status = $status ") or die(mysqli_error($this->conn));
-        while($row_project = mysqli_fetch_array($result)):
+                                    . "WHERE status <> '9' AND status = $status ") or die(mysqli_error($this->connection));
+        while($row_project = $result->fetch_assoc()):
             $project_date = date('Y-m-d',strtotime($row_project['date']));
             $style = $this->style($project_date);
             $client_id = $row_project['client_id'];
@@ -207,13 +201,13 @@ class Project {
         $citys = array();
 
         // sada treba isčitati sva naselja iz tabele city
-        $result = $this->conn->query("SELECT DISTINCT city.id, city.name as city_name "
+        $result = $this->connection->query("SELECT DISTINCT city.id, city.name as city_name "
                                     . "FROM city "
                                     . "JOIN (client, project) "
                                     . "ON (client.city_id=city.id AND project.client_id=client.id) "
                                     . "WHERE project.status='1'"
-                                    . "ORDER BY city.name") or die(mysqli_error($this->conn));
-        while($row = mysqli_fetch_array($result)){
+                                    . "ORDER BY city.name") or die(mysqli_error($this->connection));
+        while($row = $result->fetch_assoc()){
             $city = array(
                 'id' => $row['id'],
                 'name' => $row['city_name']
@@ -231,12 +225,12 @@ class Project {
         $projects = array();
 
         // listamo sve projekte koji nisu arhivirani, tj, status <> '9' i pripadaju mestu $city_id
-        $result = $this->conn->query("SELECT project.id, project.pr_id, project.title, project.status, project.client_id, client.name "
+        $result = $this->connection->query("SELECT project.id, project.pr_id, project.title, project.status, project.client_id, client.name "
                                     . "FROM project "
                                     . "JOIN client "
                                     . "ON project.client_id=client.id "
-                                    . "WHERE status <> '9' AND status = $status AND city_id = $city_id ") or die(mysqli_error($this->conn));
-        while($row_project = mysqli_fetch_array($result)):
+                                    . "WHERE status <> '9' AND status = $status AND city_id = $city_id ") or die(mysqli_error($this->connection));
+        while($row_project = $result->fetch_assoc()):
             $client_id = $row_project['client_id'];
             // pozivanje funkcije koja vraća naziv naselja za klijenta $client_id
             $client_city_name = self::getCityName($client_id);
@@ -308,13 +302,13 @@ class Project {
 
         // =======================================================================
         // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
-        $result =  $this->conn->query("SELECT project.id, project.pr_id, client.name, city.name as city_name, project.title, project.status, project.client_id "
+        $result =  $this->connection->query("SELECT project.id, project.pr_id, client.name, city.name as city_name, project.title, project.status, project.client_id "
                                     . "FROM client "
                                     . "JOIN (street, city, project)"
                                     . "ON (client.city_id = city.id AND client.street_id = street.id AND project.client_id = client.id )"
                                     . $where
-                                    . "ORDER BY project.pr_id ") or die(mysqli_error($this->conn));
-        while($row = mysqli_fetch_array($result)):
+                                    . "ORDER BY project.pr_id ") or die(mysqli_error($this->connection));
+        while($row = $result->fetch_assoc()):
             $project = array(
                 'id' => $row['id'],
                 'pr_id' => $row['pr_id'],
@@ -337,13 +331,13 @@ class Project {
         $projects = array();
 
         // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
-        $result = $this->conn->query("SELECT project.id, project.pr_id, project.date, project.client_id, client.name, project.status, project.title, project.note "
+        $result = $this->connection->query("SELECT project.id, project.pr_id, project.date, project.client_id, client.name, project.status, project.title, project.note "
                                     ."FROM project "
                                     ."JOIN client "
                                     ."ON (project.client_id = client.id) "
                                     ."WHERE (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%'OR project.title LIKE '%$name%') "
-                                    ."ORDER BY client.name ") or die(mysqli_error($this->conn));
-        while($row = mysqli_fetch_array($result)):
+                                    ."ORDER BY client.name ") or die(mysqli_error($this->connection));
+        while($row = $result->fetch_assoc()):
             $client_id = $row['client_id'];
             // pozivanje funkcije koja vraća naziv naselja za klijenta $client_id
             $client_city_name = self::getCityName($client_id);
@@ -372,13 +366,13 @@ class Project {
         $notes = array();
 
         // izlistavanje iz baze svih beležaka u jednom projektu
-        $result = $this->conn->query("SELECT * FROM project_note WHERE (project_id = $project_id ) "
-                                    . "ORDER BY id, date ") or die(mysqli_error($this->conn));
+        $result = $this->connection->query("SELECT * FROM project_note WHERE (project_id = $project_id ) "
+                                    . "ORDER BY id, date ") or die(mysqli_error($this->connection));
 
-        while($row = mysqli_fetch_array($result)):
+        while($row = $result->fetch_assoc()):
             $user_id = $row['created_at_user_id'];
-            $result_user = $this->conn->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->conn));
-            $row_user = mysqli_fetch_array($result_user);
+            $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
+            $row_user = $result_user->fetch_assoc();
             $note = array(
                 'id' => $row['id'],
                 'date' => $row['date'],
@@ -400,15 +394,15 @@ class Project {
         $project_tasks = array();
 
         // izlistavanje iz baze svih zadataka u jednom projektu
-        $result = $this->conn->query("SELECT * FROM project_task WHERE (project_id = $project_id ) "
-                                         . "ORDER BY date ") or die(mysqli_error($this->conn));
+        $result = $this->connection->query("SELECT * FROM project_task WHERE (project_id = $project_id ) "
+                                         . "ORDER BY date ") or die(mysqli_error($this->connection));
 
-        while($row = mysqli_fetch_array($result)):
+        while($row = $result->fetch_assoc()):
             $id = $row['id'];
             $date = $row['date'];
             $user_id = $row['created_at_user_id'];
-            $result_user = $this->conn->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->conn));
-            $row_user = mysqli_fetch_array($result_user);
+            $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
+            $row_user = $result_user->fetch_assoc();
             $user_name = $row_user['username'];
             $status_id = $row['status_id'];
             $tip_id = $row['tip_id'];
@@ -451,10 +445,10 @@ class Project {
 
             $title = $row['title'];
             $employee_id = $row['employee_id'];
-            $result_employee = $this->conn->query("SELECT * "
+            $result_employee = $this->connection->query("SELECT * "
                                                       . "FROM employee "
-                                                      . "WHERE id = $employee_id") or die(mysqli_error($this->conn));
-            $row_employee = mysqli_fetch_array($result_employee);
+                                                      . "WHERE id = $employee_id") or die(mysqli_error($this->connection));
+            $row_employee = $result_employee->fetch_assoc();
                 $employee_name = $row_employee['name'];
 
             $start = $row['start'];
@@ -486,12 +480,12 @@ class Project {
     // metoda koja daje podatke o zadatku (tasku)
     public function getTask ($task_id){
 
-        $result = $this->conn->query("SELECT * "
+        $result = $this->connection->query("SELECT * "
                                          . "FROM project_task "
                                          // . "JOIN (client) "
                                          // . "ON (project.client_id = client.id ) "
-                                         . "WHERE id = $task_id ") or die(mysqli_error($this->conn));
-        $row = mysqli_fetch_array($result);
+                                         . "WHERE id = $task_id ") or die(mysqli_error($this->connection));
+        $row = $result->fetch_assoc();
             $id = $row['id'];
             if(!empty($id)){
                 $tip_id = $row['tip_id'];
@@ -536,8 +530,8 @@ class Project {
 
                 $date = $row['date'];
                 $user_id = $row['created_at_user_id'];
-                $result_user = $this->conn->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->conn));
-                $row_user = mysqli_fetch_array($result_user);
+                $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
+                $row_user = $result_user->fetch_assoc();
                 $user_name = $row_user['username'];
                 $employee_id = $row['employee_id'];
 
@@ -545,10 +539,10 @@ class Project {
                     $employee_name = "Izaberi izvršioca";
                 }else{
 
-                    $result_employee = $this->conn->query("SELECT * "
+                    $result_employee = $this->connection->query("SELECT * "
                                                           . "FROM employee "
-                                                          . "WHERE id = $employee_id") or die(mysqli_error($this->conn));
-                    $row_employee = mysqli_fetch_array($result_employee);
+                                                          . "WHERE id = $employee_id") or die(mysqli_error($this->connection));
+                    $row_employee = $result_employee->fetch_assoc();
                     $employee_name = $row_employee['name'];
 
                 }
@@ -586,12 +580,12 @@ class Project {
         $task_notes = array();
 
         // izlistavanje iz baze svih beležaka u jednom projektu
-        $result = $this->conn->query("SELECT * FROM project_task_note WHERE (project_task_id = $task_id ) "
-                                         . "ORDER BY date ") or die(mysqli_error($this->conn));
+        $result = $this->connection->query("SELECT * FROM project_task_note WHERE (project_task_id = $task_id ) "
+                                         . "ORDER BY date ") or die(mysqli_error($this->connection));
 
-        while($row = mysqli_fetch_array($result)):
+        while($row = $result->fetch_assoc()):
             $user_id = $row['created_at_user_id'];
-            $result_user = $this->conn->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->conn));
+            $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
             $row_user = mysqli_fetch_array($result_user);
             $task_note = array(
                 'id' => $row['id'],
@@ -613,8 +607,8 @@ class Project {
         $employee = array();
         $employees = array();
 
-        $result = $this->conn->query("SELECT * FROM employee ORDER BY name") or die(mysqli_error($this->conn));
-        while($row = mysqli_fetch_array($result)):
+        $result = $this->connection->query("SELECT * FROM employee ORDER BY name") or die(mysqli_error($this->connection));
+        while($row = $result->fetch_assoc()):
             $employee = array(
                 'id' => $row['id'],
                 'name' => $row['name']
@@ -627,8 +621,8 @@ class Project {
 
 
     public function delNoteFromProjectTask ($project_task_note_id){
-        $this->conn->query("DELETE FROM project_task_note "
-                        . " WHERE id='$project_task_note_id' ") or die(mysqli_error($this->conn));
+        $this->connection->query("DELETE FROM project_task_note "
+                        . " WHERE id='$project_task_note_id' ") or die(mysqli_error($this->connection));
     }
 
 }
