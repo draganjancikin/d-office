@@ -1,5 +1,5 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
  * Client.class.php
  * 
@@ -8,7 +8,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBco
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
 
-class Client extends DBconnection {
+class Client extends DB {
 
     protected $id;
     protected $vps_id;
@@ -39,41 +39,13 @@ class Client extends DBconnection {
 
     // get all states from database
     public function getStates (){
-
-        $state = array();
-        $states = array();
-
-        // sada treba isčitati sve države iz tabele state
-        $result = $this->connection->query("SELECT id, name FROM state ORDER BY name" ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){    
-            $state = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($states, $state);
-        }
-
-        return $states;
+        return $this->get("state");
     }
 
 
     // metoda koja daje sva naselja
     public function getCitys (){
-
-        $city = array();
-        $citys = array();
-
-        // sada treba isčitati sva naselja iz tabele city
-        $result = $this->connection->query("SELECT * FROM city ORDER BY name" ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-            $city = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($citys, $city);
-        }
-
-        return $citys;
+        return $this->get("city");
     }
 
 
@@ -81,7 +53,7 @@ class Client extends DBconnection {
     public function getCity ($id){
 
         // sada treba isčitati sva naselja iz tabele city
-        $result = $this->connection->query("SELECT id, name FROM city WHERE id = $id ORDER BY name" ) or die(mysqli_error($this->connection));
+        $result = $this->connection->query("SELECT * FROM city WHERE id = $id ORDER BY name" ) or die(mysqli_error($this->connection));
         $row = $result->fetch_assoc();
             $id = $row['id'];
             $city_name = $row['name'];
@@ -107,21 +79,7 @@ class Client extends DBconnection {
 
     // metoda koja daje sve ulice
     public function getStreets (){
-
-        $street = array();
-        $streets = array();
-
-        // sada treba isčitati sve ulice iz tabele street
-        $result = $this->connection->query("SELECT id, name FROM street ORDER BY name" ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-            $street = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($streets, $street);
-        }
-
-        return $streets;
+        return $this->get("street");
     }
 
 
