@@ -28,16 +28,16 @@
           </div>
 
           <div class="form-group row">
-            <label for="inputMin" class="col-sm-3 col-form-label text-right">Min</label>
+            <label for="InputMin" class="col-sm-3 col-form-label text-right">Min</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" name="inputMin" value="" placeholder="Minimalna moguća vrednost osobine" />
+              <input type="text" class="form-control" id="inputMin" name="min" value="0" />
             </div>
           </div>
               
           <div class="form-group row">
             <label for="max" class="col-sm-3 col-form-label text-right">Max</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" name="max" value="" placeholder="Maksimalna moguća vrednost osobine" />
+              <input type="text" class="form-control" name="max" value="0" />
             </div>
           </div>
 
