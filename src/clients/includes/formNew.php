@@ -98,7 +98,7 @@
           <input class="form-control" id="disabledInputNum" type="text" name="home_number" maxlength="8" placeholder="Unesite kućni broj">
         </div>
         <div class="col-sm-7">
-          <input class="form-control" id="disabledInputNum" type="text" name="adress_note" placeholder="Unesite belešku uz adresu" >
+          <input class="form-control" id="disabledInputNum" type="text" name="address_note" placeholder="Unesite belešku uz adresu" >
         </div>
       </div>
 
