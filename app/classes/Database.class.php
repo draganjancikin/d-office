@@ -1,5 +1,5 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/config.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/dbConfig.php';
 /**
  * Description of Database class
  *

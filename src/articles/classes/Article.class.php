@@ -1,5 +1,5 @@
 <?php
-require_once '/server/app/classes/DBconnection.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';
 /**
  * Article.class.php
  * 

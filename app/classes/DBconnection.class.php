@@ -1,5 +1,5 @@
 <?php
-require_once '/server/app/config/dbConfig.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/dbConfig.php';
 /**
  * DBconnection.class.php
  * 
