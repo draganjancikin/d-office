@@ -307,7 +307,7 @@ class Pidb extends DBconnection {
         $article = array();
 
         // need: pidb_id, article_id, note, pieces, price, discount, tax, weight, propertys
-        $result = $this->connection->query("SELECT pidb_article.id, pidb_article.pidb_id, pidb_article.article_id, pidb_article.note, pidb_article.pieces, pidb_article.price, pidb_article.discounts, pidb_article.tax, pidb_article.weight, article.name, unit.unit_name "
+        $result = $this->connection->query("SELECT pidb_article.id, pidb_article.pidb_id, pidb_article.article_id, pidb_article.note, pidb_article.pieces, pidb_article.price, pidb_article.discounts, pidb_article.tax, pidb_article.weight, article.name, unit.name as unit_name "
                                          . "FROM pidb_article "
                                          . "JOIN (article, unit) "
                                          . "ON (pidb_article.article_id = article.id AND article.unit_id = unit.id)"
@@ -498,7 +498,7 @@ class Pidb extends DBconnection {
 
         foreach ($articles_id as $article_id):
 
-            $result_article = $this->connection->query("SELECT article.name, article.min_obrac_mera, unit.unit_name "
+            $result_article = $this->connection->query("SELECT article.name, article.min_obrac_mera, unit.name as unit_name "
                                                      . "FROM article "
                                                      . "JOIN (unit) "
                                                      . "ON (article.unit_id = unit.id)"
