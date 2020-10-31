@@ -86,10 +86,10 @@
               <td class="px-1 text-center">
                 <input class="input-box-45" type="text" name="discounts" value="<?php echo number_format($material_on_order['discounts'], 2, ",", "."); ?>" />
               </td>
-              <td class="px-1 input-box-65"><?php echo number_format($material_on_order['tax_base']*$conf->getKurs(), 2, ",", ".") ;?></td>
+              <td class="px-1 input-box-65"><?php echo number_format($material_on_order['tax_base']*$order->getKurs(), 2, ",", ".") ;?></td>
               <td class="px-1 text-center"><?php echo $material_on_order['tax'] ;?></td>
-              <td class="px-1 input-box-45"><?php echo number_format($material_on_order['tax_amount']*$conf->getKurs(), 2, ",", "."); ?></td>
-              <td class="px-1 input-box-65"><?php echo number_format($material_on_order['sub_total']*$conf->getKurs(), 2, ",", ".");?></td>
+              <td class="px-1 input-box-45"><?php echo number_format($material_on_order['tax_amount']*$order->getKurs(), 2, ",", "."); ?></td>
+              <td class="px-1 input-box-65"><?php echo number_format($material_on_order['sub_total']*$order->getKurs(), 2, ",", ".");?></td>
               <td class="px-1 text-center">
                 <button type="submit" class="btn btn-mini btn-outline-success px-1">
                   <i class="fas fa-save" title="Snimi izmenu"> </i>
@@ -112,18 +112,18 @@
         <tr class="table-secondary">
           <td colspan="3" rowspan="4"></td>
           <td colspan="3">ukupno poreska osnovica</td>
-          <td><?php echo number_format($total_tax_base*$conf->getKurs(), 2, ",", ".") ?></td>
+          <td><?php echo number_format($total_tax_base*$order->getKurs(), 2, ",", ".") ?></td>
           <td colspan="5"></td>
         </tr>
         <tr class="table-secondary">
           <td colspan="5">ukupno iznos PDV-a</td>
-          <td><?php echo number_format($total_tax_amount*$conf->getKurs(), 2, ",", ".") ?></td>
+          <td><?php echo number_format($total_tax_amount*$order->getKurs(), 2, ",", ".") ?></td>
           <td colspan="3"></td>
         </tr>
         <tr class="table-secondary">
           <td colspan="5"><strong>UKUPNO ZA UPLATU</strong></td>
           <td><strong>RSD</strong></td>
-          <td><strong><?php echo number_format($total*$conf->getKurs(), 2, ",", ".") ?></strong></td>
+          <td><strong><?php echo number_format($total*$order->getKurs(), 2, ",", ".") ?></strong></td>
           <td colspan="2"></td>
         </tr>
         <tr class="table-secondary">

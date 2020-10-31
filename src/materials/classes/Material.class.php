@@ -1,5 +1,5 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
  * Material.class.php
  * 
@@ -8,7 +8,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBco
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
 
-class Material extends DBconnection {
+class Material extends DB {
 
 
     //metoda koja vraća artikle u zavisnosti od datog pojma u pretrazi

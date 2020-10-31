@@ -7,9 +7,8 @@ if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
     
-    $conf = new Conf();
-    $article = new Article();
     $material = new Material();
+    $article = new Article();
     
     include '../../src/articles/index.php';
 else:

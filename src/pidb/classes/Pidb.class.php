@@ -1,5 +1,5 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
  * Pidb.class.php
  * 
@@ -7,7 +7,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBco
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class Pidb extends DBconnection {
+class Pidb extends DB {
 
     protected $id;
     protected $y_id;

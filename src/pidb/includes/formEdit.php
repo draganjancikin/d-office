@@ -117,10 +117,10 @@ switch ($pidb_data['tip_id']) {
                 <td class="px-1 text-center">
                   <input class="input-box-discounts" type="text" name="discounts" value="<?php echo number_format($article_on_pidb['discounts'], 2, ",", "."); ?>" />
                 </td>
-                <td class="px-1 input-box-65"><?php echo number_format($article_on_pidb['tax_base']*$conf->getKurs(), 2, ",", ".") ;?></td>
+                <td class="px-1 input-box-65"><?php echo number_format($article_on_pidb['tax_base']*$pidb->getKurs(), 2, ",", ".") ;?></td>
                 <td class="px-1 text-center"><?php echo $article_on_pidb['tax'] ;?></td>
-                <td class="px-1 input-box-45"><?php echo number_format($article_on_pidb['tax_amount']*$conf->getKurs(), 2, ",", "."); ?></td>
-                <td class="px-1 input-box-65"><?php echo number_format($article_on_pidb['sub_total']*$conf->getKurs(), 2, ",", ".");?></td>
+                <td class="px-1 input-box-45"><?php echo number_format($article_on_pidb['tax_amount']*$pidb->getKurs(), 2, ",", "."); ?></td>
+                <td class="px-1 input-box-65"><?php echo number_format($article_on_pidb['sub_total']*$pidb->getKurs(), 2, ",", ".");?></td>
                 <td class="px-1 text-center">
                   <button type="submit" class="btn btn-mini btn-outline-success px-1">
                     <i class="fas fa-save" title="Snimi izmenu"> </i>
@@ -147,23 +147,23 @@ switch ($pidb_data['tip_id']) {
             endforeach;
             ?>
             <tr class="table-<?php echo $style; ?>">
-              <td colspan="3" rowspan="6"><td colspan="3">ukupno poreska osnovica</td><td class="text-right"><?php echo number_format($total_tax_base*$conf->getKurs(), 2, ",", ".") ?></td><td colspan="5"></td>
+              <td colspan="3" rowspan="6"><td colspan="3">ukupno poreska osnovica</td><td class="text-right"><?php echo number_format($total_tax_base*$pidb->getKurs(), 2, ",", ".") ?></td><td colspan="5"></td>
             </tr>
             <tr class="table-<?php echo $style; ?>">
-              <td colspan="5">ukupno iznos PDV-a</td><td class="text-right"><?php echo number_format($total_tax_amount*$conf->getKurs(), 2, ",", ".") ?></td><td colspan="3"></td>
+              <td colspan="5">ukupno iznos PDV-a</td><td class="text-right"><?php echo number_format($total_tax_amount*$pidb->getKurs(), 2, ",", ".") ?></td><td colspan="3"></td>
             </tr>
             <tr class="table-<?php echo $style; ?>">
-              <td colspan="5">UKUPNO</td><td class="text-right"></td><td class="text-right""><?php echo number_format($total*$conf->getKurs(), 2, ",", ".") ?></td><td colspan="2"></td>
+              <td colspan="5">UKUPNO</td><td class="text-right"></td><td class="text-right""><?php echo number_format($total*$pidb->getKurs(), 2, ",", ".") ?></td><td colspan="2"></td>
             </tr>
             <tr class="table-<?php echo $style; ?>">
-              <td colspan="5">Avans</td><td class="text-right"></td><td class="text-right""><?php echo  number_format(($avans = $pidb->getAvans($pidb_id))*$conf->getKurs(), 2, ",", ".") ?></td><td colspan="2"></td>
+              <td colspan="5">Avans</td><td class="text-right"></td><td class="text-right""><?php echo  number_format(($avans = $pidb->getAvans($pidb_id))*$article->getKurs(), 2, ",", ".") ?></td><td colspan="2"></td>
             </tr>
             <tr class="table-<?php echo $style; ?>">
-              <td colspan="5"><b>OSTALO ZA UPLATU</b></td><td class="text-right"><b>RSD</b></td><td class="text-right""><b><?php echo number_format(($total-$avans)*$conf->getKurs(), 2, ",", ".") ?></b></td><td colspan="2"></td>
+              <td colspan="5"><b>OSTALO ZA UPLATU</b></td><td class="text-right"><b>RSD</b></td><td class="text-right""><b><?php echo number_format(($total-$avans)*$article->getKurs(), 2, ",", ".") ?></b></td><td colspan="2"></td>
             </tr>
             <!--
             <tr class="table-<?php echo $style; ?>">
-              <td colspan="5"><b>UKUPNO ZA UPLATU</b></td><td class="text-right"><b>RSD</b></td><td class="text-right""><b><?php echo number_format($total*$conf->getKurs(), 2, ",", ".") ?></b></td><td colspan="2"></td>
+              <td colspan="5"><b>UKUPNO ZA UPLATU</b></td><td class="text-right"><b>RSD</b></td><td class="text-right""><b><?php echo number_format($total*$article->getKurs(), 2, ",", ".") ?></b></td><td colspan="2"></td>
             </tr>
             -->
             <tr class="table-<?php echo $style; ?>">

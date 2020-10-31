@@ -26,14 +26,14 @@
         <tbody>
         <?php
         $materials = $material->getLastMaterials(10);
-        foreach ($materials as $material):
+        foreach ($materials as $material_one):
           ?>
           <tr>
-            <td><a href="?view&material_id=<?php echo $material['id'] ?>"><?php echo $material['name'] ?></a></td>
-            <td class="text-center"><?php echo $material['unit_name'] ?></td>
-            <td class="text-right"><?php echo number_format( ($material['price'] * $conf->getKurs() * ($conf->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
-            <td class="text-right"><?php echo number_format( ($material['price'] * ($conf->getTax()/100 + 1) ) , 1, ",", ".") ?></td>
-            <td><?php echo $material['client_name'] ?></td>
+            <td><a href="?view&material_id=<?php echo $material_one['id'] ?>"><?php echo $material_one['name'] ?></a></td>
+            <td class="text-center"><?php echo $material_one['unit_name'] ?></td>
+            <td class="text-right"><?php echo number_format( ($material_one['price'] * $material->getKurs() * ($material->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
+            <td class="text-right"><?php echo number_format( ($material_one['price'] * ($material->getTax()/100 + 1) ) , 1, ",", ".") ?></td>
+            <td><?php echo $material_one['client_name'] ?></td>
           </tr>
           <?php
         endforeach;

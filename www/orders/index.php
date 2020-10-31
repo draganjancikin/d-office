@@ -7,12 +7,11 @@ if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
 
-    $conf = new Conf();
     $client = new Client();
     $contact = new Contact();
     $material = new Material();
-    $order = new Order();
     $project = new Project();
+    $order = new Order();
 
     include '../../src/orders/index.php';
 else:

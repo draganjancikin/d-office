@@ -1,12 +1,13 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';/**
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
+/**
  * Order.class.php
  * 
  * Description of Order class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class Order extends DBconnection {
+class Order extends DB {
 
     //metoda koja daje zadnjih $number narudžbeica upisanih u bazu
     public function getLastOrders($limit){

@@ -42,7 +42,7 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-sm font-weight-bold text-info text-uppercase mb-1">Klijenti</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $conf->numRows('client') ?></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $db->numRows('client') ?></div>
                       </div>
                       <div class="col-auto">
                         <i class="fas fa-user fa-2x text-info"></i>
@@ -61,7 +61,7 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-sm font-weight-bold text-success text-uppercase mb-1">Dokumenti</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $conf->numRows('pidb') ?></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $db->numRows('pidb') ?></div>
                       </div>
                       <div class="col-auto">
                         <i class="fas fa-list fa-2x text-success"></i>
@@ -80,7 +80,7 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-sm font-weight-bold text-danger text-uppercase mb-1">Krojne liste</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $conf->numRows('cutting_fence') ?></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $db->numRows('cutting_fence') ?></div>
                       </div>
                       <div class="col-auto">
                         <i class="fas fa-cut fa-2x text-danger"></i>
@@ -99,7 +99,7 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-sm font-weight-bold text-success text-uppercase mb-1">Materijal</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $conf->numRows('material') ?></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $db->numRows('material') ?></div>
                       </div>
                       <div class="col-auto">
                         <i class="fas fa-inbox fa-2x text-success"></i>
@@ -118,7 +118,7 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-sm font-weight-bold text-primary text-uppercase mb-1">Nabavka</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $conf->numRows('orderm') ?></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $db->numRows('orderm') ?></div>
                       </div>
                       <div class="col-auto">
                         <i class="fas fa-th fa-2x text-primary"></i>
@@ -137,7 +137,7 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-sm font-weight-bold text-warning text-uppercase mb-1">Proizvodi</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $conf->numRows('article') ?></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $db->numRows('article') ?></div>
                       </div>
                       <div class="col-auto">
                         <i class="fas fa-tag fa-2x text-warning"></i>
@@ -176,7 +176,7 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-sm font-weight-bold text-warning text-uppercase mb-1">Projekti</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $conf->numRows('project') ?></div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $db->numRows('project') ?></div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-project-diagram fa-2x text-warning"></i>

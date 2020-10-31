@@ -4,7 +4,6 @@ $version = "RolOffice 4.2.7";
 $root = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . "/../";
 
 // required classes
-require_once $root . 'app/classes/Conf.class.php';
 require_once $root . 'src/clients/classes/Client.class.php';
 require_once $root . 'src/clients/classes/Contact.class.php';
 require_once $root . 'src/pidb/classes/Pidb.class.php';

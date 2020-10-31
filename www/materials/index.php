@@ -6,8 +6,7 @@ if(isset($_SESSION['username'])):
     
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
-    
-    $conf = new Conf();
+
     $client = new Client();
     $material = new Material();
 

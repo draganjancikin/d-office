@@ -6,12 +6,11 @@ if(isset($_SESSION['username'])):
     
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
-    
-    $conf = new Conf();
+
     $client = new Client();
     $contact = new Contact();
-    $pidb = new Pidb();
     $article = new Article();
+    $pidb = new Pidb();
         
     include '../../src/pidb/index.php';
 else:

@@ -7,11 +7,10 @@ if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
     
-    $conf = new Conf();
     $client = new Client();
-    $cutting = new Cutting();
     $pidb = new Pidb();
     $article = new Article();
+    $cutting = new Cutting();
 
     include '../../src/cutting/index.php';
 else:

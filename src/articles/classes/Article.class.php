@@ -1,14 +1,14 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
  * Article.class.php
  * 
  * Article class
  *
- * @author Dragan Jancikin <dragan.jancikin@gamil.com>
+ * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
 
-class Article extends DBconnection {
+class Article extends DB {
 
     protected $id;
     protected $group_id;
@@ -20,43 +20,15 @@ class Article extends DBconnection {
 
     // metoda koja daje sve jedinice mere
     public function getUnits (){
-    
-        $unit = array();
-        $units = array();
-
-        // sada treba isčitati sve klijente iz tabele client
-        $result = $this->connection->query("SELECT * FROM unit ORDER BY name" ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-            $unit = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($units, $unit);
-        }
-
-        return $units;
+        return $this->get("unit");
     }
-
+    
 
     // metoda koja daje sve grupe artikala
     public function getArticleGroups (){
-
-        $group = array();
-        $groups = array();
-
-        // sada treba isčitati sve grupe artikala
-        $result = $this->connection->query("SELECT * FROM article_group " ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-            $group = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($groups, $group);
-        }
-
-        return $groups;
+        return $this->get("article_group");
     }
-
+    
 
     // metoda koja daje grupu artikala
     public function getArticleGroupById ($id){
@@ -86,22 +58,9 @@ class Article extends DBconnection {
 
     // metoda koja daje sve artiklove
     public function getArticles (){
-
-        $article = array();
-        $articles = array();
-
-        $result = $this->connection->query("SELECT id, name FROM article ORDER BY name"  ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-            $article = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($articles, $article);
-        }
-
-        return $articles;
+        return $this->get("article");
     }
-
+    
 
     // metoda koja daje sve artiklove 
     public function getArticlesByGroup ($group_id){
@@ -191,25 +150,10 @@ class Article extends DBconnection {
 
 
     // metoda koja vraća property-je
-    public function getPropertys(){
-
-        $property = array();
-        $propertys = array();
-
-        // sada treba isčitati property-je  artikla
-        $result = $this->connection->query("SELECT id, name "
-                                         . "FROM property "  ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-            $property = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($propertys, $property);
-        }
-
-        return $propertys;
+    public function getPropertys (){
+        return $this->get("property");
     }
-
+    
 
     // metoda koja vraća property-je artikla, ako postoje, na osnovu article_id-a
     public function getPropertyById($article_id){

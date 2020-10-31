@@ -6,13 +6,12 @@ if(isset($_SESSION['username'])):
     
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
-    
-    $conf = new Conf();
+
     $client = new Client();
-    $project = new Project();
     $contact = new Contact();
     $order = new Order();
     $pidb = new Pidb();
+    $project = new Project();
     
     include '../../src/projects/index.php';
 else:
