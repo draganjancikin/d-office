@@ -46,8 +46,7 @@ class Contact extends DB {
 
     // metoda koja daje sve tipove kontakata
     public function getContactTypes (){
-        // TODO: ORDER BY id
-        return $this->get("contacttypes");
+        return $this->get("contacttypes", "id");
     }
     
 
