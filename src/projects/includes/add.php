@@ -13,12 +13,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['add']) ) {
   // $note = htmlspecialchars($_POST['note']);
   $note = "";
 
-  $db = new DB();
-  $connect_db = $db->connectDB();
+  $db = new DBconnection();
     
-  $connect_db->query("INSERT INTO project (date, created_at_user_id, client_id, title, priority_id, note, status) VALUES ( '$date','$user_id', '$client_id', '$title', '$priority_id', '$note', '1' )") or die(mysqli_error($connect_db));
+  $db->connection->query("INSERT INTO project (date, created_at_user_id, client_id, title, priority_id, note, status) VALUES ( '$date','$user_id', '$client_id', '$title', '$priority_id', '$note', '1' )") or die(mysqli_error($db->connection));
     
-  $project_id = $connect_db->insert_id;
+  $project_id = $db->connection->insert_id;
     
   $pr_id = $project->setPrId($project_id);
 
@@ -42,10 +41,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addNote']) ) {
     
   $note = htmlspecialchars($_POST['note']);
     
-  $db = new DB();
-  $connect_db = $db->connectDB();
+  $db = new DBconnection();
     
-  $connect_db->query("INSERT INTO project_note (date, project_id, created_at_user_id, note) VALUES ( '$date','$project_id', '$user_id', '$note' )") or die(mysqli_error($connect_db));
+  $db->connection->query("INSERT INTO project_note (date, project_id, created_at_user_id, note) VALUES ( '$date','$project_id', '$user_id', '$note' )") or die(mysqli_error($db->connection));
     
   // ovde link da vodi na pregled projekta
   die('<script>location.href = "?view&project_id=' .$project_id. '" </script>');
@@ -63,10 +61,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addTask']) ) {
   $tip_id = $_POST["tip_id"];
   $title = htmlspecialchars($_POST['title']);
 
-  $db = new DB();
-  $connect_db = $db->connectDB();
+  $db = new DBconnection();
     
-  $connect_db->query("INSERT INTO project_task (date, project_id, created_at_user_id, tip_id, status_id, title) VALUES ( '$date','$project_id', '$user_id', '$tip_id', '$status_id', '$title' )") or die(mysqli_error($connect_db));
+  $db->connection->query("INSERT INTO project_task (date, project_id, created_at_user_id, tip_id, status_id, title) VALUES ( '$date','$project_id', '$user_id', '$tip_id', '$status_id', '$title' )") or die(mysqli_error($db->connection));
     
   // ovde link da vodi na pregled projekta
   die('<script>location.href = "?view&project_id=' .$project_id. '" </script>');
@@ -82,10 +79,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addTaskNote']) ) {
     
   $note = htmlspecialchars($_POST['note']);
     
-  $db = new DB();
-  $connect_db = $db->connectDB();
+  $db = new DBconnection();
     
-  $connect_db->query("INSERT INTO project_task_note (date, project_task_id, created_at_user_id, note) VALUES ( '$date','$task_id', '$user_id', '$note' )") or die(mysqli_error($connect_db));
+  $db->connection->query("INSERT INTO project_task_note (date, project_task_id, created_at_user_id, note) VALUES ( '$date','$task_id', '$user_id', '$note' )") or die(mysqli_error($db->connection));
     
   // ovde link da vodi na pregled zadatka
   die('<script>location.href = "?editTask&task_id=' .$task_id. '&project_id=' .$project_id. '" </script>');
