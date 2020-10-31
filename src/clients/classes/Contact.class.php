@@ -1,5 +1,5 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
  * Contact.class.php
  * 
@@ -7,7 +7,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBco
  * 
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class Contact extends DBconnection {
+class Contact extends DB {
 
     protected $id;
     protected $client_id;
@@ -30,23 +30,14 @@ class Contact extends DBconnection {
                                                 . "WHERE client_contacts.client_id = $id "
                                                 . "ORDER BY contacttypes.id ") or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()):
-
-            $id = $row['contact_id'];
-            $type_id = $row['type_id'];
-            $type_name = $row['name'];
-            $number = $row['number'];
-            $note = $row['note'];
-
             $contact = array(
-                'id' => $id,
-                'type_id' => $type_id,
-                'type_name' => $type_name,
-                'number' => $number,
-                'note' => $note
+                'id' => $row['contact_id'],
+                'type_id' => $row['type_id'],
+                'type_name' => $row['name'],
+                'number' => $row['number'],
+                'note' => $row['note']
             );
- 
             array_push($contacts, $contact);
- 
         endwhile;
 
         return $contacts;
@@ -55,28 +46,10 @@ class Contact extends DBconnection {
 
     // metoda koja daje sve tipove kontakata
     public function getContactTypes (){
-
-        $type = array();
-        $types = array();
-
-        // sada treba isčitati sva naselja iz tabele city
-        $result = $this->connection->query("SELECT id, name FROM contacttypes ORDER BY id" ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-
-            $id = $row['id'];
-            $name = $row['name'];
-
-            $type = array(
-                'id' => $id,
-                'name' => $name
-            );
- 
-            array_push($types, $type);
-        }
-
-        return $types;
+        // TODO: ORDER BY id
+        return $this->get("contacttypes");
     }
-
+    
 
     // metoda koja briše kontakt
     public function delContact($client_id, $contact_id){

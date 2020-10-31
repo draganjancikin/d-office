@@ -1,5 +1,5 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
  * Project.class.php
  * 
@@ -7,7 +7,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBco
  *
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
-class Project extends DBconnection {
+class Project extends DB {
 
     // $id je id projekta
     public $id;
@@ -603,22 +603,9 @@ class Project extends DBconnection {
 
     // metoda koja daje zaposlene
     public function getEmployees (){
-
-        $employee = array();
-        $employees = array();
-
-        $result = $this->connection->query("SELECT * FROM employee ORDER BY name") or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()):
-            $employee = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($employees, $employee);
-        endwhile;
-
-        return $employees;
+        return $this->get("employee");
     }
-
+    
 
     public function delNoteFromProjectTask ($project_task_note_id){
         $this->connection->query("DELETE FROM project_task_note "

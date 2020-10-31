@@ -54,14 +54,6 @@ class Material extends DB {
     }
 
 
-    // metoda koja daje vrednost poreza
-    public function getTax(){
-        $results = $this->connection->query("SELECT * FROM preferences WHERE id = '1' ") or die(mysqli_error($this->connection));
-            $row = $results->fetch_assoc();
-        return $row['tax'];
-    }
-
-
     //metoda koja vraća podatke o materialu 
     public function getMaterial($material_id){
 
@@ -107,23 +99,9 @@ class Material extends DB {
 
     // metoda koja daje sve jedinicec mere
     public function getUnits (){
-
-        $unit = array();
-        $units = array();
-
-        // sada treba isčitati sve klijente iz tabele client
-        $result = $this->connection->query("SELECT * FROM unit ORDER BY name" ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-            $unit = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($units, $unit);
-        }
-
-        return $units;
+        return $this->get("unit");
     }
-
+    
 
     //metoda koja daje zadnjih $number materijala upisanih u bazu
     public function getLastMaterials($limit){
@@ -239,25 +217,10 @@ class Material extends DB {
 
 
     // metoda koja vraća property-je
-    public function getPropertys(){
-
-        $property = array();
-        $propertys = array();
-
-        // sada treba isčitati property-je  artikla
-        $result = $this->connection->query("SELECT id, name "
-                                         . "FROM property "  ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-            $property = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($propertys, $property);
-        }
-
-        return $propertys;
+    public function getPropertys (){
+        return $this->get("property");
     }
-
+    
 
     // metoda koja briše osobinu materijala
     public function delMaterialProperty($material_id, $property_id) {

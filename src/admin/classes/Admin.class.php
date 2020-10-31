@@ -9,11 +9,10 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBco
  */
 class Admin {
 
-    // metoda koja daje sve jedinicec mere
     public function baseBackup (){
         $dumpfile = "roloffice_" . date("Y-m-d_H-i-s") . ".sql";
 
-        // passthru("C:/xampp/mysql/bin/mysqldump --opt --host=DB_SERVER --user=DB_USERNAME --password=DB_PASSWORD DB_NAME > D:/Documents/BackUps/MYSQL/$dumpfile");    
+        // passthru("C:/xampp/mysql/bin/mysqldump --opt --host=DB_SERVER --user=DB_USERNAME --password=DB_PASSWORD DB_NAME > D:/Documents/BackUps/MYSQL/$dumpfile");
 
         $command = "C:/xampp/mysql/bin/mysqldump --opt --host=" .DB_SERVER. " --user=" .DB_USERNAME. " --password=" .DB_PASSWORD. " "  .DB_NAME. " > D:/Documents/BackUps/MYSQL/" .$dumpfile;
 
@@ -30,9 +29,8 @@ class Admin {
                 Backup baze je izvšen u fajl: <br />D:/Documents/BackUps/MYSQL/'.$dumpfile.'
             </div>
             ';
-        
-        // unnecessery line
-        // passthru("tail -1 $dumpfile");
+
+        passthru("tail -1 $dumpfile");
     }
 
 }

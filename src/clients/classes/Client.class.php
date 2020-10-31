@@ -286,9 +286,7 @@ class Products extends DbConnect {
     protected $type;
     protected $attributes;
 
-    public function __construct($name) {
-        $this->name = $name;
-    }
+    
 
     public function select() {
         $query = "SELECT * FROM products";

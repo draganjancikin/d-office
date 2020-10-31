@@ -31,35 +31,35 @@
           <div class="form-group row">
             <label for="inputWidth" class="col-sm-4 col-form-label text-right">Širina polja: </label>
             <div class="col-sm-3"> 
-              <input class="form-control" id="inputWidth" type="text" name="width">
+              <input class="form-control" id="inputWidth" type="text" name="width" value="0">
             </div>
           </div>
          
           <div class="form-group row">
             <label for="inputHeight" class="col-sm-4 col-form-label text-right">Visina polja: </label>
             <div class="col-sm-3"> 
-              <input class="form-control" id="inputHeight" type="text" name="height">
+              <input class="form-control" id="inputHeight" type="text" name="height" value="0">
             </div>
           </div>
         
           <div class="form-group row">
             <label for="inputMidHeight" class="col-sm-4 col-form-label text-right">Visina sredine polja: </label>
             <div class="col-sm-3"> 
-              <input class="form-control" id="inputMidHeight" type="text" name="mid_height">
+              <input class="form-control" id="inputMidHeight" type="text" name="mid_height" value="0">
             </div>
           </div>
 
           <div class="form-group row">
             <label for="inputSpace" class="col-sm-4 col-form-label text-right">Razmak medju letvicama: </label>
             <div class="col-sm-2"> 
-              <input class="form-control" id="inputSpace" type="text" name="space">
+              <input class="form-control" id="inputSpace" type="text" name="space" value="0">
             </div>
           </div>
       
           <div class="form-group row">
             <label for="inputFieldNumber" class="col-sm-4 col-form-label text-right"> Broj polja: </label>
             <div class="col-sm-2"> 
-              <input class="form-control" id="inputFieldNumber" type="text" name="field_number">
+              <input class="form-control" id="inputFieldNumber" type="text" name="field_number" value="0">
             </div>
           </div>
     

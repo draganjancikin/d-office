@@ -5,8 +5,13 @@ require_once 'DBconnection.class.php';
  */
 class DB extends DBconnection {
 
+    /**
+     * @param $table
+     */
     protected function get ($table){
         
+        // TODO: add to options ORDER BY ...
+
         $tableRow = array();
         $tableRows = array();
 

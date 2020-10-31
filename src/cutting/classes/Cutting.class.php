@@ -1,5 +1,5 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
  * Cutting.class.php
  * 
@@ -7,7 +7,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBco
  *
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
-class Cutting extends DBconnection {
+class Cutting extends DB {
 
 
     //metoda koja daje zadnjih $number materijala upisanih u bazu
@@ -356,21 +356,7 @@ class Cutting extends DBconnection {
 
     // metoda koja daje sve modele
     public function getFenceModels (){
-
-        $type = array();
-        $types = array();
-
-        // sada treba isčitati sva naselja iz tabele city
-        $result = mysqli_query($this->connection, "SELECT id, name FROM cutting_fence_model ORDER BY id" ) or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)){
-            $type = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($types, $type);
-        }
-
-        return $types;
+        return $this->get("cutting_fence_model");
     }
-
+    
 }

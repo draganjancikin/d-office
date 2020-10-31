@@ -204,16 +204,6 @@ class Pidb extends DB {
     }
 
 
-    // metoda koja daje vrednost poreza
-    public function getTax(){
-
-        $results = $this->connection->query("SELECT * FROM preferences WHERE id = '1' ") or die(mysqli_error($this->connection));
-            $row = mysqli_fetch_array($results);
-            $tax = $row['tax'];
-        return $tax;
-    }
-
-
     // metoda koja daje artikle dokumenta
     public function getArticlesOnPidb($pidb_id){
 
