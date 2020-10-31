@@ -7,10 +7,9 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delCuttingArticle"])) {
     $cutting_fence_id = htmlspecialchars($_GET['cutting_fence_id']);
     $cutting_fence_article_id = htmlspecialchars($_GET['cutting_fence_article_id']);
 
-    $db = new DB();
-    $connection = $db->connectDB();
+    $db = new DBconnection();
 
-    $connection->query("DELETE FROM cutting_fence_article WHERE id='$cutting_fence_article_id' ") or die(mysqli_error($connection));
+    $db->connection->query("DELETE FROM cutting_fence_article WHERE id='$cutting_fence_article_id' ") or die(mysqli_error($db->connection));
 
     die('<script>location.href = "?edit&cutting_id='.$cutting_fence_id.'" </script>');
 }
@@ -21,18 +20,17 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delCutting"])) {
 
     $cutting_id = htmlspecialchars($_GET["cutting_id"]);
 
-    $db = new DB();
-    $connection = $db->connectDB();
+    $db = new DBconnection();
 
     // first: delete articles from cutting_fence_article
-    $result_article = $connection->query("SELECT * FROM cutting_fence_article WHERE cutting_fence_id='$cutting_id'") or die(mysqli_error($connection));
+    $result_article = $db->connection->query("SELECT * FROM cutting_fence_article WHERE cutting_fence_id='$cutting_id'") or die(mysqli_error($db->connection));
 
     while($row_article = mysqli_fetch_array($result_article)){
-        $connection->query("DELETE FROM cutting_fence_article WHERE cutting_fence_id='$cutting_id' ") or die(mysqli_error($connection));
+        $db->connection->query("DELETE FROM cutting_fence_article WHERE cutting_fence_id='$cutting_id' ") or die(mysqli_error($db->connection));
     }
 
     // second: delete cutting
-    $connection->query("DELETE FROM cutting_fence WHERE id='$cutting_id' ") or die(mysqli_error($connection));
+    $db->connection->query("DELETE FROM cutting_fence WHERE id='$cutting_id' ") or die(mysqli_error($db->connection));
 
     die('<script>location.href = "?name=&search=" </script>');
 }

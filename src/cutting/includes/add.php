@@ -6,13 +6,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newCutting"]) ) {
     $date = date('Y-m-d h:i:s');
     $client_id = htmlspecialchars($_POST['client_id']);
     
-    $db = new DB();
-    $connect_db = $db->connectDB();
+    $db = new DBconnection();
     
-    $connect_db->query(" INSERT INTO cutting_fence ( date, client_id) " 
-                     . " VALUES ( '$date', '$client_id')") or die(mysqli_error($connect_db));
+    $db->connection->query(" INSERT INTO cutting_fence ( date, client_id) " 
+                     . " VALUES ( '$date', '$client_id')") or die(mysqli_error($db->connection));
 
-    $cutting_id = $connect_db->insert_id;
+    $cutting_id = $db->connection->insert_id;
     $c_id = $cutting->setCid();
     
     die('<script>location.href = "?view&cutting_id='.$cutting_id.'" </script>');
@@ -37,11 +36,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleToCutting"]))
     $space = htmlspecialchars($_POST['space']);
     $field_number = htmlspecialchars($_POST['field_number']);
     
-    $db = new DB();
-    $connect_db = $db->connectDB();
+    $db = new DBconnection();
     
-    $connect_db->query(" INSERT INTO cutting_fence_article (cutting_fence_id, cutting_fence_model_id, width, height, mid_height, space, field_number) " 
-                     . " VALUES ('$cutting_id', '$cutting_fence_model_id', '$width', '$height', '$mid_height', '$space', '$field_number')") or die(mysqli_error($connect_db));
+    $db->connection->query(" INSERT INTO cutting_fence_article (cutting_fence_id, cutting_fence_model_id, width, height, mid_height, space, field_number) " 
+                     . " VALUES ('$cutting_id', '$cutting_fence_model_id', '$width', '$height', '$mid_height', '$space', '$field_number')") or die(mysqli_error($db->connection));
     
     die('<script>location.href = "?edit&cutting_id='.$cutting_id.'" </script>');
 }
