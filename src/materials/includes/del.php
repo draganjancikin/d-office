@@ -18,8 +18,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delProperty"]) ) {
     $material_id = htmlspecialchars($_GET["material_id"]);
     $property_id = htmlspecialchars($_GET["property_id"]);
 
-    $db = new DB();
-    $connection = $db->connectDB();
+    // $db = new DBconnection();
 
     $material->delMaterialProperty($material_id, $property_id);
 
