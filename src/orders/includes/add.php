@@ -10,18 +10,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addOrder"]) ) {
     $title = htmlspecialchars($_POST["title"]);
     $note = htmlspecialchars($_POST["note"]);
   
-    $db = new DB();
-    $conn = $db->connectDB();
+    $db = new DBconnection();
+
     $sql = "INSERT INTO orderm (date, supplier_id, project_id, title, note ) VALUES ( '$date', '$supplier_id', '$project_id', '$title', '$note' )";
     
-    if ($conn->query($sql) === TRUE) {
+    if ($db->connection->query($sql) === TRUE) {
         // echo "New record created successfully";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo "Error: " . $sql . "<br>" . $db->connection->error;
         exit();
     }
         
-    $order_id = $conn->insert_id;
+    $order_id = $db->connection->insert_id;
     $o_id = $order->setOid();
 
     die('<script>location.href = "?view&order_id=' .$order_id. '" </script>');
@@ -40,22 +40,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addMaterialInOrder"]) )
     $price = $material->getPrice($material_id);
     $tax = $material->getTax();
 
-    $db = new DB();
-    $connection = $db->connectDB();
+    $db = new DBconnection();
 
-    $connection->query("INSERT INTO orderm_material (order_id, material_id, note, pieces, price, tax) " 
-                    . " VALUES ('$order_id', '$material_id', '$note', '$pieces', '$price', '$tax' )") or die(mysqli_error($connection));
+    $db->connection->query("INSERT INTO orderm_material (order_id, material_id, note, pieces, price, tax) " 
+                    . " VALUES ('$order_id', '$material_id', '$note', '$pieces', '$price', '$tax' )") or die(mysqli_error($db->connection));
 
     // treba nam i pidb_article_id (id artikla u pidb dokumentu) to je u stvari zadnji unos
-    $orderm_material_id = $connection->insert_id;;
+    $orderm_material_id = $db->connection->insert_id;;
 
     //insert property-a mateijala u tabelu orderm_article_property
-    $propertys = $connection->query( "SELECT * FROM material_property WHERE material_id ='$material_id'");
+    $propertys = $db->connection->query( "SELECT * FROM material_property WHERE material_id ='$material_id'");
     while($row_property = mysqli_fetch_array($propertys)){
         $property_id = $row_property['property_id'];
         $quantity = 0;
-        $connection->query("INSERT INTO orderm_material_property (orderm_material_id, property_id, quantity) " 
-                        . " VALUES ('$orderm_material_id', '$property_id', '$quantity' )") or die(mysqli_error($connection));
+        $db->connection->query("INSERT INTO orderm_material_property (orderm_material_id, property_id, quantity) " 
+                        . " VALUES ('$orderm_material_id', '$property_id', '$quantity' )") or die(mysqli_error($db->connection));
     }
 
     die('<script>location.href = "?edit&order_id=' .$order_id. '" </script>');

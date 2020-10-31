@@ -18,12 +18,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editOrder"]) ) {
 
     $note = htmlspecialchars($_POST["note"]);
     
-    $db = new DB();
-    $connection = $db->connectDB();
+    $db = new DBconnection();
 
-    $connection->query(" UPDATE orderm " 
+    $db->connection->query(" UPDATE orderm " 
                      . " SET project_id ='$project_id', title='$title', status='$status', is_archived='$is_archived', note='$note' " 
-                     . " WHERE id = '$order_id' ") or die(mysqli_error($connection));
+                     . " WHERE id = '$order_id' ") or die(mysqli_error($db->connection));
 
     die('<script>location.href = "?view&order_id='.$order_id.'" </script>');
 }
@@ -47,12 +46,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialInOrder"]) 
     $discounts_1 = htmlspecialchars($_POST["discounts"]);
     $discounts = str_replace(",", ".", $discounts_1);
     
-    $db = new DB();
-    $connection = $db->connectDB();
+    $db = new DBconnection();
     
-    $connection->query("UPDATE orderm_material " 
+    $db->connection->query("UPDATE orderm_material " 
                     . " SET material_id='$material_id', note='$note', pieces='$pieces', price='$price', discounts='$discounts' " 
-                    . " WHERE id = '$orderm_material_id' ") or die(mysqli_error($connection));
+                    . " WHERE id = '$orderm_material_id' ") or die(mysqli_error($db->connection));
     
     // sa da treba uraditi i update property-a u tabeli pidb_article_property
     // 
@@ -60,11 +58,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialInOrder"]) 
     // u tabelu pidb_article_property i da uradimo POST za svaki, naravno u svakom prolazu
     // petlje treba da promenljiva ima naziv koji odgovara property-u
     
-    $result_propertys = $connection->query("SELECT orderm_material_property.id, property.name "
+    $result_propertys = $db->connection->query("SELECT orderm_material_property.id, property.name "
                                          . "FROM orderm_material_property "
                                          . "JOIN (orderm_material, property)"
                                          . "ON (orderm_material_property.orderm_material_id = orderm_material.id AND orderm_material_property.property_id = property.id) "
-                                         . "WHERE orderm_material.id = $orderm_material_id ") or die(mysqli_error($connection));
+                                         . "WHERE orderm_material.id = $orderm_material_id ") or die(mysqli_error($db->connection));
     
     while($row_property = mysqli_fetch_array($result_propertys)){
         
@@ -74,8 +72,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialInOrder"]) 
         // ${$property_name} =  htmlspecialchars($_POST["$property_name"]);
         ${$property_name} =  str_replace(",", ".", htmlspecialchars($_POST["$property_name"]));
         
-        $connection->query("UPDATE orderm_material_property " 
-                        . " SET quantity='${$property_name}'  WHERE id = '$id' ") or die(mysqli_error($connection));
+        $db->connection->query("UPDATE orderm_material_property " 
+                        . " SET quantity='${$property_name}'  WHERE id = '$id' ") or die(mysqli_error($db->connection));
         
     }
     
