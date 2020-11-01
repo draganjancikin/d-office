@@ -36,7 +36,7 @@ else:
                         $contacts = $contact->getContactsById($project_data['client_id']);
                         foreach ($contacts as $contact):
                             ?>
-                            <dt class="col-sm-4 col-md-3"><?php echo $contact['type_name']; ?></dt>
+                            <dt class="col-sm-4 col-md-3"><?php echo $contact['name']; ?></dt>
                             <dd class="col-sm-8 col-md-9"><?php echo $contact['number'] . ($contact['note']=="" ? "" : ", " .$contact['note']); ?></dd>
                             <?php
                         endforeach;
