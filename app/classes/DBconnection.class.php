@@ -1,9 +1,7 @@
 <?php
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/dbConfig.php';
 /**
- * DBconnection.class.php
- * 
- * Database connection class
+ * Connect to database
  * 
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
@@ -23,7 +21,6 @@ class DBconnection {
             exit();
         }
 
-        // echo "The connection is established!" . "<br>";
         return $conn;
     }
 
