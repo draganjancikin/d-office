@@ -1,26 +1,3 @@
-<!-- 
-<form method="get">
-            
-  <div class="form-group row">
-    <div class="col-sm-5">
-      <select class="form-control" name="city_id">
-        <option value="">Izaberi naselje</option>
-        <?php
-        // $citys = $project->getCitysByActiveProject();
-        // foreach ($citys as $city) {
-            // echo '<option value="' .$city['id']. '">' .$city['name']. '</option>';
-        // }
-        ?>
-      </select>
-    </div>
-        
-    <div class="col-sm-5">
-      <button type="submit" class="btn btn-sm btn-outline-secondary">Prikaži projekte</button>
-    </div>
-  </div>             
-        
-</form>
-    -->
 <?php
 if(!$client->checkCity($city_id)){
     $city_name = '

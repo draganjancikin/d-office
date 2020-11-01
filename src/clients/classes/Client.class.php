@@ -1,13 +1,10 @@
 <?php
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
- * Client.class.php
- * 
  * Client class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-
 class Client extends DB {
 
     protected $id;
@@ -49,13 +46,9 @@ class Client extends DB {
     }
 
 
-    // metoda koja daje naselje
     public function getCity ($id){
-
-        // sada treba isčitati sva naselja iz tabele city
         $result = $this->connection->query("SELECT * FROM city WHERE id = $id ORDER BY name" ) or die(mysqli_error($this->connection));
         $row = $result->fetch_assoc();
-            $id = $row['id'];
             $city_name = $row['name'];
         return $city_name;
     }
