@@ -1,11 +1,11 @@
 <?php
-if(!$client->checkCity($city_id)){
-    $city_name = '
-    <spam class="text-warning"> Traženo mesto ne postoji!</spam>
-    ';
+if(!$client->isExistCity($city_id)){
+    $city_name = '<spam class="text-warning"> Traženo mesto ne postoji!</spam>';
 } else {
     $city_name = $client->getCity($city_id);
+    $city_name = $city_name['name'];
 }
+
 ?>
 
 <div class="card mb-4">

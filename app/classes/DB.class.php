@@ -8,16 +8,19 @@ require_once 'DBconnection.class.php';
 class DB extends DBconnection {
 
     /**
-     * Method that getting all rows FROM $table ORDER BY $order_by
+     * Method that SELECT $columns and getting all rows FROM $table WHERE $filter 
+     * ORDER BY $sort
      * 
      * @param string $table table name
-     * @param string $order_by optional clause for order data
+     * @param string $columns optional clause wich columns selecting
+     * @param string $sort optional clause for sort data
+     * @param string $filter optional clause for filtering data
      * 
-     * @return array
+     * @return array aray of arays
      * 
      * @author Dragan Jancikin <dragan.jancikin@gmail.com>
      */
-    protected function get(string $table, string $order_by = "name") {
+    protected function get(string $table, string $columns="*", $sort = NULL, $filter = NULL) {
         
         // ------------- list of arguments -----------------------
         // extract(func_get_args(), EXTR_PREFIX_ALL, "data");
@@ -26,13 +29,18 @@ class DB extends DBconnection {
         // for ($i = 0; $i < $numargs; $i++) {
         //    echo "Argument $i is: " . $arg_list[$i] . "<br />\n";
         // }
+
+        $select = "SELECT $columns";
+        $from = "FROM $table";
+        (!$filter ? $where = "" : $where = "WHERE $filter");
+        (!$sort ? $order_by ="" : $order_by = "ORDER BY $sort" );
         
-        $query_string = "SELECT id, name FROM $table ORDER BY $order_by";
-
-        $result = $this->connection->query( $query_string ) or die(mysqli_error($this->connection));
-        $result -> fetch_all(MYSQLI_ASSOC);
-
-        return $result;
+        $query_str = "$select $from $where $order_by";
+        
+        $result = $this->connection->query( $query_str ) or die(mysqli_error($this->connection));
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        
+        return $rows;
     }
 
 

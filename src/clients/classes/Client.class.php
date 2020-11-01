@@ -34,45 +34,51 @@ class Client extends DB {
     }
 
 
-    // get all states from database
     public function getStates (){
-        return $this->get("state");
+        $table = "state";
+        $columns = "*";
+        $sort = "name";
+        return $this->get($table, $columns, $sort);
     }
 
 
-    // metoda koja daje sva naselja
     public function getCitys (){
-        return $this->get("city");
+        $table = "city";
+        $columns = "*";
+        $sort = "name";
+        return $this->get($table, $columns, $sort);
     }
 
 
     public function getCity ($id){
-        $result = $this->connection->query("SELECT * FROM city WHERE id = $id ORDER BY name" ) or die(mysqli_error($this->connection));
-        $row = $result->fetch_assoc();
-            $city_name = $row['name'];
-        return $city_name;
+        $table = "city";
+        $columns = "*";
+        $sort = NULL;
+        $filter = "id=$id";
+        $result =  $this->get($table, $columns, $sort, $filter);
+        $row = $result[0]; 
+        return $row;
     }
 
-
+    
     // metoda proverava da li postoji naselje sa dati id-em
-    public function checkCity ($id){
-
-        $result = $this->connection->query("SELECT name FROM city WHERE id = $id") or die(mysqli_error($this->connection));
-            $row = $result->fetch_assoc();
-
-            if (empty($row)) {
-                $rezultat = false;
-            }else {
-                $rezultat = true;
-            }
-
-        return $rezultat;
+    public function isExistCity ($id){
+        $table = "city";
+        $columns = "name";
+        $sort = NULL;
+        $filter = "id='$id'";
+        $result = $this->get($table, $columns, $sort, $filter);
+        $row = $result;
+        return ( empty($row) ? false : true );
     }
 
-
+    
     // metoda koja daje sve ulice
     public function getStreets (){
-        return $this->get("street");
+        $table = "street";
+        $columns = "*";
+        $sort = "name";
+        return $this->get($table, $columns, $sort);
     }
 
 
@@ -96,7 +102,7 @@ class Client extends DB {
         if($id == 0) {
 
         } else {
-            // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
+            // izlistavanje iz baze slih klijenata sa id = $id
             $result = $this->connection->query("SELECT client.id, client.vps_id, client.name, client.name_note, client.lb, client.is_supplier, client.state_id, client.city_id, client.street_id, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number, client.address_note, client.note "
                                             . "FROM client "
                                             . "JOIN (street, city, state)"
@@ -189,17 +195,13 @@ class Client extends DB {
 
     // metoda koja daje sve suppliers-e
     public function getSuppliers (){
-
-        // sada treba isčitati sve klijente iz tabele client
-        $result = $this->connection->query("SELECT client.id, client.vps_id, client.name, client.is_supplier, city.name as city_name "
-                                            . "FROM client "
-                                            . "JOIN (city) "
-                                            . "ON (client.city_id = city.id AND client.is_supplier = 1) "
-                                            . "ORDER BY name" ) or die(mysqli_error($this->connection));
-        $result -> fetch_all(MYSQLI_ASSOC);
-        return $result;
+        $table = "client";
+        $columns = "id, name, is_supplier";
+        $sort = "name";
+        $filter = "is_supplier = 1";
+        return $this->get($table, $columns, $sort, $filter);
     }
-
+    
 
     //metoda koja daje zadnjih $number klijenata upisanih u bazu
     public function getLastClients($limit){
