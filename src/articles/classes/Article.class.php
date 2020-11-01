@@ -1,8 +1,6 @@
 <?php
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
- * Article.class.php
- * 
  * Article class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
