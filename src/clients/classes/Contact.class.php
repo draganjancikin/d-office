@@ -1,8 +1,6 @@
 <?php
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
- * Contact.class.php
- * 
  * Contact class
  * 
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
@@ -16,11 +14,10 @@ class Contact extends DB {
     protected $note;
 
 
-    // metoda koja daje sve kontakte klijenta
+    /**
+     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
+     */
     public function getContactsById($id){
-
-        $contact = array();
-        $contacts = array();
 
         // izlistavanje iz baze slih kontakata klijenata sa client_id
         $result = $this->connection->query("SELECT client_contacts.contact_id, contacts.id, contacts.type_id, contacts.number, contacts.note, contacttypes.id, contacttypes.name "
@@ -29,28 +26,20 @@ class Contact extends DB {
                                                 . "ON (client_contacts.contact_id = contacts.id AND contacts.type_id = contacttypes.id )"
                                                 . "WHERE client_contacts.client_id = $id "
                                                 . "ORDER BY contacttypes.id ") or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()):
-            $contact = array(
-                'id' => $row['contact_id'],
-                'type_id' => $row['type_id'],
-                'type_name' => $row['name'],
-                'number' => $row['number'],
-                'note' => $row['note']
-            );
-            array_push($contacts, $contact);
-        endwhile;
-
-        return $contacts;
+        $result->fetch_all(MYSQLI_ASSOC);
+        return $result;
     }
 
-
-    // metoda koja daje sve tipove kontakata
+    /**
+    * @author Dragan Jancikin <dragan.jancikin@gmail.com>
+    */
     public function getContactTypes (){
         return $this->get("contacttypes", "id");
     }
     
-
-    // metoda koja briše kontakt
+    /**
+    * @author Dragan Jancikin <dragan.jancikin@gmail.com>
+    */
     public function delContact($client_id, $contact_id){
         $this->connection->query("DELETE FROM contacts WHERE id='$contact_id' ") or die(mysqli_error($this->connection));
         $this->connection->query("DELETE FROM client_contacts WHERE contact_id='$contact_id' ") or die(mysqli_error($this->connection));

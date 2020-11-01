@@ -151,13 +151,12 @@
         foreach ($contacts as $contact):
             ?>
             <form action="<?php echo $_SERVER['PHP_SELF']. '?editContact&client_id=' .$client_id; ?>" method="post">
-                <input type="hidden" name="id" value="<?php echo $contact['id'] ?>">
-                <input type="hidden" name="vps_id" value="<?php echo $vps_id ?>">
+                <input type="hidden" name="contact_id" value="<?php echo $contact['contact_id'] ?>">
 
                 <div class="form-group row">
                     <div class="col-sm-3">
                         <select class="form-control" name="contacttype_id">>
-                            <option value="<?php echo $contact['type_id']; ?>"><?php echo $contact['type_name'] ?></option>
+                            <option value="<?php echo $contact['type_id']; ?>"><?php echo $contact['name'] ?></option>
                             <?php
                             foreach ($contacttypes as $contacttype):
                                 ?>
@@ -180,7 +179,7 @@
                         <button type="submit" class="btn btn-mini btn-secondary" title="Snimi izmenu kontakta!">
                             <i class="fas fa-save"> </i>
                         </button>
-                        <a href="<?php echo $_SERVER['PHP_SELF']. '?delContact&client_id=' .$client_id. '&contact_id=' .$contact['id'] ?>" class="btn btn-mini btn-danger " title="Obriši kontakt!">
+                        <a href="<?php echo $_SERVER['PHP_SELF']. '?delContact&client_id=' .$client_id. '&contact_id=' .$contact['contact_id'] ?>" class="btn btn-mini btn-danger " title="Obriši kontakt!">
                             <i class="fas fa-trash"> </i>
                         </a>
                     </div>

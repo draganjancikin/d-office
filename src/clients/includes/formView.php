@@ -10,7 +10,7 @@
 
         <form>
             <fieldset disabled>
-                
+
                 <div class="form-group row">
                     <label for="disabledSelectTip" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta klijenta:</label>
                     <div class="col-sm-4">
@@ -109,7 +109,7 @@
         </form>
 
         <hr>
-        <!-- ========== Contacts ========== -->
+
         <h5>Kontakti</h5>
         <?php
         $contacts = $contact->getContactsById($client_id);
@@ -122,7 +122,7 @@
 
                         <div class="col-sm-3">
                             <select class="form-control">
-                                <option><?php echo $contact['type_name'] ?></option>
+                                <option><?php echo $contact['name'] ?></option>
                             </select>
                         </div>
 

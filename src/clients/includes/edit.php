@@ -1,6 +1,6 @@
 <?php
 
-// client edit
+// edit client
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editClient"])) {
 
     $user_id = $_SESSION['user_id'];
@@ -48,10 +48,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editClient"])) {
     die('<script>location.href = "?view&client_id='.$client_id.'" </script>');
 }
 
-// contact of client edit
+// edit contact of client
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editContact"])) {
 
-    $contact_id = $_POST["id"];
+    $contact_id = $_POST["contact_id"];
     $client_id = basicValidation($_GET["client_id"]);
     $contacttype_id = $_POST["contacttype_id"];
     $number = basicValidation($_POST["number"]);
