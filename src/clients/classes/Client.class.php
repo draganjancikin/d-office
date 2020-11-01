@@ -86,9 +86,6 @@ class Client extends DB {
     //metoda koja vraća naziv klijenta-e u zavisnosti od datog pojma u pretrazi
     public function search($name){
 
-        $client = array();
-        $clients = array();
-
         // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
         $result = $this->connection->query("SELECT client.id, client.name, client.name_note, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number "
                                          . "FROM client "
@@ -96,19 +93,8 @@ class Client extends DB {
                                          . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
                                          . "WHERE (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%') "
                                          . "ORDER BY client.name ") or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()):
-            $client = array(
-                'id' => $row['id'],
-                'name' => $row['name'],
-                'state_name' => $row['state_name'],
-                'city_name' => $row['city_name'],
-                'street_name' => $row['street_name'],
-                'home_number' => $row['home_number']
-            );
-            array_push($clients, $client);
-        endwhile;
-
-        return $clients;
+        $result -> fetch_all(MYSQLI_ASSOC);
+        return $result;
     }
 
 
@@ -197,34 +183,19 @@ class Client extends DB {
     // metoda koja daje sve klijente
     public function getClients (){
 
-        $client = array();
-        $clients = array();
-
         // sada treba isčitati sve klijente iz tabele client
         $result = $this->connection->query("SELECT client.id, client.vps_id, client.name, city.name as city_name "
                                          . "FROM client "
                                          . "JOIN (city) "
                                          . "ON (client.city_id = city.id) "
                                          . "ORDER BY name" ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-            $client = array(
-                'id' => $row['id'],
-                'vps_id' => $row['vps_id'],
-                'name' => $row['name'],
-                'city_name' => $row['city_name']
-            );
-            array_push($clients, $client);
-        }
-
-        return $clients;
+        $result -> fetch_all(MYSQLI_ASSOC);
+        return $result;
     }
 
 
     // metoda koja daje sve suppliers-e
     public function getSuppliers (){
-
-        $client = array();
-        $clients = array();
 
         // sada treba isčitati sve klijente iz tabele client
         $result = $this->connection->query("SELECT client.id, client.vps_id, client.name, client.is_supplier, city.name as city_name "
@@ -232,25 +203,13 @@ class Client extends DB {
                                             . "JOIN (city) "
                                             . "ON (client.city_id = city.id AND client.is_supplier = 1) "
                                             . "ORDER BY name" ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()):
-            $client = array(
-                'id' => $row['id'],
-                'vps_id' => $row['vps_id'],
-                'name' => $row['name'],
-                'city_name' => $row['city_name']
-            );
-            array_push($clients, $client);
-        endwhile;
-
-        return $clients;
+        $result -> fetch_all(MYSQLI_ASSOC);
+        return $result;
     }
 
 
     //metoda koja daje zadnjih $number klijenata upisanih u bazu
     public function getLastClients($limit){
-
-        $client = array();
-        $clients = array();
 
         // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
         $result = $this->connection->query("SELECT client.id, client.name, client.name_note, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number "
@@ -259,19 +218,8 @@ class Client extends DB {
                                          . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
                                          
                                          . "ORDER BY client.id DESC LIMIT $limit") or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()):
-            $client = array(
-                'id' => $row['id'],
-                'name' => $row['name'],
-                'state_name' => $row['state_name'],
-                'city_name' => $row['city_name'],
-                'street_name' => $row['street_name'],
-                'home_number' => $row['home_number']
-            );
-            array_push($clients, $client);
-        endwhile;
-
-        return $clients;
+        $result -> fetch_all(MYSQLI_ASSOC);
+        return $result;
     }
 
 }
