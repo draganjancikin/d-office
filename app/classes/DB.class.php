@@ -1,56 +1,60 @@
 <?php
 require_once 'DBconnection.class.php';
 /**
+ * Class that contain basic method for manipulate with database
  * 
+ * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
 class DB extends DBconnection {
 
     /**
-     * @param $table
+     * Method that getting all rows FROM $table ORDER BY $order_by
+     * 
+     * @param string $table table name
+     * @param string $order_by optional clause for order data
+     * 
+     * @return array
+     * 
+     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
      */
-    protected function get ($table){
+    protected function get(string $table, string $order_by = "name") {
         
-        // TODO: add to options ORDER BY ...
+        // ------------- list of arguments -----------------------
+        // extract(func_get_args(), EXTR_PREFIX_ALL, "data");
+        // -------------------------------------------------------
+        // $arg_list = func_get_args();
+        // for ($i = 0; $i < $numargs; $i++) {
+        //    echo "Argument $i is: " . $arg_list[$i] . "<br />\n";
+        // }
+        
+        $query_string = "SELECT id, name FROM $table ORDER BY $order_by";
 
-        $tableRow = array();
-        $tableRows = array();
+        $result = $this->connection->query( $query_string ) or die(mysqli_error($this->connection));
+        $result -> fetch_all(MYSQLI_ASSOC);
 
-        $queryString = "SELECT id, name FROM $table ORDER BY name";
-
-        $result = $this->connection->query( $queryString ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){    
-            $tableRow = array(
-                'id' => $row['id'],
-                'name' => $row['name']
-            );
-            array_push($tableRows, $tableRow);
-        }
-
-        return $tableRows;
+        return $result;
     }
 
+
     public function numRows($table) {
-        $result = $this->connection->query("SELECT * FROM $table ") or die(mysqli_error($this->conn));
-        $num_rows = mysqli_num_rows($result);
-        return $num_rows;
+        $result = $this->connection->query("SELECT * FROM $table ") or die(mysqli_error($this->connection));
+        return mysqli_num_rows($result);
     }
 
     public function getKurs(){
 
         $result = $this->connection->query("SELECT kurs FROM preferences WHERE id = 1 ") or die(mysqli_error($this->connection));
             $row = $result->fetch_assoc();
-            $kurs = $row['kurs'];
-
-        return $kurs;
+        
+        return $row['kurs'];
     }
 
     public function getTax(){
 
         $result = $this->connection->query("SELECT tax FROM preferences WHERE id = 1 ") or die(mysqli_error($this->connection));
             $row = $result->fetch_assoc();
-            $tax = $row['tax'];
-
-        return $tax;
+        
+        return $row['tax'];
     }
 
 }
