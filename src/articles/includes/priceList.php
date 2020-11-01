@@ -70,8 +70,8 @@ if(isset($_GET['group_id']) AND $_GET['group_id']<>""  ){
                 <td class="px-1"><?php echo $count ?></td>  
                 <td class="px-1"><a href="?view&article_id=<?php echo $article_by_group['id'] ?>"><?php echo $article_by_group['name'] ?></a></td>
                 <td class="px-1"><?php echo $article_by_group['unit_name'] ?></td>
-                <td class="px-1"><?php echo number_format( ($article_by_group['price'] * $conf->getKurs() * ($conf->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
-                <td class="px-1"><?php echo number_format( ($article_by_group['price'] * ($conf->getTax()/100 + 1) ) , 4, ",", ".") ?></td>
+                <td class="px-1"><?php echo number_format( ($article_by_group['price'] * $article->getKurs() * ($article->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
+                <td class="px-1"><?php echo number_format( ($article_by_group['price'] * ($article->getTax()/100 + 1) ) , 4, ",", ".") ?></td>
               </tr>
               <?php
             endforeach;
