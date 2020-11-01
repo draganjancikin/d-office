@@ -34,7 +34,7 @@ class Contact extends DB {
     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
     */
     public function getContactTypes (){
-        return $this->get("contacttypes", "id");
+        return $this->get("contacttypes");
     }
     
     /**
