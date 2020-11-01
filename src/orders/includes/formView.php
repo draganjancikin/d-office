@@ -22,7 +22,7 @@
                 $contactsCount ++;
                 if($contactsCount < 5){
                     ?>
-                    <dt class="col-sm-3 col-md-2"><?php echo $contact['type_name']; ?>:</dt>
+                    <dt class="col-sm-3 col-md-2"><?php echo $contact['name']; ?>:</dt>
                     <dd class="col-sm-9 col-md-10"><?php echo $contact['number'] . ($contact['note']=="" ? "" : ", " .$contact['note']); ?></dd>
                     <?php
                 }
