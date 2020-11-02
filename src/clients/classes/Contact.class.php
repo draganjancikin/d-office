@@ -27,6 +27,7 @@ class Contact extends DB {
                                                 . "WHERE client_contacts.client_id = $id "
                                                 . "ORDER BY contacttypes.id ") or die(mysqli_error($this->connection));
         $result->fetch_all(MYSQLI_ASSOC);
+        
         return $result;
     }
 
