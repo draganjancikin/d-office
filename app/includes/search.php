@@ -400,20 +400,20 @@ if($page == "materials"):
                     <tbody>
                         <?php
                         $materials = $material->search($name);
-                        foreach ($materials as $material):
+                        foreach ($materials as $material_data):
                             ?>
                             <tr>
                                 <td>
-                                    <a href="?view&material_id=<?php echo $material['id'] ?>" title="<?php echo $material['note'] ?>"><?php echo $material['name'] ?></a>
+                                    <a href="?view&material_id=<?php echo $material_data['id'] ?>" title="<?php echo $material_data['note'] ?>"><?php echo $material_data['name'] ?></a>
                                 </td>
-                                <td class="text-center"><?php echo $material['unit_name'] ?></td>
+                                <td class="text-center"><?php echo $material_data['unit_name'] ?></td>
                                 <td class="text-right">
-                                    <?php echo number_format( ($material['price'] * $conf->getKurs() * ($conf->getTax()/100 + 1) ) , 2, ",", ".") ?>
+                                    <?php echo number_format( ($material_data['price'] * $material->getKurs() * ($material->getTax()/100 + 1) ) , 2, ",", ".") ?>
                                 </td>
                                 <td class="text-right">
-                                    <?php echo number_format( ($material['price'] * ($conf->getTax()/100 + 1) ) , 2, ",", ".") ?>
+                                    <?php echo number_format( ($material_data['price'] * ($material->getTax()/100 + 1) ) , 2, ",", ".") ?>
                                 </td>
-                                <td><?php echo $material['client_name'] ?></td>
+                                <td><?php echo $material_data['client_name'] ?></td>
                             </tr>
                             <?php
                         endforeach;
@@ -656,8 +656,8 @@ if($page == "articles"):
                             <tr>
                                 <td><a href="?view&article_id=<?php echo $articl['id'] ?>"><?php echo $articl['name'] ?></a></td>
                                 <td class="text-center"><?php echo $articl['unit_name'] ?></td>
-                                <td class="text-right"><?php echo number_format( ($articl['price'] * $conf->getKurs() * ($conf->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
-                                <td class="text-right"><?php echo number_format( ($articl['price'] * ($conf->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
+                                <td class="text-right"><?php echo number_format( ($articl['price'] * $article->getKurs() * ($article->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
+                                <td class="text-right"><?php echo number_format( ($articl['price'] * ($article->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
                             </tr>
                             <?php
                         endforeach;

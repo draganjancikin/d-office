@@ -1,5 +1,5 @@
 <?php
-$version = "RolOffice 4.2.9";
+$version = "RolOffice 4.2.10";
 $root = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . "/../";
 
 // required classes

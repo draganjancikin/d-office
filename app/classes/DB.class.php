@@ -20,7 +20,7 @@ class DB extends DBconnection {
      * 
      * @author Dragan Jancikin <dragan.jancikin@gmail.com>
      */
-    protected function get(string $table, string $columns="*", $sort = NULL, $filter = NULL) {
+    protected function get ($table, $columns = NULL, $sort = NULL, $filter = NULL) {
         
         // ------------- list of arguments -----------------------
         // extract(func_get_args(), EXTR_PREFIX_ALL, "data");
@@ -36,7 +36,7 @@ class DB extends DBconnection {
         (!$sort ? $order_by ="" : $order_by = "ORDER BY $sort" );
         
         $query_str = "$select $from $where $order_by";
-        
+        // echo $query_str;
         $result = $this->connection->query( $query_str ) or die(mysqli_error($this->connection));
         $rows = $result->fetch_all(MYSQLI_ASSOC);
         

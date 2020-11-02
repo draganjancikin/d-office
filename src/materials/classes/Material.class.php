@@ -99,7 +99,7 @@ class Material extends DB {
 
     // metoda koja daje sve jedinicec mere
     public function getUnits (){
-        return $this->get("unit");
+        return $this->get("unit", "*");
     }
     
 
