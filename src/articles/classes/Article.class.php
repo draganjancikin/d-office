@@ -18,7 +18,10 @@ class Article extends DB {
 
     // metoda koja daje sve jedinice mere
     public function getUnits (){
-        return $this->get("unit", "*");
+        $table = "unit";
+        $columns = "*";
+        $units = $this->get($table, $columns); 
+        return $units;
     }
     
 
@@ -54,9 +57,11 @@ class Article extends DB {
     }
 
 
-    // metoda koja daje sve artiklove
     public function getArticles (){
-        return $this->get("article", "*");
+        $table = "article";
+        $columns = "*";
+        $sort = "name";
+        return $this->get($table, $columns, $sort);
     }
     
 
