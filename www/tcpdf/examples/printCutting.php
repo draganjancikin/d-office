@@ -47,20 +47,10 @@ $pdf->AddPage();
 // potreban je konfiguracioni fajl
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
 
-// potrebne klase
-/*
-require $root . '/../app/classes/DB.class.php';
-require $root . '/../app/classes/Conf.class.php';
-require $root . '/../src/client/classes/Client.php';
-require $root . '/../src/client/classes/Contact.php';
-require $root . '/../src/cutting/classes/Cutting.php';
-*/
-
 // generisanje potrebnih objekata
-    $conf = new Conf();
-    $client = new Client();
-    $contact = new Contact();
-    $cutting = new Cutting();
+$client = new Client();
+$contact = new Contact();
+$cutting = new Cutting();
 
 $cutting_fence_id = $_GET['cutting_id'];
 

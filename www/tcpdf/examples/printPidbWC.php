@@ -48,29 +48,10 @@ $pdf->SetFont('dejavusans', '', 10);
 $pdf->AddPage();
 
 
-
-
 // potreban je konfiguracioni fajl
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
 
-// potrebna je klasa koja vrši konekciju na bazu na bazu
-// require $root . '/../app/classes/DB.class.php';
-// require $root . '/../app/classes/Conf.class.php';
-
-// potrebna je klasa Client
-// require $root . '/../src/client/classes/Client.php';
-
-// potrebna je klasa Contact
-// require $root . '/../src/client/classes/Contact.php';
-
-// potrebna je klasa Pidb
-// require $root . '/../src/pidb/classes/Pidb.php';
-
-// potrebna je klasa Article
-// require $root . '/../src/article/classes/Article.php';
-
 // generisanje potrebnih objekata
-    $conf = new Conf();
     $client = new Client();
     $contact = new Contact();
     $pidb = new Pidb();
@@ -86,8 +67,8 @@ if( $pidb_data['tip_id'] == 4) $pidb_name = "Povratnica";
 $client_data = $client->getClient($pidb_data['client_id']);
 $contacts = $contact->getContactsById($pidb_data['client_id']);
 
-if(!isset($contacts[0]['number']))$contacts[0]['number'] = '';
-if(!isset($contacts[1]['number']))$contacts[1]['number'] = '';
+$contact_item[0] = "_";
+$contact_item[1] = "_";
 
 $html = '
 <style type="text/css">table { padding-top: 5px; padding-bottom: 5px; }</style>
@@ -172,12 +153,12 @@ foreach ($articles_on_pidb as $article_on_pidb):
         <td align="center" width="35px">' .$article_on_pidb['unit_name']. '</td>
         <td width="53px" align="right">'.number_format($article_on_pidb['quantity'], 2, ",", "."). '</td>' 
         .($pidb_data['tip_id'] == 2 ? "" : '
-            <td width="70px" align="right">' .number_format($article_on_pidb['price']*$conf->getKurs(), 2, ",", "."). '</td>
+            <td width="70px" align="right">' .number_format($article_on_pidb['price']*$pidb->getKurs(), 2, ",", "."). '</td>
             <td width="37px" align="right">' .number_format($article_on_pidb['discounts'], 2, ",", "."). '</td>
-            <td width="80px" align="right">' .number_format($article_on_pidb['tax_base']*$conf->getKurs(), 2, ",", "."). '</td>
+            <td width="80px" align="right">' .number_format($article_on_pidb['tax_base']*$pidb->getKurs(), 2, ",", "."). '</td>
             <td width="37px" align="right">' .number_format($article_on_pidb['tax'], 2, ",", ".").'</td>
-            <td width="70px" align="right">' .number_format($article_on_pidb['tax_amount']*$conf->getKurs(), 2, ",", "."). '</td>
-            <td width="80px" align="right">' .number_format($article_on_pidb['sub_total']*$conf->getKurs(), 2, ",", "."). '</td>
+            <td width="70px" align="right">' .number_format($article_on_pidb['tax_amount']*$pidb->getKurs(), 2, ",", "."). '</td>
+            <td width="80px" align="right">' .number_format($article_on_pidb['sub_total']*$pidb->getKurs(), 2, ",", "."). '</td>
         '). '
       </tr>
     </table>
@@ -200,19 +181,19 @@ $html = ''.($pidb_data['tip_id'] == 2 ? "" : '
   <tr>
     <td colspan="3" width="270px"></td>
     <td colspan="2" width="135px" style="border-bottom-width: inherit;">ukupno poreska osnovica</td>
-    <td colspan="2" width="100px" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_base*$conf->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" width="100px" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_base*$pidb->getKurs(), 2, ",", ".").'</td>
     <td colspan="2" width="105px"></td><td width="80px"></td>
   </tr>
   <tr>
     <td colspan="3"></td>
     <td colspan="4" style="border-bottom-width: inherit;">ukupno iznos PDV-a</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount*$conf->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount*$pidb->getKurs(), 2, ",", ".").'</td>
     <td></td>
   </tr>
   <tr style="font-size: 32px; font-weight:bold;">
     <td colspan="3"></td>
     <td colspan="5" style="border-bottom-width: inherit;">UKUPNO ZA UPLATU</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">RSD '.number_format($total*$conf->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">RSD '.number_format($total*$pidb->getKurs(), 2, ",", ".").'</td>
   </tr>
   <tr>
     <td colspan="3"></td>

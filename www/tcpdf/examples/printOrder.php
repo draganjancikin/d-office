@@ -46,7 +46,6 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
 
 // generisanje potrebnih objekata
-$conf = new Conf();
 $client = new Client();
 $contact = new Contact();
 $order = new Order();
@@ -57,11 +56,15 @@ $order_id = $_GET['order_id'];
 $order_data = $order->getOrder($order_id);
 $supplier_data = $client->getClient($order_data['supplier_id']);
 $supplier_contacts = $contact->getContactsById($order_data['supplier_id']);
-$client_data = $client->getClient($order_data['client_id']);
-
-
-if(!isset($contacts[0]['number']))$contacts[0]['number'] = '';
-if(!isset($contacts[1]['number']))$contacts[1]['number'] = '';
+$i=0;
+foreach ($supplier_contacts as $supplier_contact) {
+    if($i < 2 && isset($supplier_contact['number'])) {
+        $contact_item[$i] = $supplier_contact['number'];
+    } else {
+        $contact_item[$i] = "";
+    }
+    $i++;
+}
 
 $html = '
 <style type="text/css">table { padding-top: 5px; padding-bottom: 5px; }</style>
@@ -73,7 +76,7 @@ $html = '
   <tr>
     <td width="340px" colspan="2">Vojvode Živojina Mišića 237<br />21400 Bačka Palanka<br />PIB: 100754526<br />MB: 5060100<br />žr. 220-127736-34, Procredit bank</td>
     
-    <td width="350px">Dobavljač:<br />'.$supplier_data['name'].'<br />'.$supplier_data['street_name'].' '.$supplier_data['home_number'].'<br />'.$supplier_data['city_name'].', '.$supplier_data['state_name'].'<br />'.$supplier_contacts[0]['number'].', '.$supplier_contacts[1]['number'].'</td>
+    <td width="350px">Dobavljač:<br />'.$supplier_data['name'].'<br />'.$supplier_data['street_name'].' '.$supplier_data['home_number'].'<br />'.$supplier_data['city_name'].', '.$supplier_data['state_name'].'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>
   <tr>
     <td colspan="3"><h2>Narudžbenica: '.str_pad($order_data['o_id'], 3, "0", STR_PAD_LEFT).' - '.date('m', strtotime($order_data['date'])).'</h2></td>
@@ -241,7 +244,7 @@ switch ($order_data['supplier_id']) {
         $folder = "WURTH/";
         break;
     default:
-        $folder = $client_data['name'] . ' - ';
+        $folder = $supplier_data['name'] . ' - ';
 }
 
 $pdf->Output('D:/ROLOSTIL/PORUDZBINE/' .$folder.str_pad($order_data['o_id'], 3, "0", STR_PAD_LEFT). '-' .date('m', strtotime($order_data['date'])). ' - ' .date('d M', strtotime($order_data['date'])). '.pdf', 'FI');

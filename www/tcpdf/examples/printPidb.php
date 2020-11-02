@@ -47,7 +47,6 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
 
 // generisanje potrebnih objekata
-$conf = new Conf();
 $client = new Client();
 $contact = new Contact();
 $pidb = new Pidb();
@@ -63,8 +62,22 @@ if( $pidb_data['tip_id'] == 4) $pidb_name = "Povratnica";
 $client_data = $client->getClient($pidb_data['client_id']);
 $contacts = $contact->getContactsById($pidb_data['client_id']);
 
-if(!isset($contacts[0]['number']))$contacts[0]['number'] = '';
-if(!isset($contacts[1]['number']))$contacts[1]['number'] = '';
+$contact_item[0] = "";
+$contact_item[1] = "";
+
+if ($contacts->num_rows) {
+    
+    $count = 0;
+    foreach ($contacts as $contact):
+        if (isset($contact['number']) AND $count == 0 ){ 
+            $contact_item[0] = $contact['number'];
+        } elseif (isset($contact['number']) AND $count == 1) {
+            $contact_item[1] = $contact['number'];
+        }
+        $count++; 
+    endforeach;
+    
+}
 
 $html = '
 <style type="text/css">table { padding-top: 5px; padding-bottom: 5px; }</style>
@@ -81,7 +94,7 @@ $html = '
     ž.r. 160-438797-72, Banca Intesa<br />
     ž.r. 330-11001058-98, Credit Agricole</td>
     
-    <td width="350px">Kupac:<br />'.$client_data['name'].' '.($client_data['pib']<>""?'<br />PIB '.$client_data['pib']:"").'<br />'.$client_data['street_name'].' '.$client_data['home_number'].'<br />'.$client_data['city_name'].', '.$client_data['state_name'].'<br />'.$contacts[0]['number'].', '.$contacts[1]['number'].'</td>
+    <td width="350px">Kupac:<br />'.$client_data['name'].' '.($client_data['pib']<>""?'<br />PIB '.$client_data['pib']:"").'<br />'.$client_data['street_name'].' '.$client_data['home_number'].'<br />'.$client_data['city_name'].', '.$client_data['state_name'].'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>
   <tr>
     <td colspan="3"><h2>'.$pidb_name.' broj: '.str_pad($pidb_data['y_id'], 4, "0", STR_PAD_LEFT).' - '.date('m', strtotime($pidb_data['date'])).'</h2></td>
@@ -148,12 +161,12 @@ foreach ($articles_on_pidb as $article_on_pidb):
         <td align="center" width="35px">' .$article_on_pidb['unit_name']. '</td>
         <td width="53px" align="right">'.number_format($article_on_pidb['quantity'], 2, ",", "."). '</td>' 
         .($pidb_data['tip_id'] == 2 ? "" : '
-            <td width="70px" align="right">' .number_format($article_on_pidb['price']*$conf->getKurs(), 2, ",", "."). '</td>
+            <td width="70px" align="right">' .number_format($article_on_pidb['price']*$article->getKurs(), 2, ",", "."). '</td>
             <td width="37px" align="right">' .number_format($article_on_pidb['discounts'], 2, ",", "."). '</td>
-            <td width="80px" align="right">' .number_format($article_on_pidb['tax_base']*$conf->getKurs(), 2, ",", "."). '</td>
+            <td width="80px" align="right">' .number_format($article_on_pidb['tax_base']*$article->getKurs(), 2, ",", "."). '</td>
             <td width="37px" align="right">' .number_format($article_on_pidb['tax'], 2, ",", ".").'</td>
-            <td width="70px" align="right">' .number_format($article_on_pidb['tax_amount']*$conf->getKurs(), 2, ",", "."). '</td>
-            <td width="80px" align="right">' .number_format($article_on_pidb['sub_total']*$conf->getKurs(), 2, ",", "."). '</td>
+            <td width="70px" align="right">' .number_format($article_on_pidb['tax_amount']*$article->getKurs(), 2, ",", "."). '</td>
+            <td width="80px" align="right">' .number_format($article_on_pidb['sub_total']*$article->getKurs(), 2, ",", "."). '</td>
         '). '
       </tr>
     </table>
@@ -176,19 +189,19 @@ $html = ''.($pidb_data['tip_id'] == 2 ? "" : '
   <tr>
     <td colspan="3" width="270px"></td>
     <td colspan="2" width="135px" style="border-bottom-width: inherit;">ukupno poreska osnovica</td>
-    <td colspan="2" width="100px" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_base*$conf->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" width="100px" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_base*$article->getKurs(), 2, ",", ".").'</td>
     <td colspan="2" width="105px"></td><td width="80px"></td>
   </tr>
   <tr>
     <td colspan="3"></td>
     <td colspan="4" style="border-bottom-width: inherit;">ukupno iznos PDV-a</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount*$conf->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount*$article->getKurs(), 2, ",", ".").'</td>
     <td></td>
   </tr>
   <tr style="font-size: 32px; font-weight:bold;">
     <td colspan="3"></td>
     <td colspan="5" style="border-bottom-width: inherit;">UKUPNO ZA UPLATU</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">RSD '.number_format($total*$conf->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">RSD '.number_format($total*$article->getKurs(), 2, ",", ".").'</td>
   </tr>
   <tr>
     <td colspan="3"></td>

@@ -47,7 +47,6 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
 
 // generisanje potrebnih objekata
-$conf = new Conf();
 $client = new Client();
 $contact = new Contact();
 $pidb = new Pidb();
@@ -61,8 +60,22 @@ if( $pidb_data['tip_id'] == 2) $pidb_name = "Otpremnica - račun";
 $client_data = $client->getClient($pidb_data['client_id']);
 $contacts = $contact->getContactsById($pidb_data['client_id']);
 
-if(!isset($contacts[0]['number']))$contacts[0]['number'] = '';
-if(!isset($contacts[1]['number']))$contacts[1]['number'] = '';
+if (!$contacts->num_rows) {
+  // if empty
+  $contact_item[0] = "";
+  $contact_item[1] = "";
+} else {
+  $i = 0;
+  /*
+  foreach ($contacts as $client_contact) {
+     if($i<2) {
+          $contact_item[$i] = $client_contact['name'];
+     }
+  }
+  */
+  $contact_item[0] = "_";
+  $contact_item[1] = "_";
+}
 
 $html = '
 <style type="text/css">table { padding-top: 5px; padding-bottom: 5px; }</style>
@@ -139,12 +152,12 @@ foreach ($articles_on_pidb as $article_on_pidb):
           . '<br />' .$property_temp. ' ' .$article_on_pidb['pieces']. ' kom </td>
         <td align="center" width="35px">' .$article_on_pidb['unit_name']. '</td>
         <td width="53px" align="right">'.number_format($article_on_pidb['quantity'], 2, ",", "."). '</td>
-        <td width="70px" align="right">' .number_format($article_on_pidb['price']*$conf->getKurs(), 2, ",", "."). '</td>
+        <td width="70px" align="right">' .number_format($article_on_pidb['price']*$pidb->getKurs(), 2, ",", "."). '</td>
         <td width="37px" align="right">' .number_format($article_on_pidb['discounts'], 2, ",", "."). '</td>
-        <td width="80px" align="right">' .number_format($article_on_pidb['tax_base']*$conf->getKurs(), 2, ",", "."). '</td>
+        <td width="80px" align="right">' .number_format($article_on_pidb['tax_base']*$pidb->getKurs(), 2, ",", "."). '</td>
         <td width="37px" align="right">' .number_format($article_on_pidb['tax'], 2, ",", ".").'</td>
-        <td width="70px" align="right">' .number_format($article_on_pidb['tax_amount']*$conf->getKurs(), 2, ",", "."). '</td>
-        <td width="80px" align="right">' .number_format($article_on_pidb['sub_total']*$conf->getKurs(), 2, ",", "."). '</td>
+        <td width="70px" align="right">' .number_format($article_on_pidb['tax_amount']*$pidb->getKurs(), 2, ",", "."). '</td>
+        <td width="80px" align="right">' .number_format($article_on_pidb['sub_total']*$pidb->getKurs(), 2, ",", "."). '</td>
       </tr>
     </table>
     ';
@@ -166,19 +179,19 @@ $html = '
   <tr>
     <td colspan="3" width="270px"></td>
     <td colspan="2" width="135px" style="border-bottom-width: inherit;">ukupno poreska osnovica</td>
-    <td colspan="2" width="100px" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_base*$conf->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" width="100px" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_base*$pidb->getKurs(), 2, ",", ".").'</td>
     <td colspan="2" width="105px"></td><td width="80px"></td>
   </tr>
   <tr>
     <td colspan="3"></td>
     <td colspan="4" style="border-bottom-width: inherit;">ukupno iznos PDV-a</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount*$conf->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount*$pidb->getKurs(), 2, ",", ".").'</td>
     <td></td>
   </tr>
   <tr style="font-size: 32px; font-weight:bold;">
     <td colspan="3"></td>
     <td colspan="5" style="border-bottom-width: inherit;">UKUPNO ZA UPLATU</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">RSD '.number_format($total*$conf->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">RSD '.number_format($total*$pidb->getKurs(), 2, ",", ".").'</td>
   </tr>
   <tr>
     <td colspan="3"></td>
