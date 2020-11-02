@@ -218,7 +218,7 @@ class Material extends DB {
 
     // metoda koja vraća property-je
     public function getPropertys (){
-        return $this->get("property");
+        return $this->get("property", "*");
     }
     
 
