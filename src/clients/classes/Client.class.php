@@ -156,7 +156,7 @@ class Client extends DB {
             }else{
                 $vps_name = "Pravno lice";
             }
-            $client = array(
+            $supplier = array(
                 'id' => $row['id'],
                 'vps_id' => $vps_id,
                 'vps_name' => $vps_name,
@@ -175,7 +175,7 @@ class Client extends DB {
                 'note' => $row['note']
             );
 
-        return $client;
+        return $supplier;
     }
 
 
