@@ -603,7 +603,7 @@ class Project extends DB {
 
     // metoda koja daje zaposlene
     public function getEmployees (){
-        return $this->get("employee");
+        return $this->get("employee", "name");
     }
     
 
