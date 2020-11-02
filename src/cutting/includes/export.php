@@ -4,10 +4,9 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportCuttingToPidb"]) )
 
     $cutting_id = htmlspecialchars($_GET['cutting_id']);
 
-    $db = new DB();
-    $connect_db = $db->connectDB();
+    $db = new DBconnection();
 
-    $result_cutting_fence = $connect_db->query("SELECT * FROM cutting_fence WHERE id = $cutting_id ") or die(mysqli_error($connect_db));
+    $result_cutting_fence = $db->connection->query("SELECT * FROM cutting_fence WHERE id = $cutting_id ") or die(mysqli_error($db->connection));
     $row_cutting_fence = mysqli_fetch_array($result_cutting_fence);
         $client_id = $row_cutting_fence['client_id'];
 
@@ -20,9 +19,9 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportCuttingToPidb"]) )
     $pidb_tip_id = 1;
 
     // add new proforma-invoice
-    $connect_db->query("INSERT INTO pidb (tip_id, date, client_id, title, note) VALUES ('$pidb_tip_id', '$date', '$client_id', '$title', '$note')") or die(mysqli_error($connect_db));
+    $db->connection->query("INSERT INTO pidb (tip_id, date, client_id, title, note) VALUES ('$pidb_tip_id', '$date', '$client_id', '$title', '$note')") or die(mysqli_error($db->connection));
 
-    $pidb_id = $connect_db->insert_id;
+    $pidb_id = $db->connection->insert_id;
     $y_id = $pidb->setYid($pidb_tip_id);
 
     // add article to proforma-invoice
@@ -35,19 +34,19 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportCuttingToPidb"]) )
     $price = $article->getPrice($article_id);
     $tax = $pidb->getTax();
 
-    $connect_db->query("INSERT INTO pidb_article (pidb_id, article_id, note, pieces, price, tax) VALUES ('$pidb_id', '$article_id', '$note', '$pieces', '$price', '$tax' )") or die(mysqli_error($connect_db));
+    $db->connection->query("INSERT INTO pidb_article (pidb_id, article_id, note, pieces, price, tax) VALUES ('$pidb_id', '$article_id', '$note', '$pieces', '$price', '$tax' )") or die(mysqli_error($db->connection));
 
     // treba nam i pidb_article_id (id artikla u pidb dokumentu) to je u stvari zadnji unos
-    $pidb_article_id = $connect_db->insert_id;;
+    $pidb_article_id = $db->connection->insert_id;;
 
     //insert property-a artikla u tabelu pidb_article_property
-    $propertys = $connect_db->query( "SELECT * FROM article_property WHERE article_id ='$article_id'");
+    $propertys = $db->connection->query( "SELECT * FROM article_property WHERE article_id ='$article_id'");
     while($row_property = mysqli_fetch_array($propertys)){
     
         $property_id = $row_property['property_id'];
         $quantity = $total_picket_lenght/10;
 
-        $connect_db->query("INSERT INTO pidb_article_property (pidb_article_id, property_id, quantity) VALUES ('$pidb_article_id', '$property_id', '$quantity' )") or die(mysqli_error($connect_db));
+        $db->connection->query("INSERT INTO pidb_article_property (pidb_article_id, property_id, quantity) VALUES ('$pidb_article_id', '$property_id', '$quantity' )") or die(mysqli_error($db->connection));
     }
 
     // second: pvc caps
@@ -57,7 +56,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportCuttingToPidb"]) )
 
     $price = $article->getPrice($article_id);
 
-    $connect_db->query("INSERT INTO pidb_article (pidb_id, article_id, note, pieces, price, tax) VALUES ('$pidb_id', '$article_id', '$note', '$pieces', '$price', '$tax' )") or die(mysqli_error($connect_db));
+    $db->connection->query("INSERT INTO pidb_article (pidb_id, article_id, note, pieces, price, tax) VALUES ('$pidb_id', '$article_id', '$note', '$pieces', '$price', '$tax' )") or die(mysqli_error($db->connection));
 
     die('<script>location.href = "/pidb/index.php?edit&pidb_id='.$pidb_id.'" </script>');
 }
