@@ -24,7 +24,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['add']) ) {
     if(isset($_POST['pidb_id'])){
         // update project_id in pidb
         $pidb_id = $_POST['pidb_id'];
-        $connect_db->query("UPDATE pidb SET project_id='$project_id' WHERE id = '$pidb_id' ") or die(mysqli_error($connection));
+        $db->connection->query("UPDATE pidb SET project_id='$project_id' WHERE id = '$pidb_id' ") or die(mysqli_error($connection));
     }
 
     die('<script>location.href = "?view&project_id=' .$project_id. '" </script>');
