@@ -67,9 +67,7 @@
 
   <div class="card-body p-2">
     <?php
-    $suppliers = $material->getSuppliers($material_id);
-    $clients = $client->getClients();
-    foreach ($suppliers as $supplier):
+    foreach ($material_suppliers as $supplier):
       ?>
       <form method="post">
         <fieldset disabled>

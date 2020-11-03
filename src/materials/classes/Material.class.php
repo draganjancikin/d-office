@@ -77,29 +77,18 @@ class Material extends DB {
     }
 
 
-    //metoda koja vraća sve materijale
-    public function getMaterials(){
-
-        $material = array();
-        $materials = array();
-
-        $result = $this->connection->query("SELECT id, name, note FROM material ORDER by name") or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()):
-            $material = array(
-                'id' => $row['id'],
-                'name' => $row['name'],
-                'note' => $row['note']
-            );
-            array_push($materials, $material);
-        endwhile;
-
-        return $materials;
+    public function getMaterials (){
+        $table = "material";
+        $columns = "id, name,note";
+        $sort = "name";
+        return $this->get($table, $columns, $sort);
     }
+    
 
-
-    // metoda koja daje sve jedinicec mere
     public function getUnits (){
-        return $this->get("unit", "*");
+        $table = "unit";
+        $columns = "*";
+        return $this->get($table, $columns);
     }
     
 
@@ -159,8 +148,16 @@ class Material extends DB {
     }
 
 
-    //metoda koja daje dobavljače materijala
-    public function getSuppliers($material_id){
+    public function getSuppliers (){
+        $table = "client";
+        $columns = "*";
+        $sort = NULL;
+        $filter = "is_supplier = 1";
+        return $this->get($table, $columns, $sort, $filter);
+    }
+    
+
+    public function getMaterialSuppliers($material_id){
 
         $supplier = array();
         $suppliers = array();
