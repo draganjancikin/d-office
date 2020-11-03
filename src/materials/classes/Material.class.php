@@ -47,10 +47,11 @@ class Material extends DB {
 
     // metoda koja daje cenu materijala
     public function getPrice ($material_id){
-        // sada treba isčitati cenu artikla
-        $result = $this->connection->query("SELECT price FROM material WHERE id = $material_id " ) or die(mysqli_error($this->connection));
-        $row = $result->fetch_assoc();
-        return $row['price'];
+        $table = "material";
+        $columns = "price";
+        $sort = NULL;
+        $filter = "id = $material_id";
+        return $this->get($table, $columns, $sort);
     }
 
 
@@ -119,30 +120,6 @@ class Material extends DB {
             );
             array_push($materials, $material);
         endwhile;
-
-        return $materials;
-    }
-
-
-    // metoda koja daje sve materijale od kojih je sastavljen artikal
-    public function getArticleMaterials ($id){
-
-        $material = array();
-        $materials = array();
-
-        $result = $this->connection->query("SELECT material.id, material.name, article_material.function "
-                                         . "FROM material "
-                                         . "JOIN ( article_material ) "
-                                         . "ON ( material.id = article_material.material_id ) "
-                                         . "WHERE article_material.article_id = $id " ) or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-            $material = array(
-                'id' => $row['id'],
-                'name' => $row['name'],
-                'function' => $row['function']
-            );
-            array_push($materials, $material);
-        }
 
         return $materials;
     }

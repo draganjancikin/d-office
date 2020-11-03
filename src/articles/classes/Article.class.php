@@ -49,13 +49,13 @@ class Article extends DB {
 
     // metoda koja daje cenu artikla
     public function getPrice ($article_id){
-
-        // sada treba isčitati cenu artikla
-        $result = $this->connection->query("SELECT price FROM article WHERE id = $article_id " ) or die(mysqli_error($this->connection));
-        $row = $result->fetch_assoc();
-        return $row['price'];
+        $table = "article";
+        $columns = "price";
+        $sort = NULL;
+        $filter = "id = $article_id";
+        return $this->get($table, $columns, $sort);
     }
-
+    
 
     public function getArticles (){
         $table = "article";
