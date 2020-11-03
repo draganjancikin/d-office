@@ -30,6 +30,17 @@ class DB extends DBconnection {
         //    echo "Argument $i is: " . $arg_list[$i] . "<br />\n";
         // }
 
+        /*
+        TODO: arguments in array in key=>value pairs
+        SELECT column_names FROM table_name WHERE filter ORDER BY sort, ...
+        array(
+            'column_names' => $column_names,
+            'table_name' => $table_name,
+            'filter' => $filter,
+            'sort' => $sort
+        );
+        */
+
         $select = "SELECT $columns";
         $from = "FROM $table";
         (!$filter ? $where = "" : $where = "WHERE $filter");
