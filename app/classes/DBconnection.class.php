@@ -15,6 +15,7 @@ class DBconnection {
 
     protected function tryConnect() {
 
+        // check if $instance == null, to prevent multiple connection to database
         if (self::$instance == null) {
             self::$instance = new mysqli( DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME );
             self::$instance->set_charset("utf8");

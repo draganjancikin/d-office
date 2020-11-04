@@ -46,20 +46,10 @@ class Client extends DB {
 
     public function getCity ($id){
         $result =  $this->get("SELECT * FROM city WHERE id = $id");
-        $row = $result[0]; 
-        return $row;
+        return ( empty($result[0]) ? false : $result[0] );
     }
 
     
-    // metoda proverava da li postoji naselje sa dati id-em
-    public function isExistCity ($id){
-        $result =  $this->get("SELECT * FROM city WHERE id = $id");
-        $row = $result;
-        return ( empty($row) ? false : true );
-    }
-
-    
-    // metoda koja daje sve ulice
     public function getStreets (){
         return $this->get("SELECT * FROM street ORDER BY name");
     }

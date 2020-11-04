@@ -1,5 +1,5 @@
 <?php
-if(!$client->isExistCity($city_id)){
+if(!$client->getCity($city_id)){
     $city_name = '<spam class="text-warning"> Traženo mesto ne postoji!</spam>';
 } else {
     $city_name = $client->getCity($city_id);
@@ -50,10 +50,10 @@ if(!$client->isExistCity($city_id)){
                 </thead>
                 <tfoot class="thead-light">
                     <tr>
-                        <th class="w-25">projekti</th>
-                        <th class="w-25">za realizaciju</th>
-                        <th class="w-25">u realizaciji</th>
-                        <th class="w-25">realizovano</th>
+                        <th class="w-25 text-center">projekti</th>
+                        <th class="w-25 text-center">za realizaciju</th>
+                        <th class="w-25 text-center">u realizaciji</th>
+                        <th class="w-25 text-center">realizovano</th>
                     </tr>
                 </tfoot>
                 <tbody>
