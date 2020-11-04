@@ -1,8 +1,6 @@
 <?php
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';
 /**
- * Admin.class.php
- * 
  * Admin class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
