@@ -44,7 +44,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleInPidb"]) ) {
     $pieces = htmlspecialchars($_POST["pieces"]);
     $price = $article->getPrice($article_id);
     $tax = $pidb->getTax();
-
+ // var_dump($price);
+ // exit();
     $db = new DBconnection();
 
     $db->connection->query("INSERT INTO pidb_article (pidb_id, article_id, note, pieces, price, tax) " 

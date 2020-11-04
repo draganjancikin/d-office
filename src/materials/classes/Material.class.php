@@ -47,11 +47,7 @@ class Material extends DB {
 
     // metoda koja daje cenu materijala
     public function getPrice ($material_id){
-        $table = "material";
-        $columns = "price";
-        $sort = NULL;
-        $filter = "id = $material_id";
-        return $this->get($table, $columns, $sort);
+        return $this->get("SELECT price FROM material WHERE id = $material_id")[0]['price'];
     }
 
 
@@ -79,17 +75,12 @@ class Material extends DB {
 
 
     public function getMaterials (){
-        $table = "material";
-        $columns = "id, name,note";
-        $sort = "name";
-        return $this->get($table, $columns, $sort);
+        return $this->get("SELECT id, name,note FROM material ORDER BY name");
     }
     
 
     public function getUnits (){
-        $table = "unit";
-        $columns = "*";
-        return $this->get($table, $columns);
+        return $this->get("SELECT * FROM unit");
     }
     
 
@@ -126,11 +117,7 @@ class Material extends DB {
 
 
     public function getSuppliers (){
-        $table = "client";
-        $columns = "*";
-        $sort = NULL;
-        $filter = "is_supplier = 1";
-        return $this->get($table, $columns, $sort, $filter);
+        return $this->get("SELECT * FROM client WHERE is_supplier = 1");
     }
     
 
@@ -192,7 +179,7 @@ class Material extends DB {
 
     // metoda koja vraća property-je
     public function getPropertys (){
-        return $this->get("property", "*");
+        return $this->get("SELECT * FROM property");
     }
     
 

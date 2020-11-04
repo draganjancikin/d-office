@@ -18,16 +18,13 @@ class Article extends DB {
 
     // metoda koja daje sve jedinice mere
     public function getUnits (){
-        $table = "unit";
-        $columns = "*";
-        $units = $this->get($table, $columns); 
-        return $units;
+        return $this->get("SELECT * FROM unit");
     }
     
 
     // metoda koja daje sve grupe artikala
     public function getArticleGroups (){
-        return $this->get("article_group", "*");
+        return $this->get("SELECT * FROM article_group");
     }
     
 
@@ -49,19 +46,12 @@ class Article extends DB {
 
     // metoda koja daje cenu artikla
     public function getPrice ($article_id){
-        $table = "article";
-        $columns = "price";
-        $sort = NULL;
-        $filter = "id = $article_id";
-        return $this->get($table, $columns, $sort);
+        return $this->get("SELECT price FROM article WHERE id = $article_id")[0]['price'];
     }
     
 
     public function getArticles (){
-        $table = "article";
-        $columns = "*";
-        $sort = "name";
-        return $this->get($table, $columns, $sort);
+        return $this->get("SELECT * FROM article ORDER BY name");
     }
     
 
@@ -154,7 +144,7 @@ class Article extends DB {
 
     // metoda koja vraća property-je
     public function getPropertys (){
-        return $this->get("property");
+        return $this->get("SELECT * FROM property");
     }
     
 

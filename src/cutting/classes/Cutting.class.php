@@ -356,7 +356,7 @@ class Cutting extends DB {
 
     // metoda koja daje sve modele
     public function getFenceModels (){
-        return $this->get("cutting_fence_model", "*");
+        return $this->get("SELECT * FROM cutting_fence_model");
     }
     
 }

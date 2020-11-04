@@ -8,53 +8,21 @@ require_once 'DBconnection.class.php';
 class DB extends DBconnection {
 
     /**
-     * Method that SELECT $columns and getting all rows FROM $table WHERE $filter 
-     * ORDER BY $sort
+     * Method that return result of $query_string
      * 
-     * @param string $table table name
-     * @param string $columns optional clause wich columns selecting
-     * @param string $sort optional clause for sort data
-     * @param string $filter optional clause for filtering data
+     * @param string $query_string
      * 
      * @return array aray of arays
      * 
      * @author Dragan Jancikin <dragan.jancikin@gmail.com>
      */
-    protected function get ($table, $columns = NULL, $sort = NULL, $filter = NULL) {
-        
-        // ------------- list of arguments -----------------------
-        // extract(func_get_args(), EXTR_PREFIX_ALL, "data");
-        // -------------------------------------------------------
-        // $arg_list = func_get_args();
-        // for ($i = 0; $i < $numargs; $i++) {
-        //    echo "Argument $i is: " . $arg_list[$i] . "<br />\n";
-        // }
-
-        /*
-        TODO: arguments in array in key=>value pairs
-        SELECT column_names FROM table_name WHERE filter ORDER BY sort, ...
-        array(
-            'column_names' => $column_names,
-            'table_name' => $table_name,
-            'filter' => $filter,
-            'sort' => $sort
-        );
-        */
-
-        $select = "SELECT $columns";
-        $from = "FROM $table";
-        (!$filter ? $where = "" : $where = "WHERE $filter");
-        (!$sort ? $order_by ="" : $order_by = "ORDER BY $sort" );
-        
-        $query_str = "$select $from $where $order_by";
-        // echo $query_str;
-        $result = $this->connection->query( $query_str ) or die(mysqli_error($this->connection));
+    
+    protected function get ($query_string){
+        $result = $this->connection->query( $query_string ) or die(mysqli_error($this->connection));
         $rows = $result->fetch_all(MYSQLI_ASSOC);
-        
         return $rows;
     }
-
-
+    
     public function numRows($table) {
         $result = $this->connection->query("SELECT * FROM $table ") or die(mysqli_error($this->connection));
         return mysqli_num_rows($result);

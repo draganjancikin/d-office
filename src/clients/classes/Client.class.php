@@ -26,36 +26,25 @@ class Client extends DB {
 
     // get client types
     public function getVpses (){
-        $vpses = array(
+        return array(
             array('id'=>'1', 'name'=>'Fizičko lice'),
-            array('id'=>'2', 'name'=>'Pravno lice'),
+            array('id'=>'2', 'name'=>'Pravno lice')
         );
-        return $vpses;
     }
 
 
     public function getStates (){
-        $table = "state";
-        $columns = "*";
-        $sort = "name";
-        return $this->get($table, $columns, $sort);
+        return $this->get("SELECT * FROM state ORDER BY name");
     }
 
 
     public function getCitys (){
-        $table = "city";
-        $columns = "*";
-        $sort = "name";
-        return $this->get($table, $columns, $sort);
+        return $this->get("SELECT * FROM city ORDER BY name");
     }
 
 
     public function getCity ($id){
-        $table = "city";
-        $columns = "*";
-        $sort = NULL;
-        $filter = "id=$id";
-        $result =  $this->get($table, $columns, $sort, $filter);
+        $result =  $this->get("SELECT * FROM city WHERE id = $id");
         $row = $result[0]; 
         return $row;
     }
@@ -63,11 +52,7 @@ class Client extends DB {
     
     // metoda proverava da li postoji naselje sa dati id-em
     public function isExistCity ($id){
-        $table = "city";
-        $columns = "name";
-        $sort = NULL;
-        $filter = "id='$id'";
-        $result = $this->get($table, $columns, $sort, $filter);
+        $result =  $this->get("SELECT * FROM city WHERE id = $id");
         $row = $result;
         return ( empty($row) ? false : true );
     }
@@ -75,10 +60,7 @@ class Client extends DB {
     
     // metoda koja daje sve ulice
     public function getStreets (){
-        $table = "street";
-        $columns = "*";
-        $sort = "name";
-        return $this->get($table, $columns, $sort);
+        return $this->get("SELECT * FROM street ORDER BY name");
     }
 
 
@@ -195,11 +177,7 @@ class Client extends DB {
 
     // metoda koja daje sve suppliers-e
     public function getSuppliers (){
-        $table = "client";
-        $columns = "id, name, is_supplier";
-        $sort = "name";
-        $filter = "is_supplier = 1";
-        return $this->get($table, $columns, $sort, $filter);
+        return $this->get("SELECT id, name, is_supplier FROM client WHERE is_supplier = 1 ORDER BY name");
     }
     
 
