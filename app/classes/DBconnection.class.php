@@ -8,7 +8,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/dbCon
 class DBconnection {
 
     private static $instance = null;
-    
+
     public function __construct() {
         $this->connection = $this->tryConnect();
     }

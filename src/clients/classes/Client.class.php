@@ -12,6 +12,7 @@ class Client extends DB {
     protected $name;
     protected $name_note;
     protected $lb;
+    protected $is_supplier;
     protected $state_id;
     protected $city_id;
     protected $street_id;

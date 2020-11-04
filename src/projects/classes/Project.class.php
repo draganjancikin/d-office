@@ -9,8 +9,15 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.c
  */
 class Project extends DB {
 
-    // $id je id projekta
-    public $id;
+    protected $id;
+    protected $date;
+    protected $pr_id;
+    protected $created_at_user_id;
+    protected $client_id;
+    protected $title;
+    protected $priority_id;
+    protected $note;
+    protected $status;
 
 
     // metoda koja daje naziv naselja klijenta $client_id

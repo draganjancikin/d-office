@@ -10,7 +10,16 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.c
 
 class Material extends DB {
 
+    protected $id;
+    protected $name;
+    protected $unit_id;
+    protected $weight;
+    protected $min_obrac_mera;
+    protected $price;
+    protected $note;
+    protected $date;
 
+    
     //metoda koja vraća artikle u zavisnosti od datog pojma u pretrazi
     public function search($name){
 

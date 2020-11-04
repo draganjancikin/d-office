@@ -9,7 +9,13 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.c
  */
 class Cutting extends DB {
 
+    protected $id;
+    protected $c_id;
+    protected $date;
+    protected $task_id;
+    protected $client_id;
 
+    
     //metoda koja daje zadnjih $number materijala upisanih u bazu
     public function getLastCuttings($limit){
         

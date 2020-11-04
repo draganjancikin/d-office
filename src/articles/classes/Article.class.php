@@ -11,11 +11,14 @@ class Article extends DB {
     protected $id;
     protected $group_id;
     protected $name;
+    protected $unit_id;
     protected $weight;
+    protected $min_obrac_mera;
     protected $price;
+    protected $date;
     protected $note;
 
-
+    
     // metoda koja daje sve jedinice mere
     public function getUnits (){
         return $this->get("SELECT * FROM unit");

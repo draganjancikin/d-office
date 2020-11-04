@@ -9,6 +9,18 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.c
  */
 class Order extends DB {
 
+    protected $id;
+    protected $o_id;
+    protected $date;
+    protected $supplier_id;
+    protected $project_id;
+    protected $title;
+    protected $archived;
+    protected $status;
+    protected $is_archived;
+    protected $note;
+    
+
     //metoda koja daje zadnjih $number narudžbeica upisanih u bazu
     public function getLastOrders($limit){
 

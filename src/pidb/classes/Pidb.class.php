@@ -15,7 +15,9 @@ class Pidb extends DB {
     protected $date;
     protected $client_id;
     protected $parent_id;
+    protected $project_id;
     protected $title;
+    protected $archived;
     protected $note;
     protected $tax;
     protected $kurs;

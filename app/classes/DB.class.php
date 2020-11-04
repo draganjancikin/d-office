@@ -16,7 +16,6 @@ class DB extends DBconnection {
      * 
      * @author Dragan Jancikin <dragan.jancikin@gmail.com>
      */
-    
     protected function get ($query_string){
         $result = $this->connection->query( $query_string ) or die(mysqli_error($this->connection));
         $rows = $result->fetch_all(MYSQLI_ASSOC);
@@ -29,18 +28,14 @@ class DB extends DBconnection {
     }
 
     public function getKurs(){
-
         $result = $this->connection->query("SELECT kurs FROM preferences WHERE id = 1 ") or die(mysqli_error($this->connection));
             $row = $result->fetch_assoc();
-        
         return $row['kurs'];
     }
 
     public function getTax(){
-
         $result = $this->connection->query("SELECT tax FROM preferences WHERE id = 1 ") or die(mysqli_error($this->connection));
             $row = $result->fetch_assoc();
-        
         return $row['tax'];
     }
 
