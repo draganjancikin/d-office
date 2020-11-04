@@ -608,15 +608,13 @@ class Project extends DB {
     }
 
 
-    // metoda koja daje zaposlene
     public function getEmployees (){
-        return $this->get("SELECT id, name FROM employee");
+        return $this->get("SELECT id, name FROM employee ORDER BY name");
     }
-    
 
-    public function delNoteFromProjectTask ($project_task_note_id){
-        $this->connection->query("DELETE FROM project_task_note "
-                        . " WHERE id='$project_task_note_id' ") or die(mysqli_error($this->connection));
+
+    public function delNoteFromProjectTask($project_task_note_id){
+        return $this->delete("DELETE FROM project_task_note WHERE id=$project_task_note_id");
     }
 
 }

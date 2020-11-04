@@ -16,10 +16,14 @@ class DB extends DBconnection {
      * 
      * @author Dragan Jancikin <dragan.jancikin@gmail.com>
      */
-    protected function get ($query_string){
+    protected function get($query_string) {
         $result = $this->connection->query( $query_string ) or die(mysqli_error($this->connection));
         $rows = $result->fetch_all(MYSQLI_ASSOC);
         return $rows;
+    }
+
+    protected function delete($query_string) {
+        $this->connection->query( $query_string ) or die(mysqli_error($this->connection));
     }
     
     public function numRows($table) {
@@ -27,15 +31,15 @@ class DB extends DBconnection {
         return mysqli_num_rows($result);
     }
 
-    public function getKurs(){
+    public function getKurs() {
         $result = $this->connection->query("SELECT kurs FROM preferences WHERE id = 1 ") or die(mysqli_error($this->connection));
-            $row = $result->fetch_assoc();
+        $row = $result->fetch_assoc();
         return $row['kurs'];
     }
 
-    public function getTax(){
+    public function getTax() {
         $result = $this->connection->query("SELECT tax FROM preferences WHERE id = 1 ") or die(mysqli_error($this->connection));
-            $row = $result->fetch_assoc();
+        $row = $result->fetch_assoc();
         return $row['tax'];
     }
 

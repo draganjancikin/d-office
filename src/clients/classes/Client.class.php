@@ -65,7 +65,7 @@ class Client extends DB {
                                          . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
                                          . "WHERE (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%') "
                                          . "ORDER BY client.name ") or die(mysqli_error($this->connection));
-        $result -> fetch_all(MYSQLI_ASSOC);
+        $result->fetch_all(MYSQLI_ASSOC);
         return $result;
     }
 
@@ -182,7 +182,7 @@ class Client extends DB {
                                          . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
                                          
                                          . "ORDER BY client.id DESC LIMIT $limit") or die(mysqli_error($this->connection));
-        $result -> fetch_all(MYSQLI_ASSOC);
+        $result->fetch_all(MYSQLI_ASSOC);
         return $result;
     }
 
