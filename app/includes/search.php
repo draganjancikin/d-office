@@ -458,44 +458,44 @@ if($page == "orders"):
                     </tfoot>
                     <tbody>
                     <?php
-                    foreach ($orders as $order):
-                        $project_id = $order['project_id'];
+                    foreach ($orders as $order_data):
+                        $project_id = $order_data['project_id'];
                         $project_data = $project -> getProject($project_id);
-                        if ($order['is_archived'] == 0):
+                        if ($order_data['is_archived'] == 0):
                             ?>
                             <tr>
                                 <td class="px-1">
-                                    <a href="?view&order_id=<?php echo $order['id'] ?>">
-                                        <?php echo str_pad($order['o_id'], 4, "0", STR_PAD_LEFT) . '_' . date('m_Y', strtotime($order['date'])) ?>
+                                    <a href="?view&order_id=<?php echo $order_data['id'] ?>">
+                                        <?php echo str_pad($order_data['o_id'], 4, "0", STR_PAD_LEFT) . '_' . date('m_Y', strtotime($order_data['date'])) ?>
                                     </a>
                                 </td>
                                 <td class="px-1 order-status text-center">
                                 <?php
-                                    if($order['status'] == 0):
+                                    if($order_data['status'] == 0):
                                     ?>
                                     <span class="badge badge-pill badge-light">N</span>
                                     <?php
                                     endif;
-                                    if($order['status'] == 1):
+                                    if($order_data['status'] == 1):
                                     ?>
                                     <span class="badge badge-pill badge-warning">P</span>
                                     <?php
                                     endif;
-                                    if($order['status'] == 2):
+                                    if($order_data['status'] == 2):
                                     ?>
                                     <span class="badge badge-pill badge-success">S</span>
                                     <?php
                                     endif;
-                                    if($order['status'] == 3):
+                                    if($order_data['status'] == 3):
                                     ?>
                                     <span class="badge badge-pill badge-secondary">A</span>
                                     <?php
                                     endif;
                                 ?>
                                 </td>
-                                <td class="px-1"><?php echo $order['supplier_name'] ?></td>
+                                <td class="px-1"><?php echo $order_data['supplier_name'] ?></td>
                                 <td class="px-1">
-                                    <?php echo $order['title']; ?>
+                                    <?php echo $order_data['title']; ?>
                                 </td>
                                 <td class="px-1">
                                     <?php 
@@ -507,7 +507,7 @@ if($page == "orders"):
                                         <?php 
                                     endif;
                                     ?>
-                                    <?php echo ( $order['id'] == $order['last_id'] ? '<a href="' .$_SERVER['PHP_SELF']. '?name=&search&delOrder&order_id=' .$order['id']. '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); ?>
+                                    <?php echo ( $order_data['id'] == $order->getLastOrderId() ? '<a href="' .$_SERVER['PHP_SELF']. '?name=&search&delOrder&order_id=' .$order_data['id']. '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); ?>
                                 </td>
                             </tr>
                             <?php

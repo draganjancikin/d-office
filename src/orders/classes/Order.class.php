@@ -21,6 +21,11 @@ class Order extends DB {
     protected $note;
     
 
+    public function getLastOrderId() {
+        return $this->getLastId("orderm");
+    }
+
+
     //metoda koja daje zadnjih $number narudžbeica upisanih u bazu
     public function getLastOrders($limit) {
         return $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name as supplier_name "
@@ -249,23 +254,32 @@ class Order extends DB {
 
 
     //metoda koja vraća narudžbenice u zavisnosti od datog pojma u pretrazi
+    /*
+    public function search($name) {
+        $last_id = $this->getLastId("orderm");
+        $result =  $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, client.name as supplier_name, orderm.title, orderm.status, orderm.is_archived "
+                            . "FROM orderm JOIN (client)"
+                            . "ON (orderm.supplier_id = client.id)"
+                            . "WHERE (client.name LIKE '%$name%' ) "
+                            . "ORDER BY orderm.id DESC ");
+        // var_dump($result);
+        return $result;
+    }
+    */
     public function search($name){
 
         $orders = array();
         $order = array();
-        
-        $last_id = $this->getLastId("orderm");
         
         // izlistavanje iz baze predračuna, računa, otpremnica i povratnica klijenata sa nazivom koji je sličan $name
         $result = $this->connection->query("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, client.name, orderm.title, orderm.status, orderm.is_archived "
                                          . "FROM orderm JOIN (client)"
                                          . "ON (orderm.supplier_id = client.id)"
                                          . "WHERE (client.name LIKE '%$name%' ) "
-                                         . "ORDER BY orderm.id desc  ") or die(mysqli_error($this->connection));
+                                         . "ORDER BY orderm.id DESC ") or die(mysqli_error($this->connection));
         while($row = mysqli_fetch_array($result)):
             $order = array(
                 'id' => $row['id'],
-                'last_id' => $last_id,
                 'o_id' => $row['o_id'],
                 'date' => $row['date'],
                 'project_id' => $row['project_id'],

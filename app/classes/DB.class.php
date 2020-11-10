@@ -24,7 +24,7 @@ class DB extends DBconnection {
 
     protected function getLastId($table) {
         $result = $this->connection->query("SELECT id FROM $table ORDER by id desc") or die(mysqli_error($this->connection));
-            $row = mysqli_fetch_array($result);
+        $row = mysqli_fetch_array($result);
         return $row['id'];
     }
 
