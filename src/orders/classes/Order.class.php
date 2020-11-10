@@ -22,34 +22,14 @@ class Order extends DB {
     
 
     //metoda koja daje zadnjih $number narudžbeica upisanih u bazu
-    public function getLastOrders($limit){
-
-        $order = array();
-        $orders = array();
-
-        // izlistavanje zadnjih $limit materijala
-        $result = $this->connection->query("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name "
-                                         . "FROM orderm "
-                                         . "JOIN (client) "
-                                         . "ON (orderm.supplier_id = client.id) "
-                                         . "ORDER BY orderm.id DESC LIMIT $limit") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)):
-            $order = array(
-                'id' => $row['id'],
-                'o_id' => $row['o_id'],
-                'date' => $row['date'],
-                'project_id' => $row['project_id'],
-                'title' => $row['title'],
-                'status' => $row['status'],
-                'is_archived' => $row['is_archived'],
-                'supplier_name' => $row['name']
-            );
-            array_push($orders, $order);
-        endwhile;
-    
-        return $orders;
+    public function getLastOrders($limit) {
+        return $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name as supplier_name "
+                        . "FROM orderm "
+                        . "JOIN (client) "
+                        . "ON (orderm.supplier_id = client.id) "
+                        . "ORDER BY orderm.id DESC LIMIT $limit");
     }
-
+    
 
     // metoda koja definiše i dodeljuje vrednost o_id 
     public function setOid(){
@@ -101,29 +81,15 @@ class Order extends DB {
 
 
     //metoda koja vraća podatke o dokumentu u zaisnosti od id dokumenta
-    public function getOrder($order_id){
-    
-        $result = $this->connection->query("SELECT orderm.id, orderm.o_id, orderm.date, orderm.supplier_id, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, orderm.note, client.name "
-                                         . "FROM orderm "
-                                         . "JOIN client "
-                                         . "ON (orderm.supplier_id = client.id) "
-                                         . "WHERE orderm.id = $order_id ") or die(mysqli_error($this->connection));
-        $row = mysqli_fetch_array($result);
-            $order = array(
-                'id' => $row['id'],
-                'o_id' => $row['o_id'],
-                'date' => $row['date'],
-                'project_id' => $row['project_id'],
-                'supplier_id' => $row['supplier_id'],
-                'title' => $row['title'],
-                'status' => $row['status'],
-                'is_archived' => $row['is_archived'],
-                'note' => $row['note'],
-            );
-
-        return $order;
+    public function getOrder($order_id) {
+        $result =  $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.supplier_id, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, orderm.note, client.name "
+                            . "FROM orderm "
+                            . "JOIN client "
+                            . "ON (orderm.supplier_id = client.id) "
+                            . "WHERE orderm.id = $order_id ");
+        return ( empty($result[0]) ? false : $result[0] );
     }
-
+    
 
     // metoda koja daje artikle narudžbenice
     public function getMaterialsOnOrder($order_id){
@@ -287,11 +253,9 @@ class Order extends DB {
 
         $orders = array();
         $order = array();
-
-        $result = $this->connection->query("SELECT id FROM orderm ORDER by id desc") or die(mysqli_error($this->connection));
-            $row = mysqli_fetch_array($result);
-            $last_id = $row['id'];
-
+        
+        $last_id = $this->getLastId("orderm");
+        
         // izlistavanje iz baze predračuna, računa, otpremnica i povratnica klijenata sa nazivom koji je sličan $name
         $result = $this->connection->query("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, client.name, orderm.title, orderm.status, orderm.is_archived "
                                          . "FROM orderm JOIN (client)"

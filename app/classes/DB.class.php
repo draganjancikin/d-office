@@ -22,6 +22,12 @@ class DB extends DBconnection {
         return $rows;
     }
 
+    protected function getLastId($table) {
+        $result = $this->connection->query("SELECT id FROM $table ORDER by id desc") or die(mysqli_error($this->connection));
+            $row = mysqli_fetch_array($result);
+        return $row['id'];
+    }
+
     protected function delete($query_string) {
         $this->connection->query( $query_string ) or die(mysqli_error($this->connection));
     }
