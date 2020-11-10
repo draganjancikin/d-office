@@ -25,7 +25,7 @@
                     <div class="col-sm-6">
                         <input class="form-control" id="disabledInputName" type="text" value="<?php echo $client_data['name'] ?>" disabled />
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <input class="form-control" id="disabledInputName" type="text" value="<?php echo $client_data['name_note'] ?>" disabled />
                     </div>
                 </div>

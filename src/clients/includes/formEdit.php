@@ -34,7 +34,7 @@
                 <div class="col-sm-6">
                     <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $client_data['name'] ?>" >
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                     <input class="form-control" id="inputName" type="text" name="name_note" value="<?php echo $client_data['name_note'] ?>" >
                 </div>
             </div>
