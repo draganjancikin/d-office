@@ -94,7 +94,7 @@ $html = '
     ž.r. 160-438797-72, Banca Intesa<br />
     ž.r. 330-11001058-98, Credit Agricole</td>
     
-    <td width="350px">Kupac:<br />'.$client_data['name'].' '.($client_data['pib']<>""?'<br />PIB '.$client_data['pib']:"").'<br />'.$client_data['street_name'].' '.$client_data['home_number'].'<br />'.$client_data['city_name'].', '.$client_data['state_name'].'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
+    <td width="350px">Kupac:<br />'.$client_data['name'].' '.($client_data['lb']<>""?'<br />PIB '.$client_data['pib']:"").'<br />'.$client_data['street_name'].' '.$client_data['home_number'].'<br />'.$client_data['city_name'].', '.$client_data['state_name'].'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>
   <tr>
     <td colspan="3"><h2>'.$pidb_name.' broj: '.str_pad($pidb_data['y_id'], 4, "0", STR_PAD_LEFT).' - '.date('m', strtotime($pidb_data['date'])).'</h2></td>

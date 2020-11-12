@@ -55,7 +55,6 @@ class Client extends DB {
     }
 
 
-    //metoda koja vraća naziv klijenta-e u zavisnosti od datog pojma u pretrazi
     public function search($name) {
         return $this->get("SELECT client.id, client.name, client.name_note, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number "
                         . "FROM client "
