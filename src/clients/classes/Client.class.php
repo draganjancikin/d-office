@@ -76,8 +76,8 @@ class Client extends DB {
             die('<script>location.href = "/clients/" </script>');
         } else {
             ($result[0]['vps_id'] == 1 ? $result[0]['vps_name'] = "Fizičko lice" : $result[0]['vps_name'] = "Pravno lice" );
+            return $result[0];
         }
-        return ( empty($result[0]) ? false : $result[0] );
     }
 
 
