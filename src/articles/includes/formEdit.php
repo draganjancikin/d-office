@@ -91,7 +91,7 @@
   </div>
   <div class="card-body p-2">
     <?php
-    $propertys = $article->getPropertyById($article_id);
+    $propertys = $article->getPropertyByArticleId($article_id);
     foreach ($propertys as $property):
       ?>
       <form method="post">
