@@ -92,7 +92,11 @@ class Order extends DB {
                             . "JOIN client "
                             . "ON (orderm.supplier_id = client.id) "
                             . "WHERE orderm.id = $order_id ");
-        return ( empty($result[0]) ? false : $result[0] );
+        if(empty($result)) {
+            die('<script>location.href = "/orders/" </script>');
+        } else {
+            return $result[0];
+        }
     }
     
 
