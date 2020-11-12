@@ -117,7 +117,7 @@
 
     <div class="card-body p-2">
         <?php
-        $propertys = $material->getPropertyById($material_id);
+        $propertys = $material->getPropertysByMaterialId($material_id);
         foreach ($propertys as $property):
             ?>
             <form method="post">
