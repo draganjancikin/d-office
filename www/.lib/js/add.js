@@ -18,7 +18,7 @@ $(document).ready(function(){
                 <div class="form-group row">
                   <label for="pib" class="col-sm-3 col-lg-2 col-form-label text-right">PIB: </label>
                   <div class="col-sm-3">
-                    <input class="form-control" type="text" id="pib" name="pib" value=""  maxlength="9" />
+                    <input class="form-control" type="text" id="pib" name="lb" value=""  maxlength="9" />
                   </div>
                 </div>
                 `;

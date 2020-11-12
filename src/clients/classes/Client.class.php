@@ -67,47 +67,21 @@ class Client extends DB {
     
 
     // metoda koja vraća sve podatke o kllijent-u na osnovu client_id
+    
     public function getClient($id) {
-        if($id == 0) {
-
+        $result =  $this->get("SELECT client.id, client.vps_id, client.name, client.name_note, client.lb, client.is_supplier, client.state_id, client.city_id, client.street_id, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number, client.address_note, client.note "
+                            . "FROM client "
+                            . "JOIN (street, city, state)"
+                            . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
+                            . "WHERE client.id = $id ");
+        if(empty($result)) {
+            die('<script>location.href = "/clients/" </script>');
         } else {
-            // izlistavanje iz baze slih klijenata sa id = $id
-            $result = $this->connection->query("SELECT client.id, client.vps_id, client.name, client.name_note, client.lb, client.is_supplier, client.state_id, client.city_id, client.street_id, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number, client.address_note, client.note "
-                                            . "FROM client "
-                                            . "JOIN (street, city, state)"
-                                            . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
-                                            . "WHERE client.id = $id ") or die(mysqli_error($this->connection));
-            $row = $result->fetch_assoc();
-                $vps_id = $row['vps_id'];
-                if($vps_id == 1){
-                    $vps_name = "Fizičko lice";
-                }else{
-                    $vps_name = "Pravno lice";
-                }
-                $client = array(
-                    'id' => $row['id'],
-                    'vps_id' => $vps_id,
-                    'vps_name' => $vps_name,
-                    'name' => $row['name'],
-                    'name_note' => $row['name_note'],
-                    'pib' => $row['lb'],
-                    'is_supplier' => $row['is_supplier'],
-                    'state_id' => $row['state_id'],
-                    'state_name' => $row['state_name'],
-                    'city_id' => $row['city_id'],
-                    'city_name' => $row['city_name'],
-                    'street_id' => $row['street_id'],
-                    'street_name' => $row['street_name'],
-                    'home_number' => $row['home_number'],
-                    'address_note' => $row['address_note'],
-                    'note' => $row['note']
-                );
-
-            return $client;
+            ($result[0]['vps_id'] == 1 ? $result[0]['vps_name'] = "Fizičko lice" : $result[0]['vps_name'] = "Pravno lice" );
         }
-        
+        return ( empty($result[0]) ? false : $result[0] );
     }
-
+    
 
     // metoda koja vraća sve podatke o supplier-u na osnovu supplier_id
     public function getSupplier($id) {

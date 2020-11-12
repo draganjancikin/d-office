@@ -36,7 +36,7 @@
                     <div class="form-group row">
                         <label for="disabledInputPIB" class="col-sm-3 col-lg-2 col-form-label text-right">PIB: </label>
                         <div class="col-sm-4">
-                            <input class="form-control" id="disabledInputPIB" type="text" value="<?php echo $client_data['pib'] ?>"  maxlength="9" disabled >	
+                            <input class="form-control" id="disabledInputPIB" type="text" value="<?php echo $client_data['lb'] ?>"  maxlength="9" disabled >	
                         </div>
                     </div>
                     <?php

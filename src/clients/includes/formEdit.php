@@ -45,7 +45,7 @@
                 <div class="form-group row">
                     <label for="inputPIB" class="col-sm-3 col-lg-2 col-form-label text-right">PIB: </label>
                     <div class="col-sm-4">
-                        <input class="form-control" id="inputPIB" type="text" name="pib" value="<?php echo $client_data['pib'] ?>"  maxlength="9" >	
+                        <input class="form-control" id="inputPIB" type="text" name="pib" value="<?php echo $client_data['lb'] ?>"  maxlength="9" >	
                     </div>
                 </div>
                 <?php
