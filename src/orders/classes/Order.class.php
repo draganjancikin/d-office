@@ -17,7 +17,6 @@ class Order extends DB {
     protected $status;
     protected $is_archived;
     protected $note;
-    
 
     public function getLastOrderId() {
         return $this->getLastId("orderm");
@@ -31,7 +30,7 @@ class Order extends DB {
                         . "ON (orderm.supplier_id = client.id) "
                         . "ORDER BY orderm.id DESC LIMIT $limit");
     }
-    
+
 
     // metoda koja definiše i dodeljuje vrednost o_id 
     public function setOid(){
@@ -95,7 +94,7 @@ class Order extends DB {
             return $result[0];
         }
     }
-    
+
 
     // metoda koja daje artikle narudžbenice
     public function getMaterialsOnOrder($order_id){
@@ -254,45 +253,13 @@ class Order extends DB {
     }
 
 
-    //metoda koja vraća narudžbenice u zavisnosti od datog pojma u pretrazi
-    /*
     public function search($name) {
-        $last_id = $this->getLastId("orderm");
         $result =  $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, client.name as supplier_name, orderm.title, orderm.status, orderm.is_archived "
                             . "FROM orderm JOIN (client)"
                             . "ON (orderm.supplier_id = client.id)"
                             . "WHERE (client.name LIKE '%$name%' ) "
                             . "ORDER BY orderm.id DESC ");
-        // var_dump($result);
         return $result;
-    }
-    */
-    public function search($name){
-
-        $orders = array();
-        $order = array();
-        
-        // izlistavanje iz baze predračuna, računa, otpremnica i povratnica klijenata sa nazivom koji je sličan $name
-        $result = $this->connection->query("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, client.name, orderm.title, orderm.status, orderm.is_archived "
-                                         . "FROM orderm JOIN (client)"
-                                         . "ON (orderm.supplier_id = client.id)"
-                                         . "WHERE (client.name LIKE '%$name%' ) "
-                                         . "ORDER BY orderm.id DESC ") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)):
-            $order = array(
-                'id' => $row['id'],
-                'o_id' => $row['o_id'],
-                'date' => $row['date'],
-                'project_id' => $row['project_id'],
-                'supplier_name' => $row['name'],
-                'title' => $row['title'],
-                'status' => $row['status'],
-                'is_archived' => $row['is_archived'],
-            );
-            array_push($orders, $order);
-        endwhile;
-
-        return $orders;
     }
 
 
