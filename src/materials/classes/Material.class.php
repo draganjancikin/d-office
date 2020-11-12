@@ -38,7 +38,11 @@ class Material extends DB {
                             . "JOIN (unit) "
                             . "ON (material.unit_id = unit.id) "
                             . "WHERE material.id = $material_id ");
-        return $result[0];
+        if(empty($result)) {
+            die('<script>location.href = "/materials/" </script>');
+        } else {
+            return $result[0];
+        }
     }
 
 
@@ -75,7 +79,6 @@ class Material extends DB {
     }
 
 
-    // metoda koja briše dobavljač materijala
     public function delMaterialSupplier($material_id, $client_id){
         $this->connection->query("DELETE FROM material_suppliers WHERE material_id='$material_id' AND client_id='$client_id' ") or die(mysqli_error($this->connection));
     }
