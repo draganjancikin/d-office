@@ -1,8 +1,6 @@
 <?php
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
- * Order.class.php
- * 
  * Description of Order class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
@@ -26,7 +24,6 @@ class Order extends DB {
     }
 
 
-    //metoda koja daje zadnjih $number narudžbeica upisanih u bazu
     public function getLastOrders($limit) {
         return $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name as supplier_name "
                         . "FROM orderm "
