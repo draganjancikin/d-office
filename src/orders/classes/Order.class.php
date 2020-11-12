@@ -77,7 +77,6 @@ class Order extends DB {
         }
 
         $this->connection->query("UPDATE orderm SET o_id = '$o_id' WHERE id = '$last_id' ") or die(mysqli_error($this->connection));
-
     }
 
 
@@ -254,7 +253,7 @@ class Order extends DB {
 
 
     public function search($name) {
-        $result =  $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, client.name as supplier_name, orderm.title, orderm.status, orderm.is_archived "
+        $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, client.name as supplier_name, orderm.title, orderm.status, orderm.is_archived "
                             . "FROM orderm JOIN (client)"
                             . "ON (orderm.supplier_id = client.id)"
                             . "WHERE (client.name LIKE '%$name%' ) "
@@ -266,46 +265,25 @@ class Order extends DB {
     // metoda koja briše materijal iz narudžbenice
     public function delMaterialFromOrder($orderm_material_id){
 
-        $this->connection->query("DELETE FROM orderm_material WHERE id='$orderm_material_id' ") or die(mysqli_error($this->connection));
+        $this->delete("DELETE FROM orderm_material WHERE id='$orderm_material_id' ");
 
         $result_propertys = $this->connection->query("SELECT * FROM orderm_material_property WHERE orderm_material_id = $orderm_material_id ") or die(mysqli_error($this->connection));
         while($row = mysqli_fetch_array($result_propertys)):
-            $id = $row['id'];
 
+            $id = $row['id'];
             $this->connection->query("DELETE FROM orderm_material_property WHERE id='$id' ") or die(mysqli_error($this->connection));
 
         endwhile;;
     }
 
 
-    // metoda koja daje sve narudžbenice datog projekta
     public function getOrdersByProjectId($project_id) {
-
-        $order = array();
-        $orders = array();
-
-        // izlistavanje svi narudžbenica datog projekta
-        $result = $this->connection->query("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name "
-                                         . "FROM orderm "
-                                         . "JOIN (client) "
-                                         . "ON (orderm.supplier_id = client.id) "
-                                         . "WHERE (orderm.project_id = $project_id) "
-                                         . "ORDER BY orderm.id DESC ") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)):
-            $order = array(
-                'id' => $row['id'],
-                'o_id' => $row['o_id'],
-                'date' => $row['date'],
-                'project_id' => $row['project_id'],
-                'title' => $row['title'],
-                'status' => $row['status'],
-                'is_archived' => $row['is_archived'],
-                'supplier_name' => $row['name']
-            );
-            array_push($orders, $order);
-        endwhile;
-
-        return $orders;
+        return $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name as supplier_name "
+                        . "FROM orderm "
+                        . "JOIN (client) "
+                        . "ON (orderm.supplier_id = client.id) "
+                        . "WHERE (orderm.project_id = $project_id) "
+                        . "ORDER BY orderm.id DESC ");
     }
 
 
