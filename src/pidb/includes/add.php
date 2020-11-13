@@ -38,14 +38,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPidb"]) ) {
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleInPidb"]) ) {
 
     $pidb_id = htmlspecialchars($_POST["pidb_id"]);
-    $pidb_tip_id = $pidb->getTipid($pidb_id);
     $article_id = htmlspecialchars($_POST["article_id"]);
     $note = htmlspecialchars($_POST["note"]);
     $pieces = htmlspecialchars($_POST["pieces"]);
     $price = $article->getPrice($article_id);
     $tax = $pidb->getTax();
- // var_dump($price);
- // exit();
+
     $db = new DBconnection();
 
     $db->connection->query("INSERT INTO pidb_article (pidb_id, article_id, note, pieces, price, tax) " 
@@ -65,7 +63,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleInPidb"]) ) {
                         . " VALUES ('$pidb_article_id', '$property_id', '$quantity' )") or die(mysqli_error($db->connection));
     }
 
-    die('<script>location.href = "?edit&pidb_id='.$pidb_id.'&pidb_tip_id='.$pidb_tip_id.'" </script>');
+    die('<script>location.href = "?edit&pidb_id='.$pidb_id.' " </script>');
 }
 
 // add payment

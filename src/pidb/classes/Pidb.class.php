@@ -388,22 +388,33 @@ class Pidb extends DB {
     }
 
 
-    // metoda koja daje tip dokumenta
-    public function getTipid($pidb_id){
-
-        // čitamo iz baze iz tabele pidb
-        $result = $this->connection->query("SELECT tip_id FROM pidb WHERE id = $pidb_id ") or die(mysqli_error($this->connection));
-            $row = mysqli_fetch_array($result);
-
-        return $row['tip_id'];
-    }
-
-
+    /**
+     * Method that return all avans payments by $pidb_id
+     * 
+     * @param integer $pidb_id
+     * 
+     * @return float 
+     * 
+     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
+     */
     public function getAvans($pidb_id){
-        $result = $this->get("SELECT * FROM payment WHERE pidb_id = '$pidb_id' AND payment_type_id = 1 ");
-        return $this->sumAllValuesByKey($result, "amount");
+        
+        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND payment_type_id = 1 ");
+        $avans = $this->sumAllValuesByKey($result, "amount");
+        if($this->getParent($pidb_id)){
+            $parent_id = $this->getParent($pidb_id)[0]['parent_id'];
+            $resultParent = $this->get("SELECT amount FROM payment WHERE pidb_id = '$parent_id' AND payment_type_id = 1 ");
+            $avansParent = $this->sumAllValuesByKey($resultParent, "amount");
+        } else {
+            $avansParent = 0;
+        }
+        
+        return ($avans + $avansParent);
     }
 
+    public function getParent($id){
+        return $this->get("SELECT parent_id FROM pidb WHERE id = '$id' ");
+    }
 
     public function sumAllValuesByKey($Arrays, $key) {
         $sumValues = 0;
