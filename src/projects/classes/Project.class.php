@@ -1,8 +1,6 @@
 <?php
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
 /**
- * Project.class.php
- * 
  * Description of Project class
  *
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
