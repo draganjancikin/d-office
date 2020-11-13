@@ -144,19 +144,30 @@ switch ($pidb_data['tip_id']) {
                     endforeach;
                     ?>
                     <tr class="table-<?php echo $style; ?>">
-                        <td colspan="3" rowspan="6"><td colspan="3">ukupno poreska osnovica</td><td class="text-right"><?php echo number_format($total_tax_base*$pidb->getKurs(), 2, ",", ".") ?></td><td colspan="5"></td>
+                        <td colspan="3" rowspan="6"><td colspan="3">ukupno poreska osnovica</td><td class="text-right"><?php echo number_format($total_tax_base*$pidb->getKurs(), 2, ",", ".") ?></td>
+                        <td colspan="5"></td>
                     </tr>
                     <tr class="table-<?php echo $style; ?>">
-                        <td colspan="5">ukupno iznos PDV-a</td><td class="text-right"><?php echo number_format($total_tax_amount*$pidb->getKurs(), 2, ",", ".") ?></td><td colspan="3"></td>
+                        <td colspan="5">ukupno iznos PDV-a</td>
+                        <td class="text-right"><?php echo number_format($total_tax_amount*$pidb->getKurs(), 2, ",", ".") ?></td>
+                        <td colspan="3"></td>
                     </tr>
                     <tr class="table-<?php echo $style; ?>">
-                        <td colspan="5">UKUPNO</td><td class="text-right"></td><td class="text-right""><?php echo number_format($total*$pidb->getKurs(), 2, ",", ".") ?></td><td colspan="2"></td>
+                        <td colspan="5">UKUPNO</td>
+                        <td class="text-right"></td>
+                        <td class="text-right""><?php echo number_format($total*$pidb->getKurs(), 2, ",", ".") ?></td>
+                        <td colspan="2">(eur <?php echo number_format($total, 2, ",", ".") ?>)</td>
                     </tr>
                     <tr class="table-<?php echo $style; ?>">
-                        <td colspan="5">Avans</td><td class="text-right"></td><td class="text-right""><?php echo  number_format(($avans = $pidb->getAvans($pidb_id))*$article->getKurs(), 2, ",", ".") ?></td><td colspan="2"></td>
+                        <td colspan="5">Avans</td>
+                        <td class="text-right"></td>
+                        <td class="text-right""><?php echo  number_format(($avans = $pidb->getAvans($pidb_id))*$article->getKurs(), 2, ",", ".") ?></td>
+                        <td colspan="2">(eur <?php echo number_format($avans, 2, ",", ".") ?>)</td>
                     </tr>
                     <tr class="table-<?php echo $style; ?>">
-                        <td colspan="5"><strong>OSTALO ZA UPLATU</strong></td><td class="text-right"><strong>RSD</strong></td><td class="text-right""><b><?php echo number_format(($total-$avans)*$article->getKurs(), 2, ",", ".") ?></b></td>
+                        <td colspan="5"><strong>OSTALO ZA UPLATU</strong></td>
+                        <td class="text-right"></td>
+                        <td class="text-right""><strong><?php echo number_format(($total-$avans)*$article->getKurs(), 2, ",", ".") ?></strong></td>
                         <td colspan="2">(eur <?php echo number_format($total-$avans, 2, ",", ".") ?>)</td>
                     </tr>
                 </tbody>
