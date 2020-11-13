@@ -57,6 +57,7 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
     $db->connection->query("UPDATE pidb SET archived='1' WHERE id = '$pidb_id' ") or die(mysqli_error($db->connection));
 
     // check if proforma has avans payment, if has then save avans to dispatch
+    /*
     $result_pidb_avans = $db->connection->query("SELECT * FROM payment WHERE pidb_id = '$pidb_id'") or die(mysqli_error($db->connection));
     if($result_pidb_avans->num_rows) {
 
@@ -69,6 +70,6 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
         // save avans to dispatch $pidb_id_last
         $db->connection->query("INSERT INTO payment (date, pidb_id, payment_type_id, amount) VALUES ('$date', '$pidb_id_last', '$payment_type_id', '$amount' )") or die(mysqli_error($db->connection)); 
     }
-
+    */
     die('<script>location.href = "?view&pidb_id='.$pidb_id_last.'&pidb_tip_id='.$pidb_tip_id.'" </script>');
 }
