@@ -22,6 +22,15 @@ class DB extends DBconnection {
         return $rows;
     }
 
+    /**
+     * Method that return last ID in $table
+     * 
+     * @param string $table
+     * 
+     * @return integer
+     * 
+     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
+     */
     protected function getLastId($table) {
         $result = $this->connection->query("SELECT id FROM $table ORDER by id desc") or die(mysqli_error($this->connection));
         $row = mysqli_fetch_array($result);

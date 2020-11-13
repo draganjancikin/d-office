@@ -50,7 +50,7 @@ endif;
 if($page == "pidb"):
     require '../../src/pidb/includes/del.php';
     $name = filter_input(INPUT_GET, 'search');
-    $last_pidb_id = $pidb->lastId();
+    $last_pidb_id = $pidb->getlastIdPidb();
     ?>
     <div class="card border-info mb-4">
 

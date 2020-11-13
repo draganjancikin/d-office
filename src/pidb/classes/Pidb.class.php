@@ -59,12 +59,15 @@ class Pidb extends DB {
         return $pidbs;
     }
 
-
-    public function lastId(){
-        $result = $this->connection->query("SELECT id FROM pidb ORDER by id desc") or die(mysqli_error($this->connection));
-        $row = mysqli_fetch_array($result);
-        $last_id = $row['id'];
-        return $last_id;
+    /**
+     * Method that return last ID in table "pidb"
+     * 
+     * @return integer
+     * 
+     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
+     */
+    public function getlastIdPidb(){
+        return $this->getLastId("pidb");
     }
 
    
@@ -396,14 +399,19 @@ class Pidb extends DB {
     }
 
 
-    // method that give avans by pidb_id
     public function getAvans($pidb_id){
-        $result = $this->connection->query("SELECT * FROM payment WHERE pidb_id = '$pidb_id' AND payment_type_id = 1 ") or die(mysqli_error($this->connection));
-        $row = mysqli_fetch_array($result);
-        $avans = $row['amount'];
-        return $avans;
+        $result = $this->get("SELECT * FROM payment WHERE pidb_id = '$pidb_id' AND payment_type_id = 1 ");
+        return $this->sumAllValuesByKey($result, "amount");
     }
 
+
+    public function sumAllValuesByKey($Arrays, $key) {
+        $sumValues = 0;
+        foreach ($Arrays as $subArray) {
+            $sumValues += $subArray[$key];
+        }
+        return $sumValues;
+    }
 
     // metoda koja daje sva potraživana<->uplate vezane za odreženi dokument $pidb_id
     public function getPayments($pidb_id){
