@@ -274,7 +274,13 @@ class Order extends DB {
         return $material;
     }
 
-
+    /**
+     * Method that return orders with client name like $name
+     * 
+     * @param string $name
+     * 
+     * @return array
+     */
     public function search($name) {
         $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, client.name as supplier_name, orderm.title, orderm.status, orderm.is_archived "
                             . "FROM orderm JOIN (client)"
@@ -285,32 +291,44 @@ class Order extends DB {
     }
 
 
-    // metoda koja briše materijal iz narudžbenice
+    /**
+     * Method that delete material from order
+     * 
+     * @param integer $orderm_material_id
+     */
     public function delMaterialFromOrder($orderm_material_id){
 
         $this->delete("DELETE FROM orderm_material WHERE id='$orderm_material_id' ");
-
-        $result_propertys = $this->connection->query("SELECT * FROM orderm_material_property WHERE orderm_material_id = $orderm_material_id ") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result_propertys)):
-
-            $id = $row['id'];
-            $this->connection->query("DELETE FROM orderm_material_property WHERE id='$id' ") or die(mysqli_error($this->connection));
-
-        endwhile;;
+        
+        $propertys = $this->get("SELECT * FROM orderm_material_property WHERE orderm_material_id = '$orderm_material_id' ");
+        foreach($propertys as $property) {
+            $property_id = $property['id'];
+            $this->delete("DELETE FROM orderm_material_property WHERE id='$property_id' ");
+        }
     }
 
-
+    /**
+     * Method thah return orders by project ID
+     * 
+     * @param integer $project_id
+     * 
+     * @return array
+     */
     public function getOrdersByProjectId($project_id) {
-        return $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name as supplier_name "
+        $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name as supplier_name "
                         . "FROM orderm "
                         . "JOIN (client) "
                         . "ON (orderm.supplier_id = client.id) "
                         . "WHERE (orderm.project_id = $project_id) "
                         . "ORDER BY orderm.id DESC ");
+        return $result;
     }
 
-
-    // metoda koja duplicira material iz Narudžbenice
+    /**
+     * Method that duplicate material in order
+     * 
+     * @param integer $order_material_id
+     */
     public function duplicateMaterialInOrder($order_material_id){
 
         // get material by $order_material_id
@@ -323,9 +341,6 @@ class Order extends DB {
         $price = $materialInOrder['price'];
         $tax = $materialInOrder['tax'];
         $weight = $materialInOrder['weight'];
-
-        // echo var_dump($materialInOrder);
-        // need: order_id, material_id, note, pieces, price, discount, tax, weight, propertys
 
         $this->connection->query("INSERT INTO orderm_material (order_id, material_id, note, pieces, price, tax, weight) " 
         . " VALUES ('$order_id', '$material_id', '$note', '$pieces', '$price', '$tax', '$weight' )") or die(mysqli_error($this->connection));
