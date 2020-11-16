@@ -18,19 +18,31 @@ class Order extends DB {
     protected $is_archived;
     protected $note;
 
+    /**
+     * Method that return last orded ID
+     * 
+     * @return integer
+     */
     public function getLastOrderId() {
-        return $this->getLastId("orderm");
+        $result = $this->getLastId("orderm");
+        return $result;
     }
 
-
+    /**
+     * Method that return las orders
+     * 
+     * @param integer $limit
+     * 
+     * @return array
+     */
     public function getLastOrders($limit) {
-        return $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name as supplier_name "
-                        . "FROM orderm "
-                        . "JOIN (client) "
-                        . "ON (orderm.supplier_id = client.id) "
-                        . "ORDER BY orderm.id DESC LIMIT $limit");
+        $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name as supplier_name "
+                            . "FROM orderm "
+                            . "JOIN (client) "
+                            . "ON (orderm.supplier_id = client.id) "
+                            . "ORDER BY orderm.id DESC LIMIT $limit");
+        return $result;
     }
-
 
     // metoda koja definiše i dodeljuje vrednost o_id 
     public function setOid(){
@@ -79,8 +91,13 @@ class Order extends DB {
         $this->connection->query("UPDATE orderm SET o_id = '$o_id' WHERE id = '$last_id' ") or die(mysqli_error($this->connection));
     }
 
-
-    //metoda koja vraća podatke o dokumentu u zaisnosti od id dokumenta
+    /**
+     * Method that return order data by order ID
+     * 
+     * @param integer $order_id
+     * 
+     * @return array
+     */
     public function getOrder($order_id) {
         $result =  $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.supplier_id, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, orderm.note, client.name "
                             . "FROM orderm "
@@ -95,7 +112,13 @@ class Order extends DB {
     }
 
 
-    // metoda koja daje artikle narudžbenice
+    /**
+     * Method that return materials on order
+     * 
+     * @param integer $order_id
+     * 
+     * @return array
+     */
     public function getMaterialsOnOrder($order_id){
 
         $material = array();
