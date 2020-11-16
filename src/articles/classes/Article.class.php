@@ -30,19 +30,9 @@ class Article extends DB {
     }
 
 
-    // metoda koja daje grupu artikala
     public function getArticleGroupById($id) {
-
-        $result = $this->connection->query("SELECT name FROM article_group WHERE id='$id' " ) or die(mysqli_error($this->connection));
-        $row = $result->fetch_assoc();
-
-        if($row) {
-            $group_name = $row['name'];
-        } else {
-            $group_name = "Izaberi grupu";
-        }
-
-        return $group_name;
+        $result = $this->get("SELECT id, name FROM article_group WHERE id='$id' ");
+        return ( empty($result[0]) ? false : $result[0] );
     }
 
 
