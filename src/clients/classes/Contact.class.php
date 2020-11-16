@@ -35,16 +35,25 @@ class Contact extends DB {
 
 
     /**
-    * @author Dragan Jancikin <dragan.jancikin@gmail.com>
-    */
+     * Method that return all contact types form table contacttypes
+     * 
+     * @return array
+     * 
+     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
+     */
     public function getContactTypes (){
         return $this->get("SELECT * FROM contacttypes");
     }
 
 
     /**
-    * @author Dragan Jancikin <dragan.jancikin@gmail.com>
-    */
+     * Method that delete contact from client
+     * 
+     * @param integer $client_id
+     * @param integer $contact_id
+     * 
+     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
+     */
     public function delContact($client_id, $contact_id){
         $this->delete("DELETE FROM contacts WHERE id='$contact_id' ");
         $this->delete("DELETE FROM client_contacts WHERE contact_id='$contact_id' ");
