@@ -59,11 +59,11 @@ $project_data = $project->getProject($project_id);
 $client_data = $client->getClient($project_data['client_id']);
 
 $contacts = $contact->getContactsById($project_data['client_id']);
-    
+
 $contact_item[0] = "";
 $contact_item[1] = "";
 
-if ($contacts->num_rows) {
+if (!empty($contacts)) {
     
     $count = 0;
     foreach ($contacts as $contact):
