@@ -65,7 +65,7 @@ $contacts = $contact->getContactsById($pidb_data['client_id']);
 $contact_item[0] = "";
 $contact_item[1] = "";
 
-if ($contacts->num_rows) {
+if (!empty($contacts)) {
     
     $count = 0;
     foreach ($contacts as $contact):

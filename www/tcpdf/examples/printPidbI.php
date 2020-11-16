@@ -60,21 +60,21 @@ if( $pidb_data['tip_id'] == 2) $pidb_name = "Otpremnica - račun";
 $client_data = $client->getClient($pidb_data['client_id']);
 $contacts = $contact->getContactsById($pidb_data['client_id']);
 
-if (!$contacts->num_rows) {
-  // if empty
-  $contact_item[0] = "";
-  $contact_item[1] = "";
-} else {
-  $i = 0;
-  /*
-  foreach ($contacts as $client_contact) {
-     if($i<2) {
-          $contact_item[$i] = $client_contact['name'];
-     }
-  }
-  */
-  $contact_item[0] = "_";
-  $contact_item[1] = "_";
+$contact_item[0] = "";
+$contact_item[1] = "";
+
+if (!empty($contacts)) {
+    
+  $count = 0;
+  foreach ($contacts as $contact):
+      if (isset($contact['number']) AND $count == 0 ){ 
+          $contact_item[0] = $contact['number'];
+      } elseif (isset($contact['number']) AND $count == 1) {
+          $contact_item[1] = $contact['number'];
+      }
+      $count++; 
+  endforeach;
+  
 }
 
 $html = '
@@ -92,7 +92,7 @@ $html = '
     ž.r. 160-438797-72, Banca Intesa<br />
     ž.r. 330-11001058-98, Credit Agricole</td>
     
-    <td width="350px">Kupac:<br />'.$client_data['name'].' '.($client_data['lb']<>""?'<br />PIB '.$client_data['pib']:"").'<br />'.$client_data['street_name'].' '.$client_data['home_number'].'<br />'.$client_data['city_name'].', '.$client_data['state_name'].'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
+    <td width="350px">Kupac:<br />'.$client_data['name'].' '.($client_data['lb']<>""?'<br />PIB '.$client_data['lb']:"").'<br />'.$client_data['street_name'].' '.$client_data['home_number'].'<br />'.$client_data['city_name'].', '.$client_data['state_name'].'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>
   <tr>
     <td colspan="3"><h2>'.$pidb_name.' broj: '.str_pad($pidb_data['y_id'], 4, "0", STR_PAD_LEFT).' - '.date('m', strtotime($pidb_data['date'])).'</h2></td>
