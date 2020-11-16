@@ -24,8 +24,11 @@ class Client extends DB {
     protected $modified_at_date;
     protected $modified_at_user_id;
 
-
-    // get client types
+    /**
+     * Method that return client types
+     * 
+     * @return array
+     */
     public function getVpses() {
         return array(
             array('id'=>'1', 'name'=>'Fizičko lice'),
@@ -33,38 +36,72 @@ class Client extends DB {
         );
     }
 
-
+    /**
+     * Method that return all states from table state
+     * 
+     * @return array
+     */
     public function getStates() {
-        return $this->get("SELECT * FROM state ORDER BY name");
+        $result = $this->get("SELECT * FROM state ORDER BY name");
+        return $result;
     }
 
-
+    /**
+     * Method that return all citys from table city
+     * 
+     * @return array
+     */
     public function getCitys() {
-        return $this->get("SELECT * FROM city ORDER BY name");
+        $result = $this->get("SELECT * FROM city ORDER BY name");
+        return $result;
     }
 
-
+    /**
+     * Method that return city by ID
+     * 
+     * @param integer $id
+     * 
+     * @return array
+     */
     public function getCity($id) {
         $result =  $this->get("SELECT * FROM city WHERE id = $id");
         return ( empty($result[0]) ? false : $result[0] );
     }
 
-    
+    /**
+     * Method that return all streets from table street
+     * 
+     * @return array
+     */
     public function getStreets() {
-        return $this->get("SELECT * FROM street ORDER BY name");
+        $result = $this->get("SELECT * FROM street ORDER BY name");
+        return $result;
     }
 
-
+    /**
+     * Method that return all client with name or name_note like $name
+     * 
+     * @param string $name
+     * 
+     * @return array
+     */
     public function search($name) {
-        return $this->get("SELECT client.id, client.name, client.name_note, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number "
-                        . "FROM client "
-                        . "JOIN (street, city, state) "
-                        . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id ) "
-                        . "WHERE (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%') "
-                        . "ORDER BY client.name");
+        $result = $this->get("SELECT client.id, client.name, client.name_note, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number "
+                            . "FROM client "
+                            . "JOIN (street, city, state) "
+                            . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id ) "
+                            . "WHERE (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%') "
+                            . "ORDER BY client.name");
+        return $result;
     }
 
-
+    /**
+     * Method that return client data by client ID
+     * 
+     * @param integer $id
+     * 
+     * @return array
+     */
     public function getClient($id) {
         $result =  $this->get("SELECT client.id, client.vps_id, client.name, client.name_note, client.lb, client.is_supplier, client.state_id, client.city_id, client.street_id, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number, client.address_note, client.note "
                             . "FROM client "
@@ -79,31 +116,51 @@ class Client extends DB {
         }
     }
 
-
+    /**
+     * Method that return all clients from table client
+     * 
+     * @return array
+     */
     public function getClients() {
-        return $this->get("SELECT client.id, client.vps_id, client.name, city.name as city_name "
-                        . "FROM client "
-                        . "JOIN (city) "
-                        . "ON (client.city_id = city.id) "
-                        . "ORDER BY name");
-    }
-
-
-    public function getSuppliers() {
-        return $this->get("SELECT id, name, is_supplier FROM client WHERE is_supplier = 1 ORDER BY name");
+        $result = $this->get("SELECT client.id, client.vps_id, client.name, city.name as city_name "
+                            . "FROM client "
+                            . "JOIN (city) "
+                            . "ON (client.city_id = city.id) "
+                            . "ORDER BY name");
+        return $result;
     }
     
-
-    //metoda koja daje zadnjih $number klijenata upisanih u bazu
+    /**
+     * Method that return all suppliers from table client
+     * 
+     * @return array
+     */
+    public function getSuppliers() {
+        $result = $this->get("SELECT id, name, is_supplier FROM client WHERE is_supplier = 1 ORDER BY name");
+        return $result;
+    }
+    
+    /**
+     * Method that return last clients
+     * 
+     * @param integer $limit
+     * 
+     * @return array
+     */
     public function getLastClients($limit){
-        return $this->get("SELECT client.id, client.name, client.name_note, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number "
+        $result = $this->get("SELECT client.id, client.name, client.name_note, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number "
                         . "FROM client "
                         . "JOIN (street, city, state)"
                         . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
                         . "ORDER BY client.id DESC LIMIT $limit");
+        return $result;
     }
 
 }
+
+
+
+
 
 /*
 class Products extends DbConnect {
