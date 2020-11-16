@@ -47,8 +47,6 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
 
 // generisanje potrebnih objekata
-$client = new Client();
-$contact = new Contact();
 $pidb = new Pidb();
 $article = new Article();
 
@@ -56,26 +54,6 @@ $pidb_id = $_GET['pidb_id'];
 $pidb_data = $pidb->getPidb($pidb_id);
 
 if( $pidb_data['tip_id'] == 2) $pidb_name = "Otpremnica - račun";
-
-$client_data = $client->getClient($pidb_data['client_id']);
-$contacts = $contact->getContactsById($pidb_data['client_id']);
-
-if (!$contacts->num_rows) {
-  // if empty
-  $contact_item[0] = "";
-  $contact_item[1] = "";
-} else {
-  $i = 0;
-  /*
-  foreach ($contacts as $client_contact) {
-     if($i<2) {
-          $contact_item[$i] = $client_contact['name'];
-     }
-  }
-  */
-  $contact_item[0] = "_";
-  $contact_item[1] = "_";
-}
 
 $html = '
 <style type="text/css">table { padding-top: 5px; padding-bottom: 5px; }</style>
