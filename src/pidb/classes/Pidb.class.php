@@ -23,40 +23,26 @@ class Pidb extends DB {
     protected $kurs;
 
 
-    //metoda koja vraća dokumente klijenata u zavisnosti od datog pojma u pretrazi
+    /**
+     * Method that return all documnets (pidbs) where client name or client name note
+     * or pidb year ID like $name
+     * 
+     * @param array $arr
+     * 
+     * @return array
+     */
     public function search($arr){
 
         $tip = $arr[0];
         $name = $arr[1];
         $archived = $arr[2];
 
-        $pidbs = array();
-        $pidb = array();
-
-        $result = $this->connection->query("SELECT id FROM pidb ORDER by id desc") or die(mysqli_error($this->connection));
-        $row = mysqli_fetch_array($result);
-
-        // izlistavanje iz baze predračuna, računa, otpremnica i povratnica klijenata sa nazivom koji je sličan $name
-        $result = $this->connection->query("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, client.name "
-                                        . "FROM pidb JOIN (client)"
-                                        . "ON (pidb.client_id = client.id)"
-                                        . "WHERE ( (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%' OR pidb.y_id LIKE '%$name%') AND pidb.tip_id = $tip AND pidb.archived = $archived )"
-                                        . "ORDER BY client.name, pidb.date ") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)):
-            $pidb = array(
-                'id' => $row['id'],
-                'y_id' => $row['y_id'],
-                'tip_id' => $row['tip_id'],
-                'date' => $row['date'],
-                'client_id' => $row['client_id'],
-                'title' => $row['title'],
-                'archived' => $row['archived'],
-                'client_name' => $row['name']
-            );
-            array_push($pidbs, $pidb);
-        endwhile;
-
-        return $pidbs;
+        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, client.name as client_name "
+                            . "FROM pidb JOIN (client)"
+                            . "ON (pidb.client_id = client.id)"
+                            . "WHERE ( (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%' OR pidb.y_id LIKE '%$name%') AND pidb.tip_id = $tip AND pidb.archived = $archived )"
+                            . "ORDER BY client.name, pidb.date ");
+        return $result;
     }
 
     /**
@@ -70,58 +56,29 @@ class Pidb extends DB {
         return $this->getLastId("pidb");
     }
 
-   
-    //metoda koja vraća podatke o dokumentu u zaisnosti od id dokumenta
+    /**
+     * Method that return Pidb data by Pidb ID
+     * 
+     * @param integer $pidb_id
+     * 
+     * @return array
+     */
     public function getPidb($pidb_id){
-
-        $result = $this->connection->query("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, pidb.note, client.name "
-                                     . "FROM pidb "
-                                     . "JOIN client "
-                                     . "ON (pidb.client_id = client.id) "
-                                     . "WHERE pidb.id = $pidb_id ") or die(mysqli_error($this->connection));
-        $row = mysqli_fetch_array($result);
-            $pidb = array(
-                'id' => $row['id'],
-                'y_id' => $row['y_id'],
-                'tip_id' => $row['tip_id'],
-                'date' => $row['date'],
-                'client_id' => $row['client_id'],
-                'title' => $row['title'],
-                'archived' => $row['archived'],
-                'note' => $row['note'],
-                'client_name' => $row['name']
-            );
-
-        return $pidb;
+        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, pidb.note, client.name "
+                            . "FROM pidb "
+                            . "JOIN client "
+                            . "ON (pidb.client_id = client.id) "
+                            . "WHERE pidb.id = $pidb_id ");
+        return $result[0];
     }
 
-
-    // method that give all documents by type_id
-    public function getPidbs($type_id){
-
-        $pidbs = array();
-        $pidb = array();
-
-        $result = $this->connection->query("SELECT pidb.id, pidb.y_id, pidb.date, client.name "
-                                         . "FROM pidb "
-                                         . "JOIN client "
-                                         . "ON (pidb.client_id = client.id)"
-                                         . "WHERE pidb.tip_id = $type_id ") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)):
-            $pidb = array(
-                'id' => $row['id'],
-                'y_id' => $row['y_id'],
-                'date' => $row['date'],
-                'client_name' => $row['name']
-            );
-            array_push($pidbs, $pidb);
-        endwhile;
-
-        return $pidbs;
-    }
-
-
-    //metoda koja vraća sve dokumente (račune) sa $limit
+    /**
+     * Method that return last documents (pidbs)
+     * 
+     * @param integer $limit
+     * 
+     * @return array
+     */
     public function getLastDocuments($limit){
 
         $documents = array();
@@ -387,15 +344,12 @@ class Pidb extends DB {
         endwhile;
     }
 
-
     /**
      * Method that return all avans payments by $pidb_id
      * 
      * @param integer $pidb_id
      * 
-     * @return float 
-     * 
-     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
+     * @return float
      */
     public function getAvans($pidb_id){
         
@@ -412,13 +366,29 @@ class Pidb extends DB {
         return ($avans + $avansParent);
     }
 
+    /**
+     * Method that return parent ID
+     * 
+     * @param integer $id
+     * 
+     * @return integer 
+     */
     public function getParent($id){
-        return $this->get("SELECT parent_id FROM pidb WHERE id = '$id' ");
+        $result = $this->get("SELECT parent_id FROM pidb WHERE id = '$id' ");
+        return $result;
     }
 
-    public function sumAllValuesByKey($Arrays, $key) {
+    /**
+     * Method
+     * 
+     * @param array $arrays
+     * @param string $key
+     * 
+     * @return float
+     */
+    public function sumAllValuesByKey($arrays, $key) {
         $sumValues = 0;
-        foreach ($Arrays as $subArray) {
+        foreach ($arrays as $subArray) {
             $sumValues += $subArray[$key];
         }
         return $sumValues;
@@ -463,26 +433,6 @@ class Pidb extends DB {
         );
 
         return $saldo;
-    }
-
-
-    public function getInvoices($client_id){
-
-        $invoice = array();
-        $invoices = array();
-
-        $result = $this->connection->query("SELECT * FROM pidb WHERE (tip_id = 3 AND  client_id = $client_id)  ") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)):
-            $invoice = array(
-                'id' => $row['id'],
-                'y_id' => $row['y_id'],
-                'date' => $row['date'],
-                'title' => $row['title']
-            );
-            array_push($invoices, $invoice);
-        endwhile;
-
-        return $invoices;
     }
 
 
@@ -596,31 +546,20 @@ class Pidb extends DB {
         return $row['id'];
     }
 
-
-    // metoda koja daje sve dokumente datog projekta
+    /**
+     * Method that return all pidb by project
+     * 
+     * @param integer $project_id
+     * 
+     * @return array
+     */
     public function getPidbsByProjectId($project_id) {
-
-        $pidbs = array();
-        $pidb = array();
-
-        $result = $this->connection->query("SELECT pidb.id, pidb.y_id, pidb.tip_id, pidb.date, client.name, pidb.title "
-                                         . "FROM pidb "
-                                         . "JOIN client "
-                                         . "ON (pidb.client_id = client.id)"
-                                         . "WHERE project_id = $project_id ") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)):
-            $pidb = array(
-                'id' => $row['id'],
-                'y_id' => $row['y_id'],
-                'tip_id' => $row['tip_id'],
-                'date' => $row['date'],
-                'client_name' => $row['name'],
-                'title' => $row['title']
-            );
-            array_push($pidbs, $pidb);
-        endwhile;
-
-        return $pidbs;
+        $result = $this->get("SELECT pidb.id, pidb.y_id, pidb.tip_id, pidb.date, client.name as client_name, pidb.title "
+                            . "FROM pidb "
+                            . "JOIN client "
+                            . "ON (pidb.client_id = client.id)"
+                            . "WHERE project_id = $project_id ");
+        return $result;
     }
 
 
