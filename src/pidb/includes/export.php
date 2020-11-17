@@ -21,6 +21,12 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
     $db->connection->query("INSERT INTO pidb (tip_id, date, client_id, parent_id, project_id, title, note) VALUES ('$pidb_tip_id', '$date', '$client_id', '$pidb_id', '$project_id', '$title', '$note')") or die(mysqli_error($db->connection));
 
     $pidb_id_last = $db->connection->insert_id;
+
+    // payment update
+    $db->connection->query("UPDATE payment "
+                        . "SET pidb_id='$pidb_id_last' "
+                        . "WHERE pidb_id = '$pidb_id' ") or die(mysqli_error($db->connection));
+
     $y_id = $pidb->setYid($pidb_tip_id);
 
     // get articles from proforma and save to dispatch

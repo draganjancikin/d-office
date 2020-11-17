@@ -15,11 +15,20 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delPidb"]) ) {
         $pidb->delArticleFromPidb($pidb_article_id);
     }
 
+    // get parent_id from pidb_id
+    $result_parent_id = $db->connection->query("SELECT parent_id FROM pidb WHERE id = '$pidb_id' ") or die(mysqli_error($db->connection));
+    $row_parent_id =  mysqli_fetch_array($result_parent_id);
+    $parent_id = $row_parent_id['parent_id'];
+
+    // update payment where pidb_id = $pidb_id
+    $db->connection->query("UPDATE payment "
+                        . "SET pidb_id='$parent_id' "
+                        . "WHERE pidb_id = '$pidb_id' ") or die(mysqli_error($db->connection));
+
     // brisanje dokumenta iz tabele pidb
     $db->connection->query("DELETE FROM pidb WHERE id='$pidb_id' ") or die(mysqli_error($db->connection));
 
     die('<script>location.href = "?name=&search" </script>');
-    // die('<script>location.href = "index.php" </script>');
 }
 
 // brisanje artikala iz dokumenta
