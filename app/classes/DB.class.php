@@ -13,8 +13,6 @@ class DB extends DBconnection {
      * @param string $query_string
      * 
      * @return array aray of arays
-     * 
-     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
      */
     protected function get($query_string) {
         $result = $this->connection->query( $query_string ) or die(mysqli_error($this->connection));
@@ -28,8 +26,6 @@ class DB extends DBconnection {
      * @param string $table
      * 
      * @return integer
-     * 
-     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
      */
     protected function getLastId($table) {
         $result = $this->connection->query("SELECT id FROM $table ORDER by id desc") or die(mysqli_error($this->connection));
@@ -37,6 +33,20 @@ class DB extends DBconnection {
         return $row['id'];
     }
 
+    /**
+     * Method that insert by query
+     * 
+     * @param string $query_string
+     */
+    protected function insert($query_string) {
+        $this->connection->query( $query_string ) or die(mysqli_error($this->connection));
+    }
+
+    /**
+     * Method that delete by query
+     * 
+     * @param string $query_string
+     */
     protected function delete($query_string) {
         $this->connection->query( $query_string ) or die(mysqli_error($this->connection));
     }
