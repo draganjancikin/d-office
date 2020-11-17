@@ -349,6 +349,21 @@ class Pidb extends DB {
     }
 
     /**
+     * Method that insert transaction to table payment
+     * 
+     * @param string $date
+     * @param integer $pidb_id
+     * @param integer $client_id
+     * @param integer $transaction_type_id
+     * @param float $amount
+     * @param string $note
+     */
+    public function insertTransaction($date, $pidb_id, $client_id, $transaction_type_id, $amount, $note) {
+        $this->insert("INSERT INTO payment (date, pidb_id, client_id, transaction_type_id, amount, note) " 
+        . " VALUES ('$date', '$pidb_id', '$client_id', '$transaction_type_id', '$amount', '$note' )");
+    }
+
+    /**
      * Method that return all avans payments by $pidb_id
      * 
      * @param integer $pidb_id
@@ -356,18 +371,9 @@ class Pidb extends DB {
      * @return float
      */
     public function getAvans($pidb_id){
-        
-        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND payment_type_id = 1 ");
+        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (transaction_type_id = 1 OR transaction_type_id = 2) ");
         $avans = $this->sumAllValuesByKey($result, "amount");
-        if($this->getParent($pidb_id)){
-            $parent_id = $this->getParent($pidb_id)[0]['parent_id'];
-            $resultParent = $this->get("SELECT amount FROM payment WHERE pidb_id = '$parent_id' AND payment_type_id = 1 ");
-            $avansParent = $this->sumAllValuesByKey($resultParent, "amount");
-        } else {
-            $avansParent = 0;
-        }
-        
-        return ($avans + $avansParent);
+        return $avans;
     }
 
     /**
