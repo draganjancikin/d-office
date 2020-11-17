@@ -69,7 +69,11 @@ class Pidb extends DB {
                             . "JOIN client "
                             . "ON (pidb.client_id = client.id) "
                             . "WHERE pidb.id = $pidb_id ");
-        return $result[0];
+        if(!$result){
+            die('<script>location.href = "/pidb/" </script>');
+        } else {
+            return $result[0];
+        }
     }
 
     /**
@@ -394,156 +398,36 @@ class Pidb extends DB {
         return $sumValues;
     }
 
-    // metoda koja daje sva potraživana<->uplate vezane za odreženi dokument $pidb_id
-    public function getPayments($pidb_id){
-
-        $payments = array();
-        $payment = array();
-
-        $result = $this->connection->query("SELECT * FROM payment WHERE pidb_id = '$pidb_id' ") or die(mysqli_error($this->connection));
-
-        while($row = mysqli_fetch_array($result)):
-            $payment = array(
-                'date' => $row['date'],
-                'dug_potr_id' => $row['dug_potr_id'],
-                'amount' => $row['amount'],
-                'note' => $row['note']
-            );
-            array_push($payments, $payment);
-        endwhile;
-
-        return $payments;
-    }
-
-
-    // metoda koja daje saldo
-    public function getSaldo($pidb_id){
-
-        $result_duguje = $this->connection->query("SELECT amount FROM payment WHERE (pidb_id = $pidb_id AND dug_potr_id = 0)") or die(mysqli_error($this->connection));
-            $row_duguje = mysqli_fetch_array($result_duguje);
-            $duguje = $row_duguje['amount'];
-
-        $result_potrazuje = $this->connection->query("SELECT SUM(amount) FROM payment WHERE (pidb_id = $pidb_id AND dug_potr_id = 1)") or die(mysqli_error($this->connection));
-            $row_potrazuje = mysqli_fetch_array($result_potrazuje);
-            $potrazuje = $row_potrazuje['SUM(amount)'];
-
-        $saldo = array(
-            'duguje' => $duguje,
-            'potrazuje' => $potrazuje
-        );
-
-        return $saldo;
-    }
-
-
-    public function getArticlesByClient($client_id){
-
-        $articles_id = array();
-
-        // prvo ćemo formirati niz id-a svih artikala koje je kupovao klijent $client_id
-        $result = $this->connection->query("SELECT DISTINCT pidb_article.article_id "
-                                         . "FROM pidb_article "
-                                         . "JOIN (pidb, article) "
-                                         . "ON (pidb_article.pidb_id = pidb.id AND pidb_article.article_id = article.id) "
-                                         . "WHERE pidb.client_id = '$client_id' "
-                                         . "ORDER BY article.name") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)){
-            $article_id = $row['article_id'];
-            array_push($articles_id, $article_id);
-            // promenljiva $articles_id sadrži niz svih artikala klijenta $client_id
-        }
-
-        //sada treba spakovati u niz sve artikle klijenta $client_id ===========
-        $article = array();
-        $articles = array();
-
-        foreach ($articles_id as $article_id):
-
-            $result_article = $this->connection->query("SELECT article.name, article.min_obrac_mera, unit.name as unit_name "
-                                                     . "FROM article "
-                                                     . "JOIN (unit) "
-                                                     . "ON (article.unit_id = unit.id)"
-                                                     . "WHERE article.id = '$article_id' ") or die(mysqli_error($this->connection));
-            $row_article = mysqli_fetch_array($result_article);
-                $article_name = $row_article['name'];
-                $article_unit = $row_article['unit_name'];
-                $article_min_obrac_mera = $row_article['min_obrac_mera'];
-
-            $total_quantity = 0;
-            $result_pidb_article = $this->connection->query("SELECT pidb_article.id, pidb_article.pieces "
-                    . "FROM pidb_article "
-                    . "JOIN (pidb, client) "
-                    . "ON (pidb_article.pidb_id = pidb.id AND pidb.client_id = client.id) "
-                    . "WHERE pidb_article.article_id = '$article_id' AND pidb.client_id = '$client_id' AND pidb.tip_id = '3'") or die(mysqli_error($this->connection));
-
-            // $row_pidb_article = mysqli_fetch_array($result_pidb_article);
-            while($row_pidb_article = mysqli_fetch_array($result_pidb_article)){
-
-                $pidb_article_id = $row_pidb_article['id'];
-
-                // treba izčitati sve property-e artikla iz tabele pidb_article_property
-                $property = "";
-                $temp_quantity = 1;
-
-                $propertys = array();
-
-                $result_propertys = $this->connection->query("SELECT pidb_article_property.quantity "
-                                                       . "FROM pidb_article_property "
-                                                       . "JOIN (property)"
-                                                       . "ON (pidb_article_property.property_id = property.id)"
-                                                       . "WHERE pidb_article_id = $pidb_article_id" ) or die(mysqli_error($this->connection));
-                while($row_property = mysqli_fetch_array($result_propertys)){
-
-                    $property_quantity = $row_property['quantity'];
-
-                    $temp_quantity = $temp_quantity * ( $property_quantity/100 );
-
-                }
-
-                if($temp_quantity < $article_min_obrac_mera) $temp_quantity = $article_min_obrac_mera;
-
-                $pieces = $row_pidb_article['pieces'];
-
-                $quantity = round($pieces * $temp_quantity, 2);
-
-                $total_quantity = $total_quantity + $quantity;
-            }
-
-            $article = array(
-                'id' => $article_id,
-                'name' => $article_name,
-                'unit_name' => $article_unit,
-                'quantity' => $total_quantity
-            );
-            array_push($articles, $article);
-
-        endforeach;
-
-        return $articles;
-    }
-
-
-    //metoda koja daje prethodni pidb_id za određeni pidb_tip_id
+    
+    /**
+     * Method that return previous ID
+     * 
+     * @param integer $pidb_id
+     * @param integer $pidb_tip_id
+     * 
+     * @return integer
+     */
     public function getPreviousPidb($pidb_id, $pidb_tip_id){
-
-        $result = $this->connection->query("SELECT * FROM pidb "
-                                         . "WHERE id <'$pidb_id' AND tip_id = $pidb_tip_id "
-                                         . "ORDER BY id DESC") or die(mysqli_error($this->connection));
-        $row = mysqli_fetch_array($result);
-
-        return $row['id'];
+        $result = $this->get("SELECT id FROM pidb "
+                            . "WHERE id <'$pidb_id' AND tip_id = $pidb_tip_id "
+                            . "ORDER BY id DESC");
+        return ( $result ? $result[0]['id'] : false );
     }
 
 
-    //metoda koja daje prethodni pidb_id za određeni pidb_tip_id
+    /**
+     * Method that return next ID
+     * 
+     * @param integer $pidb_id
+     * @param integer $pidb_tip_id
+     * 
+     * @return integer
+     */
     public function getNextPidb($pidb_id, $pidb_tip_id){
-
-        $result = $this->connection->query("SELECT * FROM pidb "
-                                         . "WHERE id >'$pidb_id' AND tip_id = $pidb_tip_id "
-                                         . "ORDER BY id ASC") or die(mysqli_error($this->connection));
-        $row = mysqli_fetch_array($result);
-
-        return $row['id'];
+        $result = $this->get("SELECT * FROM pidb "
+                            . "WHERE id >'$pidb_id' AND tip_id = $pidb_tip_id "
+                            . "ORDER BY id ASC");
+        return ( $result ? $result[0]['id'] : false );
     }
 
     /**
@@ -562,22 +446,24 @@ class Pidb extends DB {
         return $result;
     }
 
-
-    // metoda koja duplicira artikal iz dokumenta
+    /**
+     * Method that duplicate article in document (pidb)
+     * 
+     * @param integer $pidb_article_id
+     * 
+     * @return array
+     */
     public function duplicateArticleInPidb($pidb_article_id){
 
-        // get article by $pidb_article_id
-        $articleInPidb = $this->getArticleInPidb($pidb_article_id);
+        $article = $this->getArticleInPidb($pidb_article_id);
 
-        $pidb_id = $articleInPidb['pidb_id'];
-        $article_id = $articleInPidb['article_id'];
-        $note = $articleInPidb['note'];
-        $pieces = $articleInPidb['pieces'];
-        $price = $articleInPidb['price'];
-        $tax = $articleInPidb['tax'];
-        $weight = $articleInPidb['weight'];
-
-        // need: pidb_id, article_id, note, pieces, price, discount, tax, weight, propertys
+        $pidb_id = $article['pidb_id'];
+        $article_id = $article['article_id'];
+        $note = $article['note'];
+        $pieces = $article['pieces'];
+        $price = $article['price'];
+        $tax = $article['tax'];
+        $weight = $article['weight'];
 
         $this->connection->query("INSERT INTO pidb_article (pidb_id, article_id, note, pieces, price, tax, weight) " 
         . " VALUES ('$pidb_id', '$article_id', '$note', '$pieces', '$price', '$tax', '$weight' )") or die(mysqli_error($this->connection));
@@ -753,28 +639,6 @@ class Pidb extends DB {
         endforeach;
 
         return $articles_on_month;
-        */
-    }
-
-
-    // za brisanje
-    // funkcija koja vraća ukupan godisnji prihod
-    public function gettotalIncome($y){
-        /*
-        $result_fakturisano = $this->connection->query("SELECT SUM(amount) FROM payment WHERE (dug_potr_id = 0 AND date BETWEEN '$y-01-01 00:00:00' AND '$y-12-31 23:59:59')") or die(mysql_error());
-            $row_fakturisano = mysqli_fetch_array($result_fakturisano);
-            $fakturisano = $row_fakturisano['SUM(amount)'];
-
-        $result_naplaceno = $this->connection->query("SELECT SUM(amount) FROM payment WHERE (dug_potr_id = 1 AND date BETWEEN '$y-01-01 00:00:00' AND '$y-12-31 23:59:59')") or die(mysql_error());
-            $row_naplaceno = mysqli_fetch_array($result_naplaceno);
-            $naplaceno = $row_naplaceno['SUM(amount)'];
-
-        $total_income = array(
-            'fakturisano' => $fakturisano,
-            'naplaceno' => $naplaceno
-        );
-
-        return $total_income;
         */
     }
 
