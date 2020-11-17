@@ -64,7 +64,7 @@ class Pidb extends DB {
      * @return array
      */
     public function getPidb($pidb_id){
-        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, pidb.note, client.name "
+        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, pidb.note, client.name as client_name "
                             . "FROM pidb "
                             . "JOIN client "
                             . "ON (pidb.client_id = client.id) "
