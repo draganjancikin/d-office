@@ -119,7 +119,11 @@ class Article extends DB {
                             . "JOIN (unit) "
                             . "ON (article.unit_id = unit.id) "
                             . "WHERE article.id = $article_id ");
-        return $result[0];
+        if(!$result) {
+            die('<script>location.href = "/articles/" </script>');
+        }else{
+            return $result[0];
+        }
     }
     
     /**
