@@ -74,6 +74,7 @@
             </div>
             <form action="<?php echo $_SERVER['PHP_SELF'] . '?addPayment&pidb_id='. $pidb_id ?>" method="post" role="form">
                 <input type="hidden" name="pidb_id" value="<?php echo $pidb_id ?>">
+                <input type="hidden" name="client_id" value="<?php echo $pidb_data['client_id'] ?>">
                 <div class="modal-body">
 
                     <div class="form-group row">
@@ -88,17 +89,19 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="payment_type" class="col-sm-3 col-form-label">Vrsta uplate:</label>
-                        <div class="col-sm-4">
-                            <select class="form-control" name="payment_type_id" id="payment_type">
+                        <label for="transaction_type" class="col-sm-3 col-form-label">Vrsta uplate:</label>
+                        <div class="col-sm-5">
+                            <select class="form-control" name="transaction_type_id" id="transaction_type">
                                 <?php
                                 if($pidb_data['tip_id'] == 1) :
                                     ?>
-                                    <option value="1">Avans</option>
+                                    <option value="1">Avans (gotovinski)</option>
+                                    <option value="2">Avans (virmanski)</option>
                                     <?php
                                 elseif($pidb_data['tip_id'] == 2):
                                     ?>
-                                    <option value="2">Uplata</option>
+                                    <option value="3">Uplata (gotovinska)</option>
+                                    <option value="4">Uplata (virmanska)</option>
                                     <?php
                                 endif;
                                 ?>
@@ -108,7 +111,7 @@
 
                     <div class="form-group row">
                         <label for="amount" class="col-sm-3 col-form-label">Iznos:</label>
-                        <div class="col-sm-4">
+                        <div class="col-sm-5">
                             <input type="text" class="form-control" name="amount" id="amount" value="" placeholder="Unesite iznos" />
                         </div>
                     </div>
