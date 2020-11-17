@@ -377,6 +377,19 @@ class Pidb extends DB {
     }
 
     /**
+     * Method that return all income payments by $pidb_id
+     * 
+     * @param integer $pidb_id
+     * 
+     * @return float
+     */
+    public function getIncome($pidb_id){
+        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (transaction_type_id = 3 OR transaction_type_id = 4) ");
+        $income = $this->sumAllValuesByKey($result, "amount");
+        return $income;
+    }
+
+    /**
      * Method that return parent ID
      * 
      * @param integer $id
