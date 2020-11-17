@@ -71,15 +71,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
 
     $date = date('Y-m-d h:i:s');
     $pidb_id = htmlspecialchars($_POST["pidb_id"]);
-    $payment_type_id = htmlspecialchars($_POST["payment_type_id"]);
+    $client_id = htmlspecialchars($_POST["client_id"]);
+    $transaction_type_id = htmlspecialchars($_POST["transaction_type_id"]);
     $amount = htmlspecialchars($_POST["amount"]);
     $note = htmlspecialchars($_POST["note"]);
 
-    $db = new DBconnection();
-
-    $db->connection->query("INSERT INTO payment (date, pidb_id, payment_type_id, amount, note) " 
-                    . " VALUES ('$date', '$pidb_id', '$payment_type_id', '$amount', '$note' )") or die(mysqli_error($db->connection));
-
+    $pidb->insertTransaction($date, $pidb_id, $client_id, $transaction_type_id, $amount, $note);
+    
     die('<script>location.href = "?view&pidb_id='.$pidb_id.' " </script>');
 }
 
