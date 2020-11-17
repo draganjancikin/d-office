@@ -156,6 +156,18 @@ class Client extends DB {
         return $result;
     }
 
+    /**
+     * 
+     */
+    public function checkGetClient($id = FALSE){
+        if($id) {
+            $new = preg_replace('/[^0-9]/', '', $id);
+            return $new;
+        } else {
+            die('<script>location.href = "/clients/" </script>');
+        }
+    }
+
 }
 
 
