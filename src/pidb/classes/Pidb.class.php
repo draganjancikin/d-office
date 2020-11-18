@@ -22,13 +22,11 @@ class Pidb extends DB {
     protected $tax;
     protected $kurs;
 
-
     /**
      * Method that return all documnets (pidbs) where client name or client name note
      * or pidb year ID like $name
      * 
      * @param array $arr
-     * 
      * @return array
      */
     public function search($arr){
@@ -49,8 +47,6 @@ class Pidb extends DB {
      * Method that return last ID in table "pidb"
      * 
      * @return integer
-     * 
-     * @author Dragan Jancikin <dragan.jancikin@gmail.com>
      */
     public function getlastIdPidb(){
         return $this->getLastId("pidb");
