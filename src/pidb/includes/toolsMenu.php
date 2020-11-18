@@ -16,7 +16,7 @@ require 'export.php';
         $pidb_id = filter_input(INPUT_GET, 'pidb_id');
         $pidb_data = $pidb->getPidb($pidb_id);
         $client_data = $client->getClient($pidb_data['client_id']);
-        $articles = $article->getArticles();
+        $all_articles = $article->getAllArticles();
         // in view case show edit button
         if(isset($_GET['view'])):
           ?>

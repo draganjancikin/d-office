@@ -5,7 +5,6 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.c
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-
 class Article extends DB {
 
     protected $id;
@@ -19,15 +18,68 @@ class Article extends DB {
     protected $note;
 
     /**
-     * Method that return array of measure unit
+     * Method that return all articles from table article
      * 
      * @return array
      */
-    public function getUnits() {
-        $result = $this->get("SELECT * FROM unit");
+    public function getAllArticles() {
+        $result = $this->get("SELECT * FROM article ORDER BY name");
         return $result;
     }
-    
+
+    /**
+     * Method that return article by $article_id
+     * 
+     * @param integer $article_id
+     * 
+     * @return array
+     */
+    public function getArticle($article_id) {
+        $result = $this->get("SELECT article.id, article.group_id, article.name, article.unit_id, article.weight, article.min_obrac_mera, article.price, article.note, unit.name as unit_name "
+                            . "FROM article "
+                            . "JOIN (unit) "
+                            . "ON (article.unit_id = unit.id) "
+                            . "WHERE article.id = $article_id ");
+        if(!$result) {
+            die('<script>location.href = "/articles/" </script>');
+        }else{
+            return $result[0];
+        }
+    }
+
+    /**
+     * Method thet return last articles
+     * 
+     * @param integer $limit
+     * 
+     * @return array
+     */
+    public function getLastArticles($limit) {
+        $result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price "
+                        . "FROM article "
+                        . "JOIN (unit)"
+                        . "ON (article.unit_id = unit.id)"
+                        . "ORDER BY article.id DESC LIMIT $limit");
+        return $result;
+    }
+
+    /**
+     * Method that return all articles in group
+     * 
+     * @param integer $group_id
+     * 
+     * @return array
+     */
+    public function getArticlesByGroup($group_id) {
+        $result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price "
+                        . "FROM article "
+                        . "JOIN (unit) "
+                        . "ON (article.unit_id = unit.id) "
+                        . "WHERE (article.group_id = $group_id )"
+                        . "ORDER BY article.name ");
+        return $result;
+    }
+
     /**
      * Method that return array of article groups
      * 
@@ -51,81 +103,15 @@ class Article extends DB {
     }
 
     /**
-     * Method that return article price
-     * 
-     * @param integer $article_id
-     * 
-     * @return decimal
-     */
-    public function getPrice($article_id) {
-        $result = $this->get("SELECT price FROM article WHERE id = '$article_id' ")[0]['price'];
-        return $result;
-    }
-
-    /**
-     * Method that return all articles from table article
+     * Method that return array of measure unit
      * 
      * @return array
      */
-    public function getArticles() {
-        $result = $this->get("SELECT * FROM article ORDER BY name");
+    public function getUnits() {
+        $result = $this->get("SELECT * FROM unit");
         return $result;
     }
 
-    /**
-     * Method that return all articles in group
-     * 
-     * @param integer $group_id
-     * 
-     * @return array
-     */
-    public function getArticlesByGroup($group_id) {
-        $result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price "
-                        . "FROM article "
-                        . "JOIN (unit) "
-                        . "ON (article.unit_id = unit.id) "
-                        . "WHERE (article.group_id = $group_id )"
-                        . "ORDER BY article.name ");
-        return $result;
-    }
-
-    /**
-     * Method that return articles with name like $name
-     * 
-     * @param string $name
-     * 
-     * @return array
-     */
-    public function search($name) {
-        $result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price "
-                        . "FROM article "
-                        . "JOIN (unit) "
-                        . "ON (article.unit_id = unit.id) " 
-                        . "WHERE (article.name LIKE '%$name%') "
-                        . "ORDER BY article.name ");
-        return $result;
-    }
-
-    /**
-     * Method that return article by $article_id
-     * 
-     * @param integer $article_id
-     * 
-     * @return array
-     */
-    public function getArticle($article_id) {
-        $result = $this->get("SELECT article.id, article.group_id, article.name, article.unit_id, article.weight, article.min_obrac_mera, article.price, article.note, unit.name as unit_name "
-                            . "FROM article "
-                            . "JOIN (unit) "
-                            . "ON (article.unit_id = unit.id) "
-                            . "WHERE article.id = $article_id ");
-        if(!$result) {
-            die('<script>location.href = "/articles/" </script>');
-        }else{
-            return $result[0];
-        }
-    }
-    
     /**
      * Method that returns propertys
      * 
@@ -153,18 +139,31 @@ class Article extends DB {
     }
 
     /**
-     * Method thet return last articles
+     * Method that return article price
      * 
-     * @param integer $limit
+     * @param integer $article_id
+     * 
+     * @return decimal
+     */
+    public function getPrice($article_id) {
+        $result = $this->get("SELECT price FROM article WHERE id = '$article_id' ")[0]['price'];
+        return $result;
+    }
+
+    /**
+     * Method that return articles with name like $name
+     * 
+     * @param string $name
      * 
      * @return array
      */
-    public function getLastArticles($limit) {
+    public function search($name) {
         $result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price "
                         . "FROM article "
-                        . "JOIN (unit)"
-                        . "ON (article.unit_id = unit.id)"
-                        . "ORDER BY article.id DESC LIMIT $limit");
+                        . "JOIN (unit) "
+                        . "ON (article.unit_id = unit.id) " 
+                        . "WHERE (article.name LIKE '%$name%') "
+                        . "ORDER BY article.name ");
         return $result;
     }
 

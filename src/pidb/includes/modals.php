@@ -21,7 +21,7 @@
                                 <select class="form-control" name="article_id" id="article">
                                     <option value="">izaberi proizvod</option>
                                     <?php
-                                    foreach ($articles as $article) :
+                                    foreach ($all_articles as $article) :
                                         ?>
                                         <option value="<?php echo $article['id'] ?>"><?php echo $article['name'] ?></option>
                                         <?php
