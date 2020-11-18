@@ -7,6 +7,8 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.c
  */
 class Article extends DB {
 
+    private $table_article = "article";
+
     protected $id;
     protected $group_id;
     protected $name;
@@ -23,7 +25,7 @@ class Article extends DB {
      * @return array
      */
     public function getAllArticles() {
-        $result = $this->get("SELECT * FROM article ORDER BY name");
+        $result = $this->get("SELECT * FROM $this->table_article ORDER BY name");
         return $result;
     }
 
@@ -34,9 +36,9 @@ class Article extends DB {
      * 
      * @return array
      */
-    public function getArticle($article_id) {
+    public function getArticleById($article_id) {
         $result = $this->get("SELECT article.id, article.group_id, article.name, article.unit_id, article.weight, article.min_obrac_mera, article.price, article.note, unit.name as unit_name "
-                            . "FROM article "
+                            . "FROM $this->table_article "
                             . "JOIN (unit) "
                             . "ON (article.unit_id = unit.id) "
                             . "WHERE article.id = $article_id ");
@@ -56,7 +58,7 @@ class Article extends DB {
      */
     public function getLastArticles($limit) {
         $result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price "
-                        . "FROM article "
+                        . "FROM $this->table_article "
                         . "JOIN (unit)"
                         . "ON (article.unit_id = unit.id)"
                         . "ORDER BY article.id DESC LIMIT $limit");
@@ -72,7 +74,7 @@ class Article extends DB {
      */
     public function getArticlesByGroup($group_id) {
         $result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price "
-                        . "FROM article "
+                        . "FROM $this->table_article "
                         . "JOIN (unit) "
                         . "ON (article.unit_id = unit.id) "
                         . "WHERE (article.group_id = $group_id )"
@@ -146,7 +148,7 @@ class Article extends DB {
      * @return decimal
      */
     public function getPrice($article_id) {
-        $result = $this->get("SELECT price FROM article WHERE id = '$article_id' ")[0]['price'];
+        $result = $this->get("SELECT price FROM $this->table_article WHERE id = '$article_id' ")[0]['price'];
         return $result;
     }
 
@@ -159,7 +161,7 @@ class Article extends DB {
      */
     public function search($name) {
         $result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price "
-                        . "FROM article "
+                        . "FROM $this->table_article "
                         . "JOIN (unit) "
                         . "ON (article.unit_id = unit.id) " 
                         . "WHERE (article.name LIKE '%$name%') "
@@ -174,17 +176,8 @@ class Article extends DB {
      * @param integer $property_id
      */
     public function delArticleProperty($article_id, $property_id) {
-        $this->connection->query("DELETE FROM article_property WHERE ( article_id='$article_id' AND property_id='$property_id') ") or die(mysqli_error($this->connection));
-    }
-
-    /**
-     * Method that delete article material
-     * 
-     * @param integer $article_id
-     * @param integer $material_id
-     */
-    public function delArticleMaterijal($article_id, $material_id) {
-        $this->connection->query("DELETE FROM article_material WHERE ( article_id='$article_id' AND material_id='$material_id') ") or die(mysqli_error($this->connection));
+        $this->delete("DELETE FROM article_property "
+                    . "WHERE ( article_id='$article_id' AND property_id='$property_id') ");
     }
 
 }

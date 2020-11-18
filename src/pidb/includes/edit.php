@@ -96,7 +96,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleDataInPidb"]
         $db->connection->query("UPDATE pidb_article SET article_id='$new_article_id'  WHERE id = '$pidb_article_id' ") or die(mysqli_error($db->connection));
         
         // update price to new article prices
-        $new_article = $article -> getArticle($new_article_id);
+        $new_article = $article->getArticleById($new_article_id);
         $price = $new_article['price'];
         $note = "";
         $pieces = 1;
