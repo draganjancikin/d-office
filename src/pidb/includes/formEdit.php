@@ -132,7 +132,7 @@ switch ($pidb_data['tip_id']) {
                                         <i class="fas fa-plus" title="Dupliciraj artikal"> </i>
                                     </a>
 
-                                    <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete artikal?');"  href="<?php echo $_SERVER['PHP_SELF']. '?delArticleInPidb&pidb_id='.$pidb_id.'&pidb_tip_id='.$pidb_data['tip_id'].'&pidb_article_id=' .$article_on_pidb['id']; ?>" class="btn btn-mini btn-outline-danger px-1">
+                                    <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete artikal?')"  href="<?php echo $_SERVER['PHP_SELF']. '?delArticleInPidb&pidb_id='.$pidb_id.'&pidb_tip_id='.$pidb_data['tip_id'].'&pidb_article_id=' .$article_on_pidb['id']; ?>" class="btn btn-mini btn-outline-danger px-1">
                                         <i class="fas fa-trash" title="Obriši artikal"> </i>
                                     </a>
                                 </td>

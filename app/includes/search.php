@@ -507,7 +507,7 @@ if($page == "orders"):
                                         <?php 
                                     endif;
                                     ?>
-                                    <?php echo ( $order_data['id'] == $order->getLastOrderId() ? '<a href="' .$_SERVER['PHP_SELF']. '?name=&search&delOrder&order_id=' .$order_data['id']. '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); ?>
+                                    <?php echo ( $order_data['id'] == $order->getLastOrderId() ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="' .$_SERVER['PHP_SELF']. '?name=&search&delOrder&order_id=' .$order_data['id']. '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); ?>
                                 </td>
                             </tr>
                             <?php
