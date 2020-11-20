@@ -177,12 +177,15 @@ class Order extends DB {
 
             $price = $row['price'];
             $discounts = $row['discounts'];
-            // $tax_base = ($quantity * $price * $this->kurs) - ($quantity * $price * $this->kurs) * ($discounts/100);
-            $tax_base = ($quantity * $price) - ($quantity * $price) * ($discounts/100);
             $tax = $row['tax'];
-            $tax_amount = $tax_base * ($tax/100);
-            $sub_total = $tax_base + $tax_amount;
 
+            $tax_base_per_piece = $price - round( $price * ($discounts/100), 4 );
+            $tax_amount_per_piece = round( ($tax_base_per_piece * ($tax/100)), 4 );
+            
+            $tax_base_per_article = $tax_base_per_piece * $quantity;
+            $tax_amount_per_article = $tax_amount_per_piece * $quantity;
+            $sub_total_per_article = $tax_base_per_article + $tax_amount_per_article;
+            
         $material = array(
                 'id' => $id,
                 'material_id' => $material_id,
@@ -195,10 +198,10 @@ class Order extends DB {
                 'quantity' => $quantity,
                 'price' => $price,
                 'discounts' => $discounts,
-                'tax_base' => $tax_base,
+                'tax_base' => $tax_base_per_article,
                 'tax' => $tax,
-                'tax_amount' => $tax_amount,
-                'sub_total' => $sub_total
+                'tax_amount' => $tax_amount_per_article,
+                'sub_total' => $sub_total_per_article
             );
             array_push($materials, $material);
         }
@@ -206,8 +209,12 @@ class Order extends DB {
         return $materials;
     }
 
-
-    // metoda koja daje material narudžbenice
+    /**
+     * Method that return material in order by order material id
+     *
+     * @param int $order_material_id
+     * @return array
+     */
     public function getMaterialInOrder($order_material_id){
 
         $material = array();
@@ -290,7 +297,6 @@ class Order extends DB {
         return $result;
     }
 
-
     /**
      * Method that delete material from order
      * 
@@ -341,23 +347,20 @@ class Order extends DB {
         $price = $materialInOrder['price'];
         $tax = $materialInOrder['tax'];
         $weight = $materialInOrder['weight'];
-
-        $this->connection->query("INSERT INTO orderm_material (order_id, material_id, note, pieces, price, tax, weight) " 
-        . " VALUES ('$order_id', '$material_id', '$note', '$pieces', '$price', '$tax', '$weight' )") or die(mysqli_error($this->connection));
         
+        $this->insert("INSERT INTO orderm_material (order_id, material_id, note, pieces, price, tax, weight) " 
+                    . " VALUES ('$order_id', '$material_id', '$note', '$pieces', '$price', '$tax', '$weight' )");
         
         // treba nam i order_material_id (id materiala u order dokumentu) to je u stvari zadnji unos
-        $order_material_id = $this->connection->insert_id;;
+        $order_material_id = $this->connection->insert_id;
 
         //insert property-a materiala u tabelu orderm_material_property
-        $propertys = $this->connection->query( "SELECT * FROM material_property WHERE material_id ='$material_id'");
-        while($row_property = mysqli_fetch_array($propertys)){
-
-            $property_id = $row_property['property_id'];
+        $propertys = $this->get( "SELECT * FROM material_property WHERE material_id ='$material_id'");
+        foreach($propertys as $property){
+            $property_id = $property['property_id'];
             $quantity = 0;
-
-            $this->connection->query("INSERT INTO orderm_material_property (orderm_material_id, property_id, quantity) " 
-                            . " VALUES ('$order_material_id', '$property_id', '$quantity' )") or die(mysqli_error($this->connection));
+            $this->insert("INSERT INTO orderm_material_property (orderm_material_id, property_id, quantity) " 
+                            . " VALUES ('$order_material_id', '$property_id', '$quantity' )");
         }
 
     }
