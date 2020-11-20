@@ -160,7 +160,7 @@ class Article extends DB {
      * @return array
      */
     public function search($name) {
-        $result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price "
+        $result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price, article.note "
                         . "FROM $this->table_article "
                         . "JOIN (unit) "
                         . "ON (article.unit_id = unit.id) " 

@@ -654,7 +654,7 @@ if($page == "articles"):
                         foreach ($articles as $articl):
                             ?>
                             <tr>
-                                <td><a href="?view&article_id=<?php echo $articl['id'] ?>"><?php echo $articl['name'] ?></a></td>
+                                <td><a href="?view&article_id=<?php echo $articl['id'] ?>" title="<?php echo $articl['note'] ?>"><?php echo $articl['name'] ?></a></td>
                                 <td class="text-center"><?php echo $articl['unit_name'] ?></td>
                                 <td class="text-right"><?php echo number_format( ($articl['price'] * $article->getKurs() * ($article->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
                                 <td class="text-right"><?php echo number_format( ($articl['price'] * ($article->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
