@@ -113,12 +113,20 @@ require 'export.php';
                         <?php
                     endif;                   
                 endif;
+                
+            endif;
+
+            if( isset($_GET['view']) || isset($_GET['edit'])):
                 ?>
-                <!-- payment options -->
-                <!-- Button trigger modal za evidenciju uplata -->
-                <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addPayment" title="Evidencija plaćanja">
+                <!-- Button trigger modal za evidentiranje transakcije -->
+                <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addPayment" title="Evidentiranje transakcija">
                     <i class="fas fa-hand-holding-usd"></i>
                 </button>
+                <a href="/pidb/index.php?transactions&pidb_id=<?php echo $pidb_id ?>">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary mr-1" title="Pregled transakcija">
+                        <i class="fas fa-eye"></i> <i class="fas fa-dollar-sign"></i>
+                    </button>
+                </a>
                 <?php
             endif;
             ?>

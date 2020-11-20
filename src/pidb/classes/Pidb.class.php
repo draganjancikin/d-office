@@ -9,6 +9,8 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.c
  */
 class Pidb extends DB {
 
+    private $transaction_table = "payment";
+
     protected $id;
     protected $y_id;
     protected $tip_id;
@@ -68,8 +70,29 @@ class Pidb extends DB {
         if(!$result){
             die('<script>location.href = "/pidb/" </script>');
         } else {
+            if($result[0]['tip_id'] == 1){
+                $result[0]['type_name'] = "Predračun";
+            } elseif ($result[0]['tip_id'] == 2){
+                $result[0]['type_name'] = "Otpremnica";
+            } elseif ($result[0]['tip_id'] == 4){
+                $result[0]['type_name'] = "Povratnica";
+            }
             return $result[0];
         }
+    }
+
+    /**
+     * Method that return client by pidb_id
+     * 
+     * @param integer $pidb_id
+     * @return array
+     */
+    public function getClientByPidbId($pidb_id) {
+        $result = $this->get("SELECT client.id, client.name "
+                            . "FROM client JOIN (pidb) "
+                            . "ON (client.id = pidb.client_id) " 
+                            . "WHERE pidb.id = '$pidb_id' ");
+        return $result[0];
     }
 
     /**
@@ -116,6 +139,29 @@ class Pidb extends DB {
         return $documents;
     }
 
+    /**
+     * Method that return last transactions
+     * 
+     * @param int $limit
+     * 
+     * @return array
+     */
+    public function getLastTransactions($limit){
+        $result = $this->get("SELECT * FROM $this->transaction_table ORDER BY id LIMIT $limit ");
+        return $result;
+    }
+
+    /**
+     * Method that return all transactions on document (pidb)
+     * 
+     * @param integer $pidb_id
+     * 
+     * @return array
+     */
+    public function getTransactionsByPidbId($pidb_id){
+        $result = $this->get("SELECT * FROM $this->transaction_table WHERE pidb_id = '$pidb_id' ");
+        return $result;
+    }
 
     // metoda koja definiše i dodeljuje vrednost y_id 
     public function setYid($tip_id){
@@ -225,12 +271,23 @@ class Pidb extends DB {
 
             $price = $row['price'];
             $discounts = $row['discounts'];
-            // $tax_base = ($quantity * $price * $this->kurs) - ($quantity * $price * $this->kurs) * ($discounts/100);
-            $tax_base = ($quantity * $price) - ($quantity * $price) * ($discounts/100);
             $tax = $row['tax'];
+            
+            $tax_base_per_piece = $price - round( $price * ($discounts/100), 4 );
+            $tax_amount_per_piece = round( ($tax_base_per_piece * ($tax/100)), 4 );
+            
+            $tax_base_per_article = $tax_base_per_piece * $quantity;
+            $tax_amount_per_article = $tax_amount_per_piece * $quantity;
+            $sub_total_per_article = $tax_base_per_article + $tax_amount_per_article;
+            
+            // echo $tax_base_per_article . "+" . $tax_amount_per_article . "=" .$sub_total_per_article. "<br>";
+            /*
+            $tax_base = ($quantity * $price) - ($quantity * $price) * ($discounts/100);
             $tax_amount = $tax_base * ($tax/100);
             $sub_total = $tax_base + $tax_amount;
-
+            
+            echo $tax_base . "+" . $tax_amount . "=" . $sub_total. "<br>";
+            */
         $article = array(
                 'id' => $id,
                 'article_id' => $article_id,
@@ -242,10 +299,10 @@ class Pidb extends DB {
                 'quantity' => $quantity,
                 'price' => $price,
                 'discounts' => $discounts,
-                'tax_base' => $tax_base,
+                'tax_base' => $tax_base_per_article,
                 'tax' => $tax,
-                'tax_amount' => $tax_amount,
-                'sub_total' => $sub_total
+                'tax_amount' => $tax_amount_per_article,
+                'sub_total' => $sub_total_per_article
             );
         array_push($articles, $article);
         }
@@ -360,13 +417,30 @@ class Pidb extends DB {
     }
 
     /**
+     * Total Debit Per Document
+     * Ukupno zaduženje po dokumentu
+     * Total Indebtedness In The Accounting Document
+     * Ukupno zaduženje u računovodstvenom dokumentu
+     * 
+     * @param int $pidb_id
+     * @return float
+     */
+    public function getTotalAmountsByPidbId($pidb_id) {
+        $all_articles_on_pidb = $this->getArticlesOnPidb($pidb_id);
+        $tax_base = $this->sumAllValuesByKey($all_articles_on_pidb, "tax_base");
+        $tax_amount = $this->sumAllValuesByKey($all_articles_on_pidb, "tax_amount");
+        $total = $tax_base + $tax_amount;
+        return array('tax_base' => $tax_base, 'tax_amount' => $tax_amount, 'total' => $total);
+    }
+
+    /**
      * Method that return all avans payments by $pidb_id
      * 
      * @param integer $pidb_id
      * 
      * @return float
      */
-    public function getAvans($pidb_id){
+    public function getAvansIncome($pidb_id){
         $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (transaction_type_id = 1 OR transaction_type_id = 2) ");
         $avans = $this->sumAllValuesByKey($result, "amount");
         return $avans;

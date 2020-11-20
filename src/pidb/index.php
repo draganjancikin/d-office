@@ -50,7 +50,8 @@
                   if(isset($_GET['edit'])) include '../../src/pidb/includes/formEdit.php';
                   if(isset($_GET['editArticle']) && isset($_GET['pidb_article_id'])) include '../../src/pidb/includes/formEditArticle.php';
 
-                  if(isset($_GET['payments'])) include '../../app/includes/payments.php';
+                  if(isset($_GET['transactions']) AND isset($_GET['pidb_id'])) include '../../src/pidb/includes/transactionsByPidb.php';
+                  if(isset($_GET['transactions']) AND !isset($_GET['pidb_id'])) include '../../src/pidb/includes/listLastTransactions.php';
 
                   if(isset($_GET['search'])) include '../../app/includes/search.php';
                   if(isset($_GET['set'])) include '../../src/pidb/includes/formSettings.php';
