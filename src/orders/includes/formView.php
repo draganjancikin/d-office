@@ -140,7 +140,7 @@
                         <tr class="table-secondary">
                             <td width="110">Projekat:</td>
                             <td>
-                                <?php echo ( isset($project_data['id']) ? '<a href="/project/?view&project_id='.$project_data['id'].'">'.$project_data['pr_id'].' '.$project_data['client_name'].' - '.$project_data['title'].'</a>' : '___' ) ?>
+                                <?php echo ( isset($project_data['id']) ? '<a href="/projects/?view&project_id='.$project_data['id'].'">'.$project_data['pr_id'].' '.$project_data['client_name'].' - '.$project_data['title'].'</a>' : '___' ) ?>
                             </td>
                             <td></td>
                         </tr>
