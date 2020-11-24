@@ -4,3 +4,6 @@ app/core/config.php
 RolOffice v4.0.code-workspace
 www/projects/upload/
 www/testing/
+
+# roloffice_dev
+/todos/
