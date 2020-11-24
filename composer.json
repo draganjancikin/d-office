@@ -1,0 +1,12 @@
+{
+    "name": "rolostil/roloffice",
+    "description": "Web aplication ...",
+    "type": "project",
+    "authors": [
+        {
+            "name": "draganjancikin",
+            "email": "dragan.jancikin@gmail.com"
+        }
+    ],
+    "require": {}
+}
