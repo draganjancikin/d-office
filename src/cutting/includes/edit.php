@@ -19,7 +19,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editCuttingArticle"]) )
     $space = htmlspecialchars($_POST['space']);
     $field_number = htmlspecialchars($_POST['field_number']);
     
-    $db = new DBconnection();
+    $db = new Connection();
     
     $db->connection->query("UPDATE cutting_fence_article "
                      . "SET cutting_fence_model_id = '$cutting_fence_model_id', width = '$width', height = '$height', mid_height = '$mid_height', space = '$space', field_number = '$field_number' WHERE id = '$cutting_fence_article_id' ") or die(mysqli_error($db->connection));

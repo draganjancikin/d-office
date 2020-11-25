@@ -4,7 +4,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportCuttingToPidb"]) )
 
     $cutting_id = htmlspecialchars($_GET['cutting_id']);
 
-    $db = new DBconnection();
+    $db = new Connection();
 
     $result_cutting_fence = $db->connection->query("SELECT * FROM cutting_fence WHERE id = $cutting_id ") or die(mysqli_error($db->connection));
     $row_cutting_fence = mysqli_fetch_array($result_cutting_fence);

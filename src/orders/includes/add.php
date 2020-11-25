@@ -10,7 +10,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addOrder"]) ) {
     $title = htmlspecialchars($_POST["title"]);
     $note = htmlspecialchars($_POST["note"]);
   
-    $db = new DBconnection();
+    $db = new Connection();
 
     $sql = "INSERT INTO orderm (date, supplier_id, project_id, title, note ) VALUES ( '$date', '$supplier_id', '$project_id', '$title', '$note' )";
     
@@ -40,7 +40,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addMaterialInOrder"]) )
     $price = $material->getPrice($material_id);
     $tax = $material->getTax();
 
-    $db = new DBconnection();
+    $db = new Connection();
 
     $db->connection->query("INSERT INTO orderm_material (order_id, material_id, note, pieces, price, tax) " 
                     . " VALUES ('$order_id', '$material_id', '$note', '$pieces', '$price', '$tax' )") or die(mysqli_error($db->connection));
