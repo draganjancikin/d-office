@@ -19,7 +19,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticle"]) ) {
     $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
     $note = htmlspecialchars($_POST["note"]);
 
-    $db = new DBconnection();
+    $db = new Connection();
 
     $db->connection->query("UPDATE article 
                         SET group_id='$group_id', name='$name', unit_id='$unit_id', date='$date', weight='$weight', min_obrac_mera='$min_obrac_mera', price='$price', note='$note' 

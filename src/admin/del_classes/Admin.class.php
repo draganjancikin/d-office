@@ -8,7 +8,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBco
 class Admin {
 
     public function baseBackup (){
-        $dumpfile = "roloffice_" . date("Y-m-d_H-i-s") . ".sql";
+        $dumpfile = "roloffice_dev_" . date("Y-m-d_H-i-s") . ".sql";
 
         // passthru("C:/xampp/mysql/bin/mysqldump --opt --host=DB_SERVER --user=DB_USERNAME --password=DB_PASSWORD DB_NAME > D:/Documents/BackUps/MYSQL/$dumpfile");
 

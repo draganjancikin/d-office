@@ -20,7 +20,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newArticle"]) ) {
     $min_obrac_mera = str_replace(",", ".", htmlspecialchars($_POST['min_obrac_mera']));
     $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
 
-    $db = new DBconnection();
+    $db = new Connection();
 
     $db->connection->query("INSERT INTO article (date, group_id, name, unit_id, weight, min_obrac_mera, price ) VALUES ('$date', '$group_id', '$name', '$unit_id', '$weight', '$min_obrac_mera', '$price'  )") or die(mysqli_error($db->connection));
 
@@ -52,7 +52,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newProperty"]) ) {
 
     // echo "$user_id-$date-$article_id-$property_item_id-$min-$max";
   
-    $db = new DBconnection();
+    $db = new Connection();
 
     $db->connection->query("INSERT INTO article_property (article_id, property_id, min, max) "
                    . "VALUES ('$article_id', '$property_item_id', '$min', '$max')") or die(mysqli_error($db->connection));
@@ -72,7 +72,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newMaterial"]) ) {
     $material_item_id = htmlspecialchars($_POST['material_item_id']);
     $function = htmlspecialchars($_POST['function']);
 
-    $db = new DBconnection();
+    $db = new Connection();
 
     $db->connection->query("INSERT INTO article_material (article_id, material_id, function) "
                                            . "VALUES ('$article_id', '$material_item_id', '$function' )") or die(mysqli_error($db->connection));

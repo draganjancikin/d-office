@@ -7,7 +7,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delCuttingArticle"])) {
     $cutting_fence_id = htmlspecialchars($_GET['cutting_fence_id']);
     $cutting_fence_article_id = htmlspecialchars($_GET['cutting_fence_article_id']);
 
-    $db = new DBconnection();
+    $db = new Connection();
 
     $db->connection->query("DELETE FROM cutting_fence_article WHERE id='$cutting_fence_article_id' ") or die(mysqli_error($db->connection));
 
@@ -20,7 +20,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delCutting"])) {
 
     $cutting_id = htmlspecialchars($_GET["cutting_id"]);
 
-    $db = new DBconnection();
+    $db = new Connection();
 
     // first: delete articles from cutting_fence_article
     $result_article = $db->connection->query("SELECT * FROM cutting_fence_article WHERE cutting_fence_id='$cutting_id'") or die(mysqli_error($db->connection));

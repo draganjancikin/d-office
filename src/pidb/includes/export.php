@@ -7,7 +7,7 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
     $date = date('Y-m-d h:i:s');
     $date_control = date ('Y');
 
-    $db = new DBconnection();
+    $db = new Connection();
 
     // get proforma data
     $result_pidb = $db->connection->query("SELECT * FROM pidb WHERE id = '$pidb_id' ") or die(mysqli_error($db->connection));

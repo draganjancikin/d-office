@@ -24,7 +24,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editClient"])) {
     $address_note = basicValidation($_POST["address_note"]);
     $note = basicValidation($_POST["note"]);
 
-    $db = new DBconnection();
+    $db = new Connection();
     
     if ($vps_id == 1){
         $db->connection->query(" UPDATE client " 
@@ -57,7 +57,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editContact"])) {
     $number = basicValidation($_POST["number"]);
     $note = basicValidation($_POST["note"]);
 
-    $db = new DBconnection();
+    $db = new Connection();
     
     $db->connection->query("UPDATE contacts "
                     . " SET type_id='$contacttype_id', number='$number', note='$note' "
