@@ -6,8 +6,8 @@ session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
-    $client = new Client();
-    $material = new Material();
+    $client = new ClientController();
+    $material = new MaterialController();
     include '../../src/materials/index.php';
 else:
     header('Location: /');

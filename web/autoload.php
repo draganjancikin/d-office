@@ -4,44 +4,44 @@
 function myAutoLoader($class) {
     // echo $class;
     switch ($class) {
-        case 'Admin':
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/Admin/' . $class . '.class.php';
+        case 'AdminController':
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
-        case 'Article':
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/Article/' . $class . '.class.php';
+        case 'ArticleController':
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
-        case 'Connection':
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/Database/' . $class . '.class.php';
+        case 'ConnectionController':
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
-        case 'Client':
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/Client/' . $class . '.class.php';
+        case 'ClientController':
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
-        case 'Contact':
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/Client/' . $class . '.class.php';
+        case 'ContactController':
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
-        case 'Cutting':
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/Cutting/' . $class . '.class.php';
+        case 'CuttingController':
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
-        case 'Database':
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/Database/' . $class . '.class.php';
+        case 'DatabaseController':
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
-        case 'Material':
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/Material/' . $class . '.class.php';
+        case 'MaterialController':
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
-        case 'Order':
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/Order/' . $class . '.class.php';
+        case 'OrderController':
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
-        case 'Pidb':
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/Pidb/' . $class . '.class.php';
+        case 'PidbController':
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
-        case 'Project':
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/Project/' . $class . '.class.php';
+        case 'ProjectController':
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
         default:
-            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.class.php';
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . '.php';
             break;
     }
-    // echo "PATH: " . $path;
+    // echo "PATH: " . $path . "<br>";
     include $path;
 }
 

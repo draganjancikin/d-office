@@ -1,11 +1,11 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 /**
  * Description of Order class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class Order extends DB {
+class OrderController extends DatabaseController {
 
     protected $id;
     protected $o_id;

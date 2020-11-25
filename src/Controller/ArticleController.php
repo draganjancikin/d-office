@@ -1,11 +1,11 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 /**
  * Article class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class Article extends DB {
+class ArticleController extends DatabaseController {
 
     private $table_article = "article";
 

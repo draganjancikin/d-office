@@ -43,8 +43,7 @@ $pdf->SetFont('dejavusans', '', 10);
 // add a page
 $pdf->AddPage();
 
-// potreban je konfiguracioni fajl
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';;
 
 // generisanje potrebnih objekata
 $client = new Client();

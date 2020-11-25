@@ -1,5 +1,5 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 /**
  * Pidb.class.php
  * 
@@ -7,7 +7,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.c
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class Pidb extends DB {
+class PidbController extends DatabaseController {
 
     private $transaction_table = "payment";
 

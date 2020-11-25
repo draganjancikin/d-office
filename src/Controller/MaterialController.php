@@ -1,11 +1,11 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 /**
  * Material class
  * 
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
-class Material extends DB {
+class MaterialController extends DatabaseController {
 
     protected $id;
     protected $name;

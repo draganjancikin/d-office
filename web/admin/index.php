@@ -6,7 +6,7 @@ session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
-    $admin = new Admin();
+    $admin = new AdminController();
     include '../../src/admin/index.php';
 else:
     header('Location: /');

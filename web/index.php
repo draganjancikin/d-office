@@ -7,7 +7,7 @@ session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
-    $db = new Database();
+    $db = new DatabaseController();
     include '../app/index.php';
 else:
     include '../app/formLogin.php';
