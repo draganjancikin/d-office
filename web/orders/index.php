@@ -11,7 +11,7 @@ if(isset($_SESSION['username'])):
     $material = new MaterialController();
     $project = new ProjectController();
     $order = new OrderController();
-    include '../../src/orders/index.php';
+    include filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../templates/order/index.php';
 else:
     header('Location: /');
 endif;

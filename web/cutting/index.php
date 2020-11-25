@@ -10,7 +10,7 @@ if(isset($_SESSION['username'])):
     $pidb = new PidbController();
     $article = new ArticleController();
     $cutting = new CuttingController();
-    include '../../src/cutting/index.php';
+    include filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../templates/cutting/index.php';
 else:
     header('Location: /');
 endif;

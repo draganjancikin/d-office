@@ -7,7 +7,7 @@ if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
     $article = new ArticleController();
-    include '../../src/articles/index.php';
+    include filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../templates/article/index.php';
 else:
     header('Location: /');
 endif;

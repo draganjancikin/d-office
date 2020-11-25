@@ -11,7 +11,7 @@ if(isset($_SESSION['username'])):
     $order = new OrderController();
     $pidb = new PidbController();
     $project = new ProjectController();
-    include '../../src/projects/index.php';
+    include filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../templates/project/index.php';
 else:
     header('Location: /');
 endif;

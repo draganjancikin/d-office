@@ -46,10 +46,10 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 
 // generisanje potrebnih objekata
-$client = new Client();
-$contact = new Contact();
-$order = new Order();
-$material = new Material();
+$client = new ClientController();
+$contact = new ContactController();
+$order = new OrderController();
+$material = new MaterialController();
     
 $order_id = $_GET['order_id'];
 

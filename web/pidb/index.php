@@ -10,7 +10,7 @@ if(isset($_SESSION['username'])):
     $contact = new ContactController();
     $article = new ArticleController();
     $pidb = new PidbController();
-    include '../../src/pidb/index.php';
+    include filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../templates/pidb/index.php';
 else:
     header('Location: /');
 endif;

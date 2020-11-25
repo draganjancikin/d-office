@@ -8,7 +8,7 @@ if(isset($_SESSION['username'])):
     $userlevel = $_SESSION['user_level'];
     $client = new ClientController();
     $contact = new ContactController();
-    include '../../src/clients/index.php';
+    include filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../templates/client/index.php';
 else:
     header('Location: /');
 endif;

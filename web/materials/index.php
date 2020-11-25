@@ -8,7 +8,7 @@ if(isset($_SESSION['username'])):
     $userlevel = $_SESSION['user_level'];
     $client = new ClientController();
     $material = new MaterialController();
-    include '../../src/materials/index.php';
+    include filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../templates/material/index.php';
 else:
     header('Location: /');
 endif;
