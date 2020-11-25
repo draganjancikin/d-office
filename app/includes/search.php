@@ -48,7 +48,7 @@ if($page == "clients"):
 endif;
 
 if($page == "pidb"):
-    require '../../src/pidb/includes/del.php';
+    require '../../templates/pidb/includes/del.php';
     $name = filter_input(INPUT_GET, 'search');
     $last_pidb_id = $pidb->getlastIdPidb();
     ?>
@@ -427,7 +427,7 @@ if($page == "materials"):
 endif;
 
 if($page == "orders"):
-    require '../../src/orders/includes/del.php';
+    require '../../templates/order/includes/del.php';
     $name = filter_input(INPUT_GET, 'search');
     $orders = $order->search($name);
     ?>
