@@ -1,5 +1,5 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 /**
  * Cutting.class.php
  * 
@@ -7,7 +7,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DB.c
  *
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
-class Cutting extends DB {
+class CuttingController extends DatabaseController {
 
     protected $id;
     protected $c_id;

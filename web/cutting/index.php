@@ -6,10 +6,10 @@ session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
-    $client = new Client();
-    $pidb = new Pidb();
-    $article = new Article();
-    $cutting = new Cutting();
+    $client = new ClientController();
+    $pidb = new PidbController();
+    $article = new ArticleController();
+    $cutting = new CuttingController();
     include '../../src/cutting/index.php';
 else:
     header('Location: /');

@@ -6,11 +6,11 @@ session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
-    $client = new Client();
-    $contact = new Contact();
-    $order = new Order();
-    $pidb = new Pidb();
-    $project = new Project();
+    $client = new ClientController();
+    $contact = new ContactController();
+    $order = new OrderController();
+    $pidb = new PidbController();
+    $project = new ProjectController();
     include '../../src/projects/index.php';
 else:
     header('Location: /');

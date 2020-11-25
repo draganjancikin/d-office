@@ -5,7 +5,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
  * 
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class Contact extends Database {
+class ContactController extends DatabaseController {
 
     protected $id;
     protected $client_id;

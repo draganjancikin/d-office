@@ -1,11 +1,11 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/classes/DBconnection.class.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/dbConfig.php';
 /**
  * Admin class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class Admin {
+class AdminController {
 
     public function baseBackup (){
         $dumpfile = "roloffice_dev_" . date("Y-m-d_H-i-s") . ".sql";

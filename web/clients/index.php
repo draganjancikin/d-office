@@ -6,8 +6,8 @@ session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
-    $client = new Client();
-    $contact = new Contact();
+    $client = new ClientController();
+    $contact = new ContactController();
     include '../../src/clients/index.php';
 else:
     header('Location: /');

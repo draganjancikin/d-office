@@ -6,10 +6,10 @@ session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
-    $client = new Client();
-    $contact = new Contact();
-    $article = new Article();
-    $pidb = new Pidb();
+    $client = new ClientController();
+    $contact = new ContactController();
+    $article = new ArticleController();
+    $pidb = new PidbController();
     include '../../src/pidb/index.php';
 else:
     header('Location: /');
