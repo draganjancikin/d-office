@@ -1,4 +1,3 @@
-app/config/config.php
 app/config/dbConfig.php
 RolOffice v4.0.code-workspace
 web/projects/upload/
@@ -8,5 +7,3 @@ web/testing/
 /todos/
 /config/
 /vendor/
-dbConfig.php
-appConfig.php
