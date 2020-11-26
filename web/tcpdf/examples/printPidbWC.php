@@ -37,25 +37,19 @@ $pdf->setLanguageArray($l);
 // set font
 $pdf->SetFont('dejavusans', '', 10);
 
-
-
-
-
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Print a table
 
 // add a page
 $pdf->AddPage();
 
-
-// potreban je konfiguracioni fajl
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 
 // generisanje potrebnih objekata
-    $client = new Client();
-    $contact = new Contact();
-    $pidb = new Pidb();
-    $article = new Article();
+$client = new ClientController();
+$contact = new ContactController();
+$pidb = new PidbController();
+$article = new ArticleController();
 
 $pidb_id = $_GET['pidb_id'];
 $pidb_data = $pidb->getPidb($pidb_id);

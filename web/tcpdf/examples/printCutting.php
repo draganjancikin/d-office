@@ -44,13 +44,12 @@ $pdf->SetFont('dejavusans', '', 10);
 // add a page
 $pdf->AddPage();
 
-// potreban je konfiguracioni fajl
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 
 // generisanje potrebnih objekata
-$client = new Client();
-$contact = new Contact();
-$cutting = new Cutting();
+$client = new ClientController();
+$contact = new ContactController();
+$cutting = new CuttingController();
 
 $cutting_fence_id = $_GET['cutting_id'];
 

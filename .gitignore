@@ -1,6 +1,10 @@
 app/config/config.php
 app/config/dbConfig.php
-app/core/config.php
 RolOffice v4.0.code-workspace
-web/projects/upload/
-web/testing/
+www/projects/upload/
+www/testing/
+
+# roloffice_dev
+/todos/
+/config/
+/vendor/
