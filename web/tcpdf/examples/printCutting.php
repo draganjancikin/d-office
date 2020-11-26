@@ -1,8 +1,11 @@
 <?php
 // echo 'ovde ce biti stampanje krojne liste';
 $page = "cutting";
+/*
 require_once('../config/lang/srp.php');
 require_once('../tcpdf.php');
+*/
+require_once('tcpdf_include.php');
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -22,7 +25,7 @@ $pdf->setPrintFooter(false);
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 //set margins
-$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetMargins(10, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
 //set auto page breaks
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
@@ -31,7 +34,7 @@ $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 //set some language-dependent strings
-$pdf->setLanguageArray($l);
+// $pdf->setLanguageArray($l);
 
 // ---------------------------------------------------------
 

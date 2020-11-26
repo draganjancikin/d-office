@@ -1,7 +1,10 @@
 <?php
 $page = "pidb";
+/*
 require_once('../config/lang/srp.php');
 require_once('../tcpdf.php');
+*/
+require_once('tcpdf_include.php');
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -21,7 +24,7 @@ $pdf->setPrintFooter(false);
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 //set margins
-$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetMargins(10, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
 //set auto page breaks
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
@@ -30,7 +33,7 @@ $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 //set some language-dependent strings
-$pdf->setLanguageArray($l);
+// $pdf->setLanguageArray($l);
 
 // ---------------------------------------------------------
 
@@ -91,10 +94,10 @@ $html = '
 $pdf->writeHTML($html, true, false, true, false, '');
 
 $html = '
-<table border="1" style="font-size:30px">
+<table border="1">
   <tr>
     <td width="30px" align="center">red.<br />br.</td>
-    <td '.($pidb_data['tip_id'] == 2 ? 'width="495px"' : 'width="195px"'). ' align="center">naziv proizvoda</td>
+    <td '.($pidb_data['tip_id'] == 2 ? 'width="495px"' : 'width="185px"'). ' align="center">naziv proizvoda</td>
     <td width="35px" align="center">jed.<br />mere</td>
     <td width="53px" align="center">kol.</td>
     '.($pidb_data['tip_id'] == 2 ? "" : '
@@ -139,10 +142,10 @@ foreach ($articles_on_pidb as $article_on_pidb):
     
     $html = '
     <style type="text/css"> table{ padding: 0px; margin: 0px; }</style>
-    <table border="0" style="font-size:29px">
+    <table border="0">
       <tr>
         <td width="30px" align="center">' .$count. '</td>
-        <td '.($pidb_data['tip_id'] == 2 ? 'width="495px"' : 'width="195px"'). '>' .$article_on_pidb['name'] . '<span style="font-size: 7">' . ( $article_on_pidb['note'] == "" ? "" : ', '.$article_on_pidb['note'] ) . '</span>'
+        <td '.($pidb_data['tip_id'] == 2 ? 'width="495px"' : 'width="190px"'). '>' .$article_on_pidb['name'] . '<span style="font-size: 7">' . ( $article_on_pidb['note'] == "" ? "" : ', '.$article_on_pidb['note'] ) . '</span>'
             . '<br />' .$property_temp. ' ' .$article_on_pidb['pieces']. ' kom </td>
         <td align="center" width="35px">' .$article_on_pidb['unit_name']. '</td>
         <td width="53px" align="right">'.number_format($article_on_pidb['quantity'], 2, ",", "."). '</td>' 
@@ -169,11 +172,11 @@ endforeach;
 $html = ''.($pidb_data['tip_id'] == 2 ? "" : '
 <style type="text/css">table {	padding: 0px; margin: 0px; }</style>
 
-<table><tr><td width="690px" colspan="10" style="border-bottom-width: inherit;"></td></tr></table>
+<table><tr><td width="685px" colspan="10" style="border-bottom-width: inherit;"></td></tr></table>
 
-<table border="0" style="font-size:29px;">
+<table border="0">
   <tr>
-    <td colspan="3" width="270px"></td>
+    <td colspan="3" width="265px"></td>
     <td colspan="2" width="135px" style="border-bottom-width: inherit;">ukupno poreska osnovica</td>
     <td colspan="2" width="100px" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_base*$pidb->getKurs(), 2, ",", ".").'</td>
     <td colspan="2" width="105px"></td><td width="80px"></td>
@@ -184,7 +187,7 @@ $html = ''.($pidb_data['tip_id'] == 2 ? "" : '
     <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount*$pidb->getKurs(), 2, ",", ".").'</td>
     <td></td>
   </tr>
-  <tr style="font-size: 32px; font-weight:bold;">
+  <tr style="font-weight:bold;">
     <td colspan="3"></td>
     <td colspan="5" style="border-bottom-width: inherit;">UKUPNO ZA UPLATU</td>
     <td colspan="2" align="right" style="border-bottom-width: inherit;">RSD '.number_format($total*$pidb->getKurs(), 2, ",", ".").'</td>
@@ -202,7 +205,7 @@ $pdf->writeHTML($html, true, false, true, false, '');
 
 $html = '
 <table border="1">
-  <tr><td width="690px">Napomena:<br />'.nl2br($pidb_data['note']).'</td></tr>
+  <tr><td width="685px">Napomena:<br />'.nl2br($pidb_data['note']).'</td></tr>
 </table>
 ';
 

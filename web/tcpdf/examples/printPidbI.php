@@ -1,7 +1,9 @@
 <?php
-$page = "pidb";
+/*
 require_once('../config/lang/srp.php');
 require_once('../tcpdf.php');
+*/
+require_once('tcpdf_include.php');
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -21,7 +23,7 @@ $pdf->setPrintFooter(false);
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 //set margins
-$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetMargins(10, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
 //set auto page breaks
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
@@ -30,7 +32,7 @@ $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 //set some language-dependent strings
-$pdf->setLanguageArray($l);
+// $pdf->setLanguageArray($l);
 
 // ---------------------------------------------------------
 
@@ -46,10 +48,10 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';;
 
 // generisanje potrebnih objekata
-$client = new Client();
-$contact = new Contact();
-$pidb = new Pidb();
-$article = new Article();
+$client = new ClientController();
+$contact = new ContactController();
+$pidb = new PidbController();
+$article = new ArticleController();
 
 $pidb_id = $_GET['pidb_id'];
 $pidb_data = $pidb->getPidb($pidb_id);
@@ -81,7 +83,7 @@ $html = '
 
 <table border="0">
   <tr>
-    <td width="690px" colspan="3"><h1>ROLOSTIL szr</h1></td>
+    <td width="685px" colspan="3"><h1>ROLOSTIL szr</h1></td>
   </tr>
   <tr>
     <td width="340px" colspan="2">
@@ -105,7 +107,7 @@ $html = '
 $pdf->writeHTML($html, true, false, true, false, '');
 
 $html = '
-<table border="1" style="font-size:30px">
+<table border="1">
   <tr>
     <td width="30px" align="center">red.<br />br.</td>
     <td width="195px" align="center">naziv proizvoda</td>
@@ -146,7 +148,7 @@ foreach ($articles_on_pidb as $article_on_pidb):
     
     $html = '
     <style type="text/css"> table{ padding: 0px; margin: 0px; }</style>
-    <table border="0" style="font-size:29px">
+    <table border="0">
       <tr>
         <td width="30px" align="center">' .$count. '</td>
         <td width="195px">' .$article_on_pidb['name'] . '<span style="font-size: 7">' . ( $article_on_pidb['note'] == "" ? "" : ', '.$article_on_pidb['note'] ) . '</span>'
@@ -174,9 +176,9 @@ endforeach;
 $html = '
 <style type="text/css">table {	padding: 0px; margin: 0px; }</style>
 
-<table><tr><td width="690px" colspan="10" style="border-bottom-width: inherit;"></td></tr></table>
+<table><tr><td width="685px" colspan="10" style="border-bottom-width: inherit;"></td></tr></table>
 
-<table border="0" style="font-size:29px;">
+<table border="0">
   <tr>
     <td colspan="3" width="270px"></td>
     <td colspan="2" width="135px" style="border-bottom-width: inherit;">ukupno poreska osnovica</td>
@@ -189,7 +191,7 @@ $html = '
     <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount*$pidb->getKurs(), 2, ",", ".").'</td>
     <td></td>
   </tr>
-  <tr style="font-size: 32px; font-weight:bold;">
+  <tr style="font-weight:bold;">
     <td colspan="3"></td>
     <td colspan="5" style="border-bottom-width: inherit;">UKUPNO ZA UPLATU</td>
     <td colspan="2" align="right" style="border-bottom-width: inherit;">RSD '.number_format($total*$pidb->getKurs(), 2, ",", ".").'</td>

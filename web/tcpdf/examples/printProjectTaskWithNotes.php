@@ -1,7 +1,10 @@
 <?php
 $page = "projects";
-require_once('../config/lang/eng.php');
+/*
+require_once('../config/lang/srp.php');
 require_once('../tcpdf.php');
+*/
+require_once('tcpdf_include.php');
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -21,7 +24,7 @@ $pdf->setPrintFooter(false);
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 //set margins
-$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetMargins(10, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
 //set auto page breaks
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
@@ -30,7 +33,7 @@ $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 //set some language-dependent strings
-$pdf->setLanguageArray($l);
+// $pdf->setLanguageArray($l);
 
 // ---------------------------------------------------------
 
@@ -101,7 +104,7 @@ $project_notes = $project->getNotesByProject($project_id);
 foreach ($project_notes as $project_note):
     
   $html = '
-    <table><tr><td width="90px">' . date('d-M-Y', strtotime($project_note['date'])) . '</td><td width="600px">'.nl2br($project_note['note']).'</td></tr></table>
+    <table><tr><td width="90px">' . date('d-M-Y', strtotime($project_note['date'])) . '</td><td width="695px">'.nl2br($project_note['note']).'</td></tr></table>
   ';
   $pdf->writeHTML($html, true, false, true, false, '');
     
