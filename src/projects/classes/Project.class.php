@@ -450,11 +450,17 @@ class Project extends DB {
 
             $title = $row['title'];
             $employee_id = $row['employee_id'];
-            $result_employee = $this->connection->query("SELECT * "
-                                                      . "FROM employee "
-                                                      . "WHERE id = $employee_id") or die(mysqli_error($this->connection));
-            $row_employee = $result_employee->fetch_assoc();
+            
+            $result_employee = $this->get("SELECT name "
+                                        . "FROM employee "
+                                        . "WHERE id = $employee_id");
+            
+            if ($result_employee) {
+                $row_employee = $result_employee[0];
                 $employee_name = $row_employee['name'];
+            } else {
+                $employee_name = " ";
+            }
 
             $start = $row['start'];
             $end = $row['end'];
