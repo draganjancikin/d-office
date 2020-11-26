@@ -1,14 +1,13 @@
 ﻿<?php
 $page = "clients";
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/appConfig.php';
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../app/config/conf.php';
 session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $userlevel = $_SESSION['user_level'];
-    $client = new ClientController();
-    $contact = new ContactController();
-    include filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../templates/client/index.php';
+    $client = new Client();
+    $contact = new Contact();
+    include '../../src/clients/index.php';
 else:
     header('Location: /');
 endif;

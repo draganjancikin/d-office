@@ -75,44 +75,44 @@ class ProjectController extends DatabaseController {
 
 
     // metoda koja daje podatke o projektu
-    public function getProject ($project_id){
+    public function getProject($project_id) {
 
-        $result = $this->connection->query("SELECT project.id, project.pr_id, project.date, project.client_id, project.title, project.priority_id, project.status, project.note, project.created_at_user_id, client.name as client_name "
-                                    . "FROM project "
-                                    . "JOIN (client) "
-                                    . "ON (project.client_id = client.id ) "
-                                    . "WHERE project.id = $project_id ") or die(mysqli_error($this->connection));
-        $row = $result->fetch_assoc();
+        $result = $this->get("SELECT project.id, project.pr_id, project.date, project.client_id, project.title, project.priority_id, project.status, project.note, project.created_at_user_id, client.name as client_name "
+                            . "FROM project "
+                            . "JOIN (client) "
+                            . "ON (project.client_id = client.id ) "
+                            . "WHERE project.id = $project_id ");
+        if( !empty($result) ){
+            $row = $result[0];
             $id = $row['id'];
-            // check is project exist
-            if(!empty($id)){
-                $created_at_user_id = $row['created_at_user_id'];
-                $result_user_created = $this->connection->query("SELECT admin.username "
-                                                      . "FROM admin "
-                                                      . "WHERE admin.id = $created_at_user_id ") or die(mysqli_error($this->connection));
-                $row_user_created = $result_user_created->fetch_assoc();
-                $project = array(
-                    'id' => $id,
-                    'pr_id' => $row['pr_id'],
-                    'date' => $row['date'],
-                    'client_id' => $row['client_id'],
-                    'client_name' => $row['client_name'],
-                    'title' => $row['title'],
-                    'priority_id' => $row['priority_id'],
-                    'status' => $row['status'],
-                    'note' => $row['note'],
-                    'created_at_user' => $row_user_created['username']
-                );
-                return $project;
 
-            }else {
-                return array(
-                    'id' => '0',
-                    'pr_id' => '',
-                    'client_name' => '',
-                    'title' => ''
-                );
-            }
+            $created_at_user_id = $row['created_at_user_id'];
+            $result_user_created = $this->get("SELECT admin.username "
+                                                  . "FROM admin "
+                                                  . "WHERE admin.id = $created_at_user_id ");
+            $row_user_created = $result_user_created[0];
+            $project = array(
+                'id' => $id,
+                'pr_id' => $row['pr_id'],
+                'date' => $row['date'],
+                'client_id' => $row['client_id'],
+                'client_name' => $row['client_name'],
+                'title' => $row['title'],
+                'priority_id' => $row['priority_id'],
+                'status' => $row['status'],
+                'note' => $row['note'],
+                'created_at_user' => $row_user_created['username']
+            );
+            return $project;
+        }else{
+
+            return array(
+                'id' => '0',
+                'pr_id' => '',
+                'client_name' => '',
+                'title' => ''
+            );
+        };
 
     }
 
@@ -450,11 +450,17 @@ class ProjectController extends DatabaseController {
 
             $title = $row['title'];
             $employee_id = $row['employee_id'];
-            $result_employee = $this->connection->query("SELECT * "
-                                                      . "FROM employee "
-                                                      . "WHERE id = $employee_id") or die(mysqli_error($this->connection));
-            $row_employee = $result_employee->fetch_assoc();
+            
+            $result_employee = $this->get("SELECT name "
+                                        . "FROM employee "
+                                        . "WHERE id = $employee_id");
+            
+            if ($result_employee) {
+                $row_employee = $result_employee[0];
                 $employee_name = $row_employee['name'];
+            } else {
+                $employee_name = " ";
+            }
 
             $start = $row['start'];
             $end = $row['end'];
