@@ -28,7 +28,7 @@
           $orders = $order->getLastOrders(10);
           foreach ($orders as $order):
             $project_id = $order['project_id'];
-            $project_data = $project -> getProject($project_id);
+            $project_data = $project->getProject($project_id);
             ?>
             <tr>
               <td class="px-1">
