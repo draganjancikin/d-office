@@ -1,9 +1,7 @@
 <?php
 $page = "pidb";
-/*
-require_once('../config/lang/srp.php');
-require_once('../tcpdf.php');
-*/
+
+// Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
 
 // create new PDF document
@@ -11,10 +9,10 @@ $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('Rolostil');
+$pdf->SetAuthor('Roloffice');
 $pdf->SetTitle('ROLOSTIL - Dokument');
 $pdf->SetSubject('Rolostil');
-$pdf->SetKeywords('Rolostil, PDF, nalog');
+$pdf->SetKeywords('Rolostil, PDF, Proforma, Invoice');
 
 // remove default header/footer
 $pdf->setPrintHeader(false);
@@ -24,7 +22,7 @@ $pdf->setPrintFooter(false);
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 //set margins
-$pdf->SetMargins(10, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
 //set auto page breaks
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);

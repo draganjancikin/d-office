@@ -8,3 +8,5 @@ web/testing/
 /todos/
 /config/
 /vendor/
+dbConfig.php
+appConfig.php
