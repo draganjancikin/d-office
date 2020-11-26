@@ -9,4 +9,4 @@
 define("DB_SERVER", "localhost");
 define("DB_USERNAME", "rolostil");
 define("DB_PASSWORD", "Rolostil237");
-define("DB_NAME", "roloffice-2020_dev");
+define("DB_NAME", "roloffice-2020");
