@@ -1,7 +1,10 @@
 <?php
 $page = "nabavka";
-require_once('../config/lang/eng.php');
+/*
+require_once('../config/lang/srp.php');
 require_once('../tcpdf.php');
+*/
+require_once('tcpdf_include.php');
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -21,7 +24,7 @@ $pdf->setPrintFooter(false);
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 //set margins
-$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetMargins(10, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
 //set auto page breaks
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
@@ -30,7 +33,7 @@ $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 //set some language-dependent strings
-$pdf->setLanguageArray($l);
+// $pdf->setLanguageArray($l);
 
 // ---------------------------------------------------------
 
@@ -71,7 +74,7 @@ $html = '
 
 <table border="0">
   <tr>
-    <td width="690px" colspan="3"><h1>ROLOSTIL szr</h1></td>
+    <td width="685px" colspan="3"><h1>ROLOSTIL szr</h1></td>
   </tr>
   <tr>
     <td width="340px" colspan="2">Vojvode Živojina Mišića 237<br />21400 Bačka Palanka<br />PIB: 100754526<br />MB: 5060100<br />žr. 220-127736-34, Procredit bank</td>
@@ -90,7 +93,7 @@ $html = '
 $pdf->writeHTML($html, true, false, true, false, '');
 
 $html = '
-<table border="1" style="font-size:32px">
+<table border="1">
   <tr>
     <td width="35px">red.<br />broj</td>
     <th width="100px" align="center">šifra</th>
@@ -128,7 +131,7 @@ foreach ($materials_on_order as $material_on_order):
     
     $html = '
     <style type="text/css"> table{ padding: 0px; margin: 0px; }</style>
-    <table border="0" style="font-size:36px">
+    <table border="0" style="font-size:14px">
       <tr>
         <td width="35px" align="center">'.$count.'</td>
         <td width="100px" class="center">' . $material_on_order['code'] . '</td>
