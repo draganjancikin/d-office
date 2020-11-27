@@ -39,7 +39,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addNote']) ) {
 
     $note = htmlspecialchars($_POST['note']);
 
-    $db = new Connection();
+    $db = new DatabaseController();
 
     $db->connection->query("INSERT INTO project_note (date, project_id, created_at_user_id, note) VALUES ( '$date','$project_id', '$user_id', '$note' )") or die(mysqli_error($db->connection));
 
@@ -58,7 +58,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addTask']) ) {
     $tip_id = $_POST["tip_id"];
     $title = htmlspecialchars($_POST['title']);
 
-    $db = new Connection();
+    $db = new DatabaseController();
 
     $db->connection->query("INSERT INTO project_task (date, project_id, created_at_user_id, tip_id, status_id, title) VALUES ( '$date','$project_id', '$user_id', '$tip_id', '$status_id', '$title' )") or die(mysqli_error($db->connection));
 
@@ -76,7 +76,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addTaskNote']) ) {
 
     $note = htmlspecialchars($_POST['note']);
 
-    $db = new Connection();
+    $db = new DatabaseController();
 
     $db->connection->query("INSERT INTO project_task_note (date, project_task_id, created_at_user_id, note) VALUES ( '$date','$task_id', '$user_id', '$note' )") or die(mysqli_error($db->connection));
 

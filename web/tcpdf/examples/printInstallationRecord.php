@@ -1,9 +1,7 @@
 <?php
 $page = 'projects';
-/*
-require_once('../config/lang/srp.php');
-require_once('../tcpdf.php');
-*/
+
+// Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
 
 // create new PDF document
@@ -24,7 +22,7 @@ $pdf->setPrintFooter(false);
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 //set margins
-$pdf->SetMargins(10, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
 //set auto page breaks
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
