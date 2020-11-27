@@ -162,24 +162,24 @@ class PidbController extends DatabaseController {
         $result = $this->get("SELECT * FROM $this->transaction_table WHERE pidb_id = '$pidb_id' ");
         $i = 0;
         foreach($result as $row){
-            switch ($row['transaction_type_id']) {
+            switch ($row['type_id']) {
                 case 1:
-                    $transaction_type = "Avans (gotovinski)";
+                    $type = "Avans (gotovinski)";
                     break;
                 case 2:
-                    $transaction_type = "Avans";
+                    $type = "Avans";
                     break;
                 case 3:
-                    $transaction_type = "Uplata (gotovinska)";
+                    $type = "Uplata (gotovinska)";
                     break;
                 case 4:
-                    $transaction_type = "Uplata";
+                    $type = "Uplata";
                     break;
                 default:
-                $transaction_type = "_";
+                $type = "_";
                     break;
             }
-            $result[$i]['transaction_type_name'] = $transaction_type;
+            $result[$i]['type_name'] = $type;
             $i++;
         }
         return $result;
@@ -463,7 +463,7 @@ class PidbController extends DatabaseController {
      * @return float
      */
     public function getAvansIncome($pidb_id){
-        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (transaction_type_id = 1 OR transaction_type_id = 2) ");
+        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (type_id = 1 OR type_id = 2) ");
         $avans = $this->sumAllValuesByKey($result, "amount");
         return $avans;
     }
@@ -476,7 +476,7 @@ class PidbController extends DatabaseController {
      * @return float
      */
     public function getIncome($pidb_id){
-        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (transaction_type_id = 3 OR transaction_type_id = 4) ");
+        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (type_id = 3 OR type_id = 4) ");
         $income = $this->sumAllValuesByKey($result, "amount");
         return $income;
     }
