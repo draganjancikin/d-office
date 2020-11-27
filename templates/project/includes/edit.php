@@ -13,7 +13,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['editProject']) ) {
     $status = htmlspecialchars($_POST["status"]);
     // $note = htmlspecialchars($_POST["note"]);
 
-    $db = new Connection();
+    $db = new DatabaseController();
 
     // $db->connection->query("UPDATE project SET client_id='$client_id', title='$title', priority_id='$priority_id', note='$note' WHERE id = '$project_id' ") or die(mysql_error($db->connection));
     $db->connection->query("UPDATE project SET client_id='$client_id', title='$title', priority_id='$priority_id', status='$status' WHERE id = '$project_id' ") or die(mysqli_error($db->connection));
@@ -31,7 +31,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['editTask']) ) {
     $start = htmlspecialchars($_POST["start"]);
     $end = htmlspecialchars($_POST["end"]);
 
-    $db = new Connection();
+    $db = new DatabaseController();
 
 
     /*
@@ -131,7 +131,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET['setTaskStart']) ) {
     $start = date('Y-m-d h:i:s');
     $status_id = 2;
 
-    $db = new Connection();
+    $db = new DatabaseController();
 
     $db->connection->query("UPDATE project_task SET start='$start', status_id='$status_id' WHERE id = '$task_id' ") or die(mysqli_error($db->connection));
 
@@ -145,7 +145,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET['setTaskEnd']) ) {
     $task_id = htmlspecialchars($_GET["task_id"]);
     $project_id = htmlspecialchars($_GET["project_id"]);
 
-    $db = new Connection();
+    $db = new DatabaseController();
 
     $result_start = $db->connection->query("SELECT * FROM project_task WHERE id = '$task_id' ") or die(mysqli_error($db->connection));
         $row_start = mysqli_fetch_array($result_start);
