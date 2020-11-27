@@ -72,11 +72,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
     $date = date('Y-m-d h:i:s');
     $pidb_id = htmlspecialchars($_POST["pidb_id"]);
     $client_id = htmlspecialchars($_POST["client_id"]);
-    $transaction_type_id = htmlspecialchars($_POST["transaction_type_id"]);
+    $type_id = htmlspecialchars($_POST["type_id"]);
     $amount = htmlspecialchars($_POST["amount"]);
     $note = htmlspecialchars($_POST["note"]);
 
-    $pidb->insertTransaction($date, $pidb_id, $client_id, $transaction_type_id, $amount, $note);
+    $pidb->insertTransaction($date, $pidb_id, $client_id, $type_id, $amount, $note);
     
     die('<script>location.href = "?view&pidb_id='.$pidb_id.' " </script>');
 }

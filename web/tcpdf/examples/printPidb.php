@@ -155,7 +155,7 @@ foreach ($articles_on_pidb as $article_on_pidb):
     
     $html = '
     <style type="text/css"> table{ padding: 0px; margin: 0px; }</style>
-    <table border="0">
+    <table border="0" style="font-size: 10px">
       <tr>
         <td width="30px" align="center">' .$count. '</td>
         <td '.($pidb_data['tip_id'] == 2 ? 'width="495px"' : 'width="190px"'). '>' .$article_on_pidb['name'] . '<span style="font-size: 7">' . ( $article_on_pidb['note'] == "" ? "" : ', '.$article_on_pidb['note'] ) . '</span>'

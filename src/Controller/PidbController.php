@@ -433,9 +433,9 @@ class PidbController extends DatabaseController {
      * @param float $amount
      * @param string $note
      */
-    public function insertTransaction($date, $pidb_id, $client_id, $transaction_type_id, $amount, $note) {
-        $this->insert("INSERT INTO payment (date, pidb_id, client_id, transaction_type_id, amount, note) " 
-        . " VALUES ('$date', '$pidb_id', '$client_id', '$transaction_type_id', '$amount', '$note' )");
+    public function insertTransaction($date, $pidb_id, $client_id, $type_id, $amount, $note) {
+        $this->insert("INSERT INTO payment (date, pidb_id, client_id, type_id, amount, note) " 
+        . " VALUES ('$date', '$pidb_id', '$client_id', '$type_id', '$amount', '$note' )");
     }
 
     /**
