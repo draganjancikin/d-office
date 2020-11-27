@@ -160,6 +160,28 @@ class PidbController extends DatabaseController {
      */
     public function getTransactionsByPidbId($pidb_id){
         $result = $this->get("SELECT * FROM $this->transaction_table WHERE pidb_id = '$pidb_id' ");
+        $i = 0;
+        foreach($result as $row){
+            switch ($row['transaction_type_id']) {
+                case 1:
+                    $transaction_type = "Avans (gotovinski)";
+                    break;
+                case 2:
+                    $transaction_type = "Avans";
+                    break;
+                case 3:
+                    $transaction_type = "Uplata (gotovinska)";
+                    break;
+                case 4:
+                    $transaction_type = "Uplata";
+                    break;
+                default:
+                $transaction_type = "_";
+                    break;
+            }
+            $result[$i]['transaction_type_name'] = $transaction_type;
+            $i++;
+        }
         return $result;
     }
 

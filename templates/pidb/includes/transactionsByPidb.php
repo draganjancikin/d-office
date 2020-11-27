@@ -27,6 +27,7 @@ endif;
                 <thead class="thead-light">
                     <tr class="text-center">
                         <th>datum</th>
+                        <th>vrsta ID</th>
                         <th>duguje</th>
                         <th>potražuje</th>
                         <th></th>
@@ -36,6 +37,7 @@ endif;
                 <tbody>
                     <tr>
                         <td class="text-center"><?php echo date('d-m-Y', strtotime($pidb_data['date'])) ?></td>
+                        <td class="text-center"></td>
                         <td class="text-right"><?php echo number_format($total, 4, ",", ".") ?></td>
                         <td class="text-right"></td>
                         <td></td>
@@ -45,6 +47,7 @@ endif;
                         ?>
                         <tr>
                             <td class="text-center"><?php echo date('d-m-Y', strtotime($transaction['date'])) ?></td>
+                            <td class="text-center"><?php echo $transaction['transaction_type_name'] ?></td>
                             <td class="text-right">
                                
                             </td>
@@ -61,12 +64,14 @@ endif;
                 </tbody>
                 <tfoot>
                     <tr>
+                        <th></th>
                         <th class="text-right">ukupno</th>
                         <th class="text-right"><?php echo number_format($total, 4, ",", ".") ?></th>
                         <th class="text-right"><?php echo number_format($total_income, 4, ",", ".") ?></th>
                         <th></th>
                     </tr>
                     <tr>
+                        <th></th>
                         <th colspan="2" class="text-right">saldo</th>
                         <th class="text-right <?php echo ( ($total-$total_income) <= 0 ? "bg-success" : "bg-danger text-white" ) ?>">
                             <?php echo number_format($total-$total_income, 4, ",", ".") ?>
