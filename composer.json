@@ -13,5 +13,11 @@
       "email": "draga.jancikin@gmail.com",
       "role": "lead"
     }
-  ]
+  ],
+  "autoload": {
+    "files": [],
+    "psr-4": {
+      "Roloffice\\Controller\\": "src/Controller"
+    }
+  }
 }

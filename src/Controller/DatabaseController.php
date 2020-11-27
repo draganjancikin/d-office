@@ -1,6 +1,9 @@
 <?php
+
+namespace Roloffice\Controller;
+
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/dbConfig.php';
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
+// require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 /**
  * Class that contain basic method for manipulate with database
  * 
@@ -18,7 +21,7 @@ class DatabaseController {
 
         // check if $instance == null, to prevent multiple connection to database
         if (self::$instance == null) {
-            self::$instance = new mysqli( DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME );
+            self::$instance = new \mysqli( DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME );
             self::$instance->set_charset("utf8");
             if ( self::$instance->connect_error ) {
                 printf("Connection failed: %s\ ", self::$instance->connect_error);

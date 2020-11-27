@@ -1,4 +1,7 @@
 <?php
+
+namespace Roloffice\Controller;
+
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/dbConfig.php';
 /**
  * Admin class
