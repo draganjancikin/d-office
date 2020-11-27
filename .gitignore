@@ -6,5 +6,5 @@ web/testing/
 
 # roloffice_dev
 /todos/
-/config/
+/config/dbConfig.php
 /vendor/
