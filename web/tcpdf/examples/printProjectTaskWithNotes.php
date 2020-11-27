@@ -1,9 +1,8 @@
 <?php
 $page = "projects";
-/*
-require_once('../config/lang/srp.php');
-require_once('../tcpdf.php');
-*/
+
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
+
 require_once('tcpdf_include.php');
 
 // create new PDF document
@@ -49,9 +48,9 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 
 // generisanje potrebnih objekata
-$client = new ClientController();
-$contact = new ContactController();
-$project = new ProjectController();
+$client = new \Roloffice\Controller\ClientController();
+$contact = new \Roloffice\Controller\ContactController();
+$project = new \Roloffice\Controller\ProjectController();
 $date = date('d M Y');
 
 $project_id = $_GET['project_id'];

@@ -1,6 +1,8 @@
 <?php
 $page = "nabavka";
 
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
+
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
 
@@ -47,10 +49,10 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 
 // generisanje potrebnih objekata
-$client = new ClientController();
-$contact = new ContactController();
-$order = new OrderController();
-$material = new MaterialController();
+$client = new \Roloffice\Controller\ClientController();
+$contact = new \Roloffice\Controller\ContactController();
+$order = new \Roloffice\Controller\OrderController();
+$material = new \Roloffice\Controller\MaterialController();
     
 $order_id = $_GET['order_id'];
 

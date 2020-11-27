@@ -1,6 +1,8 @@
 <?php
 $page = "pidb";
 
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
+
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
 
@@ -47,8 +49,8 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 
 // generisanje potrebnih objekata
-$pidb = new PidbController();
-$article = new ArticleController();
+$pidb = new \Roloffice\Controller\PidbController();
+$article = new \Roloffice\Controller\ArticleController();
 
 $pidb_id = $_GET['pidb_id'];
 $pidb_data = $pidb->getPidb($pidb_id);
