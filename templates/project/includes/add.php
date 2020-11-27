@@ -12,7 +12,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['add']) ) {
     // $note = htmlspecialchars($_POST['note']);
     $note = "";
 
-    $db = new Connection();
+    $db = new DatabaseController();
 
     $db->connection->query("INSERT INTO project (date, created_at_user_id, client_id, title, priority_id, note, status) VALUES ( '$date','$user_id', '$client_id', '$title', '$priority_id', '$note', '1' )") or die(mysqli_error($db->connection));
 
