@@ -1,0 +1,17 @@
+{
+  "name": "rolostil/roloffice",
+  "version": "5.0.4",
+  "type": "project",
+  "description": "Web application for Rolostil company.",
+  "keywords": [
+    "Rolostil",
+    "application"
+  ],
+  "authors": [
+    {
+      "name": "Dragan Jancikin",
+      "email": "draga.jancikin@gmail.com",
+      "role": "lead"
+    }
+  ]
+}

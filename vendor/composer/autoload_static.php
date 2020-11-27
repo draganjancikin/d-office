@@ -6,24 +6,6 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitd03256b155efdbd38f521527ef6485c8
 {
-    public static $files = array (
-        '8a0a24a242fadf94eaf0e51880a8a3d4' => __DIR__ . '/../..' . '/config/dbConfig.php',
-    );
-
-    public static $prefixLengthsPsr4 = array (
-        'R' => 
-        array (
-            'Roloffice\\' => 10,
-        ),
-    );
-
-    public static $prefixDirsPsr4 = array (
-        'Roloffice\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src',
-        ),
-    );
-
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
@@ -31,8 +13,6 @@ class ComposerStaticInitd03256b155efdbd38f521527ef6485c8
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd03256b155efdbd38f521527ef6485c8::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd03256b155efdbd38f521527ef6485c8::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInitd03256b155efdbd38f521527ef6485c8::$classMap;
 
         }, null, ClassLoader::class);
