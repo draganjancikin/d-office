@@ -1,6 +1,7 @@
 <?php
 function myAutoLoader($class) {
-    include $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . ".php";
+    $path = $_SERVER['DOCUMENT_ROOT'] . '/../src/Controller/' . $class . ".php";
+    include $path;
 }
 
 spl_autoload_register('myAutoLoader');
