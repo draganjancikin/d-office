@@ -110,6 +110,14 @@
                     </div>
 
                     <div class="form-group row">
+                        <label for="date" class="col-sm-3 col-form-label">Datum uplate:</label>
+                        <div class="col-sm-5">
+                            <input type="date" id="date" name="date" value="<?php echo $pidb->getDate() ?>">
+                        </div>
+                    </div>
+                    
+
+                    <div class="form-group row">
                         <label for="amount" class="col-sm-3 col-form-label">Iznos:</label>
                         <div class="col-sm-5">
                             <input type="text" class="form-control" name="amount" id="amount" value="" placeholder="Unesite iznos" />
