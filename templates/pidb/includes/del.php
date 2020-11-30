@@ -5,7 +5,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delPidb"]) ) {
     $pidb_id = htmlspecialchars($_GET["pidb_id"]);
     $pidb_tip_id = htmlspecialchars($_GET["pidb_tip_id"]);
 
-    $db = new DatabaseController();
+    $db = new \Roloffice\Controller\DatabaseController();
 
     // brisanje artikala dokumenta iz tabele pidb_article i brisanje property-a iz pidb_article_property
     $result_pidb_articles = $db->connection->query("SELECT * FROM pidb_article WHERE pidb_id='$pidb_id'") or die(mysqli_error($db->connection));
