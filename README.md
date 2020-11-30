@@ -9,3 +9,4 @@ New for version 5.1.0
 - add transaction: add custom date, add created_at, created_at_user_id
 - add new metthod getDate() to DatabaseContoller
 - on payment page allow decimal separator ","
+- updated double comparision
