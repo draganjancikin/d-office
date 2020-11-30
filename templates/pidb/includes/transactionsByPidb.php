@@ -75,7 +75,7 @@ endif;
                             <tr>
                                 <th></th>
                                 <th colspan="2" class="text-right">saldo</th>
-                                <th class="text-right <?php echo ( ($total-$total_income) <= 0 ? "bg-success" : "bg-danger text-white" ) ?>">
+                                <th class="text-right <?php echo ( (round($total, 4) - round($total_income, 4)) <= 0 ? "bg-success" : "bg-danger text-white" ) ?>">
                                     <?php echo number_format($total-$total_income, 4, ",", ".") ?>
                                 </th>
                             </tr>
