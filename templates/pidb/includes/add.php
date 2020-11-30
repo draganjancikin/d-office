@@ -79,6 +79,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
     $client_id = htmlspecialchars($_POST["client_id"]);
     $type_id = htmlspecialchars($_POST["type_id"]);
     $amount = htmlspecialchars($_POST["amount"]);
+    $amount = $pidb->correctDecimalSeparator($amount);
     $note = htmlspecialchars($_POST["note"]);
     $created_at_date = date('Y-m-d h:i:s');
     $created_at_user_id = $username = $_SESSION['user_id'];
