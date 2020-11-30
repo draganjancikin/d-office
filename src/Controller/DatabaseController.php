@@ -97,4 +97,8 @@ class DatabaseController {
         return $row['tax'];
     }
 
+    public function correctDecimalSeparator($dec) {
+        return str_replace(",", ".", $dec);
+    }
+
 }
