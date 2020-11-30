@@ -16,7 +16,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPidb"]) ) {
     $title = htmlspecialchars($_POST["title"]);
     $note = htmlspecialchars($_POST["note"]);
 
-    $db = new DatabaseController;
+    $db = new DatabaseController();
     
     $db->connection->query("INSERT INTO pidb (tip_id, date, client_id, project_id, title, note) " 
     . " VALUES ('$pidb_tip_id', '$date', '$client_id', '$project_id', '$title', '$note')") or die(mysqli_error($connect_db));
@@ -44,7 +44,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleInPidb"]) ) {
     $price = $article->getPrice($article_id);
     $tax = $pidb->getTax();
 
-    $db = new DatabaseController;
+    $db = new DatabaseController();
 
     $db->connection->query("INSERT INTO pidb_article (pidb_id, article_id, note, pieces, price, tax) " 
                     . " VALUES ('$pidb_id', '$article_id', '$note', '$pieces', '$price', '$tax' )") or die(mysqli_error($db->connection));
@@ -69,14 +69,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleInPidb"]) ) {
 // add payment
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
 
-    $date = date('Y-m-d h:i:s');
+    if(!$_POST["date"]) {
+        $date = date('Y-m-d h:i:s');
+    }else{
+        $time = date(' h:i:s');
+        $date = htmlspecialchars($_POST["date"]) . $time;
+    }
     $pidb_id = htmlspecialchars($_POST["pidb_id"]);
     $client_id = htmlspecialchars($_POST["client_id"]);
     $type_id = htmlspecialchars($_POST["type_id"]);
     $amount = htmlspecialchars($_POST["amount"]);
     $note = htmlspecialchars($_POST["note"]);
-
-    $pidb->insertTransaction($date, $pidb_id, $client_id, $type_id, $amount, $note);
+    $created_at_date = date('Y-m-d h:i:s');
+    $created_at_user_id = $username = $_SESSION['user_id'];
+    $pidb->insertTransaction($date, $pidb_id, $client_id, $type_id, $amount, $note, $created_at_date, $created_at_user_id);
     
     die('<script>location.href = "?view&pidb_id='.$pidb_id.' " </script>');
 }

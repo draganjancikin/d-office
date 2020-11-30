@@ -76,6 +76,10 @@ class DatabaseController {
         $this->connection->query( $query_string ) or die(mysqli_error($this->connection));
     }
     
+    public function getDate() {
+        return date('Y-m-d');
+    }
+
     public function numRows($table) {
         $result = $this->connection->query("SELECT * FROM $table ") or die(mysqli_error($this->connection));
         return mysqli_num_rows($result);
