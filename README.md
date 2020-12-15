@@ -11,6 +11,7 @@ New for version 5.1.0:
 - on payment page allow decimal separator ","
 - updated double comparision
 - add new index: "type_name_abb" to method getPidb()
+- add cash register page
 
 Enhancement:
 - CSS tuning for Order and Pidb forms
