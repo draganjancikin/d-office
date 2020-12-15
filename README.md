@@ -13,3 +13,4 @@ New for version 5.1.0:
 
 Enhancement:
 - CSS tuning for Order and Pidb forms
+- Replace "eur" with € on Pidb fomms
