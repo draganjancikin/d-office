@@ -75,10 +75,13 @@ class PidbController extends DatabaseController {
         } else {
             if($result[0]['tip_id'] == 1){
                 $result[0]['type_name'] = "Predračun";
+                $result[0]['type_name_abb'] = "P";
             } elseif ($result[0]['tip_id'] == 2){
                 $result[0]['type_name'] = "Otpremnica";
+                $result[0]['type_name_abb'] = "O";
             } elseif ($result[0]['tip_id'] == 4){
                 $result[0]['type_name'] = "Povratnica";
+                $result[0]['type_name_abb'] = "POV";
             }
             return $result[0];
         }
