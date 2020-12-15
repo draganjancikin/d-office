@@ -10,6 +10,7 @@ New for version 5.1.0:
 - add new metthod getDate() to DatabaseContoller
 - on payment page allow decimal separator ","
 - updated double comparision
+- add new index: "type_name_abb" to method getPidb()
 
 Enhancement:
 - CSS tuning for Order and Pidb forms
