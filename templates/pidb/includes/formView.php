@@ -209,12 +209,12 @@ switch ($pidb_data['tip_id']) {
                     <tr class="table-<?php echo $style; ?>">
                         <td colspan="6">UKUPNO</td>
                         <td class="text-right"><?php echo number_format($total*$pidb->getKurs(), 2, ",", ".") ?></td>
-                        <td class="text-right">(eur <?php echo number_format($total, 4, ",", ".") ?>)</td>
+                        <td class="text-right">(&#8364; <?php echo number_format($total, 4, ",", ".") ?>)</td>
                     </tr>
                     <tr class="table-<?php echo $style; ?>">
                         <td colspan="6">Avans</td>
                         <td class="text-right"><?php echo  number_format(($avans = $pidb->getAvansIncome($pidb_id))*$article->getKurs(), 2, ",", ".") ?></td>
-                        <td class="text-right">(eur <?php echo number_format($avans, 4, ",", ".") ?>)</td>
+                        <td class="text-right">(&#8364; <?php echo number_format($avans, 4, ",", ".") ?>)</td>
                     </tr>
                     <?php
                         $income = $pidb->getIncome($pidb_id);
@@ -223,7 +223,7 @@ switch ($pidb_data['tip_id']) {
                             <tr class="table-<?php echo $style; ?>">
                                 <td colspan="6">Uplaćeno</td>
                                 <td class="text-right""><?php echo  number_format(($income)*$article->getKurs(), 2, ",", ".") ?></td>
-                                <td class="text-right">(eur <?php echo number_format($income, 4, ",", ".") ?>)</td>
+                                <td class="text-right">(&#8364; <?php echo number_format($income, 4, ",", ".") ?>)</td>
                             </tr>
                             <?php
                         endif;
@@ -231,7 +231,7 @@ switch ($pidb_data['tip_id']) {
                     <tr class="table-<?php echo $style; ?>">
                         <td colspan="6"><strong>OSTALO ZA UPLATU<strong></td>
                         <td class="text-right"><strong><?php echo number_format(($total-$avans-$income)*$article->getKurs(), 2, ",", ".") ?></strong></td>
-                        <td class="text-right">(eur <?php echo number_format($total-$avans-$income, 4, ",", ".") ?>)</td>
+                        <td class="text-right">(&#8364; <?php echo number_format($total-$avans-$income, 4, ",", ".") ?>)</td>
                     </tr>
                 </tfoot>
             </table>
