@@ -9,16 +9,18 @@
                     <table class="table table-bordered table-hover" id="" width="100%" cellspacing="0">
                         <thead class="thead-light">
                             <tr>
-                                <th class="text-center">___</th>
+                                <th>___</th>
                             </tr>
                         </thead>
                         <tfoot class="thead-light">
                             <tr>
-                                <th class="text-center">___</th>
+                                <th>___</th>
                             </tr>
                         </tfoot>
                         <tbody>
-
+                            <tr>
+                                <td>___</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
