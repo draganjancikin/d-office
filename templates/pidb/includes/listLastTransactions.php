@@ -13,7 +13,7 @@ $transactions = $pidb->getLastTransactions(10);
                         <th>datum</th>
                         <th>klijent</th>
                         <th>dukument</th>
-                        <th>iznos</th>
+                        <th class="text-center">iznos</th>
                     </tr>
                 </thead>
                 <tfoot class="thead-light">
@@ -21,7 +21,7 @@ $transactions = $pidb->getLastTransactions(10);
                         <th>datum</th>
                         <th>klijent</th>
                         <th>dukument</th>
-                        <th>iznos</th>
+                        <th class="text-center">iznos</th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -30,9 +30,13 @@ $transactions = $pidb->getLastTransactions(10);
                         ?>
                         <tr>
                             <td><?php echo date('d-m-Y', strtotime($transaction['date'])) ?></td>
-                            <td>ID: <?php echo $transaction['client_id'] ?></td>
-                            <td>ID: <?php echo $transaction['pidb_id'] ?></td>
-                            <td><?php echo $transaction['amount'] ?></td>
+                            <td><?php echo $transaction['client_name'] ?></td>
+                            <td>
+                                <a href="?view&pidb_id=<?php echo $transaction['pidb_id'] ?>">
+                                    <?php echo str_pad($transaction['pidb_y_id'], 4, "0", STR_PAD_LEFT) . ' - ' . date('m / Y', strtotime($transaction['date'])); ?>
+                                </a>
+                            </td>
+                            <td class="text-right"><?php echo $transaction['amount'] ?></td>
                         </tr>
                         <?php
                     endforeach;

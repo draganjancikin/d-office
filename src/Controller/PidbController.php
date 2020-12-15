@@ -150,7 +150,11 @@ class PidbController extends DatabaseController {
      * @return array
      */
     public function getLastTransactions($limit){
-        $result = $this->get("SELECT * FROM $this->transaction_table ORDER BY id LIMIT $limit ");
+        $result = $this->get("SELECT $this->transaction_table.id, $this->transaction_table.date, $this->transaction_table.pidb_id, $this->transaction_table.amount, client.name as client_name, pidb.y_id as pidb_y_id  "
+                            . "FROM $this->transaction_table "
+                            . "JOIN (client, pidb)"
+                            . "ON ($this->transaction_table.client_id = client.id AND $this->transaction_table.pidb_id = pidb.id )"
+                            . "ORDER BY id LIMIT $limit ");
         return $result;
     }
 
