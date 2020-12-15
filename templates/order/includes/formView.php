@@ -30,7 +30,7 @@
             ?>
         </dl>
         <div class="table-responsive">
-            <table class="table" >
+            <table class="table table-hover" >
                 <thead>
                     <tr class="table-secondary">
                         <th class="px-1">#</th>

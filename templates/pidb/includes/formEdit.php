@@ -63,7 +63,7 @@ switch ($pidb_data['tip_id']) {
         </dl>
 
         <div class="table-responsive">
-            <table class="table" >
+            <table class="table table-hover" >
                 <thead>
                     <tr class="table-<?php echo $style; ?>">
                         <th class="px-1 text-center">#</th>
@@ -102,7 +102,7 @@ switch ($pidb_data['tip_id']) {
                                     endforeach;
                                     ?>
                                     <br />
-                                    <input class="input-box-100" type="text" name="note" value="<?php echo $article_on_pidb['note']; ?>" />
+                                    <input class="in-article-note" type="text" name="note" value="<?php echo $article_on_pidb['note']; ?>" />
                                 </td>
                                 <td class="px-1 text-center"><?php echo $article_on_pidb['unit_name'] ;?></td>
                                 <td class="px-1 input-box-45">

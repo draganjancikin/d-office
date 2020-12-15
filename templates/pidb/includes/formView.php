@@ -64,7 +64,7 @@ switch ($pidb_data['tip_id']) {
 
         <div class="table-responsive">
 
-            <table class="table" >
+            <table class="table table-hover" >
                 <thead>
                     <tr class="table-<?php echo $style; ?>">
                         <th class="px-1 text-center">#</th>
