@@ -1,4 +1,4 @@
-# RolOffice v5.1.3
+# RolOffice v5.1.4
 
 Web Application 
 
@@ -27,3 +27,6 @@ Enhancement:
 ## New for version 5.1.3
 - Resolved issue #56: Fatal error : Uncaught Error ...
 - Delete unnecessary files
+
+## New for version 5.1.4
+- Resolved issue #57: Fatal error : Uncaught Error ...
