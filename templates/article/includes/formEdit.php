@@ -71,7 +71,7 @@
             <div class="col-sm-2">
                 <input class="form-control" id="inputPrice" type="text" name="price" value="<?php echo $article_data['price'] ?>">
             </div>
-            <div class="col-sm-2">eur</div>
+            <div class="col-sm-2">&#8364; bez PDV-a</div>
         </div>
 
         <div class="form-group row">

@@ -35,7 +35,7 @@
             <th>Naziv</th>
             <th class="text-center">jed. mere</th>
             <th class="text-center">cena <br />(RSD sa PDV-om)</th>
-            <th class="text-center">cena <br />(EUR sa PDV-om)</th>
+            <th class="text-center">cena <br />(&#8364; sa PDV-om)</th>
           </tr>
         </thead>
         <tfoot class="thead-light">
@@ -43,7 +43,7 @@
             <th>Naziv</th>
             <th class="text-center">jed. mere</th>
             <th class="text-center">cena <br />(RSD sa PDV-om)</th>
-            <th class="text-center">cena <br />(EUR sa PDV-om)</th>
+            <th class="text-center">cena <br />(&#8364; sa PDV-om)</th>
           </tr>
         </tfoot>
         <tbody>

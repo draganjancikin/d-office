@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Roloffice\\' => array($baseDir . '/src'),
+    'Roloffice\\Controller\\' => array($baseDir . '/src/Controller'),
 );

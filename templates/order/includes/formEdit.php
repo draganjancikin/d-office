@@ -30,7 +30,7 @@
       ?>
     </dl>
     <div class="table-responsive">
-      <table class="table" >
+      <table class="table table-hover" >
         <thead>
           <tr class="table-secondary">
             <th class="px-1">#</th>
@@ -73,7 +73,7 @@
                   echo $property['property_name'] . ' <input class="input-box-50" type="text" name="' .$property['property_name']. '" value="' .number_format($property['property_quantity'], 2, ",", ""). '" placeholder="(cm)" /> ';
                 endforeach;
                 ?>
-                <br /><input class="input-box-100" type="text" name="note" value="<?php echo $material_on_order['note']; ?>" />
+                <br /><input class="in-article-note" type="text" name="note" value="<?php echo $material_on_order['note']; ?>" />
               </td>
               <td class="px-1 text-center"><?php echo $material_on_order['unit_name'] ;?></td>
               <td class="px-1 input-box-45">
@@ -128,7 +128,7 @@
         </tr>
         <tr class="table-secondary">
           <td colspan="5"></td>
-          <td>(eur </td>
+          <td>(&#8364; </td>
           <td><?php echo number_format(($total), 2, ",", ".") ?>)</td>
           <td colspan="2"></td>
         </tr>

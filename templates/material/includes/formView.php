@@ -37,7 +37,7 @@
           <div class="col-sm-2">
             <input class="form-control" id="disabledInputPrice" type="text" name="price" value="<?php echo $material_data['price']; ?>" disabled />
           </div>
-          <div class="col-sm-2">EUR bez PDV-a</div>
+          <div class="col-sm-2">&#8364; bez PDV-a</div>
         </div>   
                
         <div class="form-group row">

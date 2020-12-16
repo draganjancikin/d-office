@@ -1,4 +1,7 @@
 <?php
+
+namespace Roloffice\Controller;
+
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/dbConfig.php';
 /**
  * Admin class
@@ -8,7 +11,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/dbConfig.
 class AdminController {
 
     public function baseBackup (){
-        $dumpfile = "roloffice_dev_" . date("Y-m-d_H-i-s") . ".sql";
+        $dumpfile = "roloffice_" . ENV . "_" . date("Y-m-d_H-i-s") . ".sql";
 
         // passthru("C:/xampp/mysql/bin/mysqldump --opt --host=DB_SERVER --user=DB_USERNAME --password=DB_PASSWORD DB_NAME > D:/Documents/BackUps/MYSQL/$dumpfile");
 

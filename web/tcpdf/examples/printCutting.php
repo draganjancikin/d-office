@@ -1,6 +1,7 @@
 <?php
-// echo 'ovde ce biti stampanje krojne liste';
 $page = "cutting";
+
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
 
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
@@ -48,9 +49,9 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 
 // generisanje potrebnih objekata
-$client = new ClientController();
-$contact = new ContactController();
-$cutting = new CuttingController();
+$client = new \Roloffice\Controller\ClientController();
+$contact = new \Roloffice\Controller\ContactController();
+$cutting = new \Roloffice\Controller\CuttingController();
 
 $cutting_fence_id = $_GET['cutting_id'];
 
