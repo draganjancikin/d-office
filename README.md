@@ -1,8 +1,8 @@
-# RolOffice v5.0.4
+# RolOffice v5.1.0
 
 Web Application 
 
-New for version 5.1.0:
+## New for version 5.1.0:
 - add Composer and composer autoload
 - add transaction type to transaction list by pidb
 - on database table transaction rename columns transaction_type_id to type_id and update code
@@ -14,5 +14,5 @@ New for version 5.1.0:
 - add cash register page
 
 Enhancement:
-- CSS tuning for Order and Pidb forms
-- Replace "eur" with € on Pidb fomms
+- little CSS tuning for Order and Pidb forms
+- Replace "eur" with € 
