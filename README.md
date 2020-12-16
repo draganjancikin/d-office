@@ -1,4 +1,4 @@
-# RolOffice v5.1.0
+# RolOffice v5.1.2
 
 Web Application 
 
@@ -20,3 +20,6 @@ Enhancement:
 ## New for version 5.1.1
 - Replace variable $version with const VERSION
 - change file name for dump database
+
+## New for version 5.1.2
+- Move const ENV to dbConfig

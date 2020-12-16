@@ -1,6 +1,5 @@
 <?php
-define("VERSION","5.1.0");
-define("ENV", "DEV");
+define("VERSION","5.1.2");
 
 // folders with CSS, JS, ...
 switch($page){
