@@ -23,3 +23,7 @@ Enhancement:
 
 ## New for version 5.1.2
 - Move const ENV to dbConfig
+
+## New for version 5.1.3
+- Resolved issue #56: Fatal error : Uncaught Error ...
+- Delete unnecessary files
