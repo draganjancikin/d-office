@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="sr">
 <head>
-  <title><?php echo $version ?></title>
+  <title><?php echo VERSION ?></title>
   <?php include 'includes/pageHead.php' ?>
 </head>
 <body id="page-top">
