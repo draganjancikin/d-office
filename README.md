@@ -2,7 +2,7 @@
 
 Web Application 
 
-## New for version 5.1.0:
+## New for version 5.1.0
 - add Composer and composer autoload
 - add transaction type to transaction list by pidb
 - on database table transaction rename columns transaction_type_id to type_id and update code
@@ -16,3 +16,7 @@ Web Application
 Enhancement:
 - little CSS tuning for Order and Pidb forms
 - Replace "eur" with € 
+
+## New for version 5.1.1
+- Replace variable $version with const VERSION
+- change file name for dump database
