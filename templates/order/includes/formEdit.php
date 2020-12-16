@@ -128,7 +128,7 @@
         </tr>
         <tr class="table-secondary">
           <td colspan="5"></td>
-          <td>(eur </td>
+          <td>(&#8364; </td>
           <td><?php echo number_format(($total), 2, ",", ".") ?>)</td>
           <td colspan="2"></td>
         </tr>

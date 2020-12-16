@@ -194,12 +194,12 @@ $html = '
   <tr style="font-weight:bold;">
     <td colspan="3"></td>
     <td colspan="5" style="border-bottom-width: inherit;">UKUPNO ZA UPLATU</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">RSD '.number_format($total*$pidb->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total*$pidb->getKurs(), 2, ",", ".").'</td>
   </tr>
   <tr>
     <td colspan="3"></td>
     <td colspan="5"></td>
-    <td colspan="2" align="right">( EUR '.number_format($total, 2, ",", ".").' )</td>
+    <td colspan="2" align="right">( &#8364; '.number_format($total, 2, ",", ".").' )</td>
   </tr>
 </table>
 ';
