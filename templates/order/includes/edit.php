@@ -18,7 +18,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editOrder"]) ) {
 
     $note = htmlspecialchars($_POST["note"]);
     
-    $db = new DatabaseController();
+    $db = new \Roloffice\Controller\DatabaseController();
 
     $db->connection->query(" UPDATE orderm " 
                      . " SET project_id ='$project_id', title='$title', status='$status', is_archived='$is_archived', note='$note' " 
@@ -46,7 +46,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialInOrder"]) 
     $discounts_1 = htmlspecialchars($_POST["discounts"]);
     $discounts = str_replace(",", ".", $discounts_1);
     
-    $db = new DatabaseController();
+    $db = new \Roloffice\Controller\DatabaseController();
     
     $db->connection->query("UPDATE orderm_material " 
                     . " SET material_id='$material_id', note='$note', pieces='$pieces', price='$price', discounts='$discounts' " 

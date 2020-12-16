@@ -12,7 +12,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterial"]) ) {
     $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
     $note = htmlspecialchars($_POST['note']);
 
-    $db = new DatabaseController();
+    $db = new \Roloffice\Controller\DatabaseController();
 
     $db->connection->query("UPDATE material "
                      . "SET name='$name', unit_id='$unit_id', date='$date', weight='$weight', price='$price', note='$note' "
@@ -32,7 +32,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialSupplier"])
     $code = htmlspecialchars($_POST["code"]);
     $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
 
-    $db = new DatabaseController();
+    $db = new \Roloffice\Controller\DatabaseController();
 
     $db->connection->query("UPDATE material_suppliers "
                      . "SET material_id='$material_id', client_id='$client_id', code='$code', price='$price' "
