@@ -33,5 +33,8 @@ Enhancement:
 
 ## NEW for version 5.1.5
 
+Issue resolved:
+- #60 Add ROLO-TIM NS to printOrder
+
 Enhancement:
 - Little CSS tuning for Pidb view an edit forms
