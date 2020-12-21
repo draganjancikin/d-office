@@ -91,7 +91,7 @@
                     <div class="form-group row">
                         <label for="transaction_type" class="col-sm-3 col-form-label">Vrsta uplate:</label>
                         <div class="col-sm-5">
-                            <select class="form-control" name="transaction_type_id" id="transaction_type">
+                            <select class="form-control" name="type_id" id="transaction_type">
                                 <?php
                                 if($pidb_data['tip_id'] == 1) :
                                     ?>
@@ -108,6 +108,14 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="form-group row">
+                        <label for="date" class="col-sm-3 col-form-label">Datum uplate:</label>
+                        <div class="col-sm-5">
+                            <input type="date" id="date" name="date" value="<?php echo $pidb->getDate() ?>">
+                        </div>
+                    </div>
+                    
 
                     <div class="form-group row">
                         <label for="amount" class="col-sm-3 col-form-label">Iznos:</label>

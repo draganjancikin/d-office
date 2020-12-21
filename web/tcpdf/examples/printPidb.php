@@ -1,6 +1,8 @@
 <?php
 $page = "pidb";
 
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
+
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
 
@@ -47,10 +49,10 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 
 // generisanje potrebnih objekata
-$client = new ClientController();
-$contact = new ContactController();
-$pidb = new PidbController();
-$article = new ArticleController();
+$client = new \Roloffice\Controller\ClientController();
+$contact = new \Roloffice\Controller\ContactController();
+$pidb = new \Roloffice\Controller\PidbController();
+$article = new \Roloffice\Controller\ArticleController();
 
 $pidb_id = $_GET['pidb_id'];
 $pidb_data = $pidb->getPidb($pidb_id);
@@ -155,7 +157,7 @@ foreach ($articles_on_pidb as $article_on_pidb):
     
     $html = '
     <style type="text/css"> table{ padding: 0px; margin: 0px; }</style>
-    <table border="0">
+    <table border="0" style="font-size: 10px">
       <tr>
         <td width="30px" align="center">' .$count. '</td>
         <td '.($pidb_data['tip_id'] == 2 ? 'width="495px"' : 'width="190px"'). '>' .$article_on_pidb['name'] . '<span style="font-size: 7">' . ( $article_on_pidb['note'] == "" ? "" : ', '.$article_on_pidb['note'] ) . '</span>'
@@ -203,12 +205,12 @@ $html = ''.($pidb_data['tip_id'] == 2 ? "" : '
   <tr style="font-weight:bold;">
     <td colspan="3"></td>
     <td colspan="5" style="border-bottom-width: inherit;">UKUPNO ZA UPLATU</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">RSD '.number_format($total*$article->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total*$article->getKurs(), 2, ",", ".").'</td>
   </tr>
   <tr>
     <td colspan="3"></td>
     <td colspan="5"></td>
-    <td colspan="2" align="right">( EUR '.number_format($total, 2, ",", ".").' )</td>
+    <td colspan="2" align="right">( &#8364; '.number_format($total, 2, ",", ".").' )</td>
   </tr>
 </table>
 ').'

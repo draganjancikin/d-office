@@ -1,5 +1,5 @@
 <?php
-$version = "RolOffice 4.3.2";
+define("VERSION","5.1.6");
 
 // folders with CSS, JS, ...
 switch($page){

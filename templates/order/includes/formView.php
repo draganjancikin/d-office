@@ -30,7 +30,7 @@
             ?>
         </dl>
         <div class="table-responsive">
-            <table class="table" >
+            <table class="table table-hover" >
                 <thead>
                     <tr class="table-secondary">
                         <th class="px-1">#</th>
@@ -127,7 +127,7 @@
                     </tr>
                     <tr class="table-secondary">
                         <td colspan="5"></td>
-                        <td>(eur </td>
+                        <td>(&#8364; </td>
                         <td><?php echo number_format(($total), 2, ",", ".") ?>)</td>
                         <td colspan="2"></td>
                     </tr>

@@ -53,6 +53,8 @@
                   if(isset($_GET['transactions']) AND isset($_GET['pidb_id'])) include '../../templates/pidb/includes/transactionsByPidb.php';
                   if(isset($_GET['transactions']) AND !isset($_GET['pidb_id'])) include '../../templates/pidb/includes/listLastTransactions.php';
 
+                  if( isset($_GET['cashRegister']) ) include '../../templates/pidb/includes/cashRegister.php';
+
                   if(isset($_GET['search'])) include '../../app/includes/search.php';
                   if(isset($_GET['set'])) include '../../templates/pidb/includes/formSettings.php';
 
@@ -62,7 +64,9 @@
             </div>
 
             <!-- Modals -->
-            <?php include '../../templates/pidb/includes/modals.php'; ?>
+            <?php 
+            if (isset($_GET['pidb_id'])) include '../../templates/pidb/includes/modals.php'; 
+            ?>
             <!-- End of Modals -->
             
           </div>

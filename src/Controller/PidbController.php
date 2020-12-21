@@ -1,5 +1,8 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
+
+namespace Roloffice\Controller;
+
+//require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 /**
  * Pidb.class.php
  * 
@@ -72,10 +75,13 @@ class PidbController extends DatabaseController {
         } else {
             if($result[0]['tip_id'] == 1){
                 $result[0]['type_name'] = "Predračun";
+                $result[0]['type_name_abb'] = "P";
             } elseif ($result[0]['tip_id'] == 2){
                 $result[0]['type_name'] = "Otpremnica";
+                $result[0]['type_name_abb'] = "O";
             } elseif ($result[0]['tip_id'] == 4){
                 $result[0]['type_name'] = "Povratnica";
+                $result[0]['type_name_abb'] = "POV";
             }
             return $result[0];
         }
@@ -147,7 +153,11 @@ class PidbController extends DatabaseController {
      * @return array
      */
     public function getLastTransactions($limit){
-        $result = $this->get("SELECT * FROM $this->transaction_table ORDER BY id LIMIT $limit ");
+        $result = $this->get("SELECT $this->transaction_table.id, $this->transaction_table.date, $this->transaction_table.pidb_id, $this->transaction_table.amount, client.name as client_name, pidb.y_id as pidb_y_id  "
+                            . "FROM $this->transaction_table "
+                            . "JOIN (client, pidb)"
+                            . "ON ($this->transaction_table.client_id = client.id AND $this->transaction_table.pidb_id = pidb.id )"
+                            . "ORDER BY id LIMIT $limit ");
         return $result;
     }
 
@@ -160,6 +170,28 @@ class PidbController extends DatabaseController {
      */
     public function getTransactionsByPidbId($pidb_id){
         $result = $this->get("SELECT * FROM $this->transaction_table WHERE pidb_id = '$pidb_id' ");
+        $i = 0;
+        foreach($result as $row){
+            switch ($row['type_id']) {
+                case 1:
+                    $type = "Avans (gotovinski)";
+                    break;
+                case 2:
+                    $type = "Avans";
+                    break;
+                case 3:
+                    $type = "Uplata (gotovinska)";
+                    break;
+                case 4:
+                    $type = "Uplata";
+                    break;
+                default:
+                $type = "_";
+                    break;
+            }
+            $result[$i]['type_name'] = $type;
+            $i++;
+        }
         return $result;
     }
 
@@ -411,9 +443,9 @@ class PidbController extends DatabaseController {
      * @param float $amount
      * @param string $note
      */
-    public function insertTransaction($date, $pidb_id, $client_id, $transaction_type_id, $amount, $note) {
-        $this->insert("INSERT INTO payment (date, pidb_id, client_id, transaction_type_id, amount, note) " 
-        . " VALUES ('$date', '$pidb_id', '$client_id', '$transaction_type_id', '$amount', '$note' )");
+    public function insertTransaction($date, $pidb_id, $client_id, $type_id, $amount, $note, $created_at_date, $created_at_user_id) {
+        $this->insert("INSERT INTO payment (date, pidb_id, client_id, type_id, amount, note, created_at_date, created_at_user_id) " 
+        . " VALUES ('$date', '$pidb_id', '$client_id', '$type_id', '$amount', '$note', '$created_at_date', '$created_at_user_id' )");
     }
 
     /**
@@ -441,7 +473,7 @@ class PidbController extends DatabaseController {
      * @return float
      */
     public function getAvansIncome($pidb_id){
-        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (transaction_type_id = 1 OR transaction_type_id = 2) ");
+        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (type_id = 1 OR type_id = 2) ");
         $avans = $this->sumAllValuesByKey($result, "amount");
         return $avans;
     }
@@ -454,7 +486,7 @@ class PidbController extends DatabaseController {
      * @return float
      */
     public function getIncome($pidb_id){
-        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (transaction_type_id = 3 OR transaction_type_id = 4) ");
+        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (type_id = 3 OR type_id = 4) ");
         $income = $this->sumAllValuesByKey($result, "amount");
         return $income;
     }
