@@ -38,3 +38,4 @@ Issue resolved:
 
 Enhancement:
 - Little CSS tuning for Pidb view an edit forms
+- Delete unnecessary files
