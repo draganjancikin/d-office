@@ -31,7 +31,7 @@ Enhancement:
 ## New in version 5.1.4
 - Resolved issue #57: Fatal error : Uncaught Error ...
 
-## NEW for version 5.1.5
+## New in version 5.1.5
 
 Issue resolved:
 - #60 Add ROLO-TIM NS to printOrder
@@ -39,3 +39,8 @@ Issue resolved:
 Enhancement:
 - Little CSS tuning for Pidb view an edit forms
 - Delete unnecessary files
+
+## New for version 5.1.6
+
+- Enhancement for require autoload in front index.php
+- installationRecord update
