@@ -35,6 +35,10 @@ a:hover {
   max-width: 380px;
 }
 
+#pidb-tools {
+  min-width: 115px;
+}
+
 /* Form, input ------------------- */
 .form-group {
   margin-bottom: 0.5rem;

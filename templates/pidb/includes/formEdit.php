@@ -76,7 +76,7 @@ switch ($pidb_data['tip_id']) {
                         <th class="px-1 text-center">PDV<br />%</th>
                         <th class="px-1 text-center">iznos PDV</th>
                         <th class="px-1 text-center">ukupno</th>
-                        <th class="px-1 text-center"></th>
+                        <th class="px-1 text-center" id="pidb-tools"></th>
                     </tr>
                 </thead>
                 <tbody>

@@ -64,7 +64,9 @@
             </div>
 
             <!-- Modals -->
-            <?php include '../../templates/pidb/includes/modals.php'; ?>
+            <?php 
+            if (isset($_GET['pidb_id'])) include '../../templates/pidb/includes/modals.php'; 
+            ?>
             <!-- End of Modals -->
             
           </div>
