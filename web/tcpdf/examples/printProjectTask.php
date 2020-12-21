@@ -1,8 +1,9 @@
 <?php
-$page = "project";
+$page = "projects";
 
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
 
+// Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
 
 // create new PDF document
@@ -45,8 +46,6 @@ $pdf->SetFont('dejavusans', '', 10);
 // add a page
 $pdf->AddPage();
 
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
-
 // generisanje potrebnih objekata
 $client = new \Roloffice\Controller\ClientController();
 $contact = new \Roloffice\Controller\ContactController();
@@ -81,7 +80,7 @@ $html = '
 <style type="text/css">table {padding: 3px 10px 3px 10px; }</style>
 
 <table border="0">
-  <tr><td width="150px"><h3>RADNI NALOG </h3> </td><td width="400px">za projekat #'.str_pad($project_data['pr_id'], 4, "0", STR_PAD_LEFT).'</td><td>'.date('d-M-Y', strtotime($project_data['date'])).'</td></tr>
+  <tr><td width="150px"><h3>PROJEKAT </h3> </td><td width="400px">za projekat #'.str_pad($project_data['pr_id'], 4, "0", STR_PAD_LEFT).'</td><td>'.date('d-M-Y', strtotime($project_data['date'])).'</td></tr>
 </table>
 
 <table border="0">

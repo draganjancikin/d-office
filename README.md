@@ -43,3 +43,4 @@ Enhancement:
 ## New for version 5.1.6
 
 - Enhancement for require autoload in front index.php
+- installationRecord update
