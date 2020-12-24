@@ -48,4 +48,5 @@ Enhancement:
 ## New in version 5.1.7
 
 - .gitignore update
-- Remove permissions from leftSidebarMenu, and change identation to 2 spaces
+- Remove permissions for leftSidebarMenu, and change indentation to 2 spaces
+- Change indentation for app/index.php to 2 spaces
