@@ -143,6 +143,14 @@ require 'export.php';
           ->
           <i class="fas fa-euro-sign"></i>
         </button>
+
+        <!-- Print Buttons -->
+        <a href="/tcpdf/examples/printDailyCashReport.php ?>" title="PDF [new window]" target="_blank">
+          <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
+            <i class="fas fa-print"> </i>
+            <i class="fas fa-cash-register"></i>
+          </button>
+        </a>
         <?php
       endif;
         ?>

@@ -45,8 +45,6 @@ $daily_transactions = $pidb->getDailyCashTransactions();
       </div>
     </div>
 
-    <p>Postaviti uslov da pre upisa transakcije proveri da li je izvršen početni unos gotovine</p>
-    
     <h5>Kada se klikne na dnevni izveštaj</h5>
     <ul>
       <li>prvo automatski napraviti izlaz gotovine</li>
