@@ -162,6 +162,53 @@ class PidbController extends DatabaseController {
     }
 
     /**
+     * 
+     */
+    public function getDailyCashTransactions() {
+        $date_now = date('Y-m-d');
+        $result = $this->get("SELECT * "
+                            ."FROM $this->transaction_table "
+                            ."WHERE (created_at_date BETWEEN '$date_now 00:00:00' AND '$date_now 23:59:59') AND (type_id = 1 || type_id = 3 || type_id = 5 || type_id = 6)"
+                            ."ORDER BY date");
+        $i = 0;
+        foreach($result as $row){
+            switch ($row['type_id']) {
+                case 1:
+                    $type = "Avans (gotovinski)";
+                    break;
+                case 2:
+                    $type = "Avans";
+                    break;
+                case 3:
+                    $type = "Uplata (gotovinska)";
+                    break;
+                case 4:
+                    $type = "Uplata";
+                    break;
+                case 5:
+                    $type = "Ulaz gotovine";
+                    break;
+                case 6:
+                    $type = "Izlaz gotovine";
+                    break;
+                default:
+                $type = "_";
+                    break;
+            }
+            $result[$i]['type_name'] = $type;
+            $i++;
+        }
+        return $result;
+    }
+
+    /**
+     * 
+     */
+    public function ifExistFirstCashInput() {
+        return false;
+    }
+
+    /**
      * Method that return all transactions on document (pidb)
      * 
      * @param integer $pidb_id
@@ -564,6 +611,35 @@ class PidbController extends DatabaseController {
                             . "JOIN client "
                             . "ON (pidb.client_id = client.id)"
                             . "WHERE project_id = $project_id ");
+        return $result;
+    }
+
+    /**
+     * 
+     */
+    public function getAllPidbs() {
+        $result = $this->get("SELECT pidb.id, pidb.y_id, pidb.tip_id, pidb.title, pidb.date, client.name as client_name "
+                            ."FROM pidb "
+                            ."JOIN client "
+                            ."ON (pidb.client_id = client.id) "
+                            ."ORDER BY date ASC");
+        $i = 0;
+        foreach($result as $row){
+            switch ($row['tip_id']) {
+                case 1:
+                    $type = "P";
+                    break;
+                case 2:
+                    $type = "O";
+                    break;
+                default:
+                    $type = "_";
+                    break;
+            }
+            $result[$i]['type_name'] = $type;
+            $i++;
+        }
+
         return $result;
     }
 
