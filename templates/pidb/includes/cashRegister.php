@@ -46,10 +46,5 @@ $daily_cash_saldo = $pidb->getDailyCashSaldo();
       </div>
     </div>
 
-    <h5>Kada se klikne na dnevni izveštaj</h5>
-    <ul>
-      <li>prvo automatski napraviti izlaz gotovine</li>
-      <li>onda odštampati dnevni izveštaj</li>
-    </ul>
   </div>
 </div>

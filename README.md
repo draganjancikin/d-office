@@ -55,3 +55,7 @@ Enhancement:
 ## New in version 5.2.0
 
 - Add new feature: Daily cash report
+
+## New in version 5.2.1
+
+- Code cleanup
