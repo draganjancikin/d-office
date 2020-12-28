@@ -169,7 +169,7 @@ class PidbController extends DatabaseController {
         $result = $this->get("SELECT * "
                             ."FROM $this->transaction_table "
                             ."WHERE (created_at_date BETWEEN '$date_now 00:00:00' AND '$date_now 23:59:59') AND (type_id = 1 || type_id = 3 || type_id = 5 || type_id = 6)"
-                            ."ORDER BY date");
+                            ."ORDER BY date DESC");
         $i = 0;
         foreach($result as $row){
             switch ($row['type_id']) {
