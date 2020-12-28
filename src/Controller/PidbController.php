@@ -186,10 +186,10 @@ class PidbController extends DatabaseController {
                     $type = "Uplata";
                     break;
                 case 5:
-                    $type = "Ulaz gotovine";
+                    $type = "Početno stanje kase";
                     break;
                 case 6:
-                    $type = "Izlaz gotovine";
+                    $type = "Izlaz gotovine na kraju dana (smene)";
                     break;
                 default:
                 $type = "_";
