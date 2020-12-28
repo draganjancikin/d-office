@@ -77,6 +77,7 @@
             <label for="transaction_type" class="col-sm-3 col-form-label">Vrsta:</label>
             <div class="col-sm-5">
               <select class="form-control" name="type_id" id="transaction_type">
+                <option value="7">Izlaz gotovine</option>
                 <option value="6">Izlaz gotovine na kraju dana (smene)</option>
               </select>
             </div>

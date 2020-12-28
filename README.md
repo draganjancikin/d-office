@@ -63,4 +63,7 @@ Enhancement:
 ## New in version 5.2.2
 
 - Change type id in PidbController
-- 
+
+## New in version 5.2.3
+
+- Add new transaction type in Pidb
