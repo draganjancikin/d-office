@@ -51,16 +51,17 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 $pidb = new \Roloffice\Controller\PidbController();
 
 $daily_transactions = $pidb->getDailyCashTransactions();
-    
+$daily_cash_saldo = $pidb->getDailyCashSaldo();
 $html = '
   <h1>Dnevni izveštaj</h1>
+  <h4>'.date('d. M Y').'.g</h4>
   <table>
     <thead>
       <tr>
-        <th>ID</th>
-        <th>vrsta transakcije</th>
-        <th>note</th>
-        <th align="center">amount</th>
+        <th style="border-bottom: 1px solid black;">ID</th>
+        <th style="border-bottom: 1px solid black;">vrsta transakcije</th>
+        <th style="border-bottom: 1px solid black;">note</th>
+        <th style="border-bottom: 1px solid black;" align="center">amount</th>
       </tr>
     </thead>
   </table>
@@ -87,10 +88,10 @@ $html = '
     <table>
     <tfoot>
       <tr>
-        <th></th>
-        <th></th>
-        <th align="right">stanje</th>
-        <th align="right">_____</th>
+        <th style="border-top: 1px solid black;"></th>
+        <th style="border-top: 1px solid black;"></th>
+        <th style="border-top: 1px solid black;" align="right">stanje</th>
+        <th style="border-top: 1px solid black;" align="right">'.$daily_cash_saldo.'</th>
       </tr>
     </tfoot>
   </table>

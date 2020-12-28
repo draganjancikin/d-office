@@ -51,3 +51,7 @@ Enhancement:
 - Remove permissions for leftSidebarMenu, and change indentation to 2 spaces
 - Change indentation for app/index.php to 2 spaces
 - Change indentation for templates/pidb/includes/listLastTransaction.php to 2 spaces
+
+## New in version 5.2.0
+
+- Add new feature: Daily cash report

@@ -77,14 +77,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
   if(!$_POST["date"]) {
     $date = date('Y-m-d H:i:s');
   }else{
-    $time = date('Y-m-d H:i:s');
-    $date = htmlspecialchars($_POST["date"]) . $time;
+    $date = date('Y-m-d H:i:s');
   }
+  
   $pidb_id = htmlspecialchars($_POST["pidb_id"]);
   $client_id = htmlspecialchars($_POST["client_id"]);
   $type_id = htmlspecialchars($_POST["type_id"]);
   $amount = htmlspecialchars($_POST["amount"]);
   $amount = $pidb->correctDecimalSeparator($amount);
+  if ($type_id == 6) {
+    $amount = "-".$amount;
+  }
   $note = htmlspecialchars($_POST["note"]);
   $created_at_date = date('Y-m-d H:i:s');
   $created_at_user_id = $username = $_SESSION['user_id'];

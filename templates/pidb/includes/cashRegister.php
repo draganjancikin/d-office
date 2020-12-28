@@ -1,5 +1,6 @@
 <?php
 $daily_transactions = $pidb->getDailyCashTransactions();
+$daily_cash_saldo = $pidb->getDailyCashSaldo();
 ?>
 <div class="row">
   <div class="col-lg-10 col-md-12">
@@ -37,7 +38,7 @@ $daily_transactions = $pidb->getDailyCashTransactions();
                 <th></th>
                 <th></th>
                 <th class="text-right">stanje</th>
-                <th class="text-right">_____</th>
+                <th class="text-right"><?php echo $daily_cash_saldo  ?></th>
               </tr>
             </tfoot>
           </table>
