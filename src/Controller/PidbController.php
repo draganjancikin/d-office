@@ -168,7 +168,7 @@ class PidbController extends DatabaseController {
         $date_now = date('Y-m-d');
         $result = $this->get("SELECT * "
                             ."FROM $this->transaction_table "
-                            ."WHERE (created_at_date BETWEEN '$date_now 00:00:00' AND '$date_now 23:59:59') AND (type_id = 1 || type_id = 3 || type_id = 5 || type_id = 6)"
+                            ."WHERE (created_at_date BETWEEN '$date_now 00:00:00' AND '$date_now 23:59:59') AND (type_id = 1 || type_id = 3 || type_id = 5 || type_id = 6 || type_id = 7) "
                             ."ORDER BY date ASC");
         $i = 0;
         foreach($result as $row){
@@ -190,6 +190,9 @@ class PidbController extends DatabaseController {
                     break;
                 case 6:
                     $type = "Izlaz gotovine na kraju dana (smene)";
+                    break;
+                case 7:
+                    $type = "Izlaz gotovine";
                     break;
                 default:
                 $type = "_";
