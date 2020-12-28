@@ -40,7 +40,14 @@ Enhancement:
 - Little CSS tuning for Pidb view an edit forms
 - Delete unnecessary files
 
-## New for version 5.1.6
+## New in version 5.1.6
 
 - Enhancement for require autoload in front index.php
 - installationRecord update
+
+## New in version 5.1.7
+
+- .gitignore update
+- Remove permissions for leftSidebarMenu, and change indentation to 2 spaces
+- Change indentation for app/index.php to 2 spaces
+- Change indentation for templates/pidb/includes/listLastTransaction.php to 2 spaces

@@ -65,7 +65,8 @@
 
             <!-- Modals -->
             <?php 
-            if (isset($_GET['pidb_id'])) include '../../templates/pidb/includes/modals.php'; 
+            if (isset($_GET['pidb_id'])) include '../../templates/pidb/includes/modals.php';
+            if (isset($_GET['cashRegister'])) include '../../templates/pidb/includes/modals2.php';
             ?>
             <!-- End of Modals -->
             
