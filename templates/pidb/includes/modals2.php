@@ -1,71 +1,3 @@
-<!-- Modal addPaymentFromCashRegister -->
-<div class="modal" id="addPaymentFromCashRegister" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Evidencija transakcija</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?addPayment&pidb_id=0' ?>" method="post" role="form">
-        <input type="hidden" name="pidb_id" value="0">
-        <input type="hidden" name="client_id" value="0">
-        <div class="modal-body">
-
-          <div class="form-group row">
-            <label for="transaction_type" class="col-sm-3 col-form-label">Vrsta:</label>
-            <div class="col-sm-5">
-              <select class="form-control" name="type_id" id="transaction_type">
-                <!--
-                <option value="1">Avans (gotovinski)</option>
-                <option value="2">Avans (virmanski)</option>
-                  
-                <option value="3">Uplata (gotovinska)</option>
-                <option value="4">Uplata (virmanska)</option>
-                -->
-                <option value="5">Ulaz gotovine</option>
-                <option value="5">Izlaz gotovine</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label for="date" class="col-sm-3 col-form-label">Datum uplate:</label>
-            <div class="col-sm-5">
-              <input type="date" id="date" name="date" value="<?php echo $pidb->getDate() ?>">
-            </div>
-          </div>
-                    
-          <div class="form-group row">
-            <label for="amount" class="col-sm-3 col-form-label">Iznos:</label>
-            <div class="col-sm-5">
-              <input type="text" class="form-control" name="amount" id="amount" value="" placeholder="Unesite iznos" />
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label for="note" class="col-sm-3 col-form-label">Beleška:</label>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" name="note" id="note" value="" >
-            </div>
-          </div>
-
-        </div>
-        <!-- End Modal Body -->
-
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-sm btn-primary" >Evidentiraj uplatu</button>
-        </div>
-
-      </form>
-    </div>  
-  </div>
-</div>
-<!-- End Modal -->
-
 <!-- Modal cashInput -->
 <div class="modal" id="cashInput" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -82,6 +14,7 @@
 
         <input type="hidden" name="pidb_id" value="0">
         <input type="hidden" name="client_id" value="0">
+        <input type="hidden" name="date" value="<?php echo $pidb->getDate() ?>">
 
         <div class="modal-body">
 
@@ -136,6 +69,8 @@
       <form action="<?php echo $_SERVER['PHP_SELF'] . '?addPayment' ?>" method="post" role="form">
         <input type="hidden" name="pidb_id" value="0">
         <input type="hidden" name="client_id" value="0">
+        <input type="hidden" name="date" value="<?php echo $pidb->getDate() ?>">
+        
         <div class="modal-body">
 
           <div class="form-group row">
