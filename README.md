@@ -59,3 +59,8 @@ Enhancement:
 ## New in version 5.2.1
 
 - Code cleanup
+
+## New in version 5.2.2
+
+- Change type id in PidbController
+- 
