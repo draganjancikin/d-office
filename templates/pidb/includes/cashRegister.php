@@ -1,6 +1,12 @@
 <?php
-$daily_transactions = $pidb->getDailyCashTransactions();
-$daily_cash_saldo = $pidb->getDailyCashSaldo();
+if(isset($_GET['date'])){
+  $date = $_GET['date'];
+} else {
+  $date = "";
+}
+echo $date;
+$daily_transactions = $pidb->getDailyCashTransactions($date);
+$daily_cash_saldo = $pidb->getDailyCashSaldo($date);
 ?>
 <div class="row">
   <div class="col-lg-10 col-md-12">
