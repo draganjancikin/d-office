@@ -31,11 +31,17 @@ $daily_cash_saldo = $pidb->getDailyCashSaldo($date);
               <tr>
                 <td><?php echo $transaction['type_name'] ?></td>
                 <td>
-                  <a href="/pidb?view&pidb_id=<?php echo $transaction['pidb_id']?>">
-                    <?php echo str_pad($transaction['pidb_y_id'], 4, "0", STR_PAD_LEFT) ?>
-                    <?php echo $transaction['client_name'] ?>
-                    <?php echo $transaction['pidb_title'] ?>
-                  </a>
+                  <?php
+                  if ($transaction['pidb_y_id'] <> 0): 
+                    ?>
+                    <a href="/pidb?view&pidb_id=<?php echo $transaction['pidb_id']?>">
+                      <?php echo str_pad($transaction['pidb_y_id'], 4, "0", STR_PAD_LEFT) ?>
+                      <?php echo $transaction['client_name'] ?>
+                      <?php echo $transaction['pidb_title'] ?>
+                    </a>
+                    <?php
+                  endif;
+                  ?>
                 </td>
                 <td><?php echo $transaction['note'] ?></td>
                 <td class="text-right"><?php echo $transaction['amount'] ?></td>
