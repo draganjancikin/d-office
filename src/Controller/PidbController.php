@@ -157,7 +157,7 @@ class PidbController extends DatabaseController {
                             . "FROM $this->transaction_table "
                             . "JOIN (client, pidb)"
                             . "ON ($this->transaction_table.client_id = client.id AND $this->transaction_table.pidb_id = pidb.id )"
-                            . "ORDER BY id LIMIT $limit ");
+                            . "ORDER BY id DESC LIMIT $limit ");
         return $result;
     }
 
