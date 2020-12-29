@@ -145,12 +145,28 @@ require 'export.php';
         </button>
 
         <!-- Print Buttons -->
-        <a href="/tcpdf/examples/printDailyCashReport.php" title="PDF [new window]" target="_blank">
+        <?php
+        if (isset($_GET['date'])) {
+          $date = $_GET['date'];
+        } else {
+          $date = $pidb->getDate();
+        }
+        ?>
+        <!--
+        <a href="/tcpdf/examples/printDailyCashReport.php&" title="PDF [new window]" target="_blank">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
             <i class="fas fa-print"> </i>
             <i class="fas fa-cash-register"></i>
           </button>
         </a>
+        -->
+        <form class="d-inline" target="_blank" action="/tcpdf/examples/printDailyCashReport.php">
+          <input type="hidden" name="date" value="<?php echo $date ?>">
+          <button type="submit" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
+            <i class="fas fa-print"> </i>
+            <i class="fas fa-cash-register"></i>
+          </button>
+        </form>
         <?php
       endif;
         ?>

@@ -50,11 +50,13 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 // generisanje potrebnih objekata
 $pidb = new \Roloffice\Controller\PidbController();
 
-$daily_transactions = $pidb->getDailyCashTransactions();
-$daily_cash_saldo = $pidb->getDailyCashSaldo();
+$date = $_GET['date'];
+
+$daily_transactions = $pidb->getDailyCashTransactions($date);
+$daily_cash_saldo = $pidb->getDailyCashSaldo($date);
 $html = '
   <h1>Dnevni izveštaj</h1>
-  <h4>'.date('d. M Y').'.g</h4>
+  <h4>'.$date.'.g</h4>
   <table>
     <thead>
       <tr>

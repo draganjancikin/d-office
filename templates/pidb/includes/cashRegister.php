@@ -4,7 +4,6 @@ if(isset($_GET['date'])){
 } else {
   $date = "";
 }
-echo $date;
 $daily_transactions = $pidb->getDailyCashTransactions($date);
 $daily_cash_saldo = $pidb->getDailyCashSaldo($date);
 ?>
