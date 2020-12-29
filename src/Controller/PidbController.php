@@ -170,12 +170,10 @@ class PidbController extends DatabaseController {
         } else {
             $date = date('Y-m-d');
         }
-        $result = $this->get("SELECT $this->transaction_table.type_id, $this->transaction_table.pidb_id, $this->transaction_table.client_id, $this->transaction_table.note, $this->transaction_table.amount, pidb.y_id as pidb_y_id, pidb.title as pidb_title, client.name as client_name  "
+        $result = $this->get("SELECT * "
                             ."FROM $this->transaction_table "
-                            ."JOIN (pidb, client) "
-                            ."ON (pidb.id = $this->transaction_table.pidb_id AND client.id = $this->transaction_table.client_id) "
-                            ."WHERE ($this->transaction_table.created_at_date BETWEEN '$date 00:00:00' AND '$date 23:59:59') AND (type_id = 1 || type_id = 3 || type_id = 5 || type_id = 6 || type_id = 7) "
-                            ."ORDER BY $this->transaction_table.date ASC;");
+                            ."WHERE (created_at_date BETWEEN '$date 00:00:00' AND '$date 23:59:59') AND (type_id = 1 || type_id = 3 || type_id = 5 || type_id = 6 || type_id = 7) "
+                            ."ORDER BY date ASC;");
         $i = 0;
         foreach($result as $row){
             switch ($row['type_id']) {
@@ -204,6 +202,17 @@ class PidbController extends DatabaseController {
                 $type = "_";
                     break;
             }
+            if ( $row['pidb_id'] <> 0 ) {
+                $pidb_data = $this->getPidb($row['pidb_id']);
+                $result[$i]['pidb_y_id'] = $pidb_data['y_id'];
+                $result[$i]['client_name'] = $pidb_data['client_name'];
+                $result[$i]['pidb_title'] = $pidb_data['title'];
+            } else {
+                $result[$i]['pidb_y_id'] = 0;
+                $result[$i]['client_name'] = "";
+                $result[$i]['pidb_title'] = "";
+            }
+
             $result[$i]['type_name'] = $type;
             $i++;
         }
