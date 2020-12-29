@@ -67,3 +67,7 @@ Enhancement:
 ## New in version 5.2.3
 
 - Add new transaction type in Pidb
+
+## New in version 5.2.4
+
+- Add date param in cashRegister path
