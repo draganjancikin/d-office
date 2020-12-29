@@ -54,16 +54,17 @@ $date = $_GET['date'];
 
 $daily_transactions = $pidb->getDailyCashTransactions($date);
 $daily_cash_saldo = $pidb->getDailyCashSaldo($date);
+
 $html = '
   <h1>Dnevni izveštaj</h1>
   <h4>'.$date.'.g</h4>
   <table>
     <thead>
       <tr>
-        <th style="border-bottom: 1px solid black;">ID</th>
         <th style="border-bottom: 1px solid black;">vrsta transakcije</th>
-        <th style="border-bottom: 1px solid black;">note</th>
-        <th style="border-bottom: 1px solid black;" align="center">amount</th>
+        <th style="border-bottom: 1px solid black;">vezani dokument</th>
+        <th style="border-bottom: 1px solid black;">beleška</th>
+        <th style="border-bottom: 1px solid black;" align="center">iznos</th>
       </tr>
     </thead>
   </table>
@@ -71,12 +72,17 @@ $html = '
 $pdf->writeHTML($html, true, false, true, false, '');
 
 foreach($daily_transactions as $transaction):
-  
+  if ($transaction['pidb_id'] <> 0) {
+    $pidb_data = $pidb->getPidb($transaction['pidb_id']);
+    $pidb_data = $pidb_data['y_id']. ' ' .$pidb_data['client_name']. ' ' .$pidb_data['title'];
+  } else {
+    $pidb_data = "";
+  }
   $html = '
   <table>
     <tr>
-      <td>' . $transaction['id'] . '</td>
       <td>' . $transaction['type_name'] . '</td>
+      <td>'.$pidb_data.'</td>
       <td>' . $transaction['note'] . '</td>
       <td align="right">' . $transaction['amount'] . '</td>
     </tr>
