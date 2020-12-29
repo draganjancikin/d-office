@@ -75,3 +75,4 @@ Enhancement:
 ## New in version 5.2.5
 
 - ORDER in last Transaction change to DESC
+- Daily cash list update
