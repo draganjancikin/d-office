@@ -18,10 +18,10 @@ $daily_cash_saldo = $pidb->getDailyCashSaldo($date);
           <table class="table table-bordered table-hover" id="" width="100%" cellspacing="0">
             <thead class="thead-light">
               <tr>
-                <th class="text-center">ID</th>
                 <th class="text-center">vrsta transakcije</th>
-                <th class="text-center">note</th>
-                <th class="text-center">amount</th>
+                <th>vezani dokument</th>
+                <th class="text-center">beleška</th>
+                <th class="text-center">iznos</th>
               </tr>
             </thead>
             <tbody>
@@ -29,8 +29,14 @@ $daily_cash_saldo = $pidb->getDailyCashSaldo($date);
             foreach($daily_transactions as $transaction) :
               ?>
               <tr>
-                <td class="text-center"><?php echo $transaction['id'] ?></td>
                 <td><?php echo $transaction['type_name'] ?></td>
+                <td>
+                  <a href="/pidb?view&pidb_id=<?php echo $transaction['pidb_id']?>">
+                    <?php echo str_pad($transaction['pidb_y_id'], 4, "0", STR_PAD_LEFT) ?>
+                    <?php echo $transaction['client_name'] ?>
+                    <?php echo $transaction['pidb_title'] ?>
+                  </a>
+                </td>
                 <td><?php echo $transaction['note'] ?></td>
                 <td class="text-right"><?php echo $transaction['amount'] ?></td>
               </tr>
