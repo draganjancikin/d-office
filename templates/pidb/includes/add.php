@@ -1,4 +1,6 @@
 <?php
+use Roloffice\Core\Database;
+
 // add new document
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPidb"]) ) {
 
@@ -16,7 +18,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPidb"]) ) {
   $title = htmlspecialchars($_POST["title"]);
   $note = htmlspecialchars($_POST["note"]);
 
-  $db = new \Roloffice\Controller\DatabaseController();
+  $db = new Database();
     
   $db->connection->query("INSERT INTO pidb (tip_id, date, client_id, project_id, title, note) " 
                         . " VALUES ('$pidb_tip_id', '$date', '$client_id', '$project_id', '$title', '$note')") or die(mysqli_error($connect_db));
@@ -44,7 +46,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleInPidb"]) ) {
   $price = $article->getPrice($article_id);
   $tax = $pidb->getTax();
 
-  $db = new \Roloffice\Controller\DatabaseController();
+  $db = new Database();
 
   $db->connection->query("INSERT INTO pidb_article (pidb_id, article_id, note, pieces, price, tax) " 
                         . " VALUES ('$pidb_id', '$article_id', '$note', '$pieces', '$price', '$tax' )") or die(mysqli_error($db->connection));

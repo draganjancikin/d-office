@@ -1,4 +1,6 @@
 <?php
+use Roloffice\Core\Database;
+
 // add new Material
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["new"]) ) {
 
@@ -23,7 +25,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["new"]) ) {
 
     $note = htmlspecialchars($_POST['note']);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     $db->connection->query("INSERT INTO material (date, name, unit_id, weight, price,  note ) VALUES ('$date', '$name', '$unit_id', '$weight', '$price', '$note' )") or die(mysqli_error($db->connection));
 
@@ -48,7 +50,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newSupplier"]) ) {
     }
     if($client_id == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
     
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
   
     $db->connection->query("INSERT INTO material_suppliers (material_id, client_id, code, price, date ) "
                    . "VALUES ('$material_id', '$client_id', '$code', '$price', '$date' )") or die(mysqli_error($db->connection));
@@ -67,7 +69,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newProperty"]) ) {
     $min = htmlspecialchars($_POST['min']);
     $max = htmlspecialchars($_POST['max']);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     $db->connection->query("INSERT INTO material_property (material_id, property_id, min, max) "
                      . "VALUES ('$material_id', '$property_item_id', '$min', '$max')") or die(mysqli_error($db->connection));

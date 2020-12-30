@@ -1,4 +1,6 @@
 <?php
+use Roloffice\Core\Database;
+
 // add client
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newClient"])) {
 
@@ -27,7 +29,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newClient"])) {
     $address_note = basicValidation($_POST["address_note"]);
     $note = basicValidation($_POST["note"]);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
     
     // citamo iz baze, iz tabele client sve zapise gde je name=$name
     $provera_upit = $db->connection->query( "SELECT name FROM client WHERE name='$name'");
@@ -69,7 +71,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newContact"])) {
     $number = basicValidation($_POST["number"]);
     $note = basicValidation($_POST["note"]);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     $db->connection->query("INSERT INTO contacts (type_id, number, note) VALUES ('$type_id', '$number', '$note') ") or die(mysqli_error($db->connection));
 
@@ -85,7 +87,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET["addSCS"])) {
     $action = basicValidation($_POST["action"]);
     $name = basicValidation($_POST["name"]);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     // citamo iz baze, iz tabele $action sve zapise gde je name=$name
     $str = 'SELECT * FROM ' . $action . ' WHERE name="' . $name . '" ';

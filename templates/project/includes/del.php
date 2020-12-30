@@ -1,11 +1,13 @@
 <?php
+use Roloffice\Core\Database;
+
 // brisanje beleške iz projekta
 if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET['delNote']) ) {
 
     $note_id = htmlspecialchars($_GET["note_id"]);
     $project_id = htmlspecialchars($_GET["project_id"]);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     $db->connection->query("DELETE FROM project_note WHERE id='$note_id' ") or die(mysqli_error($db->connection));
 
@@ -18,7 +20,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET['delTask']) ) {
     $task_id = htmlspecialchars($_GET["task_id"]);
     $project_id = htmlspecialchars($_GET["project_id"]);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     // brisanje beležaka koje su vezane uz zadatak
     $result_project_task_notes = $db->connection->query("SELECT * FROM project_task_note WHERE project_task_id='$task_id'") or die(mysqli_error($db->connection));
@@ -40,7 +42,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET['delTaskNote']) ) {
     $project_id = htmlspecialchars($_GET["project_id"]);
     $task_id = htmlspecialchars($_GET["task_id"]);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     $db->connection->query("DELETE FROM project_task_note WHERE id='$task_note_id' ") or die(mysqli_error($db->connection));
 
