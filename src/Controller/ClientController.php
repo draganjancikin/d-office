@@ -2,13 +2,14 @@
 
 namespace Roloffice\Controller;
 
-// require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
+use Roloffice\Core\Database;
+
 /**
  * Client class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class ClientController extends DatabaseController {
+class ClientController extends Database {
 
     protected $id;
     protected $vps_id;

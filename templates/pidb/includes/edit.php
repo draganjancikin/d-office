@@ -1,4 +1,6 @@
 <?php
+use Roloffice\Core\Database;
+
 $user_id = $_SESSION['user_id'];
 $date = date('Y-m-d h:i:s');
 
@@ -12,7 +14,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editPidb"]) ) {
   $archived = htmlspecialchars($_POST["archived"]);
   $note = htmlspecialchars($_POST["note"]);
 
-  $db = new \Roloffice\Controller\DatabaseController();
+  $db = new Database();
 
   $db->connection->query("UPDATE pidb SET title='$title', client_id='$client_id', archived='$archived', note='$note'  WHERE id = '$pidb_id' ") or die(mysqli_error($db->connection));
 
@@ -27,7 +29,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleInPidb"]) ) 
 
   $article_id = htmlspecialchars($_POST["article_id"]);
 
-  $db = new \Roloffice\Controller\DatabaseController();
+  $db = new Database();
 
   $note = htmlspecialchars($_POST["note"]);
   $pieces_1 = htmlspecialchars($_POST["pieces"]);
@@ -76,7 +78,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleDataInPidb"]
   $old_article = $pidb->getArticleInPidb($pidb_article_id);
   $old_article_id = $old_article['article_id'];
 
-  $db = new \Roloffice\Controller\DatabaseController();
+  $db = new Database();
 
   // first check if article_id in pidb_article_id changed
   if ($old_article_id == $new_article_id){
@@ -121,7 +123,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editSettings"]) ) {
   $kurs = str_replace(",", ".", htmlspecialchars($_POST["kurs"]));
   $tax = str_replace(",", ".", htmlspecialchars($_POST["tax"]));
 
-  $db = new \Roloffice\Controller\DatabaseController();
+  $db = new Database();
 
   $db->connection->query("UPDATE preferences SET kurs='$kurs', tax='$tax' WHERE id = '1' ") or die(mysqli_error($db->connection));
 

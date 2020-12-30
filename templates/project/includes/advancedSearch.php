@@ -56,20 +56,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["advancedSearch"])) :
                 <table class="dataTable table table-hover" id="" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th class="px-1">narudžbenica</th>
+                            <th class="px-1">projekat</th>
                             <th class="px-1 text-center order-status" title="Status projekta">s</th>
-                            <th class="px-1">dobavljač</th>
-                            <th class="px-1">naslov</th>
-                            <th class="px-1">za projekat</th>
+                            <th class="px-1">za realizaciju</th>
+                            <th class="px-1">u realizaciji</th>
+                            <th class="px-1">realizovano</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th class="px-1">narudžbenica</th>
                             <th class="px-1 text-center order-status" title="Status projekta">s</th>
-                            <th class="px-1">dobavljač</th>
-                            <th class="px-1">naslov</th>
-                            <th class="px-1">za projekat</th>
+                            <th class="px-1">za realizaciju</th>
+                            <th class="px-1">u realizaciji</th>
+                            <th class="px-1">realizovano</th>
                         </tr>
                     </tfoot>
                     <tbody>

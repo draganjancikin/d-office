@@ -1,10 +1,12 @@
 <?php
+use Roloffice\Core\Database;
+
 // export cutting to proforma-invoice
 if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportCuttingToPidb"]) ) {
 
     $cutting_id = htmlspecialchars($_GET['cutting_id']);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     $result_cutting_fence = $db->connection->query("SELECT * FROM cutting_fence WHERE id = $cutting_id ") or die(mysqli_error($db->connection));
     $row_cutting_fence = mysqli_fetch_array($result_cutting_fence);

@@ -2,13 +2,14 @@
 
 namespace Roloffice\Controller;
 
-//require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
+use Roloffice\Core\Database;
+
 /**
  * Article class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class ArticleController extends DatabaseController {
+class ArticleController extends Database {
 
     private $table_article = "article";
 

@@ -2,13 +2,14 @@
 
 namespace Roloffice\Controller;
 
-// require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
+use Roloffice\Core\Database;
+
 /**
  * Material class
  * 
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
-class MaterialController extends DatabaseController {
+class MaterialController extends Database {
 
     protected $id;
     protected $name;

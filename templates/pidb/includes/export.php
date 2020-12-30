@@ -1,4 +1,6 @@
 <?php
+use Roloffice\Core\Database;
+
 // export proforma to dispatch
 if(isset($_GET["exportProformaToDispatch"]) ) {
 
@@ -7,7 +9,7 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
     $date = date('Y-m-d h:i:s');
     $date_control = date ('Y');
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     // get proforma data
     $result_pidb = $db->connection->query("SELECT * FROM pidb WHERE id = '$pidb_id' ") or die(mysqli_error($db->connection));
