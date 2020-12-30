@@ -42,7 +42,6 @@
           <a class="collapse-item" href="/pidb/?transactions">Transakcije</a>
           <a class="collapse-item" href="/pidb/?cashRegister">Kasa</a>
           <a class="collapse-item" href="/pidb/index.php?new"><i class="fas fa-plus"></i> Novi dokument</a>
-          <a class="collapse-item" href="/pidb/index.php?payments"><i class="fas fa-eye"></i> Plaćanja</a>
           <a class="collapse-item" href="/pidb/index.php?set"><i class="fas fa-cog"></i> Podešavanja</a>
         </div>
       </div>
