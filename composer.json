@@ -17,7 +17,8 @@
   "autoload": {
     "files": [],
     "psr-4": {
-      "Roloffice\\Controller\\": "src/Controller"
+      "Roloffice\\Controller\\": "src/Controller",
+      "Roloffice\\Core\\": "src/Core"
     }
   }
 }

@@ -2,13 +2,14 @@
 
 namespace Roloffice\Controller;
 
-// require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
+use Roloffice\Core\Database;
+
 /**
  * Description of Order class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class OrderController extends DatabaseController {
+class OrderController extends Database {
 
     protected $id;
     protected $o_id;

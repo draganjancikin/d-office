@@ -2,7 +2,8 @@
 
 namespace Roloffice\Controller;
 
-// require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
+use Roloffice\Core\Database;
+
 /**
  * Cutting.class.php
  * 
@@ -10,7 +11,7 @@ namespace Roloffice\Controller;
  *
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
-class CuttingController extends DatabaseController {
+class CuttingController extends Database {
 
     protected $id;
     protected $c_id;

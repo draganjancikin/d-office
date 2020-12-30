@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Controller;
+namespace Roloffice\Core;
 
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/dbConfig.php';
 // require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
@@ -9,7 +9,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/dbConfig.
  * 
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class DatabaseController {
+class Database {
 
     private static $instance = null;
 

@@ -1,4 +1,6 @@
 <?php
+use Roloffice\Core\Database;
+
 // novi projekat
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['add']) ) {
 
@@ -12,7 +14,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['add']) ) {
     // $note = htmlspecialchars($_POST['note']);
     $note = "";
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     $db->connection->query("INSERT INTO project (date, created_at_user_id, client_id, title, priority_id, note, status) VALUES ( '$date','$user_id', '$client_id', '$title', '$priority_id', '$note', '1' )") or die(mysqli_error($db->connection));
 
@@ -39,7 +41,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addNote']) ) {
 
     $note = htmlspecialchars($_POST['note']);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     $db->connection->query("INSERT INTO project_note (date, project_id, created_at_user_id, note) VALUES ( '$date','$project_id', '$user_id', '$note' )") or die(mysqli_error($db->connection));
 
@@ -58,7 +60,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addTask']) ) {
     $tip_id = $_POST["tip_id"];
     $title = htmlspecialchars($_POST['title']);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     $db->connection->query("INSERT INTO project_task (date, project_id, created_at_user_id, tip_id, status_id, title) VALUES ( '$date','$project_id', '$user_id', '$tip_id', '$status_id', '$title' )") or die(mysqli_error($db->connection));
 
@@ -76,7 +78,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addTaskNote']) ) {
 
     $note = htmlspecialchars($_POST['note']);
 
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
 
     $db->connection->query("INSERT INTO project_task_note (date, project_task_id, created_at_user_id, note) VALUES ( '$date','$task_id', '$user_id', '$note' )") or die(mysqli_error($db->connection));
 

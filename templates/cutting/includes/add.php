@@ -1,4 +1,6 @@
 <?php
+use Roloffice\Core\Database;
+
 // new cutting
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newCutting"]) ) {
     
@@ -6,7 +8,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newCutting"]) ) {
     $date = date('Y-m-d h:i:s');
     $client_id = htmlspecialchars($_POST['client_id']);
     
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
     
     $db->connection->query(" INSERT INTO cutting_fence ( date, client_id) " 
                      . " VALUES ( '$date', '$client_id')") or die(mysqli_error($db->connection));
@@ -36,7 +38,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleToCutting"]))
     $space = htmlspecialchars($_POST['space']);
     $field_number = htmlspecialchars($_POST['field_number']);
     
-    $db = new \Roloffice\Controller\DatabaseController();
+    $db = new Database();
     
     $db->connection->query(" INSERT INTO cutting_fence_article (cutting_fence_id, cutting_fence_model_id, width, height, mid_height, space, field_number) " 
                      . " VALUES ('$cutting_id', '$cutting_fence_model_id', '$width', '$height', '$mid_height', '$space', '$field_number')") or die(mysqli_error($db->connection));
