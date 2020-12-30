@@ -80,3 +80,4 @@ Enhancement:
 # New in version 5.2.6
 
 - Remove "Plaćanja" from leftSidebarMenu
+- Move Controller/DatabaseController to Core/Database
