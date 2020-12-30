@@ -1,3 +1,6 @@
+<?php
+use Roloffice\Core\Database;
+?>
 <div class="card mb-4">
   <div class="card-header p-2">
     <h6 class="m-0 font-weight-bold text-primary">Detaljna pretraga</h6>
@@ -80,16 +83,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND $_GET["p"] == 1) {
                         
               // proveravamo da li je upisano nešto u polje ulica
               if(!$street==""){
-                $where_street = " AND street.street_name LIKE '%$street%' ";
+                $where_street = " AND street.name LIKE '%$street%' ";
                 if(!$city==""){
-                  $where_city = " AND city.city_name LIKE '%$city%' ";
+                  $where_city = " AND city.name LIKE '%$city%' ";
                 }else{
                   $where_city = "";
                 }
               }else{
                 $where_street = "";
                 if(!$city==""){
-                  $where_city = " AND city.city_name LIKE '%$city%' ";
+                  $where_city = " AND city.name LIKE '%$city%' ";
                 }else{
                   $where_city = "";
                 }
@@ -100,16 +103,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND $_GET["p"] == 1) {
                         
               // proveravamo da li je upisano nešto u polje ulica
               if(!$street==""){
-                $where_street = " AND street.street_name LIKE '%$street%' ";
+                $where_street = " AND street.name LIKE '%$street%' ";
                 if(!$city==""){
-                  $where_city = " AND city.city_name LIKE '%$city%' ";
+                  $where_city = " AND city.name LIKE '%$city%' ";
                 }else{
                   $where_city = "";
                 }
               }else{
                 $where_street = "";
                 if(!$city==""){
-                  $where_city = " AND city.city_name LIKE '%$city%' ";
+                  $where_city = " AND city.name LIKE '%$city%' ";
                 }else{
                   $where_city = "";
                 }
@@ -118,12 +121,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND $_GET["p"] == 1) {
                 
             $where = "WHERE (vps_id = 1 OR vps_id = 2) " . $where_client . $where_street . $where_city;
                     
-            $db = new DB();
-            $connection = $db->connectDB();
+            $db = new Database();
+            $connection = $db->connection;
             $count = 0;
                     
             // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
-            $result = $connection->query("SELECT client.id, client.name, city.city_name, street.street_name, client.home_number "
+            $result = $connection->query("SELECT client.id, client.name, city.name as city_name, street.name as street_name, client.home_number "
                                         . "FROM client "
                                         . "JOIN (street, city)"
                                         . "ON (client.city_id = city.id AND client.street_id = street.id)"
