@@ -12,7 +12,7 @@ use Roloffice\Core\Database;
 class ClientController extends Database {
 
     protected $id;
-    protected $vps_id;
+    protected $type_id;
     protected $name;
     protected $name_note;
     protected $lb;
@@ -33,7 +33,7 @@ class ClientController extends Database {
      * 
      * @return array
      */
-    public function getVpses() {
+    public function getTypes() {
         return array(
             array('id'=>'1', 'name'=>'Fizičko lice'),
             array('id'=>'2', 'name'=>'Pravno lice')
@@ -107,7 +107,7 @@ class ClientController extends Database {
      * @return array
      */
     public function getClient($id) {
-        $result =  $this->get("SELECT client.id, client.vps_id, client.name, client.name_note, client.lb, client.is_supplier, client.state_id, client.city_id, client.street_id, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number, client.address_note, client.note "
+        $result =  $this->get("SELECT client.id, client.type_id, client.name, client.name_note, client.lb, client.is_supplier, client.state_id, client.city_id, client.street_id, state.name as state_name, city.name as city_name, street.name as street_name, client.home_number, client.address_note, client.note "
                             . "FROM client "
                             . "JOIN (street, city, state)"
                             . "ON (client.state_id = state.id AND client.city_id = city.id AND client.street_id = street.id )"
@@ -115,7 +115,7 @@ class ClientController extends Database {
         if(empty($result)) {
             die('<script>location.href = "/clients/" </script>');
         } else {
-            ($result[0]['vps_id'] == 1 ? $result[0]['vps_name'] = "Fizičko lice" : $result[0]['vps_name'] = "Pravno lice" );
+            ($result[0]['type_id'] == 1 ? $result[0]['type_name'] = "Fizičko lice" : $result[0]['type_name'] = "Pravno lice" );
             return $result[0];
         }
     }
@@ -126,7 +126,7 @@ class ClientController extends Database {
      * @return array
      */
     public function getClients() {
-        $result = $this->get("SELECT client.id, client.vps_id, client.name, city.name as city_name "
+        $result = $this->get("SELECT client.id, client.type_id, client.name, city.name as city_name "
                             . "FROM client "
                             . "JOIN (city) "
                             . "ON (client.city_id = city.id) "
