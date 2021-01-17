@@ -1,4 +1,4 @@
-# RolOffice v5.3.0
+# RolOffice v5.3.2
 
 Web Application
 
@@ -95,3 +95,7 @@ Enhancement:
 ## New in version 5.3.1
 
 - Remove folder vendor from .gitignore
+
+## new in version 5.3.2
+
+- Change client.vps_id to client.type_id

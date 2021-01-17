@@ -15,7 +15,7 @@
                     <label for="disabledSelectTip" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta klijenta:</label>
                     <div class="col-sm-4">
                         <select id="disabledSelectTip" class="form-control">
-                            <option><?php echo $client_data['vps_name'] ?></option>
+                            <option><?php echo $client_data['type_name'] ?></option>
                         </select>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                 </div>
 
                 <?php
-                if ($client_data['vps_id'] == 2):
+                if ($client_data['type_id'] == 2):
                     ?>
                     <div class="form-group row">
                         <label for="disabledInputPIB" class="col-sm-3 col-lg-2 col-form-label text-right">PIB: </label>

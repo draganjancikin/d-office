@@ -119,7 +119,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND $_GET["p"] == 1) {
               }
             }
                 
-            $where = "WHERE (vps_id = 1 OR vps_id = 2) " . $where_client . $where_street . $where_city;
+            $where = "WHERE (type_id = 1 OR type_id = 2) " . $where_client . $where_street . $where_city;
                     
             $db = new Database();
             $connection = $db->connection;

@@ -16,7 +16,7 @@
       <div class="form-group row">
         <label for="select_pidb_tip_id" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta dokumenta:</label>
         <div class="col-sm-4">
-          <div id="vps">
+          <div id="type">
             <select id="select_pidb_tip_id" name="pidb_tip_id" class="form-control">
               <option value="1">Predračun</option>
               <option value="2">Otpremnica</option>
