@@ -91,3 +91,7 @@ Enhancement:
 - Move Controller/DatabaseController to Core/Database
 
 ## New in version 5.3.0
+
+## New in version 5.3.1
+
+- Remove folder vendor from .gitignore
