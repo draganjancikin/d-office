@@ -1,4 +1,4 @@
-# RolOffice v5.1.4
+# RolOffice v5.3.0
 
 Web Application
 
@@ -89,3 +89,9 @@ Enhancement:
 
 - Remove "Plaćanja" from leftSidebarMenu
 - Move Controller/DatabaseController to Core/Database
+
+## New in version 5.3.0
+
+## New in version 5.3.1
+
+- Remove folder vendor from .gitignore
