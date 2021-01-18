@@ -8,6 +8,4 @@ $baseDir = dirname($vendorDir);
 return array(
     'Roloffice\\Core\\' => array($baseDir . '/src/Core'),
     'Roloffice\\Controller\\' => array($baseDir . '/src/Controller'),
-    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
-    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
 );
