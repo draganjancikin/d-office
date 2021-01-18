@@ -1,8 +1,9 @@
-# RolOffice v5.1.4
+# RolOffice v5.3.2
 
-Web Application 
+Web Application
 
 ## New in version 5.1.0
+
 - Add Composer and composer autoload
 - Add transaction type to transaction list by pidb
 - On database table transaction rename columns transaction_type_id to type_id and update code
@@ -14,29 +15,36 @@ Web Application
 - Add cash register page
 
 Enhancement:
+
 - Little CSS tuning for Order and Pidb forms
-- Replace "eur" with € 
+- Replace "eur" with €
 
 ## New in version 5.1.1
+
 - Replace variable $version with const VERSION
 - Change file name for dump database
 
 ## New in version 5.1.2
+
 - Move const ENV to dbConfig
 
 ## New in version 5.1.3
+
 - Resolved issue #56: Fatal error : Uncaught Error ...
 - Delete unnecessary files
 
 ## New in version 5.1.4
+
 - Resolved issue #57: Fatal error : Uncaught Error ...
 
 ## New in version 5.1.5
 
 Issue resolved:
+
 - #60 Add ROLO-TIM NS to printOrder
 
 Enhancement:
+
 - Little CSS tuning for Pidb view an edit forms
 - Delete unnecessary files
 
@@ -77,7 +85,21 @@ Enhancement:
 - ORDER in last Transaction change to DESC
 - Daily cash list update
 
-# New in version 5.2.6
+## New in version 5.2.6
 
 - Remove "Plaćanja" from leftSidebarMenu
 - Move Controller/DatabaseController to Core/Database
+
+## New in version 5.3.0
+
+## New in version 5.3.1
+
+- Remove folder vendor from .gitignore
+
+## New in version 5.3.2
+
+- Change client.vps_id to client.type_id
+
+## New in version 5.3.3
+
+- Add Doctrine package to application

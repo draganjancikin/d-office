@@ -1,6 +1,6 @@
 {
   "name": "rolostil/roloffice",
-  "version": "5.1.4",
+  "version": "5.3.3",
   "type": "project",
   "description": "Web application for Rolostil company.",
   "keywords": [
@@ -10,7 +10,7 @@
   "authors": [
     {
       "name": "Dragan Jancikin",
-      "email": "draga.jancikin@gmail.com",
+      "email": "dragan.jancikin@gmail.com",
       "role": "lead"
     }
   ],
@@ -20,5 +20,8 @@
       "Roloffice\\Controller\\": "src/Controller",
       "Roloffice\\Core\\": "src/Core"
     }
+  },
+  "require": {
+    "doctrine/orm": "2.8.1"
   }
 }

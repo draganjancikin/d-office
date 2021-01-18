@@ -307,7 +307,7 @@ class ProjectController extends Database {
             }
         }
 
-        $where = "WHERE (vps_id = 1 OR vps_id = 2) " . $where_client . $where_project_title . $where_city;
+        $where = "WHERE (type_id = 1 OR type_id = 2) " . $where_client . $where_project_title . $where_city;
 
         // =======================================================================
         // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name

@@ -11,13 +11,13 @@
             <div class="form-group row">
                 <label for="selectTip" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta klijenta:</label>
                 <div class="col-sm-4">
-                    <select id="selectTip" class="form-control" name="vps_id">
+                    <select id="selectTip" class="form-control" name="type_id">
                         <?php
-                        $vpses = $client->getVpses();
-                        foreach ($vpses as $vps) :
+                        $types = $client->getTypes();
+                        foreach ($types as $type) :
                             ?>
-                            <option value="<?php echo $vps['id'] ?>">
-                                <?php echo $vps['name'] ?>
+                            <option value="<?php echo $type['id'] ?>">
+                                <?php echo $type['name'] ?>
                             </option>
                             <?php
                         endforeach;
