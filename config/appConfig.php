@@ -1,5 +1,9 @@
 <?php
-define("VERSION","5.3.3");
+define("VERSION","5.3.4");
+
+if(empty($page)) {
+    $page = "";
+}
 
 // folders with CSS, JS, ...
 switch($page){
