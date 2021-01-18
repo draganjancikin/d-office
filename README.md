@@ -96,6 +96,10 @@ Enhancement:
 
 - Remove folder vendor from .gitignore
 
-## new in version 5.3.2
+## New in version 5.3.2
 
 - Change client.vps_id to client.type_id
+
+## New in version 5.3.3
+
+- Add Doctrine package to application
