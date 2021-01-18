@@ -8,7 +8,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editClient"])) {
     $date = date('Y-m-d h:i:s');
 
     $client_id = $_POST["client_id"];
-    $vps_id = $_POST["vps_id"];
+    $type_id = $_POST["type_id"];
     $name = basicValidation($_POST["name"]);
     $name_note = basicValidation($_POST["name_note"]);
 
@@ -27,21 +27,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editClient"])) {
 
     $db = new Database();
     
-    if ($vps_id == 1){
+    if ($type_id == 1){
         $db->connection->query(" UPDATE client " 
-                         . " SET vps_id='$vps_id', name='$name', name_note='$name_note', is_supplier='$is_supplier', state_id='$state_id', city_id='$city_id', street_id='$street_id', home_number='$home_number', address_note='$address_note', note='$note', modified_at_date='$date', modified_at_user_id='$user_id' "
+                         . " SET type_id='$type_id', name='$name', name_note='$name_note', is_supplier='$is_supplier', state_id='$state_id', city_id='$city_id', street_id='$street_id', home_number='$home_number', address_note='$address_note', note='$note', modified_at_date='$date', modified_at_user_id='$user_id' "
                          . " WHERE id = '$client_id' ") or die(mysqli_error($db->connection));
     }
 
-    if ($vps_id == 2){
-        if ( $vps_id == 2 AND !isset($_POST["pib"]) ) {
+    if ($type_id == 2){
+        if ( $type_id == 2 AND !isset($_POST["pib"]) ) {
             $db->connection->query("UPDATE client "
-                            . " SET vps_id='$vps_id', name='$name', name_note='$name_note', is_supplier='$is_supplier', state_id='$state_id', city_id='$city_id', street_id='$street_id', home_number='$home_number', address_note='$address_note', note='$note', modified_at_date='$date', modified_at_user_id='$user_id' "
+                            . " SET type_id='$type_id', name='$name', name_note='$name_note', is_supplier='$is_supplier', state_id='$state_id', city_id='$city_id', street_id='$street_id', home_number='$home_number', address_note='$address_note', note='$note', modified_at_date='$date', modified_at_user_id='$user_id' "
                             . " WHERE id = '$client_id' ") or die(mysqli_error($db->connection));
         }else{
             $lb = basicValidation($_POST["pib"]);
             $db->connection->query("UPDATE client "
-                            . " SET vps_id='$vps_id', name='$name', name_note='$name_note', lb='$lb', is_supplier='$is_supplier', state_id='$state_id', city_id='$city_id', street_id='$street_id', home_number='$home_number', address_note='$address_note', note='$note', modified_at_date='$date', modified_at_user_id='$user_id' "
+                            . " SET type_id='$type_id', name='$name', name_note='$name_note', lb='$lb', is_supplier='$is_supplier', state_id='$state_id', city_id='$city_id', street_id='$street_id', home_number='$home_number', address_note='$address_note', note='$note', modified_at_date='$date', modified_at_user_id='$user_id' "
                             . " WHERE id = '$client_id' ") or die(mysqli_error($db->connection));
         }
     }

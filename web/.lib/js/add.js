@@ -10,8 +10,8 @@ $(document).ready(function(){
   $('#selectTip').change(function(){
       
       // preuzimamo value elementa koji se nadgleda, u ovom slucaju je select 
-      // sa id vps
-      var vps_id = $(this).val();
+      // sa id type
+      var type_id = $(this).val();
       
       // definisemo sadrzaj promenljive pib
       var pib = `
@@ -24,10 +24,10 @@ $(document).ready(function(){
                 `;
       
       // ako je fizicko lice div id="pib" se puni sa html('')
-      if(vps_id==='1') $('div#pib').html('');;
+      if(type_id==='1') $('div#pib').html('');;
       
       // ako je pravno lice div id="pib" se puni sa html(pib)
-      if(vps_id==='2') $('div#pib').html(pib);;
+      if(type_id==='2') $('div#pib').html(pib);;
       
   });
   

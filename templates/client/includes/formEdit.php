@@ -10,18 +10,18 @@
 
         <form action="<?php echo $_SERVER['PHP_SELF']. '?editClient&client_id=' .$client_id; ?>" method="post">
             <input type="hidden" name="client_id" value="<?php echo $client_id ?>">
-            <input type="hidden" name="vps_id" value="<?php echo $client_data['vps_id'] ?>">
+            <input type="hidden" name="type_id" value="<?php echo $client_data['type_id'] ?>">
 
             <div class="form-group row">
                 <label for="selectTip" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta klijenta:</label>
                 <div class="col-sm-4">
-                    <select id="selectTip" class="form-control" name="vps_id" >
-                        <option value="<?php echo $client_data['vps_id']; ?>"><?php echo $client_data['vps_name']; ?></option>
+                    <select id="selectTip" class="form-control" name="type_id" >
+                        <option value="<?php echo $client_data['type_id']; ?>"><?php echo $client_data['type_name']; ?></option>
                         <?php
-                        $vpses = $client->getVpses();
-                        foreach ($vpses as $vps):
+                        $types = $client->getTypes();
+                        foreach ($types as $type):
                             ?>
-                            <option value="<?php echo $vps['id'] ?>"><?php echo $vps['name'] ?></option>
+                            <option value="<?php echo $type['id'] ?>"><?php echo $type['name'] ?></option>
                             <?php
                         endforeach;
                         ?>
@@ -40,7 +40,7 @@
             </div>
 
             <?php
-            if ($client_data['vps_id'] == 2):
+            if ($client_data['type_id'] == 2):
                 ?>
                 <div class="form-group row">
                     <label for="inputPIB" class="col-sm-3 col-lg-2 col-form-label text-right">PIB: </label>

@@ -7,7 +7,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newClient"])) {
     $user_id = $_SESSION['user_id'];
     $date = date('Y-m-d h:i:s');
 
-    $vps_id = $_POST["vps_id"];
+    $type_id = $_POST["type_id"];
 
     if (empty($_POST['name'])) {
         $nameError = 'Ime mora biti upisano';
@@ -41,15 +41,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newClient"])) {
         die('<script>location.href = "?alert&ob=2" </script>');
     }else{
 
-        if ($vps_id == 1){
+        if ($type_id == 1){
             //MySqli Insert Query
-            $insert_row = $db->connection->query( " INSERT INTO client (vps_id, name, name_note, is_supplier, state_id, city_id, street_id, home_number, address_note, note, created_at_date, created_at_user_id) "
-                                            . " VALUES ('$vps_id', '$name', '$name_note', '$is_supplier', '$state_id', '$city_id', '$street_id', '$home_number', '$address_note', '$note', '$date', '$user_id') ") or die(mysqli_error($connect_db));
-        } elseif ($vps_id == 2){
+            $insert_row = $db->connection->query( " INSERT INTO client (type_id, name, name_note, is_supplier, state_id, city_id, street_id, home_number, address_note, note, created_at_date, created_at_user_id) "
+                                            . " VALUES ('$type_id', '$name', '$name_note', '$is_supplier', '$state_id', '$city_id', '$street_id', '$home_number', '$address_note', '$note', '$date', '$user_id') ") or die(mysqli_error($connect_db));
+        } elseif ($type_id == 2){
             $lb = basicValidation($_POST["pib"]);
             //MySqli Insert Query
-            $insert_row = $db->connection->query( " INSERT INTO client (vps_id, name, name_note, lb, is_supplier, state_id, city_id, street_id, home_number, address_note, note, created_at_date, created_at_user_id) "
-                                            . " VALUES ('$vps_id', '$name', '$name_note', '$lb', '$is_supplier', '$state_id', '$city_id', '$street_id', '$home_number', '$address_note', '$note', '$date', '$user_id') ") or die(mysqli_error($connect_db));
+            $insert_row = $db->connection->query( " INSERT INTO client (type_id, name, name_note, lb, is_supplier, state_id, city_id, street_id, home_number, address_note, note, created_at_date, created_at_user_id) "
+                                            . " VALUES ('$type_id', '$name', '$name_note', '$lb', '$is_supplier', '$state_id', '$city_id', '$street_id', '$home_number', '$address_note', '$note', '$date', '$user_id') ") or die(mysqli_error($connect_db));
         }
 
         if($insert_row){
