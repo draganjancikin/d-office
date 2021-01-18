@@ -2,7 +2,7 @@
 $page = "home";
 require __DIR__ . '/../vendor/autoload.php';
 
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/appConfig.php';
+require_once __DIR__ . '/../config/dbConfig.php';
 
 session_start();
 if(isset($_SESSION['username'])):
