@@ -103,3 +103,7 @@ Enhancement:
 ## New in version 5.3.3
 
 - Add Doctrine package to application
+
+## New in version 5.3.4
+
+- Resolved issue #81: 
