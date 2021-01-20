@@ -184,6 +184,8 @@ foreach ($articles_on_pidb as $article_on_pidb):
     
 endforeach;
 
+$income = $pidb->getIncome($pidb_id);
+
 $html = ''.($pidb_data['tip_id'] == 2 ? "" : '
 <style type="text/css">table {	padding: 0px; margin: 0px; }</style>
 
@@ -202,15 +204,28 @@ $html = ''.($pidb_data['tip_id'] == 2 ? "" : '
     <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount*$article->getKurs(), 2, ",", ".").'</td>
     <td></td>
   </tr>
-  <tr style="font-weight:bold;">
+ <tr>
     <td colspan="3"></td>
-    <td colspan="5" style="border-bottom-width: inherit;">UKUPNO ZA UPLATU</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total*$article->getKurs(), 2, ",", ".").'</td>
+    <td colspan="5" style="border-bottom-width: inherit;">UKUPNO</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total*$pidb->getKurs(), 2, ",", ".").'</td>
+    <td></td>
   </tr>
   <tr>
     <td colspan="3"></td>
+    <td colspan="5" style="border-bottom-width: inherit;">Avans</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format(($avans = $pidb->getAvansIncome($pidb_id))*$article->getKurs(), 2, ",", ".").'</td>
+    <td></td>
+  </tr>
+  <tr style="font-weight:bold;">
+    <td colspan="3"></td>
+    <td colspan="5" style="border-bottom-width: inherit;">OSTALO ZA UPLATU</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format(($total-$avans-$income)*$article->getKurs(), 2, ",", ".").'</td>
+  </tr>
+
+  <tr>
+    <td colspan="3"></td>
     <td colspan="5"></td>
-    <td colspan="2" align="right">( &#8364; '.number_format($total, 2, ",", ".").' )</td>
+    <td colspan="2" align="right" style="font-size: 11px;">( &#8364; '.number_format($total-$avans-$income, 4, ",", ".").' )</td>
   </tr>
 </table>
 ').'

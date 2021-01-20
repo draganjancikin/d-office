@@ -1,4 +1,4 @@
-# RolOffice v5.3.2
+# RolOffice v5.3.5
 
 Web Application
 
@@ -106,4 +106,8 @@ Enhancement:
 
 ## New in version 5.3.4
 
-- Resolved issue #81: 
+- Resolved issue #81 
+
+## New in version 5.3.5
+
+- Resolved issue #83

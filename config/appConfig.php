@@ -1,5 +1,5 @@
 <?php
-define("VERSION","5.3.4");
+define("VERSION","5.3.5");
 
 if(empty($page)) {
     $page = "";
