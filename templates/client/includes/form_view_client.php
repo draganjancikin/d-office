@@ -112,35 +112,34 @@
 
     <h5>Kontakti</h5>
     <?php
-    
-    // TODO Dragan
-    $contacts = $contact->getContactsById($client_id);
-        $contacttypes = $contact->getContactTypes();
-        foreach ($contacts as $contact):
-            ?>
-            <form>
+    $client_contacts = $client_data->getContacts();
+    foreach ($client_contacts as $client_contact):
+      $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy( array('id' =>$client_contact->getId()) );
+      $client_contact_type = $client_contact_data->getType();
+      ?>
+      <form>
                 <fieldset disabled>
                     <div class="form-group row">
 
                         <div class="col-sm-3">
                             <select class="form-control">
-                                <option><?php echo $contact['name'] ?></option>
+                                <option><?php echo $client_contact_type->getName() ?></option>
                             </select>
                         </div>
 
                         <div class="col-sm-3">
-                            <input class="form-control" type="text" value="<?php echo $contact['number'] ?>"  placeholder="unesi kontakt" disabled >	
+                            <input class="form-control" type="text" value="<?php echo $client_contact->getBody() ?>"  placeholder="unesi kontakt" disabled >	
                         </div>
 
                         <div class="col-sm-4">
-                            <input class="form-control" type="text" value="<?php echo $contact['note'] ?>" placeholder="unesi belešku" >
+                            <input class="form-control" type="text" value="<?php echo $client_contact->getNote() ?>" placeholder="unesi belešku" >
                         </div>
 
                         <div class="col-sm-2">
                             <button type="submit" class="btn btn-mini btn-secondary disabled" title="Snimi izmenu kontakta!">
                                 <i class="fas fa-save"> </i>
                             </button>
-                            <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&client_id=' .$client_id. '&contact_id=' .$contact['id']. '&delContact'; ?>" class="btn btn-mini btn-secondary disabled" title="Obriši kontakt!">
+                            <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&client_id=' .$client_id. '&contact_id=' .$client_contact->getId(). '&deleteContact'; ?>" class="btn btn-mini btn-secondary disabled" title="Obriši kontakt!">
                                 <i class="fas fa-trash"> </i>
                             </a>
                         </div>
