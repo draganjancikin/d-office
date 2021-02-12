@@ -42,7 +42,7 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-sm font-weight-bold text-info text-uppercase mb-1">Klijenti</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $db->numRows('client') ?></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $db->numRows('v6_clients') ?></div>
                       </div>
                       <div class="col-auto">
                         <i class="fas fa-user fa-2x text-info"></i>
