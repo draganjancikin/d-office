@@ -19,6 +19,7 @@
     "psr-4": {
       "Roloffice\\Controller\\": "src/Controller",
       "Roloffice\\Core\\": "src/Core"
+      "Roloffice\\Entity\\": "src/Entity"
     }
   },
   "require": {
