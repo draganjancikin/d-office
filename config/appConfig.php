@@ -1,4 +1,5 @@
 <?php
+require_once 'dbConfig.php';
 define("VERSION","5.3.5");
 
 if(empty($page)) {

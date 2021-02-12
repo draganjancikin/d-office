@@ -10,12 +10,15 @@
         <tfoot class="thead-light"><tr><th>klijent</th><th>adresa</th></tr></tfoot>
         <tbody>
           <?php
-          $last_clients = $client->getLastClients(10);
+          $last_clients = $entityManager->getRepository('\Roloffice\Entity\Client')->getLastClients(10);
           foreach ($last_clients as $client):
+            $country = $entityManager->find('\Roloffice\Entity\Country', $client->getCountry() );
+            $city = $entityManager->find('\Roloffice\Entity\City', $client->getCity() );
+            $street = $entityManager->find('\Roloffice\Entity\Street', $client->getStreet() );
             ?>
             <tr>
-              <td><a href="?view&client_id=<?php echo $client['id'] ?>"><?php echo $client['name'] ?></a></td>
-              <td><?php echo ( $client['street_name'] == "" ? "" : $client['street_name'] . " " . $client['home_number'] .  ", " ) . $client['city_name']. ', ' .$client['state_name']; ?></td>
+              <td><a href="?view&client_id=<?php echo $client->getId() ?>"><?php echo $client->getName() ?></a></td>
+              <td><?php echo ( $street->getName() == "" ? "" : $street->getName() . " " . $client->getHomeNumber() .  ", " ) . $city->getName(). ', ' .$country->getName() ?></td>
             </tr>
             <?php
           endforeach;
