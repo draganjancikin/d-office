@@ -24,7 +24,7 @@ class ClientRepository extends EntityRepository {
    * 
    * @return 
    */
-  public function getLastClients($limit = 0) {
+  public function getLastClients($limit = 5) {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('c')
         ->from('Roloffice\Entity\Client', 'c')
