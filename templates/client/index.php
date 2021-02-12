@@ -44,7 +44,7 @@
                             include '../../templates/client/includes/list_last.php';
                         else:
                             if(isset($_GET['view'])) include '../../templates/client/includes/formView.php';
-                            if(isset($_GET['new'])) include '../../templates/client/includes/formNew.php';
+                            if(isset($_GET['new'])) include '../../templates/client/includes/form_new_client.php';
                             if(isset($_GET['edit'])) include '../../templates/client/includes/formEdit.php';
                             
                             if(isset($_GET['search'])) include '../../app/includes/search.php';

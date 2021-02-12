@@ -2,6 +2,7 @@
 function basicValidation($str){
   return trim(htmlspecialchars($str));
 }
+require 'create_client.php';
 require 'add.php';
 require 'edit.php';
 require 'del.php';
