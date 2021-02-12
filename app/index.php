@@ -44,8 +44,7 @@
                         <div class="text-sm font-weight-bold text-info text-uppercase mb-1">Klijenti</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php 
-                          // echo $db->numRows('v6_clients')
-                          $entityManager->getRepository('\Roloffice\Entity\Client')->getNumberOfClients(); 
+                          echo $entityManager->getRepository('\Roloffice\Entity\Client')->getNumberOfClients(); 
                           ?>
                         </div>
                       </div>
