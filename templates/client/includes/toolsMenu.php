@@ -24,8 +24,11 @@ require 'del.php';
                 } else {
                     die('<script>location.href = "/clients/" </script>');
                 }
-                $client_data = $client->getClient($client_id);
-
+                $client_data = $entityManager->find('\Roloffice\Entity\Client', $client_id);
+                $client_type = $entityManager->find('\Roloffice\Entity\ClientType', $client_data->getType());
+                $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
+                $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
+                $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
                 // in view case show edit button 
                 if(isset($_GET['view'])):
                     ?>
