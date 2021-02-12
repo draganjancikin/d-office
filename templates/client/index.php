@@ -45,7 +45,7 @@
                         else:
                             if(isset($_GET['view'])) include '../../templates/client/includes/form_view_client.php';
                             if(isset($_GET['new'])) include '../../templates/client/includes/form_new_client.php';
-                            if(isset($_GET['edit'])) include '../../templates/client/includes/formEdit.php';
+                            if(isset($_GET['edit'])) include '../../templates/client/includes/form_edit_client.php';
                             
                             if(isset($_GET['search'])) include '../../app/includes/search.php';
                             if(isset($_GET['advancedSearch'])) include '../../templates/client/includes/advancedSearch.php';

@@ -118,40 +118,40 @@
       $client_contact_type = $client_contact_data->getType();
       ?>
       <form>
-                <fieldset disabled>
-                    <div class="form-group row">
+        <fieldset disabled>
+          <div class="form-group row">
 
-                        <div class="col-sm-3">
-                            <select class="form-control">
-                                <option><?php echo $client_contact_type->getName() ?></option>
-                            </select>
-                        </div>
+            <div class="col-sm-3">
+              <select class="form-control">
+                <option><?php echo $client_contact_type->getName() ?></option>
+              </select>
+            </div>
 
-                        <div class="col-sm-3">
-                            <input class="form-control" type="text" value="<?php echo $client_contact->getBody() ?>"  placeholder="unesi kontakt" disabled >	
-                        </div>
+            <div class="col-sm-3">
+              <input class="form-control" type="text" value="<?php echo $client_contact->getBody() ?>"  placeholder="unesi kontakt" disabled >	
+            </div>
 
-                        <div class="col-sm-4">
-                            <input class="form-control" type="text" value="<?php echo $client_contact->getNote() ?>" placeholder="unesi belešku" >
-                        </div>
+            <div class="col-sm-4">
+              <input class="form-control" type="text" value="<?php echo $client_contact->getNote() ?>" placeholder="unesi belešku" >
+            </div>
 
-                        <div class="col-sm-2">
-                            <button type="submit" class="btn btn-mini btn-secondary disabled" title="Snimi izmenu kontakta!">
-                                <i class="fas fa-save"> </i>
-                            </button>
-                            <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&client_id=' .$client_id. '&contact_id=' .$client_contact->getId(). '&deleteContact'; ?>" class="btn btn-mini btn-secondary disabled" title="Obriši kontakt!">
-                                <i class="fas fa-trash"> </i>
-                            </a>
-                        </div>
+            <div class="col-sm-2">
+              <button type="submit" class="btn btn-mini btn-secondary disabled" title="Snimi izmenu kontakta!">
+                <i class="fas fa-save"> </i>
+              </button>
+              <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&client_id=' .$client_id. '&contact_id=' .$client_contact->getId(). '&deleteContact'; ?>" class="btn btn-mini btn-secondary disabled" title="Obriši kontakt!">
+                <i class="fas fa-trash"> </i>
+              </a>
+            </div>
 
-                    </div>
+          </div>
 
-                </fieldset>
-            </form>
+        </fieldset>
+      </form>
 
-            <?php
-        endforeach;
-        ?>
-    </div>
-    <!-- End of Card body -->
+      <?php
+    endforeach;
+    ?>
+  </div>
+  <!-- End of Card body -->
 </div>
