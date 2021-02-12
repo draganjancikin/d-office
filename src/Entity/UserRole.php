@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="v6_user_roles")
  */
-class Role {
+class UserRole {
 
   /**
    * @ORM\Id
