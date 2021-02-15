@@ -36,4 +36,12 @@ class ClientRepository extends EntityRepository {
     return $result;
   }
 
+  /**
+   * Search method by criteria: name, street, ... 
+   * @return array
+   */
+  public function search($term) {
+
+  }
+
 }
