@@ -6,6 +6,7 @@ require 'create_client.php';
 require 'create_contact.php';
 require 'update_client.php';
 require 'update_contact.php';
+require 'delete_contact.php';
 
 require 'add.php';
 require 'edit.php';

@@ -188,7 +188,7 @@
             <button type="submit" class="btn btn-mini btn-secondary" title="Snimi izmenu kontakta!">
               <i class="fas fa-save"> </i>
             </button>
-            <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete kontakt?');" href="<?php echo '?delContact&client_id=' .$client_id. '&contact_id=' .$client_contact->getId() ?>" class="btn btn-mini btn-danger " title="Obriši kontakt!">
+            <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete kontakt?');" href="<?php echo '?deleteContact&client_id=' .$client_id. '&contact_id=' .$client_contact->getId() ?>" class="btn btn-mini btn-danger " title="Obriši kontakt!">
               <i class="fas fa-trash"> </i>
             </a>
           </div>
