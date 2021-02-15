@@ -3,6 +3,7 @@ function basicValidation($str){
   return trim(htmlspecialchars($str));
 }
 require 'create_client.php';
+require 'create_contact.php';
 require 'update_client.php';
 
 require 'add.php';
