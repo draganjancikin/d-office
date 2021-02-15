@@ -4,7 +4,7 @@
     <h6 class="m-0 font-weight-bold text-primary">Unos novog naselja </h6>
   </div>
   <div class="card-body">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?addSCS'; ?>" method="post">
+    <form action="<?php echo $_SERVER['PHP_SELF'] . '?createCity'; ?>" method="post">
       <input type="hidden" name="action" value="city">
       <div class="form-group row">
         <label for="inputName" class="col-sm-3 col-form-label text-right">Unesi naziv naselja: </label>
