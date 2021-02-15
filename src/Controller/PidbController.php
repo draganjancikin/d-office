@@ -66,10 +66,10 @@ class PidbController extends Database {
      * @return array
      */
     public function getPidb($pidb_id){
-        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, pidb.note, client.name as client_name "
+        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, pidb.note, v6_clients.name as client_name "
                             . "FROM pidb "
-                            . "JOIN client "
-                            . "ON (pidb.client_id = client.id) "
+                            . "JOIN v6_clients "
+                            . "ON (pidb.client_id = v6_clients.id) "
                             . "WHERE pidb.id = $pidb_id ");
         if(!$result){
             die('<script>location.href = "/pidb/" </script>');
@@ -117,9 +117,9 @@ class PidbController extends Database {
 
         // izlistavanje iz baze predračuna, računa, otpremnica i povratnica klijenata sa nazivom koji je sličan $name
         for($i=1; $i<=4; $i++):
-            $result = $this->connection->query("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, client.name "
-                                             . "FROM pidb JOIN (client)"
-                                             . "ON (pidb.client_id = client.id)"
+            $result = $this->connection->query("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, v6_clients.name "
+                                             . "FROM pidb JOIN (v6_clients)"
+                                             . "ON (pidb.client_id = v6_clients.id)"
                                              . "WHERE pidb.tip_id = $i AND pidb.archived = 0 "
                                              . "ORDER BY pidb.id DESC LIMIT $limit ") or die(mysqli_error($this->connection));
             while($row = mysqli_fetch_array($result)):
