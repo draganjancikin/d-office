@@ -33,7 +33,7 @@ require 'del.php';
                 $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
                 $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
                 $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
-                // in view case show edit button 
+                // In view case show edit button. 
                 if(isset($_GET['view'])):
                     ?>
                     <a href="?edit&client_id=<?php echo $client_id ?>">
@@ -44,7 +44,7 @@ require 'del.php';
                 <?php
                 endif;
 
-                // in edit case show view button
+                // In edit case show view button.
                 if(isset($_GET['edit'])):
                     ?>
                     <a href="?view&client_id=<?php echo $client_id ?>">
@@ -56,28 +56,28 @@ require 'del.php';
                 endif;
                 ?>
 
-                <!-- Button trigger for modal addContact -->
+                <!-- Button trigger for modal addContact. -->
                 <a href="#">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addContact" title="Dodaj novi kontakt!">
                         <i class="fas fa-plus"> </i> Kontakt
                     </button>
                 </a>
 
-                <!-- Open new project with client data -->
+                <!-- Open new project with client data. -->
                 <a href="/projects/index.php?new&client_id=<?php echo $client_id ?>">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog projekta!">
                         <i class="fas fa-arrow-right"> </i> Projekat
                     </button>
                 </a>
 
-                <!-- Open new proforma-invoice with client data -->
+                <!-- Open new proforma-invoice with client data. -->
                 <a href="/pidb/index.php?new&client_id=<?php echo $client_id ?>">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog predračuna!">
                         <i class="fas fa-arrow-right"> </i> Predračun
                     </button>
                 </a>
 
-                <!-- Open new cutting with client data -->
+                <!-- Open new cutting with client data. -->
                 <a href="/cutting/index.php?new&client_id=<?php echo $client_id ?>">
                     <button type="submit" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove krojne liste!">
                         <i class="fas fa-arrow-right"> </i> <i class="fas fa-cut"> </i> 
@@ -88,7 +88,7 @@ require 'del.php';
             ?>
 
         </div>
-        <!-- End of Card Body -->
+        <!-- End of Card Body. -->
     </div>
-    <!-- End of Card -->
+    <!-- End of Card. -->
 </div>
