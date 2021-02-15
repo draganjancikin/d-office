@@ -70,7 +70,7 @@
           <select id="selectCountry" class="form-control" name="country_id">
             <option value="<?php echo $client_country->getId() ?>"><?php echo $client_country->getName() ?></option>
             <?php
-            $states = $entityManager->getRepository('\Roloffice\Entity\Country')->findAll();
+            $states = $entityManager->getRepository('\Roloffice\Entity\Country')->findBy(array(), array('name' => 'ASC'));
             foreach ($states as $state) :
               ?>
               <option value="<?php echo $state->getId() ?>">
@@ -89,7 +89,7 @@
           <select id="selectCity" class="form-control" name="city_id">
             <option value="<?php echo $client_city->getId() ?>"><?php echo $client_city->getName() ?></option>
             <?php
-            $citys = $entityManager->getRepository('\Roloffice\Entity\City')->findAll();
+            $citys = $entityManager->getRepository('\Roloffice\Entity\City')->findBy(array(), array('name' => 'ASC'));
             foreach ($citys as $city) :
               ?>
               <option value="<?php echo $city->getId() ?>">
@@ -108,8 +108,8 @@
           <select id="selectStreet" class="form-control" name="street_id">>
             <option value="<?php echo $client_street->getId() ?>"><?php echo $client_street->getName() ?></option>
             <?php
-            $citys = $entityManager->getRepository('\Roloffice\Entity\Street')->findAll();
-            foreach ($citys as $street) :
+            $streets = $entityManager->getRepository('\Roloffice\Entity\Street')->findBy(array(), array('name' => 'ASC'));
+            foreach ($streets as $street) :
               ?>
               <option value="<?php echo $street->getId() ?>">
                 <?php echo $street->getName() ?>

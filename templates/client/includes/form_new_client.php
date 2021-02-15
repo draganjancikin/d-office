@@ -57,7 +57,7 @@
           <select id="selectCountry" class="form-control" name="country_id">
             <option value="1">Srbija</option>
             <?php
-            $states = $entityManager->getRepository('\Roloffice\Entity\Country')->findAll();
+            $states = $entityManager->getRepository('\Roloffice\Entity\Country')->findBy(array(), array('name' => 'ASC'));
             foreach ($states as $state) :
               ?>
               <option value="<?php echo $state->getId() ?>">
