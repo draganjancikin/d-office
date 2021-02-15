@@ -16,13 +16,13 @@ require 'delete_contact.php';
     <div class="card mb-2">
         <div class="card-body p-1">
 
-            <a href="/clients/index.php?new">
+            <a href="/clients/index.php?newClient">
                 <button type="button" class="btn btn-sm btn-outline-secondary" title="Upis novog klijenta!">
                 <i class="fas fa-plus"> </i><i class="fas fa-user"> </i>
                 </button>
             </a>
             <?php
-            if(isset($_GET['view']) || isset($_GET['edit'])):
+            if(isset($_GET['viewClient']) || isset($_GET['editClient'])):
                 if(isset($_GET['client_id'])) {
                     $client_id = $client->checkGetClient($_GET['client_id']);
                 } else {
@@ -34,9 +34,9 @@ require 'delete_contact.php';
                 $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
                 $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
                 // In view case show edit button. 
-                if(isset($_GET['view'])):
+                if(isset($_GET['viewClient'])):
                     ?>
-                    <a href="?edit&client_id=<?php echo $client_id ?>">
+                    <a href="?editClient&client_id=<?php echo $client_id ?>">
                         <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o klijentu!">
                         <i class="fas fa-edit"> </i> Izmena
                         </button>
@@ -45,9 +45,9 @@ require 'delete_contact.php';
                 endif;
 
                 // In edit case show view button.
-                if(isset($_GET['edit'])):
+                if(isset($_GET['editClient'])):
                     ?>
-                    <a href="?view&client_id=<?php echo $client_id ?>">
+                    <a href="?viewClient&client_id=<?php echo $client_id ?>">
                         <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o klijentu">
                         <i class="fas fa-eye"> </i> Pregled
                         </button>

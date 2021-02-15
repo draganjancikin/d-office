@@ -17,7 +17,7 @@
             $street = $entityManager->find('\Roloffice\Entity\Street', $client->getStreet() );
             ?>
             <tr>
-              <td><a href="?view&client_id=<?php echo $client->getId() ?>"><?php echo $client->getName() ?></a></td>
+              <td><a href="?viewClient&client_id=<?php echo $client->getId() ?>"><?php echo $client->getName() ?></a></td>
               <td><?php echo ( $street->getName() == "" ? "" : $street->getName() . " " . $client->getHomeNumber() .  ", " ) . $city->getName(). ', ' .$country->getName() ?></td>
             </tr>
             <?php
