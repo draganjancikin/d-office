@@ -1,7 +1,9 @@
 <?php
 $page = 'projects';
 
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/appConfig.php';
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.php';
 
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
@@ -53,13 +55,13 @@ $pdf->SetFont('dejavusans', '', 10);
 $pdf->AddPage();
 
 // generisanje potrebnih objekata
-$client = new \Roloffice\Controller\ClientController();
 $project = new \Roloffice\Controller\ProjectController();
 
 $project_id = $_GET['project_id'];
-
 $project_data = $project->getProject($project_id);
-$client_data = $client->getClient($project_data['client_id']);
+
+$client_data = $entityManager->find('Roloffice\Entity\Client', $project_data['client_id']);
+$client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
 
 $html = '
   <img src="../images/logo.png" >
@@ -69,7 +71,7 @@ $html = '
   <hr>
   <div>Datum: ______________ Adresa montaže: ___________________________________</div>
   
-  <div>Naručilac: <u>   '.$client_data['name'].', '.$client_data['city_name'].'   </u></div>
+  <div>Naručilac: <u>   '.$client_data->getName().', '.$client_city->getName().'   </u></div>
   
   <div>Ugovor broj: _________________________ Projekat broj: <u>   '.str_pad($project_data['pr_id'], 4, "0", STR_PAD_LEFT).'/'.date('Y', strtotime($project_data['date'])).'   </u></div> 
   <hr>

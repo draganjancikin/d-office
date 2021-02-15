@@ -95,9 +95,9 @@ class PidbController extends Database {
      * @return array
      */
     public function getClientByPidbId($pidb_id) {
-        $result = $this->get("SELECT client.id, client.name "
-                            . "FROM client JOIN (pidb) "
-                            . "ON (client.id = pidb.client_id) " 
+        $result = $this->get("SELECT v6_clients.id, v6_clients.name "
+                            . "FROM v6_clients JOIN (pidb) "
+                            . "ON (v6_clients.id = pidb.client_id) " 
                             . "WHERE pidb.id = '$pidb_id' ");
         return $result[0];
     }
@@ -643,10 +643,10 @@ class PidbController extends Database {
      * @return array
      */
     public function getPidbsByProjectId($project_id) {
-        $result = $this->get("SELECT pidb.id, pidb.y_id, pidb.tip_id, pidb.date, client.name as client_name, pidb.title "
+        $result = $this->get("SELECT pidb.id, pidb.y_id, pidb.tip_id, pidb.date, v6_clients.name as client_name, pidb.title "
                             . "FROM pidb "
-                            . "JOIN client "
-                            . "ON (pidb.client_id = client.id)"
+                            . "JOIN v6_clients "
+                            . "ON (pidb.client_id = v6_clients.id)"
                             . "WHERE project_id = $project_id ");
         return $result;
     }
@@ -655,10 +655,10 @@ class PidbController extends Database {
      * 
      */
     public function getAllPidbs() {
-        $result = $this->get("SELECT pidb.id, pidb.y_id, pidb.tip_id, pidb.title, pidb.date, client.name as client_name "
+        $result = $this->get("SELECT pidb.id, pidb.y_id, pidb.tip_id, pidb.title, pidb.date, v6_clients.name as client_name "
                             ."FROM pidb "
-                            ."JOIN client "
-                            ."ON (pidb.client_id = client.id) "
+                            ."JOIN v6_clients "
+                            ."ON (pidb.client_id = v6_clients.id) "
                             ."ORDER BY date ASC");
         $i = 0;
         foreach($result as $row){

@@ -2,7 +2,7 @@
 if($project_data == 'noProject'):
   die('<script>location.href = "/project/" </script>');
 else:
-  $client_data = $client->getClient($project_data['client_id']);
+  $client_data = $entityManager->find('\Roloffice\Entity\Client', $project_data['client_id']);
   ?>
   <div class="card mb-4">
     <div class="card-header p-2">
@@ -25,12 +25,16 @@ else:
           <label for="selectClient" class="col-sm-3 col-lg-2 col-form-label text-right">Klijent: </label>
           <div class="col-sm-6">
             <select id="selectClient" name="client_id" class="form-control" required >
-              <option value="<?php echo $client_data['id']; ?>"><?php echo $client_data['name']; ?></option>
+              <option value="<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></option>
               <?php
-              $clients = $client->getClients();
-              foreach ($clients as $client) {
-                echo '<option value="' .$client['id']. '">' .$client['name']. '</option>';
-              }
+              $clients_list = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => "ASC"));
+              foreach( $clients_list as $client_item):
+                ?>
+                <option value="<?php echo $client_item->getId() ?>">
+                  <?php echo $client_item->getName() ?>
+                </option>
+                <?php
+              endforeach;
               ?>
             </select>
           </div>
