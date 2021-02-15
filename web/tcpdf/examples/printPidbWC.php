@@ -1,7 +1,9 @@
 <?php
 $page = "pidb";
 
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/appConfig.php';
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.php';
 
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
@@ -46,11 +48,7 @@ $pdf->SetFont('dejavusans', '', 10);
 // add a page
 $pdf->AddPage();
 
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
-
 // generisanje potrebnih objekata
-$client = new \Roloffice\Controller\ClientController();
-$contact = new \Roloffice\Controller\ContactController();
 $pidb = new \Roloffice\Controller\PidbController();
 $article = new \Roloffice\Controller\ArticleController();
 
@@ -60,12 +58,6 @@ if( $pidb_data['tip_id'] == 1) $pidb_name = "Predračun";
 if( $pidb_data['tip_id'] == 2) $pidb_name = "Otpremnica";
 if( $pidb_data['tip_id'] == 3) $pidb_name = "Račun";
 if( $pidb_data['tip_id'] == 4) $pidb_name = "Povratnica";
-
-$client_data = $client->getClient($pidb_data['client_id']);
-$contacts = $contact->getContactsById($pidb_data['client_id']);
-
-$contact_item[0] = "_";
-$contact_item[1] = "_";
 
 $html = '
 <style type="text/css">table { padding-top: 5px; padding-bottom: 5px; }</style>

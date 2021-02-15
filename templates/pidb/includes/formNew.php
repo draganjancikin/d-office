@@ -1,4 +1,4 @@
-<!-- New Document Data -->
+<!-- New Document Data. -->
 <div class="card mb-4">
   <div class="card-header p-2">
     <h6 class="m-0 text-dark">Otvaranje novog dokumenta:</h6>
@@ -33,15 +33,20 @@
           <?php
           if(isset($_GET['client_id'])){
             $client_id = htmlspecialchars($_GET["client_id"]);
-            $client_data = $client->getClient($client_id);
-            echo '<option value="'.$client_data['id'].'">'.$client_data['name'].'</option>';
+            $client_data = $entityManager->find('\Roloffice\Entity\Client', $client_id);
+            echo '<option value="'.$client_data->getId().'">'.$client_data->getName().'</option>';
           }else{
             echo '<option value="">naziv klijenta</option>';
           }
-          $clients = $client->getClients();
-          foreach ($clients as $client) {
-            echo '<option value="' .$client['id']. '">' .$client['name']. '</option>';
-          }
+          $clients_list = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => "ASC"));
+                
+          foreach( $clients_list as $client_item):
+            ?>
+            <option value="<?php echo $client_item->getId() ?>">
+              <?php echo $client_item->getName() ?>
+            </option>
+            <?php
+          endforeach;
           ?>
           </select>
         </div>

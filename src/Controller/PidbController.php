@@ -41,11 +41,11 @@ class PidbController extends Database {
         $name = $arr[1];
         $archived = $arr[2];
 
-        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, client.name as client_name "
-                            . "FROM pidb JOIN (client)"
-                            . "ON (pidb.client_id = client.id)"
-                            . "WHERE ( (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%' OR pidb.y_id LIKE '%$name%') AND pidb.tip_id = $tip AND pidb.archived = $archived )"
-                            . "ORDER BY client.name, pidb.date ");
+        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, v6_clients.name as client_name "
+                            . "FROM pidb JOIN (v6_clients)"
+                            . "ON (pidb.client_id = v6_clients.id)"
+                            . "WHERE ( (v6_clients.name LIKE '%$name%' OR v6_clients.name_note LIKE '%$name%' OR pidb.y_id LIKE '%$name%') AND pidb.tip_id = $tip AND pidb.archived = $archived )"
+                            . "ORDER BY v6_clients.name, pidb.date ");
         return $result;
     }
 
