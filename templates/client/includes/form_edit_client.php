@@ -163,7 +163,7 @@
 
         <div class="form-group row">
           <div class="col-sm-3">
-            <select class="form-control" name="contacttype_id">>
+            <select class="form-control" name="contact_type_id">>
               <option value="<?php echo $client_contact_type->getId() ?>"><?php echo $client_contact_type->getName() ?></option>
               <?php
               $contact_types = $entityManager->getRepository('\Roloffice\Entity\ContactType')->findAll();
