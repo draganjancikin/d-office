@@ -2,7 +2,7 @@
 if(isset($_GET['pidb_id'])) :
     $pidb_id = $_GET['pidb_id'];
     $pidb_data = $pidb->getPidb($pidb_id);
-    $client = $pidb->getClientByPidbId($pidb_id);
+    $client_data = $entityManager->find('\Roloffice\Entity\Client',$pidb_data['client_id']);
     $transactions = $pidb->getTransactionsByPidbId($pidb_id);
     $total = $pidb->getTotalAmountsByPidbId($pidb_id)['total'];
     $total_income = $pidb->getAvansIncome($pidb_id) + $pidb->getIncome($pidb_id);
@@ -19,7 +19,7 @@ endif;
                     <a href="?view&pidb_id=<?php echo $pidb_id ?>">
                         <?php echo $pidb_data['type_name'] ?>
                         <?php echo str_pad($pidb_data['y_id'], 4, "0", STR_PAD_LEFT). ' - ' .date('m', strtotime($pidb_data['date'])) ?>
-                        <?php echo $client['name'] ?>
+                        <?php echo $client_data->getName() ?>
                     </a>
                 </h6>
             </div>

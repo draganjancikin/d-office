@@ -1,7 +1,8 @@
 <?php
 if(isset($_GET['pidb_id'])) :
     $pidb_id = $_GET['pidb_id'];
-    $client = $pidb->getClientByPidbId($pidb_id);
+    $pidb_data = $pidb->getPidb($pidb_id);
+    $client_data = $entityManager->find('\Roloffice\Entity\Client', $pidb_data['client_id']);
     $transactions = $pidb->getTransactionsByClientId($client['id']);
 else :
     die('<script>location.href = "/pidb/index.php?transactions" </script>');
