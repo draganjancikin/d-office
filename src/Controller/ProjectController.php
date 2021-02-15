@@ -91,9 +91,9 @@ class ProjectController extends Database {
             $id = $row['id'];
 
             $created_at_user_id = $row['created_at_user_id'];
-            $result_user_created = $this->get("SELECT admin.username "
-                                                  . "FROM admin "
-                                                  . "WHERE admin.id = $created_at_user_id ");
+            $result_user_created = $this->get("SELECT v6_users.username "
+                                                  . "FROM v6_users "
+                                                  . "WHERE v6_users.id = $created_at_user_id ");
             $row_user_created = $result_user_created[0];
             $project = array(
                 'id' => $id,
@@ -381,7 +381,7 @@ class ProjectController extends Database {
 
         while($row = $result->fetch_assoc()):
             $user_id = $row['created_at_user_id'];
-            $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
+            $result_user = $this->connection->query("SELECT * FROM v6_users WHERE id = $user_id ") or die(mysqli_error($this->connection));
             $row_user = $result_user->fetch_assoc();
             $note = array(
                 'id' => $row['id'],
@@ -411,7 +411,7 @@ class ProjectController extends Database {
             $id = $row['id'];
             $date = $row['date'];
             $user_id = $row['created_at_user_id'];
-            $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
+            $result_user = $this->connection->query("SELECT * FROM v6_users WHERE id = $user_id ") or die(mysqli_error($this->connection));
             $row_user = $result_user->fetch_assoc();
             $user_name = $row_user['username'];
             $status_id = $row['status_id'];
@@ -546,7 +546,7 @@ class ProjectController extends Database {
 
                 $date = $row['date'];
                 $user_id = $row['created_at_user_id'];
-                $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
+                $result_user = $this->connection->query("SELECT * FROM v6_users WHERE id = $user_id ") or die(mysqli_error($this->connection));
                 $row_user = $result_user->fetch_assoc();
                 $user_name = $row_user['username'];
                 $employee_id = $row['employee_id'];
@@ -601,7 +601,7 @@ class ProjectController extends Database {
 
         while($row = $result->fetch_assoc()):
             $user_id = $row['created_at_user_id'];
-            $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
+            $result_user = $this->connection->query("SELECT * FROM v6_users WHERE id = $user_id ") or die(mysqli_error($this->connection));
             $row_user = mysqli_fetch_array($result_user);
             $task_note = array(
                 'id' => $row['id'],

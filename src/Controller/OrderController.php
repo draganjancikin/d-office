@@ -294,7 +294,7 @@ class OrderController extends Database {
      */
     public function search($name) {
         $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, v6_clients.name as supplier_name, orderm.title, orderm.status, orderm.is_archived "
-                            . "FROM orderm JOIN (client)"
+                            . "FROM orderm JOIN (v6_clients)"
                             . "ON (orderm.supplier_id = v6_clients.id)"
                             . "WHERE (v6_clients.name LIKE '%$name%' ) "
                             . "ORDER BY orderm.id DESC ");
