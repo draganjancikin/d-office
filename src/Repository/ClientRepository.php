@@ -37,11 +37,28 @@ class ClientRepository extends EntityRepository {
   }
 
   /**
-   * Search method by criteria: name, street, ... 
+   * Search method by criteria: name and name note.
+   *  
    * @return array
    */
   public function search($term) {
+    // Create a QueryBilder instance
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('cl')
+      ->from('Roloffice\Entity\Client', 'cl')
+      ->join('cl.street', 's', 'WITH', 'cl.street = s.id')
+      ->join('cl.city', 'c', 'WITH', 'cl.city = c.id')
+      ->where(
+        $qb->expr()->orX(
+          $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
+          $qb->expr()->like('cl.name_note', $qb->expr()->literal("%$term%"))
+        )
+      )
+      ->orderBy('cl.name', 'ASC');
 
+    $query = $qb->getQuery();
+    $clients = $query->getResult();
+    return $clients;
   }
 
 }
