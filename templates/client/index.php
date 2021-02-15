@@ -35,7 +35,7 @@
                     <div class="row">
             
                         <!-- Tools Meni -->
-                        <?php include '../../templates/client/includes/toolsMenu.php' ?>
+                        <?php include '../../templates/client/includes/tools_menu.php' ?>
                         <!-- End of Tools Meni -->
           
                         <div class="col-lg-12 col-xl-10 px-2">
