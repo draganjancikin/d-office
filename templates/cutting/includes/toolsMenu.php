@@ -21,7 +21,10 @@ require 'export.php';
         }
 
         $cutting_data = $cutting->getCutting($cutting_id);
-        $client_data = $client->getClient($cutting_data['client_id']);
+        $client_data = $entityManager->find('\Roloffice\Entity\Client', $cutting_data['client_id']);
+        $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
+        $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
+        $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
         
         // in view case show edit button
         if(isset($_GET['view'])):

@@ -39,7 +39,6 @@
             echo '<option value="">naziv klijenta</option>';
           }
           $clients_list = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => "ASC"));
-                
           foreach( $clients_list as $client_item):
             ?>
             <option value="<?php echo $client_item->getId() ?>">

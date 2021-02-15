@@ -11,11 +11,11 @@
     <dl class="row mb-0">
 
       <dt class="col-sm-3 col-md-2">klijent:</dt>
-      <dd class="col-sm-9 col-md-10"><?php echo $client_data['name']; ?></dd>
+      <dd class="col-sm-9 col-md-10"><?php echo $client_data->getName() ?></dd>
 
       <dt class="col-sm-3 col-md-2">adresa:</dt>
       <dd class="col-sm-9 col-md-10">
-        <?php echo $client_data['street_name']. ' ' .$client_data['home_number']. ', ' .$client_data['city_name']. ', ' .$client_data['state_name']; ?>
+        <?php echo $client_street->getName(). ' ' .$client_data->getHomeNumber(). ', ' .$client_city->getName(). ', ' .$client_country->getName() ?>
       </dd>
     
     </dl>
