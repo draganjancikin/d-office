@@ -1,4 +1,4 @@
-# RolOffice v5.3.5
+# RolOffice v5.3.5 - 6.0.0-alpha-1
 
 Web Application
 
@@ -111,3 +111,7 @@ Enhancement:
 ## New in version 5.3.5
 
 - Resolved issue #83
+
+## New in version 5.3.5 - 6.0.0-alpha-1
+
+- Added Doctrine ORM 2.8.1 layer to application. and implemented to Client part of App
