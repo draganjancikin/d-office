@@ -23,9 +23,9 @@
         <a class="collapse-item" href="/clients/index.php?new"><i class="fas fa-plus"></i> Novi klijent</a>
         <a class="collapse-item" href="/clients/index.php?advancedSearch"><i class="fas fa-search"></i> Detajna pretraga</a>
         <hr class="sidebar-divider">
-        <a class="collapse-item" href="/clients/index.php?addstate"><i class="fas fa-plus"></i> Dodaj državu</a>
-        <a class="collapse-item" href="/clients/index.php?addcity"><i class="fas fa-plus"></i> Dodaj naselje</a>
-        <a class="collapse-item" href="/clients/index.php?addstreet"><i class="fas fa-plus"></i> Dodaj ulicu</a>
+        <a class="collapse-item" href="/clients/index.php?newCountry"><i class="fas fa-plus"></i> Dodaj državu</a>
+        <a class="collapse-item" href="/clients/index.php?newCity"><i class="fas fa-plus"></i> Dodaj naselje</a>
+        <a class="collapse-item" href="/clients/index.php?newStreet"><i class="fas fa-plus"></i> Dodaj ulicu</a>
       </div>
     </div>
   </li>

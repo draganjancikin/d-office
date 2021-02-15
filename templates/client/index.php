@@ -50,12 +50,11 @@
                             if(isset($_GET['search'])) include '../../app/includes/search.php';
                             if(isset($_GET['advancedSearch'])) include '../../templates/client/includes/advancedSearch.php';
 
-                            if(isset($_GET['addstate'])) include '../../templates/client/includes/formAddState.php';
-                            if(isset($_GET['addcity'])) include '../../templates/client/includes/formAddCity.php';
-                            if(isset($_GET['addstreet'])) include '../../templates/client/includes/formAddStreet.php';
+                            if(isset($_GET['newCountry'])) include '../../templates/client/includes/form_new_country.php';
+                            if(isset($_GET['newCity'])) include '../../templates/client/includes/form_new_city.php';
+                            if(isset($_GET['newStreet'])) include '../../templates/client/includes/form_new_street.php';
 
                             if(isset($_GET['alert'])) include '../../app/includes/alerts.php';
-                            
                         endif;
                         ?>
                         </div>
