@@ -14,9 +14,9 @@ $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/../src"),
 // database configuration parameters
 $connectionParams = array(
   'dbname' => 'roloffice-2020_dev',
-  'user' => 'rolostil',
-  'password' => 'rolostil237',
-  'host' => 'localhost',
+  'user' => DB_USERNAME,
+  'password' => DB_PASSWORD,
+  'host' => DB_SERVER,
   'driver' => 'mysqli',
 );
 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams);

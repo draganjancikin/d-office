@@ -25,11 +25,11 @@ class ProjectController extends Database {
     // metoda koja daje naziv naselja klijenta $client_id
     public function getCityName($client_id){
 
-        $result = $this->connection->query("SELECT client.city_id, city.name "
-                                            . "FROM client "
-                                            . "JOIN (city)"
-                                            . "ON (client.city_id = city.id )"
-                                            . "WHERE client.id = $client_id ") or die(mysqli_error($this->connection));
+        $result = $this->connection->query("SELECT v6_clients.city_id, v6_cities.name "
+                                            . "FROM v6_clients "
+                                            . "JOIN (v6_cities)"
+                                            . "ON (v6_clients.city_id = v6_cities.id )"
+                                            . "WHERE v6_clients.id = $client_id ") or die(mysqli_error($this->connection));
         $row = $result->fetch_assoc();
 
         return $row['name'];
@@ -81,19 +81,19 @@ class ProjectController extends Database {
     // metoda koja daje podatke o projektu
     public function getProject($project_id) {
 
-        $result = $this->get("SELECT project.id, project.pr_id, project.date, project.client_id, project.title, project.priority_id, project.status, project.note, project.created_at_user_id, client.name as client_name "
+        $result = $this->get("SELECT project.id, project.pr_id, project.date, project.client_id, project.title, project.priority_id, project.status, project.note, project.created_at_user_id, v6_clients.name as client_name "
                             . "FROM project "
-                            . "JOIN (client) "
-                            . "ON (project.client_id = client.id ) "
+                            . "JOIN (v6_clients) "
+                            . "ON (project.client_id = v6_clients.id ) "
                             . "WHERE project.id = $project_id ");
         if( !empty($result) ){
             $row = $result[0];
             $id = $row['id'];
 
             $created_at_user_id = $row['created_at_user_id'];
-            $result_user_created = $this->get("SELECT admin.username "
-                                                  . "FROM admin "
-                                                  . "WHERE admin.id = $created_at_user_id ");
+            $result_user_created = $this->get("SELECT v6_users.username "
+                                                  . "FROM v6_users "
+                                                  . "WHERE v6_users.id = $created_at_user_id ");
             $row_user_created = $result_user_created[0];
             $project = array(
                 'id' => $id,
@@ -128,10 +128,10 @@ class ProjectController extends Database {
         $projects = array();
 
         // sada treba isčitati sve klijente iz tabele client
-        $result = $this->connection->query("SELECT project.id, project.pr_id, project.client_id, project.title, client.name "
+        $result = $this->connection->query("SELECT project.id, project.pr_id, project.client_id, project.title, v6_clients.name "
                                     . "FROM project "
-                                    . "JOIN (client) "
-                                    . "ON (project.client_id = client.id) "
+                                    . "JOIN (v6_clients) "
+                                    . "ON (project.client_id = v6_clients.id) "
                                     . "ORDER BY id" ) or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()){
             $project = array(
@@ -168,18 +168,19 @@ class ProjectController extends Database {
 
         $project = array();
         $projects = array();
-
+        
         // listamo sve projekte koji nisu arhivirani, tj, status <> '9'
-        $result = $this->connection->query("SELECT project.id, project.pr_id, project.date, project.title, project.status, project.client_id, client.name "
-                                    . "FROM project "
-                                    . "JOIN client "
-                                    . "ON project.client_id=client.id "
-                                    . "WHERE status <> '9' AND status = $status ") or die(mysqli_error($this->connection));
+        $result = $this->connection->query("SELECT project.id, project.pr_id, project.date, project.title, project.status, project.client_id, v6_clients.name "
+                                        . "FROM project "
+                                        . "JOIN v6_clients "
+                                        . "ON project.client_id = v6_clients.id "
+                                        . "WHERE status <> '9' AND status = $status "
+                                        ." ORDER BY project.id") or die(mysqli_error($this->connection));
         while($row_project = $result->fetch_assoc()):
             $project_date = date('Y-m-d',strtotime($row_project['date']));
             $style = $this->style($project_date);
             $client_id = $row_project['client_id'];
-
+            
             // pozivanje funkcije koja vraća naziv naselja za klijenta $client_id
             $client_city_name = self::getCityName($client_id);
 
@@ -210,12 +211,12 @@ class ProjectController extends Database {
         $citys = array();
 
         // sada treba isčitati sva naselja iz tabele city
-        $result = $this->connection->query("SELECT DISTINCT city.id, city.name as city_name "
-                                    . "FROM city "
-                                    . "JOIN (client, project) "
-                                    . "ON (client.city_id=city.id AND project.client_id=client.id) "
+        $result = $this->connection->query("SELECT DISTINCT v6_cities.id, v6_cities.name as city_name "
+                                    . "FROM v6_cities "
+                                    . "JOIN (v6_clients, project) "
+                                    . "ON (v6_clients.city_id = v6_cities.id AND project.client_id = v6_clients.id) "
                                     . "WHERE project.status='1'"
-                                    . "ORDER BY city.name") or die(mysqli_error($this->connection));
+                                    . "ORDER BY v6_cities.name") or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()){
             $city = array(
                 'id' => $row['id'],
@@ -234,10 +235,10 @@ class ProjectController extends Database {
         $projects = array();
 
         // listamo sve projekte koji nisu arhivirani, tj, status <> '9' i pripadaju mestu $city_id
-        $result = $this->connection->query("SELECT project.id, project.pr_id, project.title, project.status, project.client_id, client.name "
+        $result = $this->connection->query("SELECT project.id, project.pr_id, project.title, project.status, project.client_id, v6_clients.name "
                                     . "FROM project "
-                                    . "JOIN client "
-                                    . "ON project.client_id=client.id "
+                                    . "JOIN v6_clients "
+                                    . "ON project.client_id = v6_clients.id "
                                     . "WHERE status <> '9' AND status = $status AND city_id = $city_id ") or die(mysqli_error($this->connection));
         while($row_project = $result->fetch_assoc()):
             $client_id = $row_project['client_id'];
@@ -267,7 +268,7 @@ class ProjectController extends Database {
         // metoda koja vraća projekat/kte u zavisnosti od parametara u pretrazi
         if(!$client==""){
             // postoji upis u polje ime klijenta
-            $where_client = " AND (client.name LIKE '%$client%' OR client.name_note LIKE '%$client%' )";
+            $where_client = " AND (v6_clients.name LIKE '%$client%' OR v6_clients.name_note LIKE '%$client%' )";
 
             // proveravamo da li je upisano nešto u polje naslov
             if(!$project_title==""){
@@ -311,10 +312,10 @@ class ProjectController extends Database {
 
         // =======================================================================
         // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
-        $result =  $this->connection->query("SELECT project.id, project.pr_id, client.name, city.name as city_name, project.title, project.status, project.client_id "
-                                    . "FROM client "
+        $result =  $this->connection->query("SELECT project.id, project.pr_id, v6_clients.name, city.name as city_name, project.title, project.status, project.client_id "
+                                    . "FROM v6_clients "
                                     . "JOIN (street, city, project)"
-                                    . "ON (client.city_id = city.id AND client.street_id = street.id AND project.client_id = client.id )"
+                                    . "ON (v6_clients.city_id = city.id AND v6_clients.street_id = street.id AND project.client_id = v6_clients.id )"
                                     . $where
                                     . "ORDER BY project.pr_id ") or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()):
@@ -340,12 +341,12 @@ class ProjectController extends Database {
         $projects = array();
 
         // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
-        $result = $this->connection->query("SELECT project.id, project.pr_id, project.date, project.client_id, client.name, project.status, project.title, project.note "
+        $result = $this->connection->query("SELECT project.id, project.pr_id, project.date, project.client_id, v6_clients.name, project.status, project.title, project.note "
                                     ."FROM project "
-                                    ."JOIN client "
-                                    ."ON (project.client_id = client.id) "
-                                    ."WHERE (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%'OR project.title LIKE '%$name%') "
-                                    ."ORDER BY client.name ") or die(mysqli_error($this->connection));
+                                    ."JOIN v6_clients "
+                                    ."ON (project.client_id = v6_clients.id) "
+                                    ."WHERE (v6_clients.name LIKE '%$name%' OR v6_clients.name_note LIKE '%$name%'OR project.title LIKE '%$name%') "
+                                    ."ORDER BY v6_clients.name ") or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()):
             $client_id = $row['client_id'];
             // pozivanje funkcije koja vraća naziv naselja za klijenta $client_id
@@ -380,7 +381,7 @@ class ProjectController extends Database {
 
         while($row = $result->fetch_assoc()):
             $user_id = $row['created_at_user_id'];
-            $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
+            $result_user = $this->connection->query("SELECT * FROM v6_users WHERE id = $user_id ") or die(mysqli_error($this->connection));
             $row_user = $result_user->fetch_assoc();
             $note = array(
                 'id' => $row['id'],
@@ -410,7 +411,7 @@ class ProjectController extends Database {
             $id = $row['id'];
             $date = $row['date'];
             $user_id = $row['created_at_user_id'];
-            $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
+            $result_user = $this->connection->query("SELECT * FROM v6_users WHERE id = $user_id ") or die(mysqli_error($this->connection));
             $row_user = $result_user->fetch_assoc();
             $user_name = $row_user['username'];
             $status_id = $row['status_id'];
@@ -498,7 +499,7 @@ class ProjectController extends Database {
         $result = $this->connection->query("SELECT * "
                                          . "FROM project_task "
                                          // . "JOIN (client) "
-                                         // . "ON (project.client_id = client.id ) "
+                                         // . "ON (project.client_id = v6_clients.id ) "
                                          . "WHERE id = $task_id ") or die(mysqli_error($this->connection));
         $row = $result->fetch_assoc();
             $id = $row['id'];
@@ -545,7 +546,7 @@ class ProjectController extends Database {
 
                 $date = $row['date'];
                 $user_id = $row['created_at_user_id'];
-                $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
+                $result_user = $this->connection->query("SELECT * FROM v6_users WHERE id = $user_id ") or die(mysqli_error($this->connection));
                 $row_user = $result_user->fetch_assoc();
                 $user_name = $row_user['username'];
                 $employee_id = $row['employee_id'];
@@ -600,7 +601,7 @@ class ProjectController extends Database {
 
         while($row = $result->fetch_assoc()):
             $user_id = $row['created_at_user_id'];
-            $result_user = $this->connection->query("SELECT * FROM admin WHERE id = $user_id ") or die(mysqli_error($this->connection));
+            $result_user = $this->connection->query("SELECT * FROM v6_users WHERE id = $user_id ") or die(mysqli_error($this->connection));
             $row_user = mysqli_fetch_array($result_user);
             $task_note = array(
                 'id' => $row['id'],

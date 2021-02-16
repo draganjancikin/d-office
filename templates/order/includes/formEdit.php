@@ -10,20 +10,22 @@
   <div class="card-body p-2">
     <dl class="row mb-0">
       <dt class="col-sm-3 col-md-2">dobavljać:</dt>
-      <dd class="col-sm-9 col-md-10"><?php echo $supplier_data['name']; ?></dd>
+      <dd class="col-sm-9 col-md-10"><?php echo $supplier_data->getName() ?></dd>
 
       <dt class="col-sm-3 col-md-2">adresa:</dt>
-      <dd class="col-sm-9 col-md-10"><?php echo $supplier_data['street_name']. ' ' .$supplier_data['home_number']. ', ' .$supplier_data['city_name']. ', ' .$supplier_data['state_name']; ?></dd>
+      <dd class="col-sm-9 col-md-10"><?php echo $supplier_street->getName(). ' ' .$supplier_data->getHomeNumber(). ', ' .$supplier_city->getName(). ', ' .$supplier_country->getName() ?></dd>
 
       <?php
-      $contacts = $contact->getContactsById($order_data['supplier_id']);
+      $supplier_contacts = $supplier_data->getContacts();
       $contactsCount = 0;
-      foreach ($contacts as $contact):
+      foreach ($supplier_contacts as $supplier_contact):
+        $supplier_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy( array('id' =>$supplier_contact->getId()) );
+        $supplier_contact_type = $supplier_contact_data->getType();
         $contactsCount ++;
         if($contactsCount < 5){
         ?>
-        <dt class="col-sm-3 col-md-2"><?php echo $contact['name']; ?>:</dt>
-        <dd class="col-sm-9 col-md-10"><?php echo $contact['number'] . ($contact['note']=="" ? "" : ", " .$contact['note']); ?></dd>
+        <dt class="col-sm-3 col-md-2"><?php echo $supplier_contact_type->getName() ?>:</dt>
+                    <dd class="col-sm-9 col-md-10"><?php echo $supplier_contact_data->getBody() . ($supplier_contact_data->getNote() =="" ? "" : ", " .$supplier_contact_data->getNote()); ?></dd>
         <?php
          }
       endforeach;
@@ -148,9 +150,7 @@
                   <option value="<?php echo ( isset($project_data['id']) ? $project_data['id'] : '' ) ?>" selected>
                     <?php echo ( isset($project_data['id']) ? $project_data['pr_id'].' '.$project_data['client_name'].' - '.$project_data['title'] : '___' ) ?>
                   </option>
-                  <!-- 
-                    list of active project
-                   -->
+                  <!-- List of active project. -->
                   <?php
                   $project_list = $project->projectTracking(1);
                   foreach( $project_list as $project_item):

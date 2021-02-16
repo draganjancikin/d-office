@@ -41,11 +41,11 @@ class PidbController extends Database {
         $name = $arr[1];
         $archived = $arr[2];
 
-        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, client.name as client_name "
-                            . "FROM pidb JOIN (client)"
-                            . "ON (pidb.client_id = client.id)"
-                            . "WHERE ( (client.name LIKE '%$name%' OR client.name_note LIKE '%$name%' OR pidb.y_id LIKE '%$name%') AND pidb.tip_id = $tip AND pidb.archived = $archived )"
-                            . "ORDER BY client.name, pidb.date ");
+        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, v6_clients.name as client_name "
+                            . "FROM pidb JOIN (v6_clients)"
+                            . "ON (pidb.client_id = v6_clients.id)"
+                            . "WHERE ( (v6_clients.name LIKE '%$name%' OR v6_clients.name_note LIKE '%$name%' OR pidb.y_id LIKE '%$name%') AND pidb.tip_id = $tip AND pidb.archived = $archived )"
+                            . "ORDER BY v6_clients.name, pidb.date ");
         return $result;
     }
 
@@ -66,10 +66,10 @@ class PidbController extends Database {
      * @return array
      */
     public function getPidb($pidb_id){
-        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, pidb.note, client.name as client_name "
+        $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, pidb.note, v6_clients.name as client_name "
                             . "FROM pidb "
-                            . "JOIN client "
-                            . "ON (pidb.client_id = client.id) "
+                            . "JOIN v6_clients "
+                            . "ON (pidb.client_id = v6_clients.id) "
                             . "WHERE pidb.id = $pidb_id ");
         if(!$result){
             die('<script>location.href = "/pidb/" </script>');
@@ -95,9 +95,9 @@ class PidbController extends Database {
      * @return array
      */
     public function getClientByPidbId($pidb_id) {
-        $result = $this->get("SELECT client.id, client.name "
-                            . "FROM client JOIN (pidb) "
-                            . "ON (client.id = pidb.client_id) " 
+        $result = $this->get("SELECT v6_clients.id, v6_clients.name "
+                            . "FROM v6_clients JOIN (pidb) "
+                            . "ON (v6_clients.id = pidb.client_id) " 
                             . "WHERE pidb.id = '$pidb_id' ");
         return $result[0];
     }
@@ -117,9 +117,9 @@ class PidbController extends Database {
 
         // izlistavanje iz baze predračuna, računa, otpremnica i povratnica klijenata sa nazivom koji je sličan $name
         for($i=1; $i<=4; $i++):
-            $result = $this->connection->query("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, client.name "
-                                             . "FROM pidb JOIN (client)"
-                                             . "ON (pidb.client_id = client.id)"
+            $result = $this->connection->query("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, v6_clients.name "
+                                             . "FROM pidb JOIN (v6_clients)"
+                                             . "ON (pidb.client_id = v6_clients.id)"
                                              . "WHERE pidb.tip_id = $i AND pidb.archived = 0 "
                                              . "ORDER BY pidb.id DESC LIMIT $limit ") or die(mysqli_error($this->connection));
             while($row = mysqli_fetch_array($result)):
@@ -154,10 +154,10 @@ class PidbController extends Database {
      * @return array
      */
     public function getLastTransactions($limit){
-        $result = $this->get("SELECT $this->transaction_table.id, $this->transaction_table.date, $this->transaction_table.pidb_id, $this->transaction_table.amount, client.name as client_name, pidb.y_id as pidb_y_id  "
+        $result = $this->get("SELECT $this->transaction_table.id, $this->transaction_table.date, $this->transaction_table.pidb_id, $this->transaction_table.amount, v6_clients.name as client_name, pidb.y_id as pidb_y_id  "
                             . "FROM $this->transaction_table "
-                            . "JOIN (client, pidb)"
-                            . "ON ($this->transaction_table.client_id = client.id AND $this->transaction_table.pidb_id = pidb.id )"
+                            . "JOIN (v6_clients, pidb)"
+                            . "ON ($this->transaction_table.client_id = v6_clients.id AND $this->transaction_table.pidb_id = pidb.id )"
                             . "ORDER BY id DESC LIMIT $limit ");
         return $result;
     }
@@ -643,10 +643,10 @@ class PidbController extends Database {
      * @return array
      */
     public function getPidbsByProjectId($project_id) {
-        $result = $this->get("SELECT pidb.id, pidb.y_id, pidb.tip_id, pidb.date, client.name as client_name, pidb.title "
+        $result = $this->get("SELECT pidb.id, pidb.y_id, pidb.tip_id, pidb.date, v6_clients.name as client_name, pidb.title "
                             . "FROM pidb "
-                            . "JOIN client "
-                            . "ON (pidb.client_id = client.id)"
+                            . "JOIN v6_clients "
+                            . "ON (pidb.client_id = v6_clients.id)"
                             . "WHERE project_id = $project_id ");
         return $result;
     }
@@ -655,10 +655,10 @@ class PidbController extends Database {
      * 
      */
     public function getAllPidbs() {
-        $result = $this->get("SELECT pidb.id, pidb.y_id, pidb.tip_id, pidb.title, pidb.date, client.name as client_name "
+        $result = $this->get("SELECT pidb.id, pidb.y_id, pidb.tip_id, pidb.title, pidb.date, v6_clients.name as client_name "
                             ."FROM pidb "
-                            ."JOIN client "
-                            ."ON (pidb.client_id = client.id) "
+                            ."JOIN v6_clients "
+                            ."ON (pidb.client_id = v6_clients.id) "
                             ."ORDER BY date ASC");
         $i = 0;
         foreach($result as $row){

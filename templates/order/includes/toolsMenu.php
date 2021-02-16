@@ -15,7 +15,11 @@ require 'del.php';
       if(isset($_GET['view']) || isset($_GET['edit'])):
         $order_id = filter_input(INPUT_GET, 'order_id');
         $order_data = $order->getOrder($order_id);
-        $supplier_data = $client->getClient($order_data['supplier_id']);
+        $supplier_data = $entityManager->find('\Roloffice\Entity\Client', $order_data['supplier_id']);
+        $supplier_country = $entityManager->find('\Roloffice\Entity\Country', $supplier_data->getCountry());
+        $supplier_city = $entityManager->find('\Roloffice\Entity\City', $supplier_data->getCity());
+        $supplier_street = $entityManager->find('\Roloffice\Entity\Street', $supplier_data->getStreet());
+        
         $project_data = $project->getProject($order_data['project_id']);
         $materials = $material->getMaterials();
 

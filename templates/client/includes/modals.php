@@ -10,7 +10,7 @@
         </button>
       </div>
 
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?newContact'; ?>" method="post" role="form">
+      <form action="<?php echo $_SERVER['PHP_SELF'] . '?createContact'; ?>" method="post" role="form">
         <input type="hidden" name="client_id" value="<?php echo $client_id ?>">
 
         <div class="modal-body">
@@ -18,12 +18,15 @@
           <div class="form-group row">
             <label for="selectContactType" class="col-sm-3 col-form-label text-right">Tip kontakta:</label>
             <div class="col-sm-5">
-              <select id="selectContactType" class="form-control" name="contacttype_id">
+              <select id="selectContactType" class="form-control" name="contact_type_id">
               <option value="">izaberi tip kontakta</option>
               <?php
-                foreach ($contacttypes as $contacttype) {
-                  echo '<option value="' .$contacttype['id']. '">' .$contacttype['name']. '</option>';
-                }
+                $contact_types = $entityManager->getRepository('\Roloffice\Entity\ContactType')->findAll();
+                foreach ($contact_types as $contact_type) :
+                  ?>
+                  <option value="<?php echo  $contact_type->getId() ?>"><?php echo $contact_type->getName() ?></option>
+                  <?php
+                endforeach;
               ?>
               </select>
             </div>
@@ -32,7 +35,7 @@
           <div class="form-group row">
             <label for="inputContact" class="col-sm-3 col-form-label text-right">Kontakt: </label>
             <div class="col-sm-9"> 
-              <input class="form-control" id="inputContact" type="text" name="number" value="" >
+              <input class="form-control" id="inputContact" type="text" name="body" value="" >
             </div>
           </div>
 

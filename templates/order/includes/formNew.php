@@ -12,9 +12,9 @@
                     <select id="selectSupplier" class="form-control" name="supplier_id" required>
                         <option value="">izaberi dobavljača</option>
                         <?php
-                        $suppliers = $client->getSuppliers();
+                        $suppliers = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC') );
                         foreach ($suppliers as $supplier) {
-                        echo '<option value="' .$supplier['id']. '">' .$supplier['name']. '</option>';
+                        echo '<option value="' .$supplier->getId(). '">' .$supplier->getName(). '</option>';
                         }
                         ?>
                     </select>
@@ -29,8 +29,8 @@
                         if(isset($_GET['project_id'])){
                             $project_id = htmlspecialchars($_GET["project_id"]);
                             $project_data = $project->getProject($project_id);
-                            $client_data = $client->getClient($project_data['client_id']);
-                            echo '<option value="'.$project_data['id'].'">' .$project_data['pr_id']. ' ' .$client_data['name']. ': ' .$project_data['title'].'</option>';
+                            $client_data = $entityManager->find('\Roloffice\Entity\Client', $project_data['client_id']);
+                            echo '<option value="'.$project_data['id'].'">' .$project_data['pr_id']. ' ' .$client_data->getName(). ': ' .$project_data['title'].'</option>';
                         }else{
                             echo '<option value="">izaberi projekat</option>';
                         }

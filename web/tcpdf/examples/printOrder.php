@@ -1,7 +1,9 @@
 <?php
 $page = "nabavka";
 
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/appConfig.php';
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.php';
 
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
@@ -46,23 +48,24 @@ $pdf->SetFont('dejavusans', '', 10);
 // add a page
 $pdf->AddPage();
 
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
-
 // generisanje potrebnih objekata
-$client = new \Roloffice\Controller\ClientController();
-$contact = new \Roloffice\Controller\ContactController();
 $order = new \Roloffice\Controller\OrderController();
 $material = new \Roloffice\Controller\MaterialController();
     
 $order_id = $_GET['order_id'];
-
 $order_data = $order->getOrder($order_id);
-$supplier_data = $client->getClient($order_data['supplier_id']);
-$supplier_contacts = $contact->getContactsById($order_data['supplier_id']);
+
+$supplier_data = $entityManager->find('Roloffice\Entity\Client', $order_data['supplier_id']);
+$supplier_country = $entityManager->find('\Roloffice\Entity\Country', $supplier_data->getCountry());
+$supplier_city = $entityManager->find('\Roloffice\Entity\City', $supplier_data->getCity());
+$supplier_street = $entityManager->find('\Roloffice\Entity\Street', $supplier_data->getStreet());
+
+$supplier_contacts = $supplier_data->getContacts();
+
 $i=0;
 foreach ($supplier_contacts as $supplier_contact) {
-    if($i < 2 && isset($supplier_contact['number'])) {
-        $contact_item[$i] = $supplier_contact['number'];
+    if($i < 2 && NULL !== $supplier_contact->getBody()) {
+        $contact_item[$i] = $supplier_contact->getBody();
     } else {
         $contact_item[$i] = "";
     }
@@ -79,7 +82,7 @@ $html = '
   <tr>
     <td width="340px" colspan="2">Vojvode Živojina Mišića 237<br />21400 Bačka Palanka<br />PIB: 100754526<br />MB: 5060100<br />žr. 220-127736-34, Procredit bank</td>
     
-    <td width="350px">Dobavljač:<br />'.$supplier_data['name'].'<br />'.$supplier_data['street_name'].' '.$supplier_data['home_number'].'<br />'.$supplier_data['city_name'].', '.$supplier_data['state_name'].'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
+    <td width="350px">Dobavljač:<br />'.$supplier_data->getName().'<br />'.$supplier_street->getName().' '.$supplier_data->getHomeNumber().'<br />'.$supplier_city->getName().', '.$supplier_country->getName().'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>
   <tr>
     <td colspan="3"><h2>Narudžbenica: '.str_pad($order_data['o_id'], 3, "0", STR_PAD_LEFT).' - '.date('m', strtotime($order_data['date'])).'</h2></td>

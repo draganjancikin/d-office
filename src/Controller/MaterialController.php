@@ -28,10 +28,10 @@ class MaterialController extends Database {
      * @return array
      */
     public function search($name) {
-        $result = $this->get("SELECT material.id, material.name, material.note, unit.name as unit_name, material_suppliers.price, material_suppliers.client_id, client.name as client_name "
+        $result = $this->get("SELECT material.id, material.name, material.note, unit.name as unit_name, material_suppliers.price, material_suppliers.client_id, v6_clients.name as client_name "
                             . "FROM material "
-                            . "JOIN (unit, material_suppliers, client) "
-                            . "ON (material.unit_id = unit.id AND material.id = material_suppliers.material_id AND client.id = client_id) "
+                            . "JOIN (unit, material_suppliers, v6_clients) "
+                            . "ON (material.unit_id = unit.id AND material.id = material_suppliers.material_id AND v6_clients.id = client_id) "
                             . "WHERE (material.name LIKE '%$name%') "
                             . "ORDER BY material.name ");
         return $result;
@@ -97,10 +97,10 @@ class MaterialController extends Database {
      * @return array
      */
     public function getLastMaterials($limit){
-        $result = $this->get("SELECT material.id, material.name, unit.name as unit_name, material_suppliers.price, material_suppliers.client_id, client.name as client_name "
+        $result = $this->get("SELECT material.id, material.name, unit.name as unit_name, material_suppliers.price, material_suppliers.client_id, v6_clients.name as client_name "
                             . "FROM material "
-                            . "JOIN (unit, material_suppliers, client)"
-                            . "ON (material.unit_id = unit.id AND material.id = material_suppliers.material_id AND client_id = client.id)"
+                            . "JOIN (unit, material_suppliers, v6_clients)"
+                            . "ON (material.unit_id = unit.id AND material.id = material_suppliers.material_id AND client_id = v6_clients.id)"
                             . "ORDER BY material.id DESC LIMIT $limit");
         return $result;
     }
@@ -123,11 +123,11 @@ class MaterialController extends Database {
      * @return array
      */
     public function getMaterialSuppliers ($material_id){
-        $result = $this->get("SELECT client.id, client.name, material_suppliers.code, material_suppliers.price "
+        $result = $this->get("SELECT v6_clients.id, v6_clients.name, material_suppliers.code, material_suppliers.price "
                             . "FROM material_suppliers "
-                            . "JOIN (client) "
-                            . "ON (material_suppliers.material_id = $material_id AND material_suppliers.client_id = client.id) "
-                            . "ORDER BY client.name");
+                            . "JOIN (v6_clients) "
+                            . "ON (material_suppliers.material_id = $material_id AND material_suppliers.client_id = v6_clients.id) "
+                            . "ORDER BY v6_clients.name");
         return $result;
     }
 

@@ -40,10 +40,10 @@ class OrderController extends Database {
      * @return array
      */
     public function getLastOrders($limit) {
-        $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name as supplier_name "
+        $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, v6_clients.name as supplier_name "
                             . "FROM orderm "
-                            . "JOIN (client) "
-                            . "ON (orderm.supplier_id = client.id) "
+                            . "JOIN (v6_clients) "
+                            . "ON (orderm.supplier_id = v6_clients.id) "
                             . "ORDER BY orderm.id DESC LIMIT $limit");
         return $result;
     }
@@ -103,10 +103,10 @@ class OrderController extends Database {
      * @return array
      */
     public function getOrder($order_id) {
-        $result =  $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.supplier_id, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, orderm.note, client.name "
+        $result =  $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.supplier_id, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, orderm.note, v6_clients.name "
                             . "FROM orderm "
-                            . "JOIN client "
-                            . "ON (orderm.supplier_id = client.id) "
+                            . "JOIN v6_clients "
+                            . "ON (orderm.supplier_id = v6_clients.id) "
                             . "WHERE orderm.id = $order_id ");
         if(empty($result)) {
             die('<script>location.href = "/orders/" </script>');
@@ -293,10 +293,10 @@ class OrderController extends Database {
      * @return array
      */
     public function search($name) {
-        $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, client.name as supplier_name, orderm.title, orderm.status, orderm.is_archived "
-                            . "FROM orderm JOIN (client)"
-                            . "ON (orderm.supplier_id = client.id)"
-                            . "WHERE (client.name LIKE '%$name%' ) "
+        $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, v6_clients.name as supplier_name, orderm.title, orderm.status, orderm.is_archived "
+                            . "FROM orderm JOIN (v6_clients)"
+                            . "ON (orderm.supplier_id = v6_clients.id)"
+                            . "WHERE (v6_clients.name LIKE '%$name%' ) "
                             . "ORDER BY orderm.id DESC ");
         return $result;
     }
@@ -325,10 +325,10 @@ class OrderController extends Database {
      * @return array
      */
     public function getOrdersByProjectId($project_id) {
-        $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, client.name as supplier_name "
+        $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, v6_clients.name as supplier_name "
                         . "FROM orderm "
-                        . "JOIN (client) "
-                        . "ON (orderm.supplier_id = client.id) "
+                        . "JOIN (v6_clients) "
+                        . "ON (orderm.supplier_id = v6_clients.id) "
                         . "WHERE (orderm.project_id = $project_id) "
                         . "ORDER BY orderm.id DESC ");
         return $result;

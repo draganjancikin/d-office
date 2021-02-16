@@ -1,50 +1,52 @@
 <?php
 if($page == "clients"):
-    $name = filter_input(INPUT_GET, 'search');
-    ?>
-    <div class="card mb-4">
-        <div class="card-header p-2">
-            <h6 class="m-0 font-weight-bold text-primary">Pretraga klijenata</h6>
-        </div>
-        <div class="card-body p-2">
-            <!-- table with list of last client -->
-            <div class="table-responsive">
-                <table class="dataTable table table-bordered table-hover" id="" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>klijent</th>
-                            <th>adresa</th>
-                        </tr>
-                    </thead>
-                    <tfoot class="thead-light">
-                        <tr>
-                            <th>klijent</th>
-                            <th>adresa</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                      <?php
-                      $clients_search = $client->search($name);
-                      foreach ($clients_search as $client_search):
-                          ?>
-                          <tr>
-                              <td>
-                                <a href="?view&client_id=<?php echo $client_search['id'] ?>"><?php echo $client_search['name'] ?></a>
-                              </td>
-                              <td>
-                                <?php echo ( $client_search['street_name'] == "" ? "" : $client_search['street_name'] . " " . $client_search['home_number'] .  ", " ) . $client_search['city_name']. ', ' .$client_search['state_name']; ?>
-                              </td>
-                          </tr>
-                          <?php
-                      endforeach;
-                      ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <!-- End of Card body -->
+  $term = filter_input(INPUT_GET, 'search');
+  $clients= $entityManager->getRepository('\Roloffice\Entity\Client')->search($term);
+  ?>
+  <div class="card mb-4">
+    <div class="card-header p-2">
+      <h6 class="m-0 font-weight-bold text-primary">Pretraga klijenata</h6>
     </div>
-    <?php
+    <div class="card-body p-2">
+      <!-- Table with list of last client. -->
+      <div class="table-responsive">
+        <table class="dataTable table table-bordered table-hover" id="" width="100%" cellspacing="0">
+          <thead class="thead-light">
+            <tr>
+              <th>klijent</th>
+              <th>adresa</th>
+            </tr>
+          </thead>
+          <tfoot class="thead-light">
+            <tr>
+              <th>klijent</th>
+              <th>adresa</th>
+            </tr>
+          </tfoot>
+          <tbody>
+            <?php
+            foreach ($clients as $client_data):
+              $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry() );
+              $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity() );
+              $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet() );
+              ?>
+              <tr>
+                <td>
+                  <a href="?view&client_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a>
+                </td>
+                <td>
+                <?php echo ( $client_street->getName() == "" ? "" : $client_street->getName() . " " . $client_data->getHomeNumber() .  ", " ) . $client_city->getName(). ', ' .$client_country->getName() ?>                              </td>
+              </tr>
+              <?php
+            endforeach;
+            ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- End of Card body. -->
+  </div>
+  <?php
 endif;
 
 if($page == "pidb"):

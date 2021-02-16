@@ -27,10 +27,10 @@ class CuttingController extends Database {
         $cuttings = array();
 
         // izlistavanje zadnjih $limit materijala
-        $result = $this->connection->query("SELECT cutting_fence.id, cutting_fence.c_id, cutting_fence.client_id, client.name "
+        $result = $this->connection->query("SELECT cutting_fence.id, cutting_fence.c_id, cutting_fence.client_id, v6_clients.name "
                                          . "FROM cutting_fence "
-                                         . "JOIN (client)"
-                                         . "ON (cutting_fence.client_id = client.id)"
+                                         . "JOIN (v6_clients)"
+                                         . "ON (cutting_fence.client_id = v6_clients.id)"
                                          . "ORDER BY cutting_fence.id DESC LIMIT $limit") or die(mysqli_error($this->connection));
         while($row = mysqli_fetch_array($result)):
             $cutting = array(
@@ -56,12 +56,12 @@ class CuttingController extends Database {
             $last_id = $row['id'];
 
         // izlistavanje iz baze svih artikala sa nazivom koji je sličan $name
-        $result = $this->connection->query("SELECT cutting_fence.id, cutting_fence.c_id, cutting_fence.client_id, client.name "
+        $result = $this->connection->query("SELECT cutting_fence.id, cutting_fence.c_id, cutting_fence.client_id, v6_clients.name "
                                          . "FROM cutting_fence "
-                                         . "JOIN (client)"
-                                         . "ON (cutting_fence.client_id = client.id)"
-                                         . "WHERE (client.name LIKE '%$name%') "
-                                         . "ORDER BY client.name ") or die(mysqli_error($this->connection));
+                                         . "JOIN (v6_clients)"
+                                         . "ON (cutting_fence.client_id = v6_clients.id)"
+                                         . "WHERE (v6_clients.name LIKE '%$name%') "
+                                         . "ORDER BY v6_clients.name ") or die(mysqli_error($this->connection));
         while($row = mysqli_fetch_array($result)):
             $cutting = array(
                 'id' => $row['id'],
@@ -79,10 +79,10 @@ class CuttingController extends Database {
     //metoda koja vraća podatke o krojnoj listi od id krojne liste
     public function getCutting($cutting_id){
 
-        $result = $this->connection->query("SELECT cutting_fence.id, cutting_fence.c_id, cutting_fence.date, cutting_fence.client_id, client.name  "
+        $result = $this->connection->query("SELECT cutting_fence.id, cutting_fence.c_id, cutting_fence.date, cutting_fence.client_id, v6_clients.name  "
                                        . "FROM cutting_fence "
-                                       . "JOIN (client) "
-                                       . "ON (cutting_fence.client_id = client.id) "
+                                       . "JOIN (v6_clients) "
+                                       . "ON (cutting_fence.client_id = v6_clients.id) "
                                        . "WHERE cutting_fence.id = $cutting_id ") or die(mysqli_error($this->connection));
         $row = mysqli_fetch_array($result);
 
