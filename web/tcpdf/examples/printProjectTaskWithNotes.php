@@ -1,6 +1,8 @@
 <?php
 
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/appConfig.php';
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.php';
 
 require_once('tcpdf_include.php');
 
@@ -45,34 +47,36 @@ $pdf->SetFont('dejavusans', '', 10);
 $pdf->AddPage();
 
 // generisanje potrebnih objekata
-$client = new \Roloffice\Controller\ClientController();
-$contact = new \Roloffice\Controller\ContactController();
 $project = new \Roloffice\Controller\ProjectController();
 $date = date('d M Y');
 
 $project_id = $_GET['project_id'];
 
 $project_data = $project->getProject($project_id);
-$client_data = $client->getClient($project_data['client_id']);
 
-$contacts = $contact->getContactsById($project_data['client_id']);
+$client_data = $entityManager->find('Roloffice\Entity\Client', $project_data['client_id']);
+$client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
+$client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
+$client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
+
+$client_contacts = $client_data->getContacts();
     
 $contact_item[0] = "";
 $contact_item[1] = "";
 
-if (!empty($contacts)) {
+if (!empty($client_contacts)) {
     
-    $count = 0;
-    foreach ($contacts as $contact):
-        if (isset($contact['number']) AND $count == 0 ){ 
-            $contact_item[0] = $contact['number'];
-        } elseif (isset($contact['number']) AND $count == 1) {
-            $contact_item[1] = $contact['number'];
-        }
-        $count++; 
-    endforeach;
+  $count = 0;
+  foreach ($client_contacts as $client_contact):
+    if ( NULL !== $client_contact->getBody() AND $count == 0 ){ 
+      $contact_item[0] = $client_contact->getBody();
+    } elseif ( NULL !== $client_contact->getBody() AND $count == 1) {
+      $contact_item[1] = $client_contact->getBody();
+    }
+    $count++; 
+  endforeach;
     
-} 
+}
 
 $html = '
   <style type="text/css">table {padding: 3px 10px 3px 10px; }</style>
@@ -82,8 +86,8 @@ $html = '
   </table>
   
   <table border="0">
-    <tr><td width="80px">klijent:</td> <td width="auto">'.$client_data['name'] . ($client_data['name_note']<>""?', '.$client_data['name_note']:"").'</td></tr>
-    <tr><td>adresa:</td>               <td>'.$client_data['street_name'].' '.$client_data['home_number'].', '.$client_data['city_name'].', '.$client_data['state_name'].', '.$client_data['address_note'].'</td></tr>
+    <tr><td width="80px">klijent:</td> <td width="auto">'.$client_data->getName() . ($client_data->getNameNote()<>""?', '.$client_data->getNameNote():"").'</td></tr>
+    <tr><td>adresa:</td>               <td>'.$client_street->getName().' '.$client_data->getHomeNumber().', '.$client_city->getName().', '.$client_country->getName().', '.$client_data->getAddressNote().'</td></tr>
     <tr><td></td>                      <td>' .$contact_item[0]. '</td></tr>
     ' .( $contact_item[1]=="" ? "" : '<tr><td></td><td>' .$contact_item[1]. '</td></tr>' ). '
   </table>
@@ -112,7 +116,7 @@ $pdf->lastPage();
 // ---------------------------------------------------------
 
 //Close and output PDF document
-$pdf->Output('nalog_' .$client_data['name']. '.pdf', 'I');
+$pdf->Output('nalog_' .$client_data->getName(). '.pdf', 'I');
 
 //============================================================+
 // END OF FILE                                                

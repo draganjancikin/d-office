@@ -56,7 +56,7 @@ class ClientController extends Database {
      * @return array
      */
     public function getCitys() {
-        $result = $this->get("SELECT * FROM city ORDER BY name");
+        $result = $this->get("SELECT * FROM v6_cities ORDER BY name");
         return $result;
     }
 
@@ -68,7 +68,7 @@ class ClientController extends Database {
      * @return array
      */
     public function getCity($id) {
-        $result =  $this->get("SELECT * FROM city WHERE id = $id");
+        $result =  $this->get("SELECT * FROM v6_cities WHERE id = $id");
         return ( empty($result[0]) ? false : $result[0] );
     }
 

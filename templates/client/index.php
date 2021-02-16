@@ -35,27 +35,26 @@
                     <div class="row">
             
                         <!-- Tools Meni -->
-                        <?php include '../../templates/client/includes/toolsMenu.php' ?>
+                        <?php include '../../templates/client/includes/tools_menu.php' ?>
                         <!-- End of Tools Meni -->
           
                         <div class="col-lg-12 col-xl-10 px-2">
                         <?php
                         if (empty($_GET)): // ako je $_GET prazan
-                            include '../../templates/client/includes/listLast.php';
+                            include '../../templates/client/includes/list_last.php';
                         else:
-                            if(isset($_GET['view'])) include '../../templates/client/includes/formView.php';
-                            if(isset($_GET['new'])) include '../../templates/client/includes/formNew.php';
-                            if(isset($_GET['edit'])) include '../../templates/client/includes/formEdit.php';
+                            if(isset($_GET['viewClient'])) include '../../templates/client/includes/form_view_client.php';
+                            if(isset($_GET['newClient'])) include '../../templates/client/includes/form_new_client.php';
+                            if(isset($_GET['editClient'])) include '../../templates/client/includes/form_edit_client.php';
                             
                             if(isset($_GET['search'])) include '../../app/includes/search.php';
-                            if(isset($_GET['advancedSearch'])) include '../../templates/client/includes/advancedSearch.php';
+                            if(isset($_GET['advancedSearch'])) include '../../templates/client/includes/form_advanced_search.php';
 
-                            if(isset($_GET['addstate'])) include '../../templates/client/includes/formAddState.php';
-                            if(isset($_GET['addcity'])) include '../../templates/client/includes/formAddCity.php';
-                            if(isset($_GET['addstreet'])) include '../../templates/client/includes/formAddStreet.php';
+                            if(isset($_GET['newCountry'])) include '../../templates/client/includes/form_new_country.php';
+                            if(isset($_GET['newCity'])) include '../../templates/client/includes/form_new_city.php';
+                            if(isset($_GET['newStreet'])) include '../../templates/client/includes/form_new_street.php';
 
                             if(isset($_GET['alert'])) include '../../app/includes/alerts.php';
-                            
                         endif;
                         ?>
                         </div>

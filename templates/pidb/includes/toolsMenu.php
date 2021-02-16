@@ -15,9 +15,12 @@ require 'export.php';
       if( isset($_GET['view']) || isset($_GET['edit']) || isset($_GET['editArticle']) ):
         $pidb_id = filter_input(INPUT_GET, 'pidb_id');
         $pidb_data = $pidb->getPidb($pidb_id);
-        $client_data = $client->getClient($pidb_data['client_id']);
+        $client_data = $entityManager->find('\Roloffice\Entity\Client', $pidb_data['client_id']);
+        $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
+        $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
+        $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
         $all_articles = $article->getAllArticles();
-        // in view case show edit button
+        // In view case show edit button.
         if(isset($_GET['view'])):
           ?>
           <a href="?edit&pidb_id=<?php echo $pidb_id ?>">

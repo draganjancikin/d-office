@@ -1,7 +1,9 @@
 <?php
 $page = "pidb";
 
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/appConfig.php';
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.php';
 
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
@@ -46,11 +48,7 @@ $pdf->SetFont('dejavusans', '', 10);
 // add a page
 $pdf->AddPage();
 
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
-
 // generisanje potrebnih objekata
-$client = new \Roloffice\Controller\ClientController();
-$contact = new \Roloffice\Controller\ContactController();
 $pidb = new \Roloffice\Controller\PidbController();
 $article = new \Roloffice\Controller\ArticleController();
 
@@ -61,23 +59,27 @@ if( $pidb_data['tip_id'] == 2) $pidb_name = "Otpremnica";
 if( $pidb_data['tip_id'] == 3) $pidb_name = "Racun";
 if( $pidb_data['tip_id'] == 4) $pidb_name = "Povratnica";
 
-$client_data = $client->getClient($pidb_data['client_id']);
-$contacts = $contact->getContactsById($pidb_data['client_id']);
+$client_data = $entityManager->find('Roloffice\Entity\Client', $pidb_data['client_id']);
+$client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
+$client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
+$client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
+
+$client_contacts = $client_data->getContacts();
 
 $contact_item[0] = "";
 $contact_item[1] = "";
 
-if (!empty($contacts)) {
+if (!empty($client_contacts)) {
     
-    $count = 0;
-    foreach ($contacts as $contact):
-        if (isset($contact['number']) AND $count == 0 ){ 
-            $contact_item[0] = $contact['number'];
-        } elseif (isset($contact['number']) AND $count == 1) {
-            $contact_item[1] = $contact['number'];
-        }
-        $count++; 
-    endforeach;
+  $count = 0;
+  foreach ($client_contacts as $client_contact):
+    if ( NULL !== $client_contact->getBody() AND $count == 0 ){ 
+      $contact_item[0] = $client_contact->getBody();
+    } elseif ( NULL !== $client_contact->getBody() AND $count == 1) {
+      $contact_item[1] = $client_contact->getBody();
+    }
+    $count++; 
+  endforeach;
     
 }
 
@@ -98,7 +100,7 @@ $html = '
     ž.r. 160-438797-72, Banca Intesa<br />
     ž.r. 330-11001058-98, Credit Agricole</td>
     
-    <td width="350px">Kupac:<br />'.$client_data['name'].' '.($client_data['lb']<>""?'<br />PIB '.$client_data['lb']:"").'<br />'.$client_data['street_name'].' '.$client_data['home_number'].'<br />'.$client_data['city_name'].', '.$client_data['state_name'].'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
+    <td width="350px">Kupac:<br />'.$client_data->getName().' '.($client_data->getLb()<>""?'<br />PIB '.$client_data->getLb():"").'<br />'.$client_street->getName().' '.$client_data->getHomeNumber().'<br />'.$client_city->getName().', '.$client_country->getName().'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>
   <tr>
     <td colspan="3"><h2>'.$pidb_name.' broj: '.str_pad($pidb_data['y_id'], 4, "0", STR_PAD_LEFT).' - '.date('m', strtotime($pidb_data['date'])).'</h2></td>

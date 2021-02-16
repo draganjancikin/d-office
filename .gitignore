@@ -8,3 +8,6 @@ web/testing/
 /todos/
 /config/dbConfig.php
 /vendor/
+
+# Ignore .sql files
+*.sql

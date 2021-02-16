@@ -2,7 +2,7 @@
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/dbConfig.php';
 session_start();
 
-$table = "admin";    // the table that this script will set up and use.
+$table = "v6_users";    // the table that this script will set up and use.
 
 // Create connection
 $mysqli = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
@@ -31,7 +31,7 @@ if ($num_rows <= 0) {
 
 } else {
 
-    $result_user = mysqli_query($mysqli, "SELECT * FROM admin WHERE username='$username' ") or die(mysqli_error($mysqli));
+    $result_user = mysqli_query($mysqli, "SELECT * FROM $table WHERE username='$username' ") or die(mysqli_error($mysqli));
 
     $row_user = mysqli_fetch_array($result_user);	
     $user_id = $row_user['id'];
