@@ -6,7 +6,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.p
 session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
-    $userlevel = $_SESSION['user_level'];
+    $user_role_id = $_SESSION['user_role_id'];
     $pidb = new \Roloffice\Controller\PidbController();
     $article = new \Roloffice\Controller\ArticleController();
     $cutting = new \Roloffice\Controller\CuttingController();

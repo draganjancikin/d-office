@@ -151,26 +151,31 @@
                 </div>
               </a>
             </div>
-
-            <!-- Card Admin -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <a href="admin" class="card-link">
-                <div class="card border-left-secondary shadow h-100 py-2">
-                  <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                      <div class="col mr-2">
-                        <div class="text-sm font-weight-bold text-secondary text-uppercase mb-1">Admin</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">. . .</div>
-                      </div>
-                      <div class="col-auto">
-                        <i class="fas fa-wrench fa-2x text-secondary"></i>
+            <?php
+            if($user_role_id==1 OR $user_role_id==2):
+              ?>
+              <!-- Card Admin -->
+              <div class="col-xl-3 col-md-6 mb-4">
+                <a href="admin" class="card-link">
+                  <div class="card border-left-secondary shadow h-100 py-2">
+                    <div class="card-body">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                          <div class="text-sm font-weight-bold text-secondary text-uppercase mb-1">Admin</div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">. . .</div>
+                        </div>
+                        <div class="col-auto">
+                          <i class="fas fa-wrench fa-2x text-secondary"></i>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </a>
-            </div>
-            <!-- End of Card Admin -->
+                </a>
+              </div>
+              <!-- End of Card Admin -->
+              <?php
+            endif;
+            ?>
 
             <!-- Card Projects -->
             <div class="col-xl-3 col-md-6 mb-4">
