@@ -13,8 +13,9 @@ require 'del.php';
       <?php
       if(isset($_GET['view']) || isset($_GET['edit'])):
         $material_id = filter_input(INPUT_GET, 'material_id');
-        $material_data = $material->getMaterial($material_id);
-        $material_suppliers = $material->getMaterialSuppliers($material_id);
+        $material_data = $entityManager->find('\Roloffice\Entity\Material', $material_id);
+        $material_unit = $entityManager->find('\Roloffice\Entity\Unit', $material_data->getUnit());
+        $material_suppliers = $entityManager->getRepository('\Roloffice\Entity\MaterialSupplier')->getMaterialSuppliers($material_id);
         $clients = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => 'ASC'));
         $suppliers = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC'));
         // In view case show edit button.
