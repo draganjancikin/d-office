@@ -115,3 +115,9 @@ Enhancement:
 ## New in version 5.3.5 - 6.0.0-alpha-1
 
 - Added Doctrine ORM 2.8.1 layer to application. and implemented to Client part of App
+
+## New in version 6.0.2
+
+- Code cleanup
+- Change user level to user role
+- Remove bootstrap.php from git

@@ -97,7 +97,7 @@ require 'export.php';
         endif;
           
         // Next and Previuos button
-        if($userlevel == 1 && isset($_GET['edit'])):
+        if($user_role_id == 1 && isset($_GET['edit'])):
           ?>
           <a href="?edit&pidb_id=<?php echo $pidb->getPreviousPidb($pidb_id, $pidb_data['tip_id']) ?>">
             <button type="submit" class="btn btn-sm btn-outline-secondary mr-1">
