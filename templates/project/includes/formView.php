@@ -102,7 +102,7 @@ else:
                       }
                       ?>
                     </td>
-                    <td class="px-1" <?php echo ($userlevel==1 ? 'title=" ' . $note['user_name'] . '"' : '' ); ?>>
+                    <td class="px-1" <?php echo ($user_role_id==1 ? 'title=" ' . $note['user_name'] . '"' : '' ); ?>>
                       <?php echo nl2br($note['note']); ?>
                     </td>
                     <td class="px-1">
@@ -230,7 +230,7 @@ else:
                                             ?>
                                             <div class="card border-<?php echo $project_task['class']; ?> mb-2">
                                               <div class="card-header bg-<?php echo $project_task['class']; ?> p-2">
-                                                <h6 class="d-inline m-0" <?php echo 'title="' . ($userlevel==1 ? $project_task['user_name'] : '') . ' " ' ?> >
+                                                <h6 class="d-inline m-0" <?php echo 'title="' . ($user_role_id==1 ? $project_task['user_name'] : '') . ' " ' ?> >
                                                   <?php echo $project_task['tip']. ': '.$project_task['title'] ; ?>
                                                 </h6>
                                                 <div class="float-right">
@@ -280,7 +280,7 @@ else:
                                                           <span class="direct-chat-name">
                                                             <?php echo '- ' .$task_note['note']; ?>
                                                           </span>
-                                                          <?php echo ($userlevel==1 ? '<small class="label bg-gray">' .$task_note['user_name']. '</small>' : '' ); ?>
+                                                          <?php echo ($user_role_id==1 ? '<small class="label bg-gray">' .$task_note['user_name']. '</small>' : '' ); ?>
                                                         </td>
                                                       </tr>
                                                       <?php

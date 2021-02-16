@@ -34,7 +34,7 @@ else:
         <i class="fa fa-tasks"> </i>
         <?php echo $task_data['tip']. ': ' .$task_data['title']; ?>
         <?php
-        if($userlevel==1):
+        if($user_role_id==1):
           ?>
           <small class="">
             <?php echo '('. date('d-M-Y', strtotime($task_data['date'])). '), ' .$task_data['user_name']; ?>
@@ -171,10 +171,10 @@ else:
             </td>
             <td class="px-1">
               <?php echo '- ' .$task_note['note']; ?>
-              <?php echo ($userlevel==1 ? '<span class="badge badge-secondary">'.$task_note['user_name'].'</span>' : '' ); ?>
+              <?php echo ($user_role_id==1 ? '<span class="badge badge-secondary">'.$task_note['user_name'].'</span>' : '' ); ?>
             </td>
             <?php
-            if($userlevel==1):
+            if($user_role_id==1):
               ?>
               <td>
                 <!-- ovaj link treba da obriše belešku uz zadatak -->
