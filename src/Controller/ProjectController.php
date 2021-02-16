@@ -274,14 +274,14 @@ class ProjectController extends Database {
             if(!$project_title==""){
                 $where_project_title = " AND project.title LIKE '%$project_title%' ";
                 if(!$city==""){
-                    $where_city = " AND city.name LIKE '%$city%' ";
+                    $where_city = " AND v6_cities.name LIKE '%$city%' ";
                 }else{
                     $where_city = "";
                 }
             }else{
                $where_project_title = "";
                if(!$city==""){
-                    $where_city = " AND city.name LIKE '%$city%' ";
+                    $where_city = " AND v6_cities.name LIKE '%$city%' ";
                 }else{
                     $where_city = "";
                 }
@@ -294,14 +294,14 @@ class ProjectController extends Database {
             if(!$project_title==""){
                 $where_project_title = " AND project.title LIKE '%$project_title%' ";
                 if(!$city==""){
-                    $where_city = " AND city.name LIKE '%$city%' ";
+                    $where_city = " AND v6_cities.name LIKE '%$city%' ";
                 }else{
                     $where_city = "";
                 }
             }else{
                $where_project_title = "";
                if(!$city==""){
-                    $where_city = " AND city.name LIKE '%$city%' ";
+                    $where_city = " AND v6_cities.name LIKE '%$city%' ";
                 }else{
                     $where_city = "";
                 }
@@ -312,10 +312,10 @@ class ProjectController extends Database {
 
         // =======================================================================
         // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
-        $result =  $this->connection->query("SELECT project.id, project.pr_id, v6_clients.name, city.name as city_name, project.title, project.status, project.client_id "
+        $result =  $this->connection->query("SELECT project.id, project.pr_id, v6_clients.name, v6_cities.name as city_name, project.title, project.status, project.client_id "
                                     . "FROM v6_clients "
-                                    . "JOIN (street, city, project)"
-                                    . "ON (v6_clients.city_id = city.id AND v6_clients.street_id = street.id AND project.client_id = v6_clients.id )"
+                                    . "JOIN (v6_streets, v6_cities, project)"
+                                    . "ON (v6_clients.city_id = v6_cities.id AND v6_clients.street_id = v6_streets.id AND project.client_id = v6_clients.id )"
                                     . $where
                                     . "ORDER BY project.pr_id ") or die(mysqli_error($this->connection));
         while($row = $result->fetch_assoc()):
