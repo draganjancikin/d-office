@@ -18,7 +18,6 @@
             <?php
             if(isset($_GET['client_id'])){
               $client_id = htmlspecialchars($_GET["client_id"]);
-              // $client_data = $client->getClient($client_id);
               $client_data = $entityManager->find('\Roloffice\Entity\Client', $client_id);
               echo '<option value="'.$client_data->getId().'">'.$client_data->getName().'</option>';
             }else{
