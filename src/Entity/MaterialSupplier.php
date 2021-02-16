@@ -5,10 +5,10 @@ namespace Roloffice\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity (repositoryClass="Roloffice\Repository\MaterialRepository")
- * @ORM\Table(name="v6_Materials")
+ * @ORM\Entity (repositoryClass="Roloffice\Repository\MaterialSupplierRepository")
+ * @ORM\Table(name="v6_materials_suppliers")
  */
-class Material {
+class MaterialSupplier {
 
   /**
    * @ORM\Id
@@ -19,42 +19,32 @@ class Material {
   protected $id;
 
   /**
-   * @ORM\Column(type="string", length=48)
-   * @var string
-   */
-  protected $name;
-
-  /**
-   * Meny Materials have to the One Unit.
-   * @ORM\ManyToOne(targetEntity="Unit")
-   * @ORM\JoinColumn(name="unit_id", referencedColumnName="id")
+   * Meny ...
+   * @ORM\ManyToOne(targetEntity="Material")
+   * @ORM\JoinColumn(name="material_id", referencedColumnName="id")
    * @var int
    */
-  protected $unit;
+  protected $material;
 
   /**
-   * @ORM\Column(type="decimal", precision=11, scale=0)
-   * @var float
+   * Meny ...
+   * @ORM\ManyToOne(targetEntity="Client")
+   * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
+   * @var int
    */
-  protected $weight;
-
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=2)
-   * @var float
-   */
-  protected $min_obrac_mera;
-
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=4)
-   * @var float
-   */
-  protected $price;
+  protected $supplier;
 
   /**
    * @ORM\Column(type="text")
    * @var string
    */
   protected $note;
+
+  /**
+   * @ORM\Column(type="decimal", precision=11, scale=4)
+   * @var float
+   */
+  protected $price;
 
   /**
    * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
@@ -88,36 +78,20 @@ class Material {
     return $this->id;
   }
 
-  public function setName($name) {
-    $this->name = $name;
-  }
-  
-  public function getName() {
-    return $this->name;
+  public function setMaterial($material) {
+    $this->material = $material;
   }
 
-  public function setUnit($unit) {
-    $this->unit = $unit;
+  public function getMaterial() {
+    return $this->material;
   }
 
-  public function getUnit() {
-    return $this->unit;
+  public function setSupplier($supplier) {
+    $this->supplier = $supplier;
   }
 
-  public function setWeight($weight) {
-    $this->weight = $weight;
-  }
-
-  public function getWeight() {
-    return $this->weight;
-  }
-
-  public function setMinObracMera($min_obrac_mera) {
-    $this->min_obrac_mera = $min_obrac_mera;
-  }
-
-  public function getMinObracMera() {
-    return $this->min_obrac_mera;
+  public function getSupplier() {
+    return $this->supplier;
   }
 
   public function setNote($note) {
