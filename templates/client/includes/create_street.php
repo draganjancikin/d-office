@@ -31,4 +31,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createStreet"])) {
   $entityManager->persist($newStreet);
   $entityManager->flush();
 
+  die('<script>location.href = "index.php" </script>');
 }

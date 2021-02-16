@@ -38,4 +38,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createCountry"])) {
   $entityManager->persist($newCountry);
   $entityManager->flush();
 
+  die('<script>location.href = "index.php" </script>');
 }
