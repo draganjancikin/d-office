@@ -35,11 +35,11 @@ if ($num_rows <= 0) {
 
     $row_user = mysqli_fetch_array($result_user);	
     $user_id = $row_user['id'];
-    $user_level = $row_user['level'];
+    $user_role_id = $row_user['role_id'];
 
     $_SESSION['username'] = $_POST["username"];
     $_SESSION['user_id'] = $user_id;
-    $_SESSION['user_level'] = $user_level;
+    $_SESSION['user_role_id'] = $user_role_id;
 
     header('location:../index.php');
     // It is the page where you want to redirect user after login.
