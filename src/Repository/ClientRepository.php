@@ -13,8 +13,8 @@ class ClientRepository extends EntityRepository {
    */
   public function getNumberOfClients() {
     $qb = $this->_em->createQueryBuilder();
-    $qb->select('count(c.id)');
-    $qb->from('Roloffice\Entity\Client','c');
+    $qb->select('count(c.id)')
+        ->from('Roloffice\Entity\Client','c');
     $count = $qb->getQuery()->getSingleScalarResult();
     return $count;
   }
