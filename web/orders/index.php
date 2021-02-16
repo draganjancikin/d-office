@@ -6,7 +6,7 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.p
 session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
-    $userlevel = $_SESSION['user_level'];
+    $user_role_id = $_SESSION['user_role_id'];
     $material = new \Roloffice\Controller\MaterialController();
     $project = new \Roloffice\Controller\ProjectController();
     $order = new \Roloffice\Controller\OrderController();

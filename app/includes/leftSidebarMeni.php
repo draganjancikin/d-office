@@ -104,7 +104,7 @@
     </li>
 
     <?php
-    if($userlevel==1 OR $userlevel==2):
+    if($user_role_id==1 OR $user_role_id==2):
       ?>
       <!-- Nav Item - Admin Menu -->
       <li class="nav-item">
