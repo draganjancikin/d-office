@@ -1,4 +1,4 @@
-# RolOffice v5.3.5 - 6.0.3
+# RolOffice v5.3.5 - 6.0.4
 
 Web Application
 
@@ -125,3 +125,7 @@ Enhancement:
 ## New in version 6.0.3
 
 - Resolved issue #88: print Order error
+
+## New in version 6.0.4
+
+- Resolved issue #89: Link to Client in client search dont work
