@@ -62,6 +62,9 @@ $supplier_street = $entityManager->find('\Roloffice\Entity\Street', $supplier_da
 
 $supplier_contacts = $supplier_data->getContacts();
 
+$contact_item[0] = "";
+$contact_item[1] = "";
+
 $i=0;
 foreach ($supplier_contacts as $supplier_contact) {
     if($i < 2 && NULL !== $supplier_contact->getBody()) {
@@ -253,7 +256,7 @@ switch ($order_data['supplier_id']) {
         $folder = "WURTH/";
         break;
     default:
-        $folder = $supplier_data['name'] . ' - ';
+        $folder = $supplier_data->getName() . ' - ';
 }
 
 $pdf->Output('D:/ROLOSTIL/PORUDZBINE/' .$folder.str_pad($order_data['o_id'], 3, "0", STR_PAD_LEFT). '-' .date('m', strtotime($order_data['date'])). ' - ' .date('d M', strtotime($order_data['date'])). '.pdf', 'FI');
