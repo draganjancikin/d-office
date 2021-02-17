@@ -23,8 +23,6 @@
         </tfoot>
         <tbody>
         <?php
-        // TODO Dragan
-        // $materials = $material->getLastMaterials(10);
         $materials = $entityManager->getRepository('\Roloffice\Entity\Material')->getLastMaterials(10);
         foreach ($materials as $material_data):
           $material_unit = $entityManager->find('\Roloffice\Entity\Unit', $material_data->getUnit());

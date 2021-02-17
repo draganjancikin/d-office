@@ -372,60 +372,58 @@ if($page == "cutting"):
 endif;
 
 if($page == "materials"):
-    $name = filter_input(INPUT_GET, 'search');
-    ?>
-    <div class="card mb-4">
-        <div class="card-header p-2">
-            <h6 class="m-0 font-weight-bold text-primary">Pretraga materijala</h6>
-        </div>
-        <div class="card-body p-2">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>naziv artikla</th>
-                            <th class="text-center">jed. mere</th>
-                            <th class="text-center">cena <br />(RSD sa PDV-om)</th>
-                            <th class="text-center">cena <br />(EUR sa PDV-om)</th>
-                            <th>dobavljač</th>
-                        </tr>
-                    </thead>
-                    <tfoot class="thead-light">
-                        <tr>
-                            <th>naziv artikla</th>
-                            <th class="text-center">jed. mere</th>
-                            <th class="text-center">cena <br />(RSD sa PDV-om)</th>
-                            <th class="text-center">cena <br />(EUR sa PDV-om)</th>
-                            <th>dobavljač</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <?php
-                        $materials = $material->search($name);
-                        foreach ($materials as $material_data):
-                            ?>
-                            <tr>
-                                <td>
-                                    <a href="?view&material_id=<?php echo $material_data['id'] ?>" title="<?php echo $material_data['note'] ?>"><?php echo $material_data['name'] ?></a>
-                                </td>
-                                <td class="text-center"><?php echo $material_data['unit_name'] ?></td>
-                                <td class="text-right">
-                                    <?php echo number_format( ($material_data['price'] * $material->getKurs() * ($material->getTax()/100 + 1) ) , 2, ",", ".") ?>
-                                </td>
-                                <td class="text-right">
-                                    <?php echo number_format( ($material_data['price'] * ($material->getTax()/100 + 1) ) , 2, ",", ".") ?>
-                                </td>
-                                <td><?php echo $material_data['client_name'] ?></td>
-                            </tr>
-                            <?php
-                        endforeach;
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  $term = filter_input(INPUT_GET, 'search');
+  $materials= $entityManager->getRepository('\Roloffice\Entity\Material')->search($term);
+  ?>
+  <div class="card mb-4">
+    <div class="card-header p-2">
+      <h6 class="m-0 font-weight-bold text-primary">Pretraga materijala</h6>
     </div>
-    <?php
+    <div class="card-body p-2">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="" width="100%" cellspacing="0">
+          <thead class="thead-light">
+            <tr>
+              <th>naziv artikla</th>
+              <th class="text-center">jed. mere</th>
+              <th class="text-center">cena <br />(RSD sa PDV-om)</th>
+              <th class="text-center">cena <br />(EUR sa PDV-om)</th>
+            </tr>
+          </thead>
+          <tfoot class="thead-light">
+            <tr>
+              <th>naziv artikla</th>
+              <th class="text-center">jed. mere</th>
+              <th class="text-center">cena <br />(RSD sa PDV-om)</th>
+              <th class="text-center">cena <br />(EUR sa PDV-om)</th>
+            </tr>
+          </tfoot>
+          <tbody>
+            <?php
+            foreach ($materials as $material_data):
+              $material_unit = $entityManager->find('\Roloffice\Entity\Unit', $material_data->getUnit() );
+              ?>
+              <tr>
+                <td>
+                  <a href="?view&material_id=<?php echo $material_data->getId() ?>" title="<?php echo $material_data->getNote() ?>"><?php echo $material_data->getName() ?></a>
+                </td>
+                <td class="text-center"><?php echo $material_unit->getName() ?></td>
+                <td class="text-right">
+                  <?php echo number_format( ($material_data->getPrice() * $material->getKurs() * ($material->getTax()/100 + 1) ) , 2, ",", ".") ?>
+                </td>
+                <td class="text-right">
+                  <?php echo number_format( ($material_data->getPrice() * ($material->getTax()/100 + 1) ) , 2, ",", ".") ?>
+                </td>
+              </tr>
+              <?php
+            endforeach;
+            ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <?php
 endif;
 
 if($page == "orders"):

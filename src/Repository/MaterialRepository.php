@@ -35,4 +35,29 @@ class MaterialRepository extends EntityRepository {
     return $result;
   }
 
+  /**
+   * Search method by criteria: name and name note.
+   *  
+   * @return array
+   */
+  public function search($term) {
+    // Create a QueryBilder instance
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('m')
+      ->from('Roloffice\Entity\Material', 'm')
+    
+    /*
+      ->join('m.street', 's', 'WITH', 'm.street = s.id')
+      ->join('m.city', 'c', 'WITH', 'm.city = c.id')
+      */
+      ->where(
+        $qb->expr()->like('m.name', $qb->expr()->literal("%$term%")),
+        )
+      ->orderBy('m.name', 'ASC');
+
+    $query = $qb->getQuery();
+    $materials = $query->getResult();
+    return $materials;
+  }
+
 }

@@ -21,23 +21,6 @@ class MaterialController extends Database {
     protected $date;
 
     /**
-     * Method that return all material with name like $name
-     * 
-     * @param string $name
-     * 
-     * @return array
-     */
-    public function search($name) {
-        $result = $this->get("SELECT material.id, material.name, material.note, unit.name as unit_name, material_suppliers.price, material_suppliers.client_id, v6_clients.name as client_name "
-                            . "FROM material "
-                            . "JOIN (unit, material_suppliers, v6_clients) "
-                            . "ON (material.unit_id = unit.id AND material.id = material_suppliers.material_id AND v6_clients.id = client_id) "
-                            . "WHERE (material.name LIKE '%$name%') "
-                            . "ORDER BY material.name ");
-        return $result;
-    }
-
-    /**
      * Method that return material price
      * 
      * @param integer $material_id
