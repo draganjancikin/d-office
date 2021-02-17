@@ -121,3 +121,7 @@ Enhancement:
 - Code cleanup
 - Change user level to user role
 - Remove bootstrap.php from git
+
+## New in version 6.0.3
+
+- Resolved issue #88: print Order error
