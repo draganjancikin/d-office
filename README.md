@@ -116,16 +116,16 @@ Enhancement:
 
 - Added Doctrine ORM 2.8.1 layer to application. and implemented to Client part of App
 
-## New in version 6.0.2
+## New in version 5.3.5 - 6.0.2
 
 - Code cleanup
 - Change user level to user role
 - Remove bootstrap.php from git
 
-## New in version 6.0.3
+## New in version 5.3.5 - 6.0.3
 
 - Resolved issue #88: print Order error
 
-## New in version 6.0.4
+## New in version 5.3.5 - 6.0.4
 
 - Resolved issue #89: Link to Client in client search dont work
