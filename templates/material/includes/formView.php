@@ -108,9 +108,9 @@
   <div class="card-body p-2">
 
     <?php
-    // TODO Dragan
-    $propertys = $material->getPropertysByMaterialId($material_id);
-    foreach ($propertys as $property):
+    $material_propertys = $entityManager->getRepository('\Roloffice\Entity\MaterialProperty')->getMaterialProperties($material_id);
+    foreach ($material_propertys as $material_property):
+      $property_data = $entityManager->find('\Roloffice\Entity\Property', $material_property->getProperty());
       ?>
       <form method="post">
         <fieldset disabled>
@@ -118,7 +118,7 @@
 
             <div class="col-sm-4">
               <select class="form-control" name="material_id">
-                <option value="<?php echo $property['id']; ?>"><?php echo $property['name']; ?></option>
+                <option value="<?php echo $property_data->getId() ?>"><?php echo $property_data->getName() ?></option>
               </select>
             </div>
             
