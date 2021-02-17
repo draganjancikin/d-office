@@ -32,7 +32,7 @@ if($page == "clients"):
               ?>
               <tr>
                 <td>
-                  <a href="?view&Clientclient_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a>
+                  <a href="?viewClient&client_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a>
                 </td>
                 <td>
                 <?php echo ( $client_street->getName() == "" ? "" : $client_street->getName() . " " . $client_data->getHomeNumber() .  ", " ) . $client_city->getName(). ', ' .$client_country->getName() ?>                              </td>
