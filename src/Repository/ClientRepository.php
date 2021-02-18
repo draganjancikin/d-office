@@ -32,13 +32,14 @@ class ClientRepository extends EntityRepository {
         ->setMaxResults( $limit );
     $query = $qb->getQuery();
     $result = $query->getResult();
-    // $array = $query->getArrayResult();
     return $result;
   }
 
   /**
    * Search method by criteria: name and name note.
-   *  
+   * 
+   * @param string $term
+   * 
    * @return array
    */
   public function search($term) {
