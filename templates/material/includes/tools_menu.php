@@ -15,16 +15,16 @@ require 'del.php';
       </a>
       <?php
       if(isset($_GET['view']) || isset($_GET['edit'])):
-        $material_id = filter_input(INPUT_GET, 'id');
-        $material_data = $entityManager->find('\Roloffice\Entity\Material', $material_id);
-        $material_unit = $entityManager->find('\Roloffice\Entity\Unit', $material_data->getUnit());
-        $material_suppliers = $entityManager->getRepository('\Roloffice\Entity\MaterialSupplier')->getMaterialSuppliers($material_id);
+        $id = filter_input(INPUT_GET, 'id');
+        $material = $entityManager->find('\Roloffice\Entity\Material', $id);
+        $material_unit = $entityManager->find('\Roloffice\Entity\Unit', $material->getUnit());
+        $material_suppliers = $entityManager->getRepository('\Roloffice\Entity\MaterialSupplier')->getMaterialSuppliers($id);
         $clients = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => 'ASC'));
         $suppliers = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC'));
         // In view case show edit button.
         if(isset($_GET['view'])):
           ?>
-          <a href="?edit&id=<?php echo $material_id ?>">
+          <a href="?edit&id=<?php echo $id ?>">
             <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o materijalu!">
               <i class="fas fa-edit"> </i> Izmena
             </button>
@@ -35,7 +35,7 @@ require 'del.php';
         // in edit case show view button
         if(isset($_GET['edit'])):
           ?>
-          <a href="?view&id=<?php echo $material_id ?>">
+          <a href="?view&id=<?php echo $id ?>">
             <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o materijalu!">
               <i class="fas fa-eye"> </i> Pregled
             </button>

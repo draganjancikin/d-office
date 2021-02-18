@@ -43,9 +43,9 @@
                 if (empty($_GET)): // ako je $_GET prazan
                   include '../../templates/material/includes/list_last.php';
                 else:
-                  if(isset($_GET['view'])) include '../../templates/material/includes/formView.php';
-                  if(isset($_GET['edit'])) include '../../templates/material/includes/form_edit_material.php';
-                  if(isset($_GET['new'])) include '../../templates/material/includes/form_new_material.php';
+                  if(isset($_GET['view'])) include '../../templates/material/includes/form_view.php';
+                  if(isset($_GET['edit'])) include '../../templates/material/includes/form_edit.php';
+                  if(isset($_GET['new'])) include '../../templates/material/includes/form_new.php';
                   
                   if(isset($_GET['search'])) include '../../app/includes/search.php';
                 endif;
