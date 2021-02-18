@@ -56,7 +56,7 @@
           $total_tax_base = 0;
           $total_tax_amount = 0;
           $total = 0;
-          $materials_on_order = $order->getMaterialsOnOrder($order_id);
+          $materials_on_order = $entityManager->getRepository('\Roloffice\Entity\Order')->getMaterialsOnOrder($order_id);
           foreach ($materials_on_order as $material_on_order):
 
             $propertys = $material_on_order['propertys'];

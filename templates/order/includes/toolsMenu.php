@@ -21,7 +21,7 @@ require 'del.php';
         $supplier_street = $entityManager->find('\Roloffice\Entity\Street', $supplier_data->getStreet());
         
         $project_data = $project->getProject($order_data['project_id']);
-        $materials = $material->getMaterials();
+        $materials = $entityManager->getRepository('\Roloffice\Entity\Material')->findBy(array(), array('name' => "ASC"));
 
         // in view case show edit button
         if(isset($_GET['view'])):

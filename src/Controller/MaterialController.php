@@ -57,10 +57,12 @@ class MaterialController extends Database {
      * 
      * @return array
      */
+    /*
     public function getMaterials (){
         $result = $this->get("SELECT id, name,note FROM material ORDER BY name");
         return $result;
     }
+    */
 
     /**
      * Method thah return last materials
