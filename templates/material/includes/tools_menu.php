@@ -1,5 +1,6 @@
 <?php
 require 'create_material.php';
+require 'update_material.php';
 
 require 'add.php';
 require 'edit.php';
@@ -21,9 +22,9 @@ require 'del.php';
         $clients = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => 'ASC'));
         $suppliers = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC'));
         // In view case show edit button.
-        if(isset($_GET['view'])):
+        if(isset($_GET['viewMaterial'])):
           ?>
-          <a href="?edit&material_id=<?php echo $material_id ?>">
+          <a href="?editMaterial&material_id=<?php echo $material_id ?>">
             <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o materijalu!">
               <i class="fas fa-edit"> </i> Izmena
             </button>
@@ -32,9 +33,9 @@ require 'del.php';
         endif;
 
         // in edit case show view button
-        if(isset($_GET['edit'])):
+        if(isset($_GET['editMaterial'])):
           ?>
-          <a href="?view&material_id=<?php echo $material_id ?>">
+          <a href="?viewMaterial&material_id=<?php echo $material_id ?>">
             <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o materijalu!">
               <i class="fas fa-eye"> </i> Pregled
             </button>

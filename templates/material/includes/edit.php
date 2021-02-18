@@ -4,6 +4,7 @@ use Roloffice\Core\Database;
 $user_id = $_SESSION['user_id'];
 
 // edit material
+/*
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterial"]) ) {
 
     $material_id = htmlspecialchars($_GET["material_id"]);
@@ -22,6 +23,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterial"]) ) {
 
     die('<script>location.href = "?view&material_id='.$material_id.'" </script>');
 }
+*/
 
 // edit material supplier
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialSupplier"]) ) { 

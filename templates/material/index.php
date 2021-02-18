@@ -44,7 +44,7 @@
                   include '../../templates/material/includes/list_last.php';
                 else:
                   if(isset($_GET['viewMaterial'])) include '../../templates/material/includes/formView.php';
-                  if(isset($_GET['editMaterial'])) include '../../templates/material/includes/formEdit.php';
+                  if(isset($_GET['editMaterial'])) include '../../templates/material/includes/form_edit_material.php';
                   if(isset($_GET['newMaterial'])) include '../../templates/material/includes/form_new_material.php';
                   
                   if(isset($_GET['search'])) include '../../app/includes/search.php';
