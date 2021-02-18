@@ -4,7 +4,7 @@
   <h6 class="m-0 text-dark">Pregled materiala: <strong><?php echo $material_data->getName() ?></strong></h6>
   </div>
     <div class="card-body p-2">
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterial&material_id=' .$material_id; ?>" method="post">
+      <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterial&id=' .$material_id; ?>" method="post">
 
         <div class="form-group row">
           <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>

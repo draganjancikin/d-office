@@ -5,7 +5,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateMaterial"])) {
   $user_id = $_SESSION['user_id'];
   $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
   
-  $material_id = htmlspecialchars($_GET["material_id"]);
+  $id = htmlspecialchars($_GET["id"]);
 
   if (empty($_POST['name'])) {
     $nameError = 'Ime mora biti upisano';
@@ -21,7 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateMaterial"])) {
   $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
   $note = htmlspecialchars($_POST['note']);
 
-  $material = $entityManager->find('\Roloffice\Entity\Material', $material_id);
+  $material = $entityManager->find('\Roloffice\Entity\Material', $id);
 
   if ($material === null) {
     echo "Client with ID $client_id does not exist.\n";
@@ -39,5 +39,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateMaterial"])) {
 
   $entityManager->flush();
 
-  die('<script>location.href = "?viewMaterial&material_id='.$material_id.'" </script>');
+  die('<script>location.href = "?view&id='.$id.'" </script>');
 }

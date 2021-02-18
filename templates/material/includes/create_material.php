@@ -56,6 +56,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createMaterial"])) {
   $entityManager->flush();
 
   // gest last id and redirect
-  $new_material_id = $newMaterial->getId();
-  die('<script>location.href = "?viewMaterial&material_id='.$material_id.'" </script>');
+  $new_id = $newMaterial->getId();
+  die('<script>location.href = "?view&id='.$new_id.'" </script>');
 }
