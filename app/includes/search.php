@@ -405,7 +405,7 @@ if($page == "materials"):
               ?>
               <tr>
                 <td>
-                  <a href="?view&material_id=<?php echo $material_data->getId() ?>" title="<?php echo $material_data->getNote() ?>"><?php echo $material_data->getName() ?></a>
+                  <a href="?viewMaterial&material_id=<?php echo $material_data->getId() ?>" title="<?php echo $material_data->getNote() ?>"><?php echo $material_data->getName() ?></a>
                 </td>
                 <td class="text-center"><?php echo $material_unit->getName() ?></td>
                 <td class="text-right">

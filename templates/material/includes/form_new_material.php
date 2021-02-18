@@ -4,15 +4,8 @@
     <h6 class="m-0 text-dark">Upis podataka o novom materijalu</strong></h6>
   </div>
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?newMaterial'; ?>" method="post" >
+    <form action="<?php echo $_SERVER['PHP_SELF'] . '?createMaterial'; ?>" method="post" >
       
-      <div class="form-group row">
-        <label for="inputDate" class="col-sm-3 col-lg-2 col-form-label text-right">Datum:</label>
-        <div class="col-sm-3">
-          <input id="inputDate" class="form-control" name="date" value="<?php echo date("d M Y"); ?>" disabled >
-        </div>
-      </div>
-
       <div class="form-group row">
         <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
         <div class="col-sm-9 col-lg-10">
@@ -26,9 +19,9 @@
           <select id="inputUnit" class="form-control" name="unit_id" required >
             <option value="">izaberi jedinicu mere</option>
             <?php
-            $units = $material->getUnits();
-            foreach ($units as $unit) {
-              echo '<option value="' .$unit['id']. '">' .$unit['name']. '</option>';
+            $material_units = $entityManager->getRepository('\Roloffice\Entity\Unit')->findAll();
+            foreach ($material_units as $material_unit) {
+              echo '<option value="' .$material_unit->getId(). '">' .$material_unit->getName(). '</option>';
             }
             ?>
           </select>
