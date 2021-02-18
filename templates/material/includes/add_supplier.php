@@ -1,7 +1,6 @@
 <?php
-
 // Add Supplier to Material
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createSupplier"]) ) {  
+if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addSupplier"]) ) {  
   // Curent loged user.
   $user_id = $_SESSION['user_id'];
   $user = $entityManager->find("\Roloffice\Entity\User", $user_id);

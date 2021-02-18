@@ -63,6 +63,7 @@
 </div>
 <!-- End Card -->
 
+<!-- Edit Material Suppliers -->
 <div class="card mb-4">
 
   <div class="card-header p-2">
@@ -73,9 +74,8 @@
     <?php
     foreach ($material_suppliers as $material_supplier):
       ?>
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?editMaterialSupplier&id=' .$id ?>" method="post">
-        <input class="form-control" type="hidden" name="material_id" value="<?php echo $id ?>" />
-        <input class="form-control" type="hidden" name="client_id_temp" value="<?php echo $material_supplier->getSupplier()->getId() ?>" />
+      <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterialSupplier&id=' .$id ?>" method="post">
+        <input class="form-control" type="hidden" name="material_supplier_id" value="<?php echo $material_supplier->getId() ?>" />
 
         <div class="form-group row">
 
@@ -91,7 +91,7 @@
           </div>
 
           <div class="col-sm-2">
-            <input class="form-control" type="text" name="code" value="<?php echo $material_supplier->getNote() ?>">
+            <input class="form-control" type="text" name="note" value="<?php echo $material_supplier->getNote() ?>">
           </div> 
 
           <div class="col-sm-3">
@@ -100,7 +100,7 @@
 
           <div class="col-sm-2">
             <button type="submit" class="btn btn-mini btn-success"><i class="fas fa-save"> </i> </button>
-            <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&id=' .$id. '&client_id_temp=' .$material_supplier->getSupplier()->getId(). '&delMaterialSupplier'; ?>" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"> </i> </a>
+            <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&id=' .$id. '&material_supplier_id=' .$material_supplier->getId(). '&deleteMaterialSupplier'; ?>" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"> </i> </a>
           </div>
 
         </div>
@@ -129,7 +129,7 @@
           </div>
 
           <div class="col-sm-2">
-            <a href="<?php echo $_SERVER['PHP_SELF'] . '?delProperty&id=' .$id. '&property_id=' .$material_property->getProperty()->getId() ?>" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>
+            <a href="<?php echo $_SERVER['PHP_SELF'] . '?deleteMaterialProperty&id=' .$id. '&material_property_id=' .$material_property->getId() ?>" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>
           </div>
 
         </div>

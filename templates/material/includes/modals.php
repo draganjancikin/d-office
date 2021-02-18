@@ -13,7 +13,7 @@ if(isset($_GET['id'])):
           </button>
         </div>
 
-        <form action="<?php echo $_SERVER['PHP_SELF'] . '?createSupplier&id='.$id ; ?>" method="post">
+        <form action="<?php echo $_SERVER['PHP_SELF'] . '?addSupplier&id='.$id ; ?>" method="post">
           <input type="hidden" name="id" value="<?php echo $id ?>">
 
           <div class="modal-body">
@@ -72,8 +72,8 @@ if(isset($_GET['id'])):
           </button>
         </div>
 
-        <form action="<?php echo $_SERVER['PHP_SELF'] . '?newProperty&id='.$id; ?>" method="post">
-          <input type="hidden" name="material_id" value="<?php echo $id ?>">
+        <form action="<?php echo $_SERVER['PHP_SELF'] . '?addProperty&id='.$id; ?>" method="post">
+          <input type="hidden" name="id" value="<?php echo $id ?>">
 
           <div class="modal-body">
 
@@ -95,14 +95,14 @@ if(isset($_GET['id'])):
             <div class="form-group row">
               <label for="inputMin" class="col-sm-3 col-form-label text-right">Min</label>
               <div class="col-sm-8">
-                <input id="inputMin" type="text" class="form-control" name="min" value="0" placeholder="Minimalna moguća vrednost osobine" />
+                <input id="inputMin" type="text" class="form-control" name="min_size" value="0" placeholder="Minimalna moguća vrednost osobine" />
               </div>
             </div>
 
             <div class="form-group row">
               <label for="inputMax" class="col-sm-3 col-form-label text-right">Max</label>
               <div class="col-sm-8">
-                <input id="inputMax" type="text" class="form-control" name="max" value="0" placeholder="Maksimalna moguća vrednost osobine" />
+                <input id="inputMax" type="text" class="form-control" name="max_size" value="0" placeholder="Maksimalna moguća vrednost osobine" />
               </div>
             </div>
 

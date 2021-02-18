@@ -1,11 +1,11 @@
 <?php
 require 'create_material.php';
-require 'create_supplier.php';
+require 'add_supplier.php';
+require 'add_property.php';
 require 'update_material.php';
-
-require 'add.php';
-require 'edit.php';
-require 'del.php';
+require 'update_supplier.php';
+require 'delete_supplier.php';
+require 'delete_property.php';
 ?>
 <div class="col-lg-12 px-2" id="topMeni">
   <div class="card mb-2">
