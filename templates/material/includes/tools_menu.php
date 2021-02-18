@@ -1,5 +1,6 @@
 <?php
 require 'create_material.php';
+require 'create_supplier.php';
 require 'update_material.php';
 
 require 'add.php';
@@ -17,10 +18,12 @@ require 'del.php';
       if(isset($_GET['view']) || isset($_GET['edit'])):
         $id = filter_input(INPUT_GET, 'id');
         $material = $entityManager->find('\Roloffice\Entity\Material', $id);
-        $material_unit = $entityManager->find('\Roloffice\Entity\Unit', $material->getUnit());
         $material_suppliers = $entityManager->getRepository('\Roloffice\Entity\MaterialSupplier')->getMaterialSuppliers($id);
         $clients = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => 'ASC'));
         $suppliers = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC'));
+        
+        $material_propertys = $entityManager->getRepository('\Roloffice\Entity\MaterialProperty')->getMaterialProperties($id);
+
         // In view case show edit button.
         if(isset($_GET['view'])):
           ?>

@@ -17,11 +17,11 @@
           <label for="selectUnit" class="col-sm-3 col-lg-2 col-form-label text-right">Jedinica mere:</label>
           <div class="col-sm-3">
             <select id="selectUnit" name="unit_id" class="form-control">
-            <option value="<?php echo $material_unit->getId() ?>"><?php echo $material_unit->getName() ?></option>
+            <option value="<?php echo $material->getUnit()->getId() ?>"><?php echo $material->getUnit()->getName() ?></option>
               <?php
-              $material_units = $entityManager->getRepository('\Roloffice\Entity\Unit')->FindAll();
-              foreach ($material_units as $material_unit) {
-                echo '<option value="' .$material_unit->getId(). '">' .$material_unit->getName(). '</option>';
+              $units = $entityManager->getRepository('\Roloffice\Entity\Unit')->FindAll();
+              foreach ($units as $unit) {
+                echo '<option value="' .$unit->getId(). '">' .$unit->getName(). '</option>';
               }
               ?>
             </select>
@@ -72,17 +72,16 @@
   <div class="card-body p-2">
     <?php
     foreach ($material_suppliers as $material_supplier):
-      $supplier_data = $entityManager->find('\Roloffice\Entity\Client', $material_supplier->getSupplier());
       ?>
       <form action="<?php echo $_SERVER['PHP_SELF'] . '?editMaterialSupplier&id=' .$id ?>" method="post">
         <input class="form-control" type="hidden" name="material_id" value="<?php echo $id ?>" />
-        <input class="form-control" type="hidden" name="client_id_temp" value="<?php echo $supplier_data->getId() ?>" />
+        <input class="form-control" type="hidden" name="client_id_temp" value="<?php echo $material_supplier->getSupplier()->getId() ?>" />
 
         <div class="form-group row">
 
           <div class="col-sm-5">
-            <select class="form-control" name="client_id" required>
-              <option value="<?php echo $supplier_data->getId() ?>"><?php echo $supplier_data->getName() ?></option>
+            <select class="form-control" name="supplier_id" required>
+              <option value="<?php echo $material_supplier->getSupplier()->getId() ?>"><?php echo $material_supplier->getSupplier()->getName() ?></option>
               <?php
               foreach ($suppliers as $supplier) {
                 echo '<option value="' .$supplier->getId(). '">' .$supplier->getName(). '</option>';
@@ -101,7 +100,7 @@
 
           <div class="col-sm-2">
             <button type="submit" class="btn btn-mini btn-success"><i class="fas fa-save"> </i> </button>
-            <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&material_id=' .$id. '&client_id_temp=' .$material_supplier->getId(). '&delMaterialSupplier'; ?>" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"> </i> </a>
+            <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&id=' .$id. '&client_id_temp=' .$material_supplier->getSupplier()->getId(). '&delMaterialSupplier'; ?>" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"> </i> </a>
           </div>
 
         </div>
@@ -118,21 +117,19 @@
 
   <div class="card-body p-2">
     <?php
-    $material_propertys = $entityManager->getRepository('\Roloffice\Entity\MaterialProperty')->getMaterialProperties($id);
     foreach ($material_propertys as $material_property):
-      $property_data = $entityManager->find('\Roloffice\Entity\Property', $material_property->getProperty());
       ?>
       <form method="post">
         <div class="form-group row">
 
           <div class="col-sm-4">
-            <select class="form-control" name="material_id">
-              <option value="<?php echo $property_data->getId() ?>"><?php echo $property_data->getName() ?></option>
+            <select class="form-control" name="property_id">
+              <option value="<?php echo $material_property->getProperty()->getId() ?>"><?php echo $material_property->getProperty()->getName() ?></option>
             </select>
           </div>
 
           <div class="col-sm-2">
-            <a href="<?php echo $_SERVER['PHP_SELF'] . '?delProperty&id=' .$id. '&property_id=' .$property_data->getId() ?>" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>
+            <a href="<?php echo $_SERVER['PHP_SELF'] . '?delProperty&id=' .$id. '&property_id=' .$material_property->getProperty()->getId() ?>" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>
           </div>
 
         </div>

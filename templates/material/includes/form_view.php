@@ -19,7 +19,7 @@
           <label for="disabledSelectUnit" class="col-sm-3 col-lg-2 col-form-label text-right">Jedinica mere:</label>
           <div class="col-sm-3">
             <select id="disabledSelectUnit" name="unit_id" class="form-control">
-              <option value="<?php echo $material_unit->getId() ?>"><?php echo $material_unit->getName() ?></option>
+              <option value="<?php echo $material->getUnit()->getId() ?>"><?php echo $material->getUnit()->getName() ?></option>
             </select>
           </div>
         </div>
@@ -68,7 +68,6 @@
   <div class="card-body p-2">
     <?php
     foreach ($material_suppliers as $material_supplier):
-      $supplier = $entityManager->find('\Roloffice\Entity\Client', $material_supplier->getSupplier());
       ?>
       <form method="post">
         <fieldset disabled>
@@ -76,7 +75,7 @@
             
             <div class="col-sm-5">
               <select class="form-control" name="supplier_id">
-                <option value="<?php echo $supplier->getId() ?>"><?php echo $supplier->getName() ?></option>
+                <option value="<?php echo $material_supplier->getSupplier()->getId() ?>"><?php echo $material_supplier->getSupplier()->getName() ?></option>
               </select>
             </div>
 
@@ -108,17 +107,15 @@
   <div class="card-body p-2">
 
     <?php
-    $material_propertys = $entityManager->getRepository('\Roloffice\Entity\MaterialProperty')->getMaterialProperties($id);
     foreach ($material_propertys as $material_property):
-      $property = $entityManager->find('\Roloffice\Entity\Property', $material_property->getProperty());
       ?>
       <form method="post">
         <fieldset disabled>
           <div class="form-group row">
 
             <div class="col-sm-4">
-              <select class="form-control" name="material_id">
-                <option value="<?php echo $property->getId() ?>"><?php echo $property->getName() ?></option>
+              <select class="form-control" name="property_id">
+                <option value="<?php echo $material_property->getProperty()->getId() ?>"><?php echo $material_property->getProperty()->getName() ?></option>
               </select>
             </div>
             

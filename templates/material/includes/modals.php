@@ -1,5 +1,5 @@
 <?php
-if(isset($_GET['material_id'])):
+if(isset($_GET['id'])):
   ?>
   <!-- Modal addSupplier -->
   <div class="modal fade" id="addSupplier" tabindex="-1" role="dialog">
@@ -13,15 +13,15 @@ if(isset($_GET['material_id'])):
           </button>
         </div>
 
-        <form action="<?php echo $_SERVER['PHP_SELF'] . '?newSupplier&material_id='.$material_id ; ?>" method="post">
-          <input type="hidden" name="material_id" value="<?php echo $material_id ?>">
+        <form action="<?php echo $_SERVER['PHP_SELF'] . '?createSupplier&id='.$id ; ?>" method="post">
+          <input type="hidden" name="id" value="<?php echo $id ?>">
 
           <div class="modal-body">
 
             <div class="form-group row">
               <label for="selectClient" class="col-sm-3 col-form-label text-right">Dobavljač</label>
               <div class="col-sm-8">
-                <select id="selectClient" class="form-control" name="client_id" required="required">
+                <select id="selectClient" class="form-control" name="supplier_id" required="required">
                   <option value="">izaberi dobavljača</option>
                   <?php
                   foreach ($suppliers as $supplier) {
@@ -33,9 +33,9 @@ if(isset($_GET['material_id'])):
             </div>
 
             <div class="form-group row">
-              <label for="inputCode" class="col-sm-3 col-form-label text-right">Šifra</label>
+              <label for="inputCode" class="col-sm-3 col-form-label text-right">Beleška</label>
               <div class="col-sm-6">
-                <input id="inputCode" type="text" class="form-control" name="code" value="" placeholder="Upišite šifru materijala" />
+                <input id="inputCode" type="text" class="form-control" name="note" value="" placeholder="Upišite šifru materijala" />
               </div>
             </div>
 
@@ -72,8 +72,8 @@ if(isset($_GET['material_id'])):
           </button>
         </div>
 
-        <form action="<?php echo $_SERVER['PHP_SELF'] . '?newProperty&material_id='.$material_id; ?>" method="post">
-          <input type="hidden" name="material_id" value="<?php echo $material_id ?>">
+        <form action="<?php echo $_SERVER['PHP_SELF'] . '?newProperty&id='.$id; ?>" method="post">
+          <input type="hidden" name="material_id" value="<?php echo $id ?>">
 
           <div class="modal-body">
 
@@ -83,9 +83,9 @@ if(isset($_GET['material_id'])):
                 <select id="selectPropertyItem" class="form-control" name="property_item_id" required="required">
                   <option value="">izaberi osobinu</option>
                   <?php
-                  $property_list = $material->getPropertys();
+                  $property_list = $entityManager->getRepository('\Roloffice\Entity\Property')->findAll();
                   foreach ($property_list as $property_item) {
-                    echo '<option value="' .$property_item['id']. '">' .$property_item['name']. '</option>';
+                    echo '<option value="' .$property_item->getId(). '">' .$property_item->getName(). '</option>';
                   }
                   ?>
                 </select>

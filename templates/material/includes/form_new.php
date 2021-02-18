@@ -19,9 +19,9 @@
           <select id="inputUnit" class="form-control" name="unit_id" required >
             <option value="">izaberi jedinicu mere</option>
             <?php
-            $material_units = $entityManager->getRepository('\Roloffice\Entity\Unit')->findAll();
-            foreach ($material_units as $material_unit) {
-              echo '<option value="' .$material_unit->getId(). '">' .$material_unit->getName(). '</option>';
+            $units = $entityManager->getRepository('\Roloffice\Entity\Unit')->findAll();
+            foreach ($units as $unit) {
+              echo '<option value="' .$unit->getId(). '">' .$unit->getName(). '</option>';
             }
             ?>
           </select>
