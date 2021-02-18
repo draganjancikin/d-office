@@ -1,40 +1,6 @@
 <?php
 use Roloffice\Core\Database;
 
-// add new Material
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["new"]) ) {
-
-    $user_id = $_SESSION['user_id'];
-    $date = date('Y-m-d h:i:s');
-
-    $name = htmlspecialchars($_POST['name']);
-    if($name == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
-
-    $unit_id = htmlspecialchars($_POST['unit_id']);
-    if($_POST['weight']) {
-        $weight = htmlspecialchars($_POST['weight']);
-    } else {
-        $weight = 0;
-    }
-
-    if($_POST['price']) {
-        $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
-    } else {
-        $price = 0;
-    }
-
-    $note = htmlspecialchars($_POST['note']);
-
-    $db = new Database();
-
-    $db->connection->query("INSERT INTO material (date, name, unit_id, weight, price,  note ) VALUES ('$date', '$name', '$unit_id', '$weight', '$price', '$note' )") or die(mysqli_error($db->connection));
-
-    $material_id = $db->connection->insert_id;
-
-    die('<script>location.href = "?view&material_id='.$material_id.'" </script>');
-}
-
-
 // dodaj dobavljača
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newSupplier"]) ) {  
   

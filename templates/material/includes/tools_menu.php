@@ -1,4 +1,6 @@
 <?php
+require 'create_material.php';
+
 require 'add.php';
 require 'edit.php';
 require 'del.php';
@@ -7,11 +9,11 @@ require 'del.php';
   <div class="card mb-2">
     <div class="card-body py-1 px-2">
 
-      <a href="index.php?new" class="btn btn-sm btn-outline-secondary" title="Dodavanje novog materijala!">
+      <a href="index.php?newMaterial" class="btn btn-sm btn-outline-secondary" title="Dodavanje novog materijala!">
         <i class="fas fa-plus"> <i class="fas fa-inbox"></i> </i>
       </a>
       <?php
-      if(isset($_GET['view']) || isset($_GET['edit'])):
+      if(isset($_GET['viewMaterial']) || isset($_GET['editMaterial'])):
         $material_id = filter_input(INPUT_GET, 'material_id');
         $material_data = $entityManager->find('\Roloffice\Entity\Material', $material_id);
         $material_unit = $entityManager->find('\Roloffice\Entity\Unit', $material_data->getUnit());

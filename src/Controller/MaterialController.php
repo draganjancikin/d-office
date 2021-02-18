@@ -63,16 +63,6 @@ class MaterialController extends Database {
     }
 
     /**
-     * Method that return all unit
-     * 
-     * @return array
-     */
-    public function getUnits (){
-        $result = $this->get("SELECT * FROM unit");
-        return $result;
-    }
-
-    /**
      * Method thah return last materials
      * 
      * @param integer $limit
