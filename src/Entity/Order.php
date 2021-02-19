@@ -19,7 +19,7 @@ class Order {
   protected $id;
 
   /**
-   * Ordinal number of the document in the current year (redni broj dokumenta u 
+   * Ordinal number of the Order in the current year (redni broj dokumenta u 
    * tekućoj godini)
    * @ORM\Column(type="integer")
    * @var int
