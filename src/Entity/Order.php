@@ -55,7 +55,7 @@ class Order {
    */
   protected $title;
 
-
+  // TODO Dragan
   // is_archived
 
   // status
@@ -145,6 +145,38 @@ class Order {
   
   public function getNote() {
     return $this->note;
+  }
+
+  public function setCreatedAt(\DateTime $created_at) {
+    $this->created_at = $created_at;
+  }
+
+  public function getCreatedAt() {
+    return $this->created_at;
+  }
+
+  public function setCreatedByUser($created_by_user) {
+    $this->created_by_user = $created_by_user;
+  }
+
+  public function getCreatedByUser() {
+    return $this->created_by_user;
+  }
+
+  public function setModifiedAt(\DateTime $modified_at) {
+    $this->modified_at = $modified_at;
+  }
+
+  public function getModifiedAt() {
+    return $this->modified_at;
+  }
+
+  public function setModifiedByUser($modified_by_user) {
+    $this->modified_by_user = $modified_by_user;
+  }
+
+  public function getModifiedByUser() {
+    return $this->modified_by_user;
   }
 
 }
