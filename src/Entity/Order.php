@@ -61,8 +61,13 @@ class Order {
    */
   protected $is_archived;
   
-  // TODO Dragan
-  // status
+  /**
+   * Order status: 1 => 'draft', 2 => 'ordered', 3 => 'arrived'.
+   * (1 => 'nacrt', 2 => 'poručeno', 3 => 'stiglo')
+   * @ORM\Column(type="integer")
+   * @var int
+   */
+  protected $status;
   
   /**
    * Accounting Document note
@@ -149,6 +154,14 @@ class Order {
   
   public function getIsArchived() {
     return $this->is_archived;
+  }
+
+  public function setStatus($status) {
+    $this->status = $status;
+  }
+  
+  public function getStatus() {
+    return $this->status;
   }
 
   public function setNote($note) {
