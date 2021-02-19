@@ -21,7 +21,7 @@
                 <option value="">izaberi materijal</option>
                 <?php
                 foreach ($materials as $material) {
-                  echo '<option value="' .$material['id']. '" title="' .$material['note']. '">' .$material['name'].'</option>';
+                  echo '<option value="' .$material->getId(). '" title="' .$material->getNote(). '">' .$material->getName().'</option>';
                 }
                 ?>
                 </select>
