@@ -18,6 +18,14 @@ class OrderMaterialProperty {
    */
   protected $id;
 
+  // TODO Dragan
+
+  // order_material_id
+  
+  // property_id
+  
+  // quantity
+
   public function getId() {
     return $this->id;
   }
