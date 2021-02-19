@@ -28,9 +28,21 @@ class Order {
 
   // supplier_id
 
-  // project_id
 
-  // title
+  /**
+   * Meny Order belongs to the One Project.
+   * @ORM\ManyToOne(targetEntity="Project")
+   * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+   * @var int
+   */
+  protected $project;
+
+  /**
+   * @ORM\Column(type="string", length=48)
+   * @var string
+   */
+  protected $title;
+
 
   // is_archived
 
