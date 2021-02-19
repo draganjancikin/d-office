@@ -67,6 +67,34 @@ class Order {
    */
   protected $note;
 
+  /**
+   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
+   * @var DateTime
+   */
+  protected $created_at;
+
+  /**
+   * Many Orders has ben created from One User.
+   * @ORM\ManyToOne(targetEntity="User")
+   * @ORM\JoinColumn(name="created_by_user_id", referencedColumnName="id")
+   * @var int
+   */
+  protected $created_by_user;
+
+  /**
+   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
+   * @var DateTime
+   */
+  protected $modified_at;
+
+  /**
+   * Many Orders has ben updated from One User.
+   * @ORM\ManyToOne(targetEntity="User")
+   * @ORM\JoinColumn(name="modified_by_user_id", referencedColumnName="id")
+   * @var int
+   */
+  protected $modified_by_user;
+
   public function getId() {
     return $this->id;
   }
