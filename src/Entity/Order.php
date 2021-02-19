@@ -52,9 +52,13 @@ class Order {
   // is_archived
 
   // status
-
-  // note
-
+  
+  /**
+   * Accounting Document note
+   * @ORM\Column(type="text")
+   * @var string
+   */
+  protected $note;
 
   public function getId() {
     return $this->id;
@@ -90,6 +94,14 @@ class Order {
   
   public function getTitle() {
     return $this->title;
+  }
+
+  public function setNote($note) {
+    $this->note = $note;
+  }
+  
+  public function getNote() {
+    return $this->note;
   }
 
 }
