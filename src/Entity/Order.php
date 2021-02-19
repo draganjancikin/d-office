@@ -18,6 +18,27 @@ class Order {
    */
   protected $id;
 
+  /**
+   * Ordinal number of the document in the current year (redni broj dokumenta u 
+   * tekućoj godini)
+   * @ORM\Column(type="integer")
+   * @var int
+   */
+  protected $ordinal_num_in_year;
+
+  // supplier_id
+
+  // project_id
+
+  // title
+
+  // is_archived
+
+  // status
+
+  // note
+
+
   public function getId() {
     return $this->id;
   }
