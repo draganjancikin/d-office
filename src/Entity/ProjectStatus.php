@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="v6_project_priorities")
+ * @ORM\Table(name="v6_project_statuses")
  */
-class ProjectPriority {
+class ProjectStatus {
 
   /**
    * @ORM\Id
@@ -18,7 +18,7 @@ class ProjectPriority {
    */
   protected $id;
 
-  /**
+    /**
    * @ORM\Column(type="string", unique=TRUE, length=48)
    * @var string
    */
@@ -35,5 +35,5 @@ class ProjectPriority {
   public function getName() {
     return $this->name;
   }
-  
+
 }
