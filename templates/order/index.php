@@ -41,9 +41,9 @@
             <div class="col-lg-12 px-2">
               <?php 
                 if (empty($_GET)): // ako je $_GET prazan
-                  include '../../templates/order/includes/listLast.php';
+                  include '../../templates/order/includes/list_last.php';
                 else:
-                  if(isset($_GET['view'])) include '../../templates/order/includes/formView.php';
+                  if(isset($_GET['view'])) include '../../templates/order/includes/form_view.php';
                   if(isset($_GET['edit'])) include '../../templates/order/includes/formEdit.php';
                   if(isset($_GET['new'])) include '../../templates/order/includes/formNew.php';
                   

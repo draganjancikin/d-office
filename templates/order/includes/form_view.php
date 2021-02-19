@@ -3,7 +3,7 @@
   <div class="card-header p-2">
     <h6 class="m-0 text-dark">
       Narudžbenica: 
-      <strong><?php echo str_pad($order_data['o_id'], 4, "0", STR_PAD_LEFT). ' - ' .date('m', strtotime($order_data['date'])) . ' <span class="font-weight-normal">(' . date('d-M-Y', strtotime($order_data['date'])). ')</span>'; ?> </strong>
+      <strong><?php echo str_pad($order_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT). ' - ' .$order_data->getDate()->format('m')  . ' <span class="font-weight-normal">(' . $order_data->getDate()->format('d-M-Y'). ')</span>'; ?> </strong>
       - za projekat: <?php  echo ( isset($project_data['id']) ? '<a href="/projects/?view&project_id='.$project_data['id'].'">'.$project_data['pr_id'].' '.$project_data['client_name'].' - '.$project_data['title'].'</a>' : '___' ) ?>
     </h6>
   </div>
@@ -13,7 +13,7 @@
       <dt class="col-sm-3 col-md-2">dobavljač:</dt>
       <dd class="col-sm-9 col-md-10"><?php echo $supplier_data->getName() ?></dd>
       <dt class="col-sm-3 col-md-2">adresa:</dt>
-      <dd class="col-sm-9 col-md-10"><?php echo $supplier_street->getName(). ' ' .$supplier_data->getHomeNumber(). ', ' .$supplier_city->getName(). ', ' .$supplier_country->getName() ?></dd>
+      <dd class="col-sm-9 col-md-10"><?php echo $supplier_data->getStreet()->getName(). ' ' .$supplier_data->getHomeNumber(). ', ' .$supplier_data->getCity()->getName(). ', ' .$supplier_data->getCountry()->getName() ?></dd>
 
       <?php
 
@@ -149,34 +149,34 @@
             </tr>
             <tr class="table-secondary">
               <td>Naslov:</td>
-              <td><?php echo $order_data['title'] ?></td>
+              <td><?php echo $order_data->getTitle() ?></td>
               <td></td>
             </tr>
             <tr class="table-secondary">
               <td>Status:</td>
               <td>
                 <?php 
-                if($order_data['status'] == 0):
+                if($order_data->getStatus() == 0):
                   ?>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="status" id="draft" value="0" <?php if ($order_data['status'] == 0) echo 'checked'; ?> disabled>
+                    <input class="form-check-input" type="radio" name="status" id="draft" value="0" <?php if ($order_data->getStatus() == 0) echo 'checked'; ?> disabled>
                     <label class="form-check-label" for="draft"> nacrt</label>
                   </div>
                   <?php
                 endif;
-                if($order_data['status'] == 1):
+                if($order_data->getStatus() == 1):
                   ?>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="status" id="ordered" value="1" <?php if ($order_data['status'] == 1) echo 'checked'; ?> disabled>
+                    <input class="form-check-input" type="radio" name="status" id="ordered" value="1" <?php if ($order_data->getStatus() == 1) echo 'checked'; ?> disabled>
                     <label class="form-check-label" for="ordered"> poručeno</label>
                   </div>
                   <?php
                 endif;
 
-                if($order_data['status'] == 2):
+                if($order_data->getStatus() == 2):
                   ?>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="status" id="arrived" value="2" <?php if ($order_data['status'] == 2) echo 'checked'; ?> disabled>
+                    <input class="form-check-input" type="radio" name="status" id="arrived" value="2" <?php if ($order_data->getStatus() == 2) echo 'checked'; ?> disabled>
                     <label class="form-check-label" for="arrived"> stiglo</label>
                   </div>
                   <?php
@@ -190,7 +190,7 @@
                 <td>Arhivirano: </td>
                 <td>
                   <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="is_archived" name="is_archived" <?php echo ($order_data['is_archived'] == 0 ? '' : 'checked') ?> disabled>
+                  <input class="form-check-input" type="checkbox" id="is_archived" name="is_archived" <?php echo ($order_data->getIsArchived() == 0 ? '' : 'checked') ?> disabled>
                   <label class="form-check-label" for="is_archived">jeste</label>
                   </div>
                 </td>
@@ -200,7 +200,7 @@
             <tr class="table-secondary">
               <td>Napomena:</td>
               <td colspan="2">
-                <textarea class="form-control" rows="3" name="note" disabled><?php echo $order_data['note']; ?></textarea>
+                <textarea class="form-control" rows="3" name="note" disabled><?php echo $order_data->getNote() ?></textarea>
               </td>
             </tr>
 
