@@ -55,4 +55,12 @@ class Order {
     return $this->id;
   }
 
+  public function setOrdinalNumInYear($ordinal_num_in_year) {
+    $this->ordinal_num_in_year = $ordinal_num_in_year;
+  }
+  
+  public function getOrdinalNumInYear() {
+    return $this->ordinal_num_in_year;
+  }
+
 }
