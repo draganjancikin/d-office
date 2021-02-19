@@ -26,8 +26,13 @@ class Order {
    */
   protected $ordinal_num_in_year;
 
-  // supplier_id
-
+  /**
+   * Meny Order belongs to the One Supplier.
+   * @ORM\ManyToOne(targetEntity="Client")
+   * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
+   * @var int
+   */
+  protected $supplier;
 
   /**
    * Meny Order belongs to the One Project.
@@ -61,6 +66,30 @@ class Order {
   
   public function getOrdinalNumInYear() {
     return $this->ordinal_num_in_year;
+  }
+
+  public function setProject($project) {
+    $this->project = $project;
+  }
+
+  public function getProject() {
+    return $this->project;
+  }
+
+  public function setSupplier($supplier) {
+    $this->supplier = $supplier;
+  }
+
+  public function getSupplier() {
+    return $this->supplier;
+  }
+
+  public function setTitle($title) {
+    $this->title = $title;
+  }
+  
+  public function getTitle() {
+    return $this->title;
   }
 
 }
