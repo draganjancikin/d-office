@@ -55,9 +55,13 @@ class Order {
    */
   protected $title;
 
+  /**
+   * @ORM\Column(type="boolean")
+   * @var boolean
+   */
+  protected $is_archived;
+  
   // TODO Dragan
-  // is_archived
-
   // status
   
   /**
@@ -137,6 +141,14 @@ class Order {
   
   public function getTitle() {
     return $this->title;
+  }
+
+  public function setIsArchived($is_archived) {
+    $this->is_archived = $is_archived;
+  }
+  
+  public function getIsArchived() {
+    return $this->is_archived;
   }
 
   public function setNote($note) {
