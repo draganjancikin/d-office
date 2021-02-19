@@ -16,16 +16,14 @@
       <dd class="col-sm-9 col-md-10"><?php echo $supplier_data->getStreet()->getName(). ' ' .$supplier_data->getHomeNumber(). ', ' .$supplier_data->getCity()->getName(). ', ' .$supplier_data->getCountry()->getName() ?></dd>
 
       <?php
-
       $supplier_contacts = $supplier_data->getContacts();
       $contactsCount = 0;
       foreach ($supplier_contacts as $supplier_contact):
         $supplier_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy( array('id' =>$supplier_contact->getId()) );
-        $supplier_contact_type = $supplier_contact_data->getType();
         $contactsCount ++;
         if($contactsCount < 5){
           ?>
-          <dt class="col-sm-3 col-md-2"><?php echo $supplier_contact_type->getName() ?>:</dt>
+          <dt class="col-sm-3 col-md-2"><?php echo $supplier_contact_data->getType()->getName() ?>:</dt>
           <dd class="col-sm-9 col-md-10"><?php echo $supplier_contact_data->getBody() . ($supplier_contact_data->getNote() =="" ? "" : ", " .$supplier_contact_data->getNote()); ?></dd>
           <?php
         }
@@ -58,19 +56,20 @@
           $total = 0;
           $materials_on_order = $entityManager->getRepository('\Roloffice\Entity\Order')->getMaterialsOnOrder($order_id);
           foreach ($materials_on_order as $material_on_order):
-
-            $propertys = $material_on_order['propertys'];
             $count++;
             ?>
             <form action="#" method="POST">
               <tr>
                 <td class="px-1"><?php echo $count ;?></td>
                 <td class="px-1">
-                  <?php echo $material_on_order['name'] ?>
+                  <?php echo $material_on_order->getMaterial()->getName() ?>
                   <br />
-                  kol. <input class="input-box-45" type="text" name="pieces" value="<?php echo $material_on_order['pieces']; ?>" placeholder="(kol)" disabled >
-                  <?php // echo ( $article_on_pidb['property'] == "" ? "" : $article_on_pidb['property']); ?>
+                  kol. <input class="input-box-45" type="text" name="pieces" value="<?php echo $material_on_order->getPieces() ?>" placeholder="(kol)" disabled >
                   <?php
+
+                  // TODO Dragan: get all material properies
+                  // $propertys = $material_on_order['propertys'];
+                  
                   foreach ($propertys as $property):
                     echo $property['property_name'] . ' <input class="input-box-50" type="text" name="' .$property['property_name']. '" value="' .number_format($property['property_quantity'], 2, ",", "."). '" placeholder="(cm)" disabled > ';
                   endforeach;
