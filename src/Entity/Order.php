@@ -26,6 +26,13 @@ class Order {
    */
   protected $ordinal_num_in_year;
 
+    /**
+   * Date of Order
+   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
+   * @var DateTime
+   */
+  protected $date;
+
   /**
    * Meny Order belongs to the One Supplier.
    * @ORM\ManyToOne(targetEntity="Client")
@@ -70,6 +77,14 @@ class Order {
   
   public function getOrdinalNumInYear() {
     return $this->ordinal_num_in_year;
+  }
+
+  public function setDate($date) {
+    $this->date = $date;
+  }
+
+  public function getDate() {
+    return $this->date;
   }
 
   public function setProject($project) {
