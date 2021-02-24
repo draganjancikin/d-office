@@ -129,3 +129,5 @@ Enhancement:
 ## New in version 5.3.5 - 6.0.4
 
 - Resolved issue #89: Link to Client in client search dont work
+
+## New in version 5.3.5 - 6.0.5
