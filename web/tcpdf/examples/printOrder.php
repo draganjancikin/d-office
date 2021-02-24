@@ -216,6 +216,12 @@ switch ($order_data['supplier_id']) {
     case 844:
         $folder = "LIBELA/";
         break;
+    case 110:
+        $folder = "MIGRO/";
+        break;
+    case 18:
+        $folder = "MIREX/";
+        break;
     case 725:
         $folder = "PORTA ROYAL/";
         break;
@@ -257,6 +263,12 @@ switch ($order_data['supplier_id']) {
         break;
     case 116:
         $folder = "TEHNOMARKET/";
+        break;
+    case 131:
+        $folder = "TOMOVIC PLAST/";
+        break;
+    case 526:
+        $folder = "VABIS/";
         break;
     case 91:
         $folder = "WURTH/";
