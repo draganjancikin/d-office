@@ -66,31 +66,32 @@
                   <br />
                   kol. <input class="input-box-45" type="text" name="pieces" value="<?php echo $material_on_order->getPieces() ?>" placeholder="(kol)" disabled >
                   <?php
-
-                  // TODO Dragan: get all material properies
-                  // $propertys = $material_on_order['propertys'];
-                  
-                  foreach ($propertys as $property):
-                    echo $property['property_name'] . ' <input class="input-box-50" type="text" name="' .$property['property_name']. '" value="' .number_format($property['property_quantity'], 2, ",", "."). '" placeholder="(cm)" disabled > ';
+                  $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getPropertiesOnOrderMaterial($material_on_order->getId());
+                  foreach ($material_on_order_properties as $material_on_order_property):
+                    echo $material_on_order_property->getProperty()->getName() . ' <input class="input-box-50" type="text" name="' .$material_on_order_property->getProperty()->getName(). '" value="' .number_format($material_on_order_property->getQuantity(), 2, ",", "."). '" placeholder="(cm)" disabled > ';
                   endforeach;
                   ?>
-                  <br /><?php echo ( $material_on_order['note'] == "" ? "" : $material_on_order['note'] ) ?>
+                  <br /><?php echo ( $material_on_order->getNote() == "" ? "" : $material_on_order->getNote() ) ?>
                 </td>
-                <td class="px-1 text-center"><?php echo $material_on_order['unit_name'] ;?></td>
+                <td class="px-1 text-center"><?php echo $material_on_order->getMaterial()->getUnit()->getName()?></td>
                 <td class="px-1 input-box-45">
-                  <!-- količina artikla, treba da se izračunava -->
-                  <?php  echo number_format($material_on_order['quantity'], 2, ",", "."); ?>
+                  <!-- količina artikla, treba da se izračunava kao proizvod property-a -->
+                  <?php 
+                  // TODO Dragan 
+                  echo $material_on_order_quantity = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getQuantity($material_on_order->getId());
+                  // echo number_format($material_on_order['quantity'], 2, ",", "."); 
+                  ?>
                 </td>
                 <td class="px-1 text-center">
-                  <input class="input-box-65" type="text" name="price" value="<?php echo number_format($material_on_order['price'], 4, ",", "."); ?>" disabled >
+                  <input class="input-box-65" type="text" name="price" value="<?php echo number_format($material_on_order->getPrice(), 4, ",", "."); ?>" disabled >
                 </td>
                 <td class="px-1 text-center">
-                  <input class="input-box-45" type="text" name="discounts" value="<?php echo number_format($material_on_order['discounts'], 2, ",", "."); ?>" disabled >
+                  <input class="input-box-45" type="text" name="discounts" value="<?php echo number_format($material_on_order->getDiscount(), 2, ",", "."); ?>" disabled >
                 </td>
-                <td class="px-1 input-box-65"><?php echo number_format($material_on_order['tax_base']*$order->getKurs(), 2, ",", ".") ;?></td>
-                <td class="px-1 text-center"><?php echo $material_on_order['tax'] ;?></td>
-                <td class="px-1 input-box-45"><?php echo number_format($material_on_order['tax_amount']*$order->getKurs(), 2, ",", "."); ?></td>
-                <td class="px-1 input-box-65"><?php echo number_format($material_on_order['sub_total']*$order->getKurs(), 2, ",", ".");?></td>
+                <td class="px-1 input-box-65"><?php // TODO Dragan echo number_format($material_on_order['tax_base']*$order->getKurs(), 2, ",", ".") ;?></td>
+                <td class="px-1 text-center"><?php echo $material_on_order->getTax() ?></td>
+                <td class="px-1 input-box-45"><?php // TODO Dragan echo number_format($material_on_order['tax_amount']*$order->getKurs(), 2, ",", "."); ?></td>
+                <td class="px-1 input-box-65"><?php // TODO Dragan echo number_format($material_on_order['sub_total']*$order->getKurs(), 2, ",", ".");?></td>
                 <td class="px-1 text-center">
                   <button type="submit" class="btn btn-mini btn-outline-secondary px-1 disabled" disabled>
                     <i class="fas fa-save" title="Snimi izmenu"> </i>

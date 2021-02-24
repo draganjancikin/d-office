@@ -24,7 +24,7 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
 
     $pidb_id_last = $db->connection->insert_id;
 
-    // payment update
+    // payment update (change payment document from proforma to dispatch)
     $db->connection->query("UPDATE payment "
                         . "SET pidb_id='$pidb_id_last' "
                         . "WHERE pidb_id = '$pidb_id' ") or die(mysqli_error($db->connection));
