@@ -252,6 +252,9 @@ switch ($order_data['supplier_id']) {
     case 5:
         $folder = "ROLO-TIM NS/";
         break;
+    case 648:
+        $folder = "SI-LINE/";
+        break;
     case 57:
         $folder = "STAKLORAM plus/";
         break;
