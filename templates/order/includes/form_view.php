@@ -77,9 +77,7 @@
                 <td class="px-1 input-box-45">
                   <!-- količina artikla, treba da se izračunava kao proizvod property-a -->
                   <?php 
-                  // TODO Dragan 
-                  echo $material_on_order_quantity = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getQuantity($material_on_order->getId());
-                  // echo number_format($material_on_order['quantity'], 2, ",", "."); 
+                  echo number_format($material_on_order_quantity = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getQuantity($material_on_order->getId(), $material_on_order->getMaterial()->getMinObracMera(), $material_on_order->getPieces() ), 2, ",", ".");
                   ?>
                 </td>
                 <td class="px-1 text-center">

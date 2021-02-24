@@ -26,17 +26,28 @@ class OrderMaterialRepository extends EntityRepository {
     return $result;
   }
 
-    /**
-   *  @return float 
+  /**
+   * Method that return quantity of material. If material dont have property
+   * quantity = 1, if material have one property quantity = property/100. If
+   * material have two peoperties, quantity = property_one * proerty_two.
+   * 
+   * @param int $material_on_order_id
+   * @param float $min_obrac_mera
+   * @param float $pieces
+   *  
+   * @return float 
    */
-  public function getQuantity($material_on_order_id) {
+  public function getQuantity($material_on_order_id, $min_obrac_mera, $pieces) {
     $properties = $this->getPropertiesOnOrderMaterial($material_on_order_id);
-    $quantity = 1;
+    $temp_quantity = 1;
+    
     foreach ($properties as $property) {
-      $quantity = $quantity * ( $property->getQuantity()/100 );
+      $temp_quantity = $temp_quantity * ( $property->getQuantity()/100 );
     }
 
-    if($quantity < $material_min_obrac_mera) $quantity = $material_min_obrac_mera;
+    if($temp_quantity < $min_obrac_mera) $temp_quantity = $min_obrac_mera;
+
+    $quantity = round($pieces * $temp_quantity, 2);
 
     return $quantity;
   }
