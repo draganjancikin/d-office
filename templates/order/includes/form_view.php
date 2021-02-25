@@ -72,9 +72,12 @@
                     echo $material_on_order_property->getProperty()->getName() . ' <input class="input-box-50" type="text" name="' .$material_on_order_property->getProperty()->getName(). '" value="' .number_format($material_on_order_property->getQuantity(), 2, ",", "."). '" placeholder="(cm)" disabled > ';
                   endforeach;
                   ?>
-                  <br /><?php echo ( $material_on_order->getNote() == "" ? "" : $material_on_order->getNote() ) ?>
+                  <br />
+                  <?php echo ( $material_on_order->getNote() == "" ? "" : $material_on_order->getNote() ) ?>
                 </td>
-                <td class="px-1 text-center"><?php echo $material_on_order->getMaterial()->getUnit()->getName()?></td>
+                <td class="px-1 text-center">
+                  <?php echo $material_on_order->getMaterial()->getUnit()->getName() ?>
+                </td>
                 <td class="px-1 input-box-45">
                   <!-- količina artikla, treba da se izračunava kao proizvod property-a -->
                   <?php 
