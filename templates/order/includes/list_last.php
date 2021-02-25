@@ -27,10 +27,6 @@
           <?php
           $orders = $entityManager->getRepository('\Roloffice\Entity\Order')->getLastOrders(10);
           foreach ($orders as $order):
-            // TODO Dragan
-            // $project_id = $order['project_id'];
-            // $project_data = $project->getProject($project_id);
-            
             ?>
             <tr>
               <td class="px-1">
