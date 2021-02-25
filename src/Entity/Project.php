@@ -72,6 +72,14 @@ class Project {
   private $accounting_documents;
 
   /**
+   * Unidirectional - Many Projects have many Orders
+   *
+   * @ORM\ManyToMany(targetEntity="Order")
+   * @ORM\JoinTable(name="v6_projects_orders")
+   */
+  private $orders;
+
+  /**
    * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
    * @var DateTime
    */
@@ -153,6 +161,10 @@ class Project {
 
   public function getAccountingDocuments() {
     return $this->accounting_documents;
+  }
+
+  public function getOrders() {
+    return $this->orders;
   }
 
   public function setCreatedAt(\DateTime $created_at) {

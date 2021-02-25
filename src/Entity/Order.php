@@ -47,7 +47,9 @@ class Order {
    * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
    * @var int
    */
+  /*
   protected $project;
+  */
 
   /**
    * @ORM\Column(type="string", length=48)
@@ -124,6 +126,7 @@ class Order {
     return $this->date;
   }
 
+  /*
   public function setProject($project) {
     $this->project = $project;
   }
@@ -131,6 +134,7 @@ class Order {
   public function getProject() {
     return $this->project;
   }
+  */
 
   public function setSupplier($supplier) {
     $this->supplier = $supplier;
