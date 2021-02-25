@@ -52,4 +52,40 @@ class OrderMaterialRepository extends EntityRepository {
     return $quantity;
   }
 
+  /**
+   *  Method that return Tax Base by Material on Order.
+   * 
+   * @param float $price
+   *  Price of Material
+   * @param float $discount
+   *  Discount of Material
+   * @param float $quantity
+   *  Quantity of Material
+   * 
+   * @return float 
+   */
+  public function getTaxBase($price, $discount, $quantity) {
+    return ($price - round( $price * ($discount/100), 4 ) ) * $quantity;
+  }
+
+  /**
+   * Methot that return Amount of Tax by Material on order.
+   * 
+   * @param float $tax_base
+   * @param float $tax
+   * @param float $kurs
+   * 
+   * @return float 
+   */
+  public function getTaxAmount($tax_base, $tax) {
+    return round( ($tax_base * ($tax/100)), 4 );
+  }
+
+  /**
+   * 
+   */
+  public function getSubTotal($tax_base, $tax_amount) {
+    return $tax_base + $tax_amount;
+  }
+
 }

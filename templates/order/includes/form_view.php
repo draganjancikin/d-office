@@ -50,6 +50,7 @@
 
         <tbody>
           <?php
+          $kurs = $order->getKurs();
           $count = 0;
           $total_tax_base = 0;
           $total_tax_amount = 0;
@@ -86,10 +87,24 @@
                 <td class="px-1 text-center">
                   <input class="input-box-45" type="text" name="discounts" value="<?php echo number_format($material_on_order->getDiscount(), 2, ",", "."); ?>" disabled >
                 </td>
-                <td class="px-1 input-box-65"><?php // TODO Dragan echo number_format($material_on_order['tax_base']*$order->getKurs(), 2, ",", ".") ;?></td>
+                <td class="px-1 input-box-65">
+                  <?php
+                  $tax_base = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getTaxBase($material_on_order->getPrice(), $material_on_order->getDiscount(), $material_on_order_quantity);
+                  echo number_format($tax_base * $kurs, 2, ",", ".") 
+                  ?>
+                </td>
                 <td class="px-1 text-center"><?php echo $material_on_order->getTax() ?></td>
-                <td class="px-1 input-box-45"><?php // TODO Dragan echo number_format($material_on_order['tax_amount']*$order->getKurs(), 2, ",", "."); ?></td>
-                <td class="px-1 input-box-65"><?php // TODO Dragan echo number_format($material_on_order['sub_total']*$order->getKurs(), 2, ",", ".");?></td>
+                <td class="px-1 input-box-45">
+                  <?php $tax_amount = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getTaxAmount($tax_base, $material_on_order->getTax() );
+                  echo number_format($tax_amount * $kurs, 2, ",", ".");
+                  ?>
+                </td>
+                <td class="px-1 input-box-65">
+                  <?php
+                  $sub_total = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getSubTotal($tax_base, $tax_amount );
+                  echo number_format($sub_total * $kurs, 2, ",", ".");
+                  ?>
+                </td>
                 <td class="px-1 text-center">
                   <button type="submit" class="btn btn-mini btn-outline-secondary px-1 disabled" disabled>
                     <i class="fas fa-save" title="Snimi izmenu"> </i>
@@ -104,26 +119,26 @@
               </tr>
             </form>  
             <?php
-            $total_tax_base = $total_tax_base + $material_on_order['tax_base'];
-            $total_tax_amount = $total_tax_amount + $material_on_order['tax_amount'];
+            $total_tax_base = $total_tax_base + $tax_base;
+            $total_tax_amount = $total_tax_amount + $tax_amount;
             $total = $total_tax_base + $total_tax_amount;
           endforeach;
           ?>
           <tr class="table-secondary">
             <td colspan="3" rowspan="4"></td>
             <td colspan="3">ukupno poreska osnovica</td>
-            <td><?php echo number_format($total_tax_base*$order->getKurs(), 2, ",", ".") ?></td>
+            <td><?php echo number_format($total_tax_base * $kurs, 2, ",", ".") ?></td>
             <td colspan="5"></td>
           </tr>
             <tr class="table-secondary">
             <td colspan="5">ukupno iznos PDV-a</td>
-            <td><?php echo number_format($total_tax_amount*$order->getKurs(), 2, ",", ".") ?></td>
+            <td><?php echo number_format($total_tax_amount * $kurs, 2, ",", ".") ?></td>
             <td colspan="3"></td>
           </tr>
           <tr class="table-secondary">
             <td colspan="5"><strong>UKUPNO ZA UPLATU</strong></td>
             <td><strong>RSD</strong></td>
-            <td><strong><?php echo number_format($total*$order->getKurs(), 2, ",", ".") ?></strong></td>
+            <td><strong><?php echo number_format($total * $kurs, 2, ",", ".") ?></strong></td>
             <td colspan="2"></td>
           </tr>
           <tr class="table-secondary">
