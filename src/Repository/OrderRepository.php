@@ -22,7 +22,7 @@ class OrderRepository extends EntityRepository {
   /**
    * Method that return last $limit Orders.
    * 
-   * @return 
+   * @return array
    */
   public function getLastOrders($limit = 5) {
     $qb = $this->_em->createQueryBuilder();
@@ -58,6 +58,18 @@ class OrderRepository extends EntityRepository {
     return $result;
   }
 
-
+  /**
+   * @return object 
+   */
+  public function getProject($order_id) {
+    
+    $query = $this->_em->createQuery('SELECT p, o '
+                                    . 'FROM Roloffice\Entity\Project p '
+                                    . 'JOIN p.orders o '
+                                    . 'WITH o.id = :order_id');
+    $query->setParameter('order_id', $order_id);
+    $projects = $query->getResult();
+    return ($projects ? $projects[0] : NULL );
+  }
 
 }
