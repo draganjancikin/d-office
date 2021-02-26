@@ -55,18 +55,17 @@
                   ?>
                   <span class="badge badge-pill badge-secondary">A</span>
                   <?php
-                  endif;
+                endif;
                 ?>
               </td>
               <td class="px-1"><?php echo $order->getSupplier()->getName() ?></td>
               <td class="px-1"><?php echo $order->getTitle() ?></td>
               <td class="px-1">
                 <?php
-                if ($order->getProject()->getId() != 0):
-                  $project_data = $entityManager->find('\Roloffice\Entity\Project', $order->getProject());
+                if ($project = $entityManager->getRepository('Roloffice\Entity\Order')->getProject($order->getId()) ) :
                   ?>
-                  <a href="/projects/?view&project_id=<?php echo $project_data->getId() ?>">
-                    <?php echo $project_data->getOrdinalNumInYear() .' '. $project_data->getClient()->getName() .' - '. $project_data->getTitle() ?>
+                  <a href="/projects/?view&project_id=<?php echo $project->getId() ?>">
+                  <?php echo $project->getOrdinalNumInYear() .' '. $project->getClient()->getName() .' - '. $project->getTitle() ?>
                   </a>
                   <?php
                 endif;
