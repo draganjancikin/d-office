@@ -18,10 +18,7 @@ require 'del.php';
         $order_id = filter_input(INPUT_GET, 'order_id');
         $order_data = $entityManager->find('\Roloffice\Entity\Order', $order_id);
         $supplier_data = $entityManager->find('\Roloffice\Entity\Client', $order_data->getSupplier());
-        
-        // TODO Dragan
-        $project_data = $project->getProject($order_data->getProject()->getId());
-        
+        $project_data = $entityManager->getRepository('Roloffice\Entity\Order')->getProject($order_id);
         $materials = $entityManager->getRepository('\Roloffice\Entity\Material')->findBy(array(), array('name' => "ASC"));
 
         // in view case show edit button
