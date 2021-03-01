@@ -62,7 +62,6 @@ class OrderRepository extends EntityRepository {
    * @return object 
    */
   public function getProject($order_id) {
-    
     $query = $this->_em->createQuery('SELECT p, o '
                                     . 'FROM Roloffice\Entity\Project p '
                                     . 'JOIN p.orders o '

@@ -56,7 +56,7 @@
                   if( isset($_GET['cashRegister']) ) include '../../templates/pidb/includes/cashRegister.php';
 
                   if(isset($_GET['search'])) include '../../app/includes/search.php';
-                  if(isset($_GET['set'])) include '../../templates/pidb/includes/formSettings.php';
+                  if(isset($_GET['set'])) include '../../templates/pidb/includes/form_preferences.php';
 
                 endif;
               ?>

@@ -1,4 +1,6 @@
 <?php
+require 'update_preferences.php';
+
 require 'add.php';
 require 'edit.php';
 require 'del.php';

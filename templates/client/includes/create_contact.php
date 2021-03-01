@@ -29,7 +29,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createContact"])) {
   $entityManager->persist($newContact);
   $entityManager->flush();
 
-  // Add $newContact to table v6_client_contacts_test.
+  // Add $newContact to table v6_client_contacts.
   $client->getContacts()->add($newContact);
   
   $entityManager->flush();
