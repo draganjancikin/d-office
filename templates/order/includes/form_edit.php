@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">
       Narudžbenica:
       <strong><?php echo str_pad($order_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT). ' - ' .$order_data->getDate()->format('m')  . ' <span class="font-weight-normal">(' . $order_data->getDate()->format('d-M-Y'). ')</span>'; ?> </strong>
-      - za projekat: <?php  echo ( isset($project_data['id']) ? '<a href="/projects/?view&project_id='.$project_data['id'].'">'.$project_data['pr_id'].' '.$project_data['client_name'].' - '.$project_data['title'].'</a>' : '___' ) ?>
+      - za projekat: <?php  echo ( NULL != $project_data->getId()  ? '<a href="/projects/?view&project_id='.$project_data->getId().'">'.$project_data->getOrdinalNumInYear().' '.$project_data->getClient()->getName().' - '.$project_data->getTitle().'</a>' : '___' ) ?>
     </h6>
   </div>
   <div class="card-body p-2">
@@ -52,7 +52,9 @@
         <tbody>
 
         <?php
-        $kurs = $order->getKurs();
+        $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+        $kurs = $preferences->getKurs();
+
         $count = 0;
         $total_tax_base = 0;
         $total_tax_amount = 0;
@@ -167,17 +169,19 @@
               <td>
               <select class="form-control" name="project_id">
                   
-                  <option value="<?php echo ( isset($project_data['id']) ? $project_data['id'] : '' ) ?>" selected>
-                    <?php echo ( isset($project_data['id']) ? $project_data['pr_id'].' '.$project_data['client_name'].' - '.$project_data['title'] : '___' ) ?>
+                  <option value="<?php echo ( NULL != $project_data->getId() ? $project_data->getId() : '' ) ?>" selected>
+                    <?php echo ( NULL != $project_data->getId() ? $project_data->getOrdinalNumInYear().' '.$project_data->getClient()->getName().' - '.$project_data->getTItle() : '___' ) ?>
                   </option>
                   <!-- List of active project. -->
                   <?php
-                  $project_list = $project->projectTracking(1);
+                  // TODO Dragan: make method that get all active Project 
+                  // $project_list = $project->projectTracking(1);
+                  $project_list = $entityManager->getRepository('Roloffice\Entity\Project')->getAllActiveProjects();
                   foreach( $project_list as $project_item):
-                    $project_id = $project_item['id'];
-                    $project_pr_id = $project_item['pr_id'];
-                    $project_client = $project_item['client_name'];
-                    $project_title = $project_item['title'];
+                    $project_id = $project_item->getId();
+                    $project_pr_id = $project_item->getOrdinalNumInYear();
+                    $project_client = $project_item->getClient()->getName();
+                    $project_title = $project_item->getTitle();
                     ?>
                     <option value="<?php echo $project_id?>">
                       <?php echo $project_pr_id . ' ' . $project_client . ' - ' . $project_title; ?>

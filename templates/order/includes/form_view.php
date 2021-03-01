@@ -52,8 +52,7 @@
           <?php
           $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
           $kurs = $preferences->getKurs();
-          $tax = $preferences->getTax();
-          
+                    
           $count = 0;
           $total_tax_base = 0;
           $total_tax_amount = 0;
