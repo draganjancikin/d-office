@@ -1,5 +1,5 @@
 <?php
-// edit order
+// Update order.
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateOrder"]) ) {
 echo "Order updating ...";
   /*
