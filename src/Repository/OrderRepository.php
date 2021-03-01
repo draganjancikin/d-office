@@ -2,7 +2,9 @@
 
 namespace Roloffice\Repository;
 
+use Doctrine\DBAL\Types\ObjectType;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\AST\NewObjectExpression;
 
 class OrderRepository extends EntityRepository {
 
@@ -69,6 +71,74 @@ class OrderRepository extends EntityRepository {
     $query->setParameter('order_id', $order_id);
     $projects = $query->getResult();
     return ($projects ? $projects[0] : NULL );
+  }
+
+  /**
+   * Undocumented function
+   *
+   * @param int $order_id
+   * @return void
+   */
+  public function setOrdinalNumInYear($order_id) {
+    
+    // count number of records in database table orders
+    $order_count = $this->getNumberOfOrders();
+    
+    // get ID of last order
+    // TODO Dragan: make method getLastOrder()
+    $id_of_last_order = $this->getLastOrder()->getId();
+
+    // get year of last order
+    $year_of_last_order = $this->getLastOrder()->getCreatedAt()->format('Y');
+    
+    // get ID of order before last
+    $id_of_order_before_last = $this->getOrderBeforeLast()->getId();
+
+    // get ordinal number in year of order before last
+    $ordinal_number_of_order_before_last = $this->getOrderBeforeLast()->getOrdinalNumInYear();
+
+    // year of order before last
+    $year_of_order_before_last = $this->getOrderBeforeLast()->getCreatedAt()->format('Y');
+
+    if($order_count ==0){  // prvi slučaj kada je tabela $table prazna
+    
+      return die("Table order is empty!");
+    
+    }elseif($order_count ==1){  // drugi slučaj - kada postoji jedan unos u tabeli $table
+    
+      $ordinal_number_in_year = 1; // pošto postoji samo jedan unos u tabelu $table $b_on dobija vrednost '1'
+    
+    }else{  // svi ostali slučajevi kada ima više od jednog unosa u tabeli $table
+    
+      if($year_of_last_order < $year_of_order_before_last){
+        return die("Godina zadnjeg unosa je manja od godine predzadnjeg unosa! Verovarno datum nije podešen");
+      }elseif($year_of_last_order == $year_of_order_before_last){ //nema promene godine
+        $ordinal_number_in_year = $ordinal_number_of_order_before_last + 1;
+      }else{  // došlo je do promene godine
+        $ordinal_number_in_year = 1;
+      }
+    
+    }
+
+    // update ordinal_number_in_year
+    $order = $this->_em->find('\Roloffice\Entity\POrder', $order_id);
+
+    if ($order === null) {
+      echo "Order with ID $order_id does not exist.\n";
+      exit(1);
+    }
+
+    $order->setOrdinalNumInYear($ordinal_number_in_year);
+
+    $this->_em->flush();
+
+  }
+
+  /**
+   * 
+   */
+  public function getLastOrder() {
+    
   }
 
 }

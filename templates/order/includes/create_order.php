@@ -6,25 +6,24 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createOrder"]) ) {
   $user_id = $_SESSION['user_id'];
   $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
 
-  // TODO Dragan: Make method that get OrdinalNumInYear
   $ordinal_num_in_year = 0;
-
+  
   $supplier_id = htmlspecialchars($_POST["supplier_id"]);
   $supplier = $entityManager->find("\Roloffice\Entity\Client", $supplier_id);
-
+  
   $title = htmlspecialchars($_POST["title"]);
   $note = htmlspecialchars($_POST["note"]);
   
   // Save a new order.
   $newOrder = new \Roloffice\Entity\Order();
-
+  
   $newOrder->setOrdinalNumInYear($ordinal_num_in_year);
   $newOrder->setSupplier($supplier);
   $newOrder->setTitle($title);
   $newOrder->setNote($note);
   $newOrder->setStatus(0);
   $newOrder->setIsArchived(0);
-
+  
   $newOrder->setDate(new DateTime("now"));
   $newOrder->setCreatedAt(new DateTime("now"));
   $newOrder->setCreatedByUser($user);
@@ -32,9 +31,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createOrder"]) ) {
   
   $entityManager->persist($newOrder);
   $entityManager->flush();
-
+  
   // gest last id
   $new_order_id = $newOrder->getId();
+  
+  // TODO Dragan: Make method that get OrdinalNumInYear
+  $entityManager->getRepository('Roloffice\Entity\Order')->setOrdinalNumInYear($new_order_id);
   
   // If exist project in Order, then add $newOrder to table v6_projects_orders.
   if (NULL != $_POST["project_id"] ) {
