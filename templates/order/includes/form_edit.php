@@ -160,7 +160,7 @@
         </tbody>
       </table>
 
-      <form action="<?php echo $_SERVER['PHP_SELF']. '?editOrder&order_id='.$order_id; ?>" method="post">
+      <form action="<?php echo $_SERVER['PHP_SELF']. '?updateOrder&order_id='.$order_id; ?>" method="post">
         <input type="hidden" name="order_id" value="<?php echo $order_id; ?>" />
         <table class="table">  
           <tbody>
