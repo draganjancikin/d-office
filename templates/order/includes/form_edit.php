@@ -169,13 +169,11 @@
               <td>
               <select class="form-control" name="project_id">
                   
-                  <option value="<?php echo ( NULL != $project_data->getId() ? $project_data->getId() : '' ) ?>" selected>
-                    <?php echo ( NULL != $project_data->getId() ? $project_data->getOrdinalNumInYear().' '.$project_data->getClient()->getName().' - '.$project_data->getTItle() : '___' ) ?>
+                  <option value="<?php echo ( NULL != $project_data ? $project_data->getId() : '' ) ?>" selected>
+                    <?php echo ( NULL != $project_data ? $project_data->getOrdinalNumInYear().' '.$project_data->getClient()->getName().' - '.$project_data->getTItle() : '___' ) ?>
                   </option>
                   <!-- List of active project. -->
                   <?php
-                  // TODO Dragan: make method that get all active Project 
-                  // $project_list = $project->projectTracking(1);
                   $project_list = $entityManager->getRepository('Roloffice\Entity\Project')->getAllActiveProjects();
                   foreach( $project_list as $project_item):
                     $project_id = $project_item->getId();

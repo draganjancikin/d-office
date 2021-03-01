@@ -161,7 +161,7 @@
             <tr class="table-secondary">
               <td width="110">Projekat:</td>
               <td>
-                <?php echo ( NULL != $project_data->getId() ? '<a href="/projects/?view&project_id='.$project_data->getId().'">'.$project_data->getOrdinalNumInYear().' '.$project_data->getClient()->getName().' - '.$project_data->getTitle().'</a>' : '___' ) ?>
+                <?php echo ( NULL != $project_data ? '<a href="/projects/?view&project_id='.$project_data->getId().'">'.$project_data->getOrdinalNumInYear().' '.$project_data->getClient()->getName().' - '.$project_data->getTitle().'</a>' : '___' ) ?>
               </td>
               <td></td>
             </tr>

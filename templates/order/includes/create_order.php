@@ -34,13 +34,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createOrder"]) ) {
 
   // gest last id
   $new_order_id = $newOrder->getId();
-  die('<script>location.href = "?view&order_id=' .$new_order_id. '" </script>');
+  // die('<script>location.href = "?view&order_id=' .$new_order_id. '" </script>');
 
   // TODO Dragan: then if exist project save order to project
   // One Project can have multiple orders
-  $project_id = htmlspecialchars($_POST["project_id"]);
-  $project = $entityManager->find("\Roloffice\Entity\Project", $project_id);
-
+  
+  // Add $newOrder to table v6_projects_orders.
+  if (NULL != $_POST["project_id"] ) {
+    $project_id = htmlspecialchars($_POST["project_id"]);
+    $project = $entityManager->find("\Roloffice\Entity\Project", $project_id);
+    
+    $project->getOrders()->add($newOrder);
+    $entityManager->flush();
+  }
+  
+  die('<script>location.href = "?view&order_id=' .$new_order_id. '" </script>');
   
   /*
   $sql = "INSERT INTO orderm (date, supplier_id, project_id, title, note ) VALUES ( '$date', '$supplier_id', '$project_id', '$title', '$note' )";
@@ -55,6 +63,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createOrder"]) ) {
   $order_id = $db->connection->insert_id;
   $o_id = $order->setOid();
 
-  die('<script>location.href = "?view&order_id=' .$order_id. '" </script>');
   */
 }
