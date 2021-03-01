@@ -85,7 +85,6 @@ class OrderRepository extends EntityRepository {
     $order_count = $this->getNumberOfOrders();
     
     // get ID of last order
-    // TODO Dragan: make method getLastOrder()
     $id_of_last_order = $this->getLastOrder()->getId();
 
     // get year of last order
@@ -121,7 +120,7 @@ class OrderRepository extends EntityRepository {
     }
 
     // update ordinal_number_in_year
-    $order = $this->_em->find('\Roloffice\Entity\POrder', $order_id);
+    $order = $this->_em->find('\Roloffice\Entity\Order', $order_id);
 
     if ($order === null) {
       echo "Order with ID $order_id does not exist.\n";
@@ -134,11 +133,22 @@ class OrderRepository extends EntityRepository {
 
   }
 
-  /**
-   * 
+/**
+   * Method that rerurn ID of last order in db table
+   *
+   * @return object
    */
   public function getLastOrder() {
+
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('o')
+        ->from('Roloffice\Entity\Order', 'o')
+        ->orderBy('o.id', 'DESC')
+        ->setMaxResults(1);
+    $query = $qb->getQuery();
+    $last_order = $query->getResult()[0];
     
+    return $last_order;
   }
 
 }
