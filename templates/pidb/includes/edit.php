@@ -116,16 +116,3 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleDataInPidb"]
 
   die('<script>location.href = "?edit&pidb_id='.$pidb_id.'" </script>');
 }
-
-// edit settings
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editSettings"]) ) {
-
-  $kurs = str_replace(",", ".", htmlspecialchars($_POST["kurs"]));
-  $tax = str_replace(",", ".", htmlspecialchars($_POST["tax"]));
-
-  $db = new Database();
-
-  $db->connection->query("UPDATE preferences SET kurs='$kurs', tax='$tax' WHERE id = '1' ") or die(mysqli_error($db->connection));
-
-  die('<script>location.href = "?set" </script>');
-}
