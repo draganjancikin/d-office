@@ -83,15 +83,9 @@ class OrderRepository extends EntityRepository {
     
     // count number of records in database table orders
     $order_count = $this->getNumberOfOrders();
-    
-    // get ID of last order
-    $id_of_last_order = $this->getLastOrder()->getId();
 
     // get year of last order
     $year_of_last_order = $this->getLastOrder()->getCreatedAt()->format('Y');
-    
-    // get ID of order before last
-    $id_of_order_before_last = $this->getOrderBeforeLast()->getId();
 
     // get ordinal number in year of order before last
     $ordinal_number_of_order_before_last = $this->getOrderBeforeLast()->getOrdinalNumInYear();
@@ -151,4 +145,21 @@ class OrderRepository extends EntityRepository {
     return $last_order;
   }
 
+  /**
+   * Method that rerurn ID of last order in db table
+   *
+   * @return object
+   */
+  public function getOrderBeforeLast() {
+
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('o')
+        ->from('Roloffice\Entity\Order', 'o')
+        ->orderBy('o.id', 'DESC')
+        ->setMaxResults(2);
+    $query = $qb->getQuery();
+    $order_before_last = $query->getResult()[1];
+    
+    return $order_before_last;
+  }
 }
