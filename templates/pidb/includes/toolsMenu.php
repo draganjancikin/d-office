@@ -121,7 +121,7 @@ require 'export.php';
       if( isset($_GET['view']) || isset($_GET['edit'])):
         ?>
         <!-- Button trigger modal za evidentiranje transakcije -->
-        <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addPayment" title="Evidentiranje transakcija">
+        <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addPayment" <?php echo ($pidb_data['archived'] == 1 ? 'title="Predračun je arhiviran i nije moguće videntiranje transakcija" disabled' : 'title="Evidentiranje transakcija" ' ) ?>>
           <i class="fas fa-hand-holding-usd"></i>
         </button>
         <a href="/pidb/index.php?transactions&pidb_id=<?php echo $pidb_id ?>">
