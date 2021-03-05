@@ -133,3 +133,4 @@ Enhancement:
 ## New in version 5.3.5 - 6.0.5
 
 - resolved issue #96
+- resolved issue #97
