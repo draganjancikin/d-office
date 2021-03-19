@@ -134,3 +134,7 @@ Enhancement:
 
 - resolved issue #96
 - resolved issue #97
+
+## For next version 5.3.5 - 6.0.6
+
+- resplved issue #99
