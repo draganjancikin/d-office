@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # RolOffice v5.3.5 - 6.0.5
+=======
+# RolOffice v5.3.5 - 6.0.0-alpha-1
+>>>>>>> 29ee576... Version update
 
 Web Application
 
@@ -139,3 +143,9 @@ Enhancement:
 - Little CSS tuning for Order and Pidb forms
 - Replace "eur" with €
 
+- resolved issue #96
+- resolved issue #97
+## New in version 5.3.5 - 6.1.0
+
+- Implement Doctrine ORM to Material
+- Implement Doctrine ORM to Unit
