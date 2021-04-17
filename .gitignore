@@ -1,12 +1,20 @@
-app/config/dbConfig.php
 RolOffice v4.0.code-workspace
 .vscode/
+
+# Ignore LIVE enviroments files an folders
+/config/dbConfig.live.php
 web/projects/upload/
+
+# Ignore DEV enviroments files an folders
+/config/dbConfig.dev.php
 web/testing/
 
-# Ignore DEV enviroments files
+# Ignore LOCAL enviroments files an folders
+/config/dbConfig.local.php
+
+
+# Ignore enviroments files
 /todos/
-/config/dbConfig.php
 /config/bootstrap.php
 /vendor/
 
@@ -16,4 +24,3 @@ web/testing/
 # Ignore LOCAL enviroments files
 .docksal
 _working
-/config/dbConfig.local.php
