@@ -4,7 +4,7 @@ RolOffice v4.0.code-workspace
 web/projects/upload/
 web/testing/
 
-# roloffice_dev
+# Ignore DEV enviroments files
 /todos/
 /config/dbConfig.php
 /config/bootstrap.php
@@ -12,3 +12,8 @@ web/testing/
 
 # Ignore .sql files
 *.sql
+
+# Ignore LOCAL enviroments files
+.docksal
+_working
+/config/dbConfig.local.php
