@@ -1,10 +1,10 @@
-# RolOffice v5.3.5 - 6.0.6
+# RolOffice v5.3.5 - 6.0.5
 
 Web Application
 
 ## For next version 5.3.5 - 6.0.6
 
-- resplved issue #99
+- resolved issue #99
 
 ## New in version 5.3.5 - 6.0.5
 
