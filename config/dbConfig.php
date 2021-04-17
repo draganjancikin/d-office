@@ -1,4 +1,5 @@
 <?php
+require_once 'appConfig.php';
 # Check enviroment and include dbConfig file.
 if (file_exists(__DIR__ . '/dbConfig.live.php')) {
   include __DIR__ . '/dbConfig.live.php';
