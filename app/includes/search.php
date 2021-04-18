@@ -374,6 +374,7 @@ endif;
 if($page == "materials"):
   $term = filter_input(INPUT_GET, 'search');
   $materials= $entityManager->getRepository('\Roloffice\Entity\Material')->search($term);
+  $preferences = $entityManager->find('\Roloffice\Entity\Preferences', 1);
   ?>
   <div class="card mb-4">
     <div class="card-header p-2">
@@ -401,18 +402,17 @@ if($page == "materials"):
           <tbody>
             <?php
             foreach ($materials as $material_data):
-              $material_unit = $entityManager->find('\Roloffice\Entity\Unit', $material_data->getUnit() );
               ?>
               <tr>
                 <td>
                   <a href="?view&id=<?php echo $material_data->getId() ?>" title="<?php echo $material_data->getNote() ?>"><?php echo $material_data->getName() ?></a>
                 </td>
-                <td class="text-center"><?php echo $material_unit->getName() ?></td>
+                <td class="text-center"><?php echo $material_data->getUnit()->getName() ?></td>
                 <td class="text-right">
-                  <?php echo number_format( ($material_data->getPrice() * $material->getKurs() * ($material->getTax()/100 + 1) ) , 2, ",", ".") ?>
+                  <?php echo number_format( ($material_data->getPrice() * $preferences->getKurs() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?>
                 </td>
                 <td class="text-right">
-                  <?php echo number_format( ($material_data->getPrice() * ($material->getTax()/100 + 1) ) , 2, ",", ".") ?>
+                  <?php echo number_format( ($material_data->getPrice() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?>
                 </td>
               </tr>
               <?php
