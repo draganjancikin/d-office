@@ -428,8 +428,8 @@ endif;
 
 if($page == "orders"):
     require '../../templates/order/includes/del.php';
-    $name = filter_input(INPUT_GET, 'search');
-    $orders = $order->search($name);
+    $term = filter_input(INPUT_GET, 'search');
+    $orders= $entityManager->getRepository('\Roloffice\Entity\Order')->search($term);
     ?>
     <div class="card mb-4">
         <div class="card-header p-2">
@@ -459,55 +459,55 @@ if($page == "orders"):
                     <tbody>
                     <?php
                     foreach ($orders as $order_data):
-                        $project_id = $order_data['project_id'];
-                        $project_data = $project -> getProject($project_id);
-                        if ($order_data['is_archived'] == 0):
+                        // if exist get project from orders
+                        $project_data = null;
+                        if ($order_data->getIsArchived() == 0):
                             ?>
                             <tr>
                                 <td class="px-1">
-                                    <a href="?view&order_id=<?php echo $order_data['id'] ?>">
-                                        <?php echo str_pad($order_data['o_id'], 4, "0", STR_PAD_LEFT) . '_' . date('m_Y', strtotime($order_data['date'])) ?>
+                                    <a href="?view&order_id=<?php echo $order_data->getId() ?>">
+                                        <?php echo str_pad($order_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $order_data->getDate()->format('m_Y') ?>
                                     </a>
                                 </td>
                                 <td class="px-1 order-status text-center">
                                 <?php
-                                    if($order_data['status'] == 0):
+                                    if($order_data->getStatus() == 0):
                                     ?>
                                     <span class="badge badge-pill badge-light">N</span>
                                     <?php
                                     endif;
-                                    if($order_data['status'] == 1):
+                                    if($order_data->getStatus() == 1):
                                     ?>
                                     <span class="badge badge-pill badge-warning">P</span>
                                     <?php
                                     endif;
-                                    if($order_data['status'] == 2):
+                                    if($order_data->getStatus() == 2):
                                     ?>
                                     <span class="badge badge-pill badge-success">S</span>
                                     <?php
                                     endif;
-                                    if($order_data['status'] == 3):
+                                    if($order_data->getStatus() == 3):
                                     ?>
                                     <span class="badge badge-pill badge-secondary">A</span>
                                     <?php
                                     endif;
                                 ?>
                                 </td>
-                                <td class="px-1"><?php echo $order_data['supplier_name'] ?></td>
+                                <td class="px-1"><?php echo $order_data->getSupplier()->getName() ?></td>
                                 <td class="px-1">
-                                    <?php echo $order_data['title']; ?>
+                                    <?php echo $order_data->getTitle() ?>
                                 </td>
                                 <td class="px-1">
                                     <?php 
-                                    if($project_data['id']):
+                                    if( null !== $project_data):
                                         ?>
-                                        <a href="/projects/?view&project_id=<?php echo $project_data['id'] ?>">
-                                            <?php echo $project_data['pr_id'] .' '. $project_data['client_name'] .' - '. $project_data['title']; ?>
+                                        <a href="/projects/?view&project_id=<?php echo $project_data->getId() ?>">
+                                            <?php echo $project_data->getOrdinalNumInYear() .' '. $project_data->getClient()->getName() .' - '. $project_data->getTitle() ?>
                                         </a>
                                         <?php 
                                     endif;
                                     ?>
-                                    <?php echo ( $order_data['id'] == $order->getLastOrderId() ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="' .$_SERVER['PHP_SELF']. '?name=&search&delOrder&order_id=' .$order_data['id']. '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); ?>
+                                    <?php // echo ( $order_data->getId() == $order->getLastOrderId() ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="' .$_SERVER['PHP_SELF']. '?name=&search&delOrder&order_id=' .$order_data['id']. '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); ?>
                                 </td>
                             </tr>
                             <?php
