@@ -162,4 +162,24 @@ class OrderRepository extends EntityRepository {
     
     return $order_before_last;
   }
+
+  /**
+   * Search method by criteria: Supplier name.
+   * 
+   * @return array
+   */
+  public function search($term) {
+    // Create a QueryBilder instance
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('o')
+      ->from('Roloffice\Entity\Order', 'o')
+      ->join('o.supplier', 'supl', 'WITH', 'o.supplier = supl.id')
+      ->where(
+        $qb->expr()->like('supl.name', $qb->expr()->literal("%$term%")),
+        )
+      ->orderBy('o.id', 'DESC');
+    $query = $qb->getQuery();
+    $orders = $query->getResult();
+    return $orders;
+  }
 }
