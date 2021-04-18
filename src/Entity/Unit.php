@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="v6_Units")
+ * @ORM\Table(name="v6_units")
  */
 class Unit {
 
