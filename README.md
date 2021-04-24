@@ -6,6 +6,7 @@ Web Application
 
 - Implement Doctrine ORM to Material
 - Implement Doctrine ORM to Unit
+- Implement Doctrine ORM to Order
 
 ## For next version 5.3.5 - 6.0.6
 
