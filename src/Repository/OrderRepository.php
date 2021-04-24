@@ -182,4 +182,5 @@ class OrderRepository extends EntityRepository {
     $orders = $query->getResult();
     return $orders;
   }
+
 }

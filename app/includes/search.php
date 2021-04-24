@@ -429,7 +429,7 @@ endif;
 if($page == "orders"):
     require '../../templates/order/includes/del.php';
     $term = filter_input(INPUT_GET, 'search');
-    $orders= $entityManager->getRepository('\Roloffice\Entity\Order')->search($term);
+    $orders = $entityManager->getRepository('\Roloffice\Entity\Order')->search($term);
     ?>
     <div class="card mb-4">
         <div class="card-header p-2">
@@ -460,7 +460,10 @@ if($page == "orders"):
                     <?php
                     foreach ($orders as $order_data):
                         // if exist get project from orders
-                        $project_data = null;
+                        // $project_data = null;
+                        // ???
+                        $project_data = $entityManager->getRepository('\Roloffice\Entity\Order')->getProject($order_data->getId());
+                        
                         if ($order_data->getIsArchived() == 0):
                             ?>
                             <tr>
@@ -507,7 +510,7 @@ if($page == "orders"):
                                         <?php 
                                     endif;
                                     ?>
-                                    <?php // echo ( $order_data->getId() == $order->getLastOrderId() ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="' .$_SERVER['PHP_SELF']. '?name=&search&delOrder&order_id=' .$order_data['id']. '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); ?>
+                                    <?php // echo ( $order_data->getId() == $order->getLastOrderId() ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="' .$_SERVER['PHP_SELF']. '?name=&search&delOrder&order_id=' .$order_data->getId(). '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); ?>
                                 </td>
                             </tr>
                             <?php
