@@ -167,6 +167,10 @@
             <tr class="table-secondary">
               <td width="110">Projekat:</td>
               <td>
+              <input 
+                type="hidden" 
+                name="old_project_id" 
+                value="<?php echo ( $project_data ? $project_data->getId() : '0' )  ?>">
               <select class="form-control" name="project_id">
                   
                   <option value="<?php echo ( NULL != $project_data ? $project_data->getId() : '' ) ?>" selected>

@@ -64,8 +64,8 @@ class Order {
   protected $is_archived;
   
   /**
-   * Order status: 1 => 'draft', 2 => 'ordered', 3 => 'arrived'.
-   * (1 => 'nacrt', 2 => 'poručeno', 3 => 'stiglo')
+   * Order status: 0 => 'draft', 1 => 'ordered', 2 => 'arrived'.
+   * (0 => 'nacrt', 1 => 'poručeno', 2 => 'stiglo')
    * @ORM\Column(type="integer")
    * @var int
    */
