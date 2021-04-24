@@ -2,9 +2,14 @@
 // Update order.
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateOrder"]) ) {
 echo "Order updating ...";
-  /*
+  
+  // curent loged user
+  $user_id = $_SESSION['user_id'];
+  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+
   $order_id = htmlspecialchars($_GET["order_id"]);
-  $project_id = htmlspecialchars($_POST["project_id"]);
+  $order = $entityManager->find("\Roloffice\Entity\Order", $order_id);
+
   $title = htmlspecialchars($_POST["title"]);
   $status = htmlspecialchars($_POST["status"]);
 
@@ -15,13 +20,21 @@ echo "Order updating ...";
   }
 
   $note = htmlspecialchars($_POST["note"]);
+
+  // If exist project in Order, then add $order to table v6_projects_orders.
+  if (NULL != $_POST["project_id"] ) {
+    $project_id = htmlspecialchars($_POST["project_id"]);
+    $project = $entityManager->find("\Roloffice\Entity\Project", $project_id);
+    
+    $project->getOrders()->add($order);
+  }
+
+  $order->setTitle($title);
+  $order->setStatus($status);
+  $order->setIsArchived($is_archived);
+  $order->setNote($note);
   
-  $db = new Database();
-
-  $db->connection->query(" UPDATE orderm " 
-                   . " SET project_id ='$project_id', title='$title', status='$status', is_archived='$is_archived', note='$note' " 
-                   . " WHERE id = '$order_id' ") or die(mysqli_error($db->connection));
-
+  $entityManager->flush();
+  
   die('<script>location.href = "?view&order_id='.$order_id.'" </script>');
-  */
 }
