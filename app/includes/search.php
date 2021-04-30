@@ -459,11 +459,7 @@ if($page == "orders"):
                     <tbody>
                     <?php
                     foreach ($orders as $order_data):
-                        // if exist get project from orders
-                        // $project_data = null;
-                        // ???
                         $project_data = $entityManager->getRepository('\Roloffice\Entity\Order')->getProject($order_data->getId());
-                        
                         if ($order_data->getIsArchived() == 0):
                             ?>
                             <tr>
@@ -496,13 +492,15 @@ if($page == "orders"):
                                     endif;
                                 ?>
                                 </td>
-                                <td class="px-1"><?php echo $order_data->getSupplier()->getName() ?></td>
+                                <td class="px-1">
+                                    <?php echo $order_data->getSupplier()->getName() ?>
+                                </td>
                                 <td class="px-1">
                                     <?php echo $order_data->getTitle() ?>
                                 </td>
                                 <td class="px-1">
                                     <?php 
-                                    if( null !== $project_data):
+                                    if(null !== $project_data):
                                         ?>
                                         <a href="/projects/?view&project_id=<?php echo $project_data->getId() ?>">
                                             <?php echo $project_data->getOrdinalNumInYear() .' '. $project_data->getClient()->getName() .' - '. $project_data->getTitle() ?>
@@ -510,7 +508,10 @@ if($page == "orders"):
                                         <?php 
                                     endif;
                                     ?>
-                                    <?php // echo ( $order_data->getId() == $order->getLastOrderId() ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="' .$_SERVER['PHP_SELF']. '?name=&search&delOrder&order_id=' .$order_data->getId(). '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); ?>
+                                    <?php 
+                                    $last_order = $entityManager->getRepository('\Roloffice\Entity\Order')->getLastOrder();
+                                    echo ( $order_data == $last_order ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="' .$_SERVER['PHP_SELF']. '?name=&search&delOrder&order_id=' .$order_data->getId(). '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); 
+                                    ?>
                                 </td>
                             </tr>
                             <?php
@@ -543,32 +544,37 @@ if($page == "orders"):
                       
                     <?php
                     // zatim izlistavamo narudžbenice koje su arhivirane
-                    foreach ($orders as $order):
-                        $project_id = $order['project_id'];
-                        $project_data = $project -> getProject($project_id);
-                        if ($order['is_archived'] == 1):
+                    foreach ($orders as $order_data):
+                        $project_data = $entityManager->getRepository('\Roloffice\Entity\Order')->getProject($order_data->getId());
+                        // $project_id = $order['project_id'];
+                        // $project_data = $project -> getProject($project_id);
+                        if ($order_data->getIsArchived() == 1):
                             ?>
                             <tr class="table-secondary">
-                                <td class="px-1"><a href="?view&order_id=<?php echo $order['id'] ?>"><?php echo str_pad($order['o_id'], 4, "0", STR_PAD_LEFT) . '_' . date('m_Y', strtotime($order['date'])) ?></a></td>
+                                <td class="px-1">
+                                    <a href="?view&order_id=<?php echo $order_data->getId() ?>">
+                                        <?php echo str_pad($order_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $order_data->getDate()->format('m_Y') ?>
+                                    </a>
+                                </td>
                                 <td class="px-1 order-status text-center">
 
                                 <?php
-                                    if($order['status'] == 0):
+                                    if($order_data->getStatus() == 0):
                                     ?>
                                     <span class="badge badge-pill badge-light">N</span>
                                     <?php
                                     endif;
-                                    if($order['status'] == 1):
+                                    if($order_data->getStatus() == 1):
                                     ?>
                                     <span class="badge badge-pill badge-warning">P</span>
                                     <?php
                                     endif;
-                                    if($order['status'] == 2):
+                                    if($order_data->getStatus() == 2):
                                     ?>
                                     <span class="badge badge-pill badge-success">S</span>
                                     <?php
                                     endif;
-                                    if($order['is_archived'] == 1):
+                                    if($order_data->getIsArchived() == 1):
                                     ?>
                                     <span class="badge badge-pill badge-secondary">A</span>
                                     <?php
@@ -576,14 +582,18 @@ if($page == "orders"):
                                 ?>
   
                                 </td>
-                                <td class="px-1"><?php echo $order['supplier_name'] ?></td>
-                                <td class="px-1"><?php echo $order['title']; ?></td>
+                                <td class="px-1">
+                                    <?php echo $order_data->getSupplier()->getName() ?>
+                                </td>
+                                <td class="px-1">
+                                    <?php echo $order_data->getTitle() ?>
+                                </td>
                                 <td class="px-1">
                                     <?php 
-                                    if($project_data['id']):
+                                    if(null !== $project_data):
                                         ?>
-                                        <a href="/projects/?view&project_id=<?php echo $project_data['id'] ?>">
-                                            <?php echo $project_data['pr_id'] .' '. $project_data['client_name'] .' - '. $project_data['title']; ?>
+                                        <a href="/projects/?view&project_id=<?php echo $project_data->getId() ?>">
+                                            <?php echo $project_data->getOrdinalNumInYear() .' '. $project_data->getClient()->getName() .' - '. $project_data->getTitle() ?>
                                         </a>
                                         <?php 
                                     endif;
