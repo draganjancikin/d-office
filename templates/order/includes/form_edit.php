@@ -75,11 +75,12 @@
                 <?php
                 $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getPropertiesOnOrderMaterial($material_on_order->getId());
                 foreach ($material_on_order_properties as $material_on_order_property):
-                  echo $material_on_order_property->getProperty()->getName() . ' <input class="input-box-50" type="text" name="' .$material_on_order_property->getProperty()->getName(). '" value="' .number_format($material_on_order_property->getQuantity(), 2, ",", "."). '" placeholder="(cm)" disabled > ';
+                  echo $material_on_order_property->getProperty()->getName() . ' <input class="input-box-50" type="text" name="' .$material_on_order_property->getProperty()->getName(). '" value="' .number_format($material_on_order_property->getQuantity(), 2, ",", "."). '" placeholder="(cm)" > ';
                 endforeach;
                 ?>
                 <br />
-                <?php echo ( $material_on_order->getNote() == "" ? "" : $material_on_order->getNote() ) ?>
+                <input type="text" class="input-box-65" name="note" value="<?php echo ( $material_on_order->getNote() == "" ? "" : $material_on_order->getNote() ) ?>">
+                
               </td>
               <td class="px-1 text-center">
                 <?php echo $material_on_order->getMaterial()->getUnit()->getName() ?>
@@ -94,7 +95,7 @@
                 <input class="input-box-65" type="text" name="price" value="<?php echo number_format($material_on_order->getPrice(), 4, ",", ".") ?>" >
               </td>
               <td class="px-1 text-center">
-                <input class="input-box-45" type="text" name="discounts" value="<?php echo number_format($material_on_order->getDiscount(), 2, ",", ".") ?>" >
+                <input class="input-box-45" type="text" name="discount" value="<?php echo number_format($material_on_order->getDiscount(), 2, ",", ".") ?>" >
               </td>
               <td class="px-1 input-box-65">
                 <?php

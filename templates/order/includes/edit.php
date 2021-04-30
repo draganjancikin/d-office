@@ -1,15 +1,8 @@
 <?php
-use Roloffice\Core\Database;
-
-$user_id = $_SESSION['user_id'];
-$date = date('Y-m-d h:i:s');
-
-
-
 
 // edit material in order
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialInOrder"]) ) {
-    
+    /*
     $order_id = htmlspecialchars($_GET["order_id"]);
     $orderm_material_id = htmlspecialchars($_GET["orderm_material_id"]);
     $material_id = htmlspecialchars($_POST["material_id"]);
@@ -57,4 +50,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialInOrder"]) 
     }
     
     die('<script>location.href = "?edit&order_id='.$order_id.'" </script>');
+    */
 }

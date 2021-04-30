@@ -5,7 +5,7 @@ namespace Roloffice\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity (repositoryClass="Roloffice\Repository\OrderMaterialPropertyRepository")
  * @ORM\Table(name="v6_orders_materials_properties")
  */
 class OrderMaterialProperty {

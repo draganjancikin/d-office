@@ -2,9 +2,9 @@
 require 'create_order.php';
 require 'update_order.php';
 require 'add_material_to_order.php';
+require 'edit_material_in_order.php';
 
 require 'add.php';
-require 'edit.php';
 require 'del.php';
 ?>
 <div class="col-lg-12 px-2" id="topMeni">
