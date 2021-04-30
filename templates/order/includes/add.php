@@ -29,39 +29,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addOrder"]) ) {
     die('<script>location.href = "?view&order_id=' .$order_id. '" </script>');
 }
 
-
-// add article to order
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addMaterialInOrder"]) ) {
-
-    $order_id = htmlspecialchars($_GET["order_id"]);
-
-    $material_id = htmlspecialchars($_POST["materijal_id"]);
-    $note = htmlspecialchars($_POST["note"]);
-    $pieces = htmlspecialchars($_POST["pieces"]);
-
-    $price = $material->getPrice($material_id);
-    $tax = $material->getTax();
-
-    $db = new Database();
-
-    $db->connection->query("INSERT INTO orderm_material (order_id, material_id, note, pieces, price, tax) " 
-                    . " VALUES ('$order_id', '$material_id', '$note', '$pieces', '$price', '$tax' )") or die(mysqli_error($db->connection));
-
-    // treba nam i pidb_article_id (id artikla u pidb dokumentu) to je u stvari zadnji unos
-    $orderm_material_id = $db->connection->insert_id;;
-
-    //insert property-a mateijala u tabelu orderm_article_property
-    $propertys = $db->connection->query( "SELECT * FROM material_property WHERE material_id ='$material_id'");
-    while($row_property = mysqli_fetch_array($propertys)){
-        $property_id = $row_property['property_id'];
-        $quantity = 0;
-        $db->connection->query("INSERT INTO orderm_material_property (orderm_material_id, property_id, quantity) " 
-                        . " VALUES ('$orderm_material_id', '$property_id', '$quantity' )") or die(mysqli_error($db->connection));
-    }
-
-    die('<script>location.href = "?edit&order_id=' .$order_id. '" </script>');
-}
-
 // duplicate material in order
 if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["duplicateMaterialInOrder"])) {
     
