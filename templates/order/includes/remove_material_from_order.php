@@ -1,5 +1,5 @@
 <?php
-// TODO: Remove material from order.
+// Remove material from Order.
 if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["removeMaterialFromOrder"]) ) {
   
   $order_id = htmlspecialchars($_GET["order_id"]);
@@ -7,30 +7,18 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["removeMaterialFromOrder"
   $order_material_id = htmlspecialchars($_GET["order_material_id"]);
   $order_material = $entityManager->find("\Roloffice\Entity\OrderMaterial", $order_material_id);
 
-  echo "Removing material from order ...";
-
   // First remove properties from table v6_orders_materials_properties.
-
-  // Second materials from table v6_orders_materials where id = $order_material_id.
+  if ($order_material_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterialProperty')->getOrderMaterialProperties($order_material_id)) {
+    foreach ($order_material_properties as $order_material_property) {
+      $orderMaterialProperty = $entityManager->find("\Roloffice\Entity\OrderMaterialProperty", $order_material_property->getId());
+      $entityManager->remove($orderMaterialProperty);
+      $entityManager->flush();
+    }
+  }
+  
+  // Second remove materials from table v6_orders_materials
   $entityManager->remove($order_material);
   $entityManager->flush();
- 
-
-  /*
-  // sledeća metoda briše i artikal iz pidb_article i property-e iz pidb_article_property
-  $order->delMaterialFromOrder($orderm_material_id);
-
-  public function delMaterialFromOrder($orderm_material_id){
-
-        $this->delete("DELETE FROM orderm_material WHERE id='$orderm_material_id' ");
-        
-        $propertys = $this->get("SELECT * FROM orderm_material_property WHERE orderm_material_id = '$orderm_material_id' ");
-        foreach($propertys as $property) {
-            $property_id = $property['id'];
-            $this->delete("DELETE FROM orderm_material_property WHERE id='$property_id' ");
-        }
-    }
 
   die('<script>location.href = "?edit&order_id='.$order_id.'" </script>');
-  */
 }

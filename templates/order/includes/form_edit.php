@@ -122,7 +122,7 @@
                 <a href="<?php echo $_SERVER['PHP_SELF']. '?duplicateMaterialInOrder&order_id='.$order_id.'&orderm_material_id=' .$material_on_order->getMaterial()->getId() ?>" class="btn btn-mini btn-outline-info px-1">
                   <i class="fas fa-plus" title="Dupliciraj materijal"> </i>
                 </a>
-                <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete materijal?');"  href="<?php echo $_SERVER['PHP_SELF']. '?removeMaterialFromOrder&order_id='.$order_id.'&order_material_id=' .$material_on_order->getMaterial()->getId() ?>" class="btn btn-mini btn-outline-danger px-1">
+                <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete materijal?');"  href="<?php echo $_SERVER['PHP_SELF']. '?removeMaterialFromOrder&order_id='.$order_id.'&order_material_id=' .$material_on_order->getId() ?>" class="btn btn-mini btn-outline-danger px-1">
                   <i class="fas fa-trash-alt"> </i>
                 </a>
               </td>
