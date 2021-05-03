@@ -330,23 +330,14 @@ foreach ($articles_on_cutting as $article_on_cutting):
     }
     
     
-    
-    
-    
 endforeach;
 
-
-
-    
-      
 
     // $total_picket_lenght = $total_picket_lenght + $duzina_letvica_polja*$article_field_number;
     // $total_kap = $total_kap + $picket_number*$article_field_number; 
 	  
 	  
 // kraj petlje while za iscitavanje artikala iz tabele cutting_article
-
-
 
 
 

@@ -48,14 +48,10 @@ $pdf->SetFont('dejavusans', '', 10);
 // add a page
 $pdf->AddPage();
 
-// generisanje potrebnih objekata
-$order = new \Roloffice\Controller\OrderController();
-$material = new \Roloffice\Controller\MaterialController();
-    
 $order_id = $_GET['order_id'];
-$order_data = $order->getOrder($order_id);
+$order_data = $entityManager->find("\Roloffice\Entity\Order", $order_id);
 
-$supplier_data = $entityManager->find('Roloffice\Entity\Client', $order_data['supplier_id']);
+$supplier_data = $entityManager->find('Roloffice\Entity\Client', $order_data->getSupplier());
 $supplier_country = $entityManager->find('\Roloffice\Entity\Country', $supplier_data->getCountry());
 $supplier_city = $entityManager->find('\Roloffice\Entity\City', $supplier_data->getCity());
 $supplier_street = $entityManager->find('\Roloffice\Entity\Street', $supplier_data->getStreet());
@@ -88,10 +84,10 @@ $html = '
     <td width="350px">Dobavljač:<br />'.$supplier_data->getName().'<br />'.$supplier_street->getName().' '.$supplier_data->getHomeNumber().'<br />'.$supplier_city->getName().', '.$supplier_country->getName().'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>
   <tr>
-    <td colspan="3"><h2>Narudžbenica: '.str_pad($order_data['o_id'], 3, "0", STR_PAD_LEFT).' - '.date('m', strtotime($order_data['date'])).'</h2></td>
+    <td colspan="3"><h2>Narudžbenica: '.str_pad($order_data->getOrdinalNumInYear(), 3, "0", STR_PAD_LEFT).' - '.$order_data->getDate()->format('Y').'</h2></td>
   </tr>
   <tr>
-    <td colspan="3">Datum i mesto: '.date('d M Y', strtotime($order_data['date'])).'.g. Bačka Palanka</td>
+    <td colspan="3">Datum i mesto: '.$order_data->getDate()->format('Y').'.g. Bačka Palanka</td>
   </tr>
 </table>
 ';
@@ -117,17 +113,19 @@ $total_tax_base = 0;
 $total_tax_amount = 0;
 $total = 0;
 $total_eur = 0;
-$materials_on_order = $order->getMaterialsOnOrder($order_id);
+
+$materials_on_order = $entityManager->getRepository('\Roloffice\Entity\Order')->getMaterialsOnOrder($order_id);
 
 foreach ($materials_on_order as $material_on_order):
     
-    $propertys = $material_on_order['propertys'];
+    // $propertys = $material_on_order['propertys'];
+    $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getPropertiesOnOrderMaterial($material_on_order->getId());
     $property_temp = '';
     $property_counter = 0;
-    foreach ($propertys as $property):
+    foreach ($material_on_order_properties as $material_on_order_property):
         $property_counter ++;
-        $property_name = $property['property_name'];
-        $property_quantity = number_format($property['property_quantity'], 1, ",", ".");
+        $property_name = $material_on_order_property->getProperty()->getName();
+        $property_quantity = number_format($material_on_order_property->getQuantity(), 1, ",", ".");
         $property_temp = $property_temp . ( $property_counter==2 ? ' x ' : '' ) .$property_quantity . 'cm';
         // old $property_temp = $property_temp . ', ' .$property_name . ' ' .$property_quantity . ' cm';
         // $property_temp = $property_temp . ' x' .$property_quantity . ' cm';
@@ -140,13 +138,13 @@ foreach ($materials_on_order as $material_on_order):
     <table border="0" style="font-size:14px">
       <tr>
         <td width="35px" align="center">'.$count.'</td>
-        <td width="100px" class="center">' . $material_on_order['code'] . '</td>
+        <td width="100px" class="center">' . ' ' . '</td>
 
-        <td width="440px">'.$material_on_order['name']
-            . ( $material_on_order['note'] == "" ? "" : ', ' .$material_on_order['note'] )
-            .'<br />'.$property_temp. ' - ' .$material_on_order['pieces']. (($material_on_order['unit_name'] == "set" OR $material_on_order['unit_name'] == "par" ) ? " " .$material_on_order['unit_name'] : " kom " ).  '</td>
-        <td align="center" width="45px">'.$material_on_order['unit_name'].'</td>
-        <td width="65px" align="right">'.number_format($material_on_order['quantity'], 2, ",", ".").'</td>
+        <td width="440px">'.$material_on_order->getNote()
+            . ( $material_on_order->getNote() == "" ? "" : ', ' .$material_on_order->getNote() )
+            .'<br />'.$property_temp. ' - ' .$material_on_order->getPieces(). (($material_on_order->getMaterial()->getUnit()->getName() == "set" OR $material_on_order->getMaterial()->getUnit()->getName() == "par" ) ? " " .$material_on_order->getMaterial()->getUnit()->getName() : " kom " ).  '</td>
+        <td align="center" width="45px">'.$material_on_order->getMaterial()->getUnit()->getName().'</td>
+        <td width="65px" align="right">'.number_format($material_on_order_quantity = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getQuantity($material_on_order->getId(), $material_on_order->getMaterial()->getMinObracMera(), $material_on_order->getPieces()), 2, ",", ".").'</td>
         
       </tr>
     </table>
@@ -154,8 +152,8 @@ foreach ($materials_on_order as $material_on_order):
     
     $pdf->writeHTML($html, true, false, true, false, '');
     
-    $total_tax_base = $total_tax_base + $material_on_order['tax_base'];
-    $total_tax_amount = $total_tax_amount + $material_on_order['tax_amount'];
+    $total_tax_base = $total_tax_base + $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getTaxBase($material_on_order->getPrice(), $material_on_order->getDiscount(), $material_on_order_quantity);
+    $total_tax_amount = $total_tax_amount + $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getTaxAmount($total_tax_base, $material_on_order->getTax() );
     $total = $total_tax_base + $total_tax_amount;
     
 endforeach;
@@ -164,7 +162,7 @@ $html = '
 <style type="text/css"> table { padding: 0px; margin: 0px; }</style>
 <table border="1">
   <tr>
-    <td width="690px">Napomena:<br />'.nl2br($order_data['note']).'</td>
+    <td width="690px">Napomena:<br />'.nl2br($order_data->getNote()).'</td>
   </tr>
 </table>
 ';
@@ -179,7 +177,7 @@ $pdf->lastPage();
 //Close and output PDF document
 // $pdf->Output('narudzbenica.pdf', 'FI');
 
-switch ($order_data['supplier_id']) {
+switch ($order_data->getSupplier()->getId()) {
     case 12:
         $folder = "ALUMIL NS/";
         break;
@@ -280,7 +278,7 @@ switch ($order_data['supplier_id']) {
         $folder = $supplier_data->getName() . ' - ';
 }
 
-$pdf->Output('D:/ROLOSTIL/PORUDZBINE/' .$folder.str_pad($order_data['o_id'], 3, "0", STR_PAD_LEFT). '-' .date('m', strtotime($order_data['date'])). ' - ' .date('d M', strtotime($order_data['date'])). '.pdf', 'FI');
+$pdf->Output('D:/ROLOSTIL/PORUDZBINE/' . $folder . str_pad($order_data->getOrdinalNumInYear(), 3, "0", STR_PAD_LEFT) . '-' . $order_data->getDate()->format('m'). ' - ' . $order_data->getDate()->format('d M') . '.pdf', 'FI');
 
 //============================================================+
 // END OF FILE                                                
