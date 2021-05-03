@@ -23,5 +23,5 @@ web/testing/
 *.sql
 
 # Ignore LOCAL enviroments files
-.docksal
+/.docksal
 _working
