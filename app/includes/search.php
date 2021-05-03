@@ -427,7 +427,7 @@ if($page == "materials"):
 endif;
 
 if($page == "orders"):
-    require '../../templates/order/includes/del.php';
+    require '../../templates/order/includes/delete_order.php';
     $term = filter_input(INPUT_GET, 'search');
     $orders = $entityManager->getRepository('\Roloffice\Entity\Order')->search($term);
     ?>
@@ -510,7 +510,7 @@ if($page == "orders"):
                                     ?>
                                     <?php 
                                     $last_order = $entityManager->getRepository('\Roloffice\Entity\Order')->getLastOrder();
-                                    echo ( $order_data == $last_order ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="' .$_SERVER['PHP_SELF']. '?name=&search&delOrder&order_id=' .$order_data->getId(). '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); 
+                                    echo ( $order_data == $last_order ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="' .$_SERVER['PHP_SELF']. '?name=&search&deleteOrder&order_id=' .$order_data->getId(). '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : ''); 
                                     ?>
                                 </td>
                             </tr>

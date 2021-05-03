@@ -6,7 +6,6 @@ require 'edit_material_in_order.php';
 require 'remove_material_from_order.php';
 
 require 'add.php';
-require 'del.php';
 ?>
 <div class="col-lg-12 px-2" id="topMeni">
   <div class="card mb-2">

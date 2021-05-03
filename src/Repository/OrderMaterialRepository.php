@@ -88,4 +88,22 @@ class OrderMaterialRepository extends EntityRepository {
     return $tax_base + $tax_amount;
   }
 
+  /**
+   * Method that return Materials by Order.
+   * 
+   * @return 
+   */
+  public function getOrderMaterials($order) {
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('om')
+      ->from('Roloffice\Entity\OrderMaterial', 'om')
+      ->join('om.material', 'm', 'WITH', 'om.material = m.id')
+      ->where(
+        $qb->expr()->eq('om.order', $order)
+      );
+      $query = $qb->getQuery();
+      $result = $query->getResult();
+      return $result;
+  }
+
 }
