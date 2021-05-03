@@ -3,6 +3,7 @@ require 'create_order.php';
 require 'update_order.php';
 require 'add_material_to_order.php';
 require 'edit_material_in_order.php';
+require 'remove_material_from_order.php';
 
 require 'add.php';
 require 'del.php';
