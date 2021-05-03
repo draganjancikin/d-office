@@ -46,7 +46,7 @@
                   $city_id = $_GET['city_id'];
                   include '../../templates/project/includes/listProjectsByCity.php';
                 }else{
-                  include '../../templates/project/includes/listActiveProjects.php';
+                  include '../../templates/project/includes/list_active_projects.php';
                 }
                       
               else:

@@ -36,48 +36,6 @@ class ProjectController extends Database {
     }
 
 
-    // metoda koja definiše i dodeljuje vrednost pr_id 
-    public function setPrId(){
-
-        // čitamo iz baze, iz tabele project sve zapise 
-        $result = $this->connection->query("SELECT * FROM project ORDER BY id DESC") or die(mysqli_error($this->connection));
-
-        // brojimo koliko ima zapisa
-        $num = mysqli_num_rows($result); // broj kolona u tabeli $table
-
-        $row = $result->fetch_assoc();
-        $last_id = $row['id'];
-        $year_last = date('Y', strtotime($row['date']));
-
-        $row = $result->fetch_assoc();
-        $year_before_last = date('Y', strtotime($row['date']));
-
-        $pr_id_before_last = $row['pr_id'];
-
-        if($num ==0){  // prvi slučaj kada je tabela $table prazna
-
-            return die("Tabela project je prazna!");
-
-        }elseif($num ==1){  // drugi slučaj - kada postoji jedan unos u tabeli $table
-
-            $pr_id = 1; // pošto postoji samo jedan unos u tabelu $table $b_on dobija vrednost '1'
-
-        }else{  // svi ostali slučajevi kada ima više od jednog unosa u tabeli $table
-
-            if($year_last < $year_before_last){
-                return die("Godina zadnjeg unosa je manja od godine predzadnjeg unosa! Verovarno datum nije podešen");
-            }elseif($year_last == $year_before_last){ //nema promene godine
-                $pr_id = $pr_id_before_last + 1;
-            }else{  // došlo je do promene godine
-                $pr_id = 1;
-            }
-
-        }
-
-        $this->connection->query("UPDATE project SET pr_id = '$pr_id' WHERE id = '$last_id' ") or die(mysqli_error($this->connection));
-    }
-
-
     // metoda koja daje podatke o projektu
     public function getProject($project_id) {
 
@@ -201,30 +159,6 @@ class ProjectController extends Database {
         endwhile;
 
         return $projects;
-    }
-
-
-    // metoda koja daje sva naselja aktivnih projekata
-    public function getCitysByActiveProject (){
-
-        $city = array();
-        $citys = array();
-
-        // sada treba isčitati sva naselja iz tabele city
-        $result = $this->connection->query("SELECT DISTINCT v6_cities.id, v6_cities.name as city_name "
-                                    . "FROM v6_cities "
-                                    . "JOIN (v6_clients, project) "
-                                    . "ON (v6_clients.city_id = v6_cities.id AND project.client_id = v6_clients.id) "
-                                    . "WHERE project.status='1'"
-                                    . "ORDER BY v6_cities.name") or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()){
-            $city = array(
-                'id' => $row['id'],
-                'name' => $row['city_name']
-            );
-            array_push($citys, $city);
-        }
-        return $citys;
     }
 
 

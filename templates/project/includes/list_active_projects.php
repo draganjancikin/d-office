@@ -8,10 +8,12 @@
                         <select class="form-control" name="city_id">
                             <option value="">Izaberi naselje</option>
                             <?php
-                            $citys = $project->getCitysByActiveProject();
-                            foreach ($citys as $city) {
-                                echo '<option value="' .$city['id']. '">' .$city['name']. '</option>';
-                            }
+                            $cities = $entityManager->getRepository('\Roloffice\Entity\Project')->getCitiesByActiveProject();
+                            foreach ($cities as $city) :
+                                ?>
+                                <option value="<?php echo $city['id'] ?>"><?php echo $city['name'] ?></option>';
+                                <?php
+                            endforeach;
                             ?>
                         </select>
                     </div>
@@ -44,7 +46,8 @@
                 <tbody>
                     <?php
                     $status = 1;
-                    $project_list = $project->projectTracking($status);
+                    // $project_list = $project->projectTracking($status);
+                    $project_list = [];
                     foreach( $project_list as $project_item):
                         $project_id = $project_item['id'];
                         $project_tasks = $project->projectTasks($project_id);
@@ -175,7 +178,8 @@
                 <tbody>
                     <?php
                     $status = 2;
-                    $project_list = $project->projectTracking($status);
+                    //$project_list = $project->projectTracking($status);
+                    $project_list = [];
                     foreach( $project_list as $project_item):
                         $project_id = $project_item['id'];
                         $project_tasks = $project->projectTasks($project_id);

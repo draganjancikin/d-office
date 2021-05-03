@@ -20,7 +20,7 @@ class ProjectRepository extends EntityRepository {
   }
 
   /**
-   * 
+   * Method that return all active Projects.
    * 
    * @return array 
    */
@@ -38,7 +38,7 @@ class ProjectRepository extends EntityRepository {
   }
 
   /**
-   * Undocumented function
+   * Method that set OrdinalProject number in year.
    *
    * @param int $project_id
    * @return void
@@ -96,5 +96,40 @@ class ProjectRepository extends EntityRepository {
     $this->_em->flush();
 
   }
-  
+
+  /**
+   * Method that return array of Cities
+   * 
+   * @return array 
+   */
+  public function getCitiesByActiveProject() {
+    
+    $qb = $this->_em->createQueryBuilder();
+    
+    /*    
+    $qb->select('p')
+      ->from('Roloffice\Entity\Project','p')
+      ->join('p.client', 'cl', 'WITH', 'p.client = cl.id')
+      ->join('cl.city', 'ci', 'WITH', 'cl.city = ci.id')
+      ->where(
+        $qb->expr()->eq('p.status', 1)
+      )
+    ->orderBy('ci.name', 'ASC');
+    */
+    
+    $qb->select('ci.id, ci.name')
+      ->from('Roloffice\Entity\Project','p')
+      ->join('p.client', 'cl', 'WITH', 'p.client = cl.id')
+      ->join('cl.city', 'ci', 'WITH', 'cl.city = ci.id')
+      ->where(
+        $qb->expr()->eq('p.status', 1)
+      )
+      ->orderBy('ci.name', 'ASC')
+      ->distinct();
+      
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+
+    return $result;
+  }
 }
