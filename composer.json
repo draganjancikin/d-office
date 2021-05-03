@@ -24,6 +24,6 @@
     }
   },
   "require": {
-    "doctrine/orm": "2.8.1"
+    "doctrine/orm": "2.8.4"
   }
 }
