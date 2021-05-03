@@ -4,8 +4,7 @@ require 'update_order.php';
 require 'add_material_to_order.php';
 require 'edit_material_in_order.php';
 require 'remove_material_from_order.php';
-
-require 'add.php';
+require 'duplicate_material_in_order.php';
 ?>
 <div class="col-lg-12 px-2" id="topMeni">
   <div class="card mb-2">

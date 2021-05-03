@@ -79,7 +79,7 @@
                 endforeach;
                 ?>
                 <br />
-                <input type="text" class="input-box-65" name="note" value="<?php echo ( $material_on_order->getNote() == "" ? "" : $material_on_order->getNote() ) ?>">
+                <input type="text" class="in-article-note" name="note" value="<?php echo ( $material_on_order->getNote() == "" ? "" : $material_on_order->getNote() ) ?>">
                 
               </td>
               <td class="px-1 text-center">
@@ -119,7 +119,7 @@
                 <button type="submit" class="btn btn-mini btn-outline-success px-1">
                   <i class="fas fa-save" title="Snimi izmenu"> </i>
                 </button>
-                <a href="<?php echo $_SERVER['PHP_SELF']. '?duplicateMaterialInOrder&order_id='.$order_id.'&orderm_material_id=' .$material_on_order->getMaterial()->getId() ?>" class="btn btn-mini btn-outline-info px-1">
+                <a href="<?php echo $_SERVER['PHP_SELF']. '?duplicateMaterialInOrder&order_id='.$order_id.'&order_material_id=' .$material_on_order->getId() ?>" class="btn btn-mini btn-outline-info px-1">
                   <i class="fas fa-plus" title="Dupliciraj materijal"> </i>
                 </a>
                 <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete materijal?');"  href="<?php echo $_SERVER['PHP_SELF']. '?removeMaterialFromOrder&order_id='.$order_id.'&order_material_id=' .$material_on_order->getId() ?>" class="btn btn-mini btn-outline-danger px-1">
