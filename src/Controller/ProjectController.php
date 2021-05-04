@@ -196,41 +196,6 @@ class ProjectController extends Database {
     }
 
 
-    //metoda koja vraća projekte u pretrazi
-    public function search($name){
-
-        $project = array();
-        $projects = array();
-
-        // izlistavanje iz baze slih klijenata sa nazivom koji je sličan $name
-        $result = $this->connection->query("SELECT project.id, project.pr_id, project.date, project.client_id, v6_clients.name, project.status, project.title, project.note "
-                                    ."FROM project "
-                                    ."JOIN v6_clients "
-                                    ."ON (project.client_id = v6_clients.id) "
-                                    ."WHERE (v6_clients.name LIKE '%$name%' OR v6_clients.name_note LIKE '%$name%'OR project.title LIKE '%$name%') "
-                                    ."ORDER BY v6_clients.name ") or die(mysqli_error($this->connection));
-        while($row = $result->fetch_assoc()):
-            $client_id = $row['client_id'];
-            // pozivanje funkcije koja vraća naziv naselja za klijenta $client_id
-            $client_city_name = self::getCityName($client_id);
-            $status = $row['status'];
-            $title = $row['title'];
-            $project = array(
-                'id' => $row['id'],
-                'pr_id' => $row['pr_id'],
-                'date' => $row['date'],
-                'client_name' => $row['name'],
-                'client_city_name' => $client_city_name,
-                'status' => $status,
-                'title' => $title
-            );
-            array_push($projects, $project);
-        endwhile;
-
-        return $projects;
-    }
-
-
     // sve beleške jednog projekta
     public function getNotesByProject($project_id){
 

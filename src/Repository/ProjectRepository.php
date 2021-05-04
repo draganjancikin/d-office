@@ -198,4 +198,33 @@ class ProjectRepository extends EntityRepository {
     
     return $result;
   }
+
+  /**
+   * Method that return Project search
+   * 
+   * @param string $term
+   * 
+   * @return array
+   */
+  public function search($term) {
+    
+    $qb = $this->_em->createQueryBuilder();
+
+    $qb->select('p')
+      ->from('Roloffice\Entity\Project','p')
+      ->join('p.client', 'cl', 'WITH', 'p.client = cl.id')
+      ->where(
+        $qb->expr()->orX(
+          $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
+          $qb->expr()->like('cl.name_note', $qb->expr()->literal("%$term%")),
+          $qb->expr()->like('p.title', $qb->expr()->literal("%$term%"))
+        )
+      );
+    
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+  
+    return $result;
+  }
+  
 }

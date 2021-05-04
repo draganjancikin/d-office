@@ -686,8 +686,8 @@ if($page == "articles"):
 endif;
 
 if($page == "projects"):
-    $name = filter_input(INPUT_GET, 'search');
-    $project_list = $project->search($name);
+    $term = filter_input(INPUT_GET, 'search');
+    $project_list = $entityManager->getRepository('\Roloffice\Entity\Project')->search($term);
     ?>
     <h3>Rezultati pretrage projekata</h3>
     <div class="card mb-4">
@@ -718,20 +718,20 @@ if($page == "projects"):
                     <tbody>
                     <?php
                     foreach( $project_list as $project_item):
-                        if ($project_item['status'] == 1 || $project_item['status'] == 2):
-                            $project_id = $project_item['id'];
-                            $project_tasks = $project->projectTasks($project_id);
+                        if ($project_item->getStatus()->getId() == 1 || $project_item->getStatus()->getId() == 2):
+                            $project_id = $project_item->getId();
+                            $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
                             ?>
                             <tr>
                                 <td>
-                                    <a href="?view&project_id=<?php echo $project_item['id']; ?>" class="d-block card-link" title='<?php echo date('d M Y', strtotime($project_item['date']));?>'>
-                                        #<?php echo str_pad($project_item['pr_id'], 4, "0", STR_PAD_LEFT).' - '.$project_item['title']; ?>
-                                    </a>
-                                    <?php echo $project_item['client_name']. ', <span style="font-size: 0.9em;">' .$project_item['client_city_name']. '</span>'; ?>
+                                <a href="?view&project_id=<?php echo $project_item->getId(); ?>" class="d-block card-link" title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
+                                    #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
+                                </a>
+                                <?php echo $project_item->getClient()->getName(). ', <span style="font-size: 0.9em;">' .$project_item->getClient()->getCity()->getName(). '</span>' ?>
                                 </td>
                                 <!--<td class="px-1 order-status text-center">
                                     <?php
-                                    switch ($project_item['status']) {
+                                    switch ($project_item->getStatus()->getId()) {
                                         case 1:
                                             echo '<span class="badge badge-pill badge-light">A</span>';
                                             break;
@@ -750,15 +750,14 @@ if($page == "projects"):
                                     <?php
                                     $count1 = 0;
                                     foreach($project_tasks as $project_task):
-                                        if($project_task['status_id'] == 1):
+                                        if($project_task->getStatus()->getId() == 1):
                                             ?>
-                                            <a href="?editTask&task_id=<?php echo $project_task['id']; ?>&project_id=<?php echo $project_id; ?>">
-                                                <span class="badge badge-<?php echo $project_task['class']; ?>">
-                                                    <?php echo $project_task['tip']; ?>
+                                            <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                                                <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
+                                                    <?php echo $project_task->getType()->getName() ?>
                                                 </span>
-                                                <?php echo $project_task['title']; ?>
-                                            </a>
-                                            <br />
+                                                <?php echo $project_task->getTitle() ?>
+                                            </a><br />
                                             <?php
                                             $count1 ++;
                                             if ($count1 == 4):
@@ -779,13 +778,13 @@ if($page == "projects"):
                                     <?php
                                     $count2 = 0;
                                     foreach($project_tasks as $project_task):
-                                        if($project_task['status_id'] == 2):
+                                        if($project_task->getStatus()->getId() == 2):
                                             ?>
-                                            <a href="?editTask&task_id=<?php echo $project_task['id']; ?>&project_id=<?php echo $project_id; ?>">
-                                                <span class="badge badge-<?php echo $project_task['class']; ?>">
-                                                    <?php echo $project_task['tip']; ?>
+                                            <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                                                <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
+                                                    <?php echo $project_task->getType()->getName() ?>
                                                 </span>
-                                                <?php echo $project_task['title']; ?>
+                                                <?php echo $project_task->getTitle() ?>
                                             </a><br />
                                             <?php
                                             $count2 ++;
@@ -807,13 +806,13 @@ if($page == "projects"):
                                     <?php
                                     $count3 = 0;
                                     foreach($project_tasks as $project_task):
-                                        if($project_task['status_id'] == 3):
+                                        if($project_task->getStatus()->getId() == 3):
                                             ?>
-                                            <a href="?editTask&task_id=<?php echo $project_task['id']; ?>&project_id=<?php echo $project_id; ?>">
-                                                <span class="badge badge-<?php echo $project_task['class']; ?>">
-                                                    <?php echo $project_task['tip']; ?>
+                                            <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                                                <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
+                                                    <?php echo $project_task->getType()->getName() ?>
                                                 </span>
-                                                <?php echo $project_task['title']; ?>
+                                                <?php echo $project_task->getTitle() ?>
                                             </a><br />
                                             <?php
                                             $count3 ++;
