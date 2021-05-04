@@ -11,7 +11,7 @@
                             $cities = $entityManager->getRepository('\Roloffice\Entity\Project')->getCitiesByActiveProject();
                             foreach ($cities as $city) :
                                 ?>
-                                <option value="<?php echo $city['id'] ?>"><?php echo $city['name'] ?></option>';
+                                <option value="<?php echo $city['id'] ?>"><?php echo $city['name'] ?></option>
                                 <?php
                             endforeach;
                             ?>
@@ -46,18 +46,18 @@
                 <tbody>
                     <?php
                     $status = 1;
-                    // $project_list = $project->projectTracking($status);
-                    $project_list = [];
+                    $project_list = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTracking($status);
                     foreach( $project_list as $project_item):
-                        $project_id = $project_item['id'];
-                        $project_tasks = $project->projectTasks($project_id);
+                        $project_id = $project_item->getId();
+                        // TODO: make a method in Repository projectTasks($project_id) 
+                        $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
                         ?>
                         <tr>
                             <td>
-                                <a href="?view&project_id=<?php echo $project_item['id']; ?>" class="d-block card-link" title='<?php echo date('d M Y', strtotime($project_item['date']));?>'>
-                                    #<?php echo str_pad($project_item['pr_id'], 4, "0", STR_PAD_LEFT).' - '.$project_item['title']; ?>
+                                <a href="?view&project_id=<?php echo $project_item->getId(); ?>" class="d-block card-link" title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
+                                    #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
                                 </a>
-                                <?php echo $project_item['client_name']. ', <span style="font-size: 0.9em;">' .$project_item['client_city_name']. '</span>'; ?>
+                                <?php echo $project_item->getClient()->getName(). ', <span style="font-size: 0.9em;">' .$project_item->getClient()->getCity()->getName(). '</span>' ?>
                             </td>
                             <td>
                                 <?php

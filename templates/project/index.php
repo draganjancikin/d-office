@@ -44,7 +44,7 @@
                       
                 if(isset($_GET['city_id']) AND !$_GET['city_id']==""){ // ako postoji $_GET['city_id'] i nije jednak nuli
                   $city_id = $_GET['city_id'];
-                  include '../../templates/project/includes/listProjectsByCity.php';
+                  include '../../templates/project/includes/list_projects_by_city.php';
                 }else{
                   include '../../templates/project/includes/list_active_projects.php';
                 }
