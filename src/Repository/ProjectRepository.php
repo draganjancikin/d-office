@@ -162,101 +162,16 @@ class ProjectRepository extends EntityRepository {
   public function projectTasks($project_id){
     
     $qb = $this->_em->createQueryBuilder();
-    
-    
-    /*
-    $project_task = array();
-    $project_tasks = array();
+    $qb->select('pt')
+    ->from('Roloffice\Entity\ProjectTask','pt')
+    ->where(
+      $qb->expr()->eq("pt.project", "$project_id")
+    )
+    ->orderBy('pt.created_at', 'ASC');
 
-    // izlistavanje iz baze svih zadataka u jednom projektu
-    $result = $this->connection->query("SELECT * FROM project_task WHERE (project_id = $project_id ) "
-                                     . "ORDER BY date ") or die(mysqli_error($this->connection));
+    $query = $qb->getQuery();
+    $result = $query->getResult();
 
-    while($row = $result->fetch_assoc()):
-        $id = $row['id'];
-        $date = $row['date'];
-        $user_id = $row['created_at_user_id'];
-        $result_user = $this->connection->query("SELECT * FROM v6_users WHERE id = $user_id ") or die(mysqli_error($this->connection));
-        $row_user = $result_user->fetch_assoc();
-        $user_name = $row_user['username'];
-        $status_id = $row['status_id'];
-        $tip_id = $row['tip_id'];
-        switch ($tip_id) {
-            case "1":
-                $tip = "Merenje";
-                $class = "info";
-                break;
-            case "2":
-                $tip = "Ponuda";
-                $class = "warning";
-                break;
-            case "3":
-                $tip = "Nabavka";
-                $class = "secondary";
-                break;
-            case "4":
-                $tip = "Proizvodnja";
-                $class = "success";
-                break;
-            case "5":
-                $tip = "Isporuka";
-                $class = "isporuka";
-                break;
-             case "6":
-                $tip = "Montaža";
-                $class = "yellow";
-                break;
-             case "7":
-                $tip = "Rreklamacija";
-                $class = "danger";
-                break;
-             case "8":
-                $tip = "Popravka";
-                $class = "popravka";
-                break;
-            default:
-                 $tip = "";
-        }
-
-        $title = $row['title'];
-        $employee_id = $row['employee_id'];
-        
-        $result_employee = $this->get("SELECT name "
-                                    . "FROM employee "
-                                    . "WHERE id = $employee_id");
-        
-        if ($result_employee) {
-            $row_employee = $result_employee[0];
-            $employee_name = $row_employee['name'];
-        } else {
-            $employee_name = " ";
-        }
-
-        $start = $row['start'];
-        $end = $row['end'];
-
-        $project_task = array(
-            'id' => $id,
-            'date' => $date,
-            'user_id' => $user_id,
-            'user_name' => $user_name,
-            'status_id' => $status_id,
-            'tip_id' => $tip_id,
-            'tip' => $tip,
-            'class' => $class,
-            'title' => $title,
-            'employee_name' => $employee_name,
-            'start' => $start,
-            'end' => $end
-        );
-
-        array_push($project_tasks, $project_task);
-
-    endwhile;
-
-    return $project_tasks;
-    */
-    $result = [];
     return $result;
   }
 
