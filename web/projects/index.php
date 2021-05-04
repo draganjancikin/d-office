@@ -7,10 +7,6 @@ session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $user_role_id = $_SESSION['user_role_id'];
-    $client = new \Roloffice\Controller\ClientController();
-    $order = new \Roloffice\Controller\OrderController();
-    $pidb = new \Roloffice\Controller\PidbController();
-    $project = new \Roloffice\Controller\ProjectController();
     include filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../templates/project/index.php';
 else:
     header('Location: /');

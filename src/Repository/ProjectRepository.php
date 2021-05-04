@@ -162,6 +162,7 @@ class ProjectRepository extends EntityRepository {
   public function projectTasks($project_id){
     
     $qb = $this->_em->createQueryBuilder();
+    
     $qb->select('pt')
     ->from('Roloffice\Entity\ProjectTask','pt')
     ->where(
@@ -175,4 +176,26 @@ class ProjectRepository extends EntityRepository {
     return $result;
   }
 
+  /**
+   * 
+   */
+  public function projectTrackingByCity($status, $city_id) {
+
+    $qb = $this->_em->createQueryBuilder();
+
+    $qb->select('p')
+    ->from('Roloffice\Entity\Project','p')
+    ->join('p.client', 'cl', 'WITH', 'p.client = cl.id')
+    ->where(
+      $qb->expr()->andX(
+        $qb->expr()->eq("p.status", "$status"),
+        $qb->expr()->eq("cl.city", "$city_id")
+      )
+    );
+
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    
+    return $result;
+  }
 }

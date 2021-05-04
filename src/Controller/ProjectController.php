@@ -122,37 +122,6 @@ class ProjectController extends Database {
 
 
     // praćenje projekata iz određenog naselja
-    public function projectTrackingByCity ($status, $city_id){
-
-        $project = array();
-        $projects = array();
-
-        // listamo sve projekte koji nisu arhivirani, tj, status <> '9' i pripadaju mestu $city_id
-        $result = $this->connection->query("SELECT project.id, project.pr_id, project.title, project.status, project.client_id, v6_clients.name "
-                                    . "FROM project "
-                                    . "JOIN v6_clients "
-                                    . "ON project.client_id = v6_clients.id "
-                                    . "WHERE status <> '9' AND status = $status AND city_id = $city_id ") or die(mysqli_error($this->connection));
-        while($row_project = $result->fetch_assoc()):
-            $client_id = $row_project['client_id'];
-            // pozivanje funkcije koja vraća naziv naselja za klijenta $client_id
-            $client_city_name = self::getCityName($client_id);
-            $project = array(
-                'id' => $row_project['id'],
-                'pr_id' => $row_project['pr_id'],
-                'title' => $row_project['title'],
-                'status' => $row_project['status'],
-                'client_name' => $row_project['name'],
-                'client_city_name' => $client_city_name
-            );
-            array_push($projects, $project);
-        endwhile;
-
-        return $projects;
-    }
-
-
-    // praćenje projekata iz određenog naselja
     public function projectAdvancedSearch ($client, $project_title, $city){
 
         $project = array();
