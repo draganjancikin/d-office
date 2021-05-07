@@ -25,7 +25,7 @@ require 'del.php';
       
         $project_id = filter_input(INPUT_GET, 'project_id');
         
-        $project_data = $project->getProject($project_id);
+        $project_data = $entityManager->find('\Roloffice\Entity\Project', $project_id);
         
         // in view case show edit button 
         if(isset($_GET['view'])):
@@ -65,21 +65,21 @@ require 'del.php';
         </a>
 
         <!-- Open the proforma-invoice from project -->
-        <a href="/pidb/index.php?new&client_id=<?php echo $project_data['client_id'] ?>&project_id=<?php echo $project_data['id'] ?>">
+        <a href="/pidb/index.php?new&client_id=<?php echo $project_data->getClient()->getId() ?>&project_id=<?php echo $project_data->getId() ?>">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog predračuna!">
             <i class="fas fa-arrow-right"> </i> Predračun
           </button>
         </a>
 
         <!-- Open the material-order from project -->
-        <a href="/orders/index.php?new&project_id=<?php echo $project_data['id'] ?>">
+        <a href="/orders/index.php?new&project_id=<?php echo $project_data->getId() ?>">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje nove narudžbenice za materijal!">
             <i class="fas fa-arrow-right"> </i> Narudžbenica
           </button>
         </a>
 
         <!-- Open the cutting from project -->
-        <a href="/cutting/index.php?new&client_id=<?php echo $project_data['client_id'] ?>&project_id=<?php echo $project_data['id'] ?>">
+        <a href="/cutting/index.php?new&client_id=<?php echo $project_data->getClient()->getId() ?>&project_id=<?php echo $project_data->getId() ?>">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje nove krojne liste!">
             <i class="fas fa-arrow-right"> </i> <i class="fa fa-cut"> </i> 
           </button>

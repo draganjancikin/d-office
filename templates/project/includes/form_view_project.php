@@ -1,8 +1,8 @@
 <?php
-if($project_data['id']=='0'):
+if(!$project_data):
   die('<script>location.href = "/projects/" </script>');
 else:
-  $client_data = $entityManager->find('\Roloffice\Entity\Client', $project_data['client_id']);
+  $client_data = $entityManager->find('\Roloffice\Entity\Client', $project_data->getClient());
   $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
   $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
   $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
@@ -20,13 +20,13 @@ else:
         <div class="card-header p-2">
           <h6 class="m-0 text-dark">
             <i class="fa fa-folder"> </i>
-            # <?php echo str_pad($project_data['pr_id'], 4, "0", STR_PAD_LEFT).' - '.$project_data['title']; ?>
+            # <?php echo str_pad($project_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_data->getTitle() ?>
           </h6>
         </div>
         <div class="card-body p-2 client-data">
           <dl class="row mb-0">
             <dt class="col-sm-4 col-md-3">datum</dt>
-            <dd class="col-sm-8 col-md-9"><?php echo date('d-M-Y', strtotime($project_data['date'])); ?></dd>
+            <dd class="col-sm-8 col-md-9"><?php echo $project_data->getCreatedAt()->format('d-M-Y') ?></dd>
             <dt class="col-sm-4 col-md-3">klijent</dt>
             <dd class="col-sm-8 col-md-9"><a href="/clients/index.php?viewClient&client_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a></dd>
             <dt class="col-sm-4 col-md-3">adresa</dt>
@@ -91,28 +91,28 @@ else:
               <table class="table table-hover">
                 <?php
                 $date_temp = "";
-                $notes = $project->getNotesByProject($project_id);
+                $notes = $entityManager->getRepository('\Roloffice\Entity\Project')->getNotesByProject($project_id);
                 foreach ($notes as $note):
                   ?>
                   <tr>
                     <td class="px-1 width-95">
                       <?php 
-                      if(date('d-M-Y', strtotime($note['date'])) != $date_temp) {
-                        echo date('d-M-Y', strtotime($note['date']));
+                      if($note->getCreatedAt()->format('d-M-Y') != $date_temp) {
+                        echo $note->getCreatedAt()->format('d-M-Y');
                       }
                       ?>
                     </td>
-                    <td class="px-1" <?php echo ($user_role_id==1 ? 'title=" ' . $note['user_name'] . '"' : '' ); ?>>
-                      <?php echo nl2br($note['note']); ?>
+                    <td class="px-1" <?php echo ($user_role_id==1 ? 'title=" ' . $note->getCreatedByUser()->getUsername() . '"' : '' ); ?>>
+                      <?php echo nl2br($note->getNote()); ?>
                     </td>
                     <td class="px-1">
-                      <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete belešku?');" href="?view&project_id=<?php echo $project_id; ?>&note_id=<?php echo $note['id']; ?>&delNote" title="Brisanje beleške">
+                      <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete belešku?');" href="?view&project_id=<?php echo $project_id; ?>&note_id=<?php echo $note->getId() ?>&delNote" title="Brisanje beleške">
                         <i class="fas fa-trash-alt"></i>
                       </a>
                     </td>
                   </tr>
                   <?php
-                  $date_temp = date('d-M-Y', strtotime($note['date']));
+                  $date_temp = $note->getCreatedAt()->format('d-M-Y');
                 endforeach;
                 ?>
               </table>
@@ -126,17 +126,16 @@ else:
           <div class="card mb-4">
             <div class="card-body p-2 tasks-note-scroll">
               <?php
-              if ($order->getOrdersByProjectId($project_id)):
+              if ($orders = $entityManager->find("\Roloffice\Entity\Project", $project_id)->getOrders() ):
                 echo "<h5>Narudžbenice:</h5>";
-                $orders = $order->getOrdersByProjectId($project_id);
                 foreach ($orders as $order):
                     ?>
-                    <a href="/orders/?view&order_id=<?php echo $order['id'] ?>">
-                        <?php echo str_pad($order['o_id'], 4, "0", STR_PAD_LEFT) . '_' . date('m_Y', strtotime($order['date'])) ?>
+                    <a href="/orders/?view&order_id=<?php echo $order->getId() ?>">
+                        <?php echo str_pad($order->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $order->getDate()->format('m_Y') ?>
                     </a>
                     <span style="display: inline-block; width: 50px; text-align: center;">
                       <?php
-                      switch ($order['status']) {
+                      switch ($order->getStatus() ) {
                         case 0:
                           echo '<span class="badge badge-pill badge-light">N</span>';
                           break;
@@ -151,22 +150,22 @@ else:
                           # code...
                           break;
                       }
-                      if($order['is_archived'] == 1):
+                      if($order->getIsArchived() == 1):
                           ?>
                           <span class="badge badge-pill badge-secondary">A</span>
                           <?php
                       endif;
                       ?>
                     </span>
-                    <?php echo $order['supplier_name'] ?>
-                    - <?php echo $order['title'] ?><br>
+                    <?php echo $order->getSupplier()->getName() ?>
+                    - <?php echo $order->getTitle() ?><br>
                     <?php
                 endforeach;
               endif;
-
-              if ($pidb->getPidbsByProjectId($project_id)):
+              // TODO: create method getPidbsByProject() in Repository
+              $pidbs = []; //$pidb->getPidbsByProjectId($project_id)
+              if ($pidbs):
                 echo "<br><h5>Dokumenti:</h5>";
-                $pidbs = $pidb->getPidbsByProjectId($project_id);
                 foreach ($pidbs as $pidb):
                   ?>
                   <a href="/pidb/?view&pidb_id=<?php echo $pidb['id'] ?>">
@@ -223,15 +222,15 @@ else:
                                 <div class="col-sm-4">
                                     <p class="text-center"><strong><?php echo $naslov ?></strong></p>
                                     <?php
-                                    $project_tasks = $project->projectTasks($project_id);
+                                    $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
                                     foreach($project_tasks as $project_task):
                                         $count ++;
-                                        if($project_task['status_id'] == $i):
+                                        if($project_task->getStatus()->getId() == $i):
                                             ?>
-                                            <div class="card border-<?php echo $project_task['class']; ?> mb-2">
-                                              <div class="card-header bg-<?php echo $project_task['class']; ?> p-2">
-                                                <h6 class="d-inline m-0" <?php echo 'title="' . ($user_role_id==1 ? $project_task['user_name'] : '') . ' " ' ?> >
-                                                  <?php echo $project_task['tip']. ': '.$project_task['title'] ; ?>
+                                            <div class="card border-<?php echo $project_task->getType()->getClass() ?> mb-2">
+                                              <div class="card-header bg-<?php echo $project_task->getType()->getClass() ?> p-2">
+                                                <h6 class="d-inline m-0" <?php echo 'title="' . ($user_role_id==1 ? $project_task->getCreatedByUser()->getUsername() : '') . ' " ' ?> >
+                                                  <?php echo $project_task->getType()->getName(). ': '.$project_task->getTitle() ; ?>
                                                 </h6>
                                                 <div class="float-right">
                                                   <button class="btn btn-link" data-toggle="collapse" data-target="#collapse<?php echo $count ?>" aria-expanded="true" aria-controls="collapseOne">
@@ -245,15 +244,15 @@ else:
                                                   <table>
                                                     <tr>
                                                       <td>start: </td>
-                                                      <td><?php echo ($project_task['start'] == '0000-01-01 00:00:00' ? '__________' : date('d-M-Y', strtotime($project_task['start'])) ); ?></td>
+                                                      <td><?php echo ($project_task->getStartDate()->format('d-M-Y H:i:s') == '0001-01-01 00:00:00' ? '__________' : $project_task->getStartDate()->format('d-M-Y')  ); ?></td>
                                                     </tr>
                                                     <tr>
                                                       <td>izvršilac: </td>
-                                                      <td><?php echo ( !empty($project_task['employee_name']) ? $project_task['employee_name'] : '__________' ) ?></td>
+                                                      <td><?php // echo ( $project_task->getEmployee() ? $project_task->getEmployee()->getName() : '__________' ) ?></td>
                                                     </tr>
                                                     <tr>
                                                       <td>end: </td>
-                                                      <td><?php echo ($project_task['end'] == '0000-01-01 00:00:00' ? '__________' : date('d-M-Y', strtotime($project_task['end'])) ); ?></td>
+                                                      <td><?php echo ($project_task->getEndDate()->format('Y-M-d H:i:s') == '0000-01-01 00:00:00' ? '__________' : $project_task->getEndDate()->format('d-M-Y') ); ?></td>
                                                     </tr>
                                                     <tr>
                                                       <td>beleške: </td>
@@ -261,7 +260,9 @@ else:
                                                     </tr>
                                                     <?php
                                                     $date_temp = "";
-                                                    $task_notes = $project->getTaskNotesByProject($project_task['id']);
+                                                    // TODO: 
+                                                    // $task_notes = $project->getTaskNotesByProject($project_task['id']);
+                                                    $task_notes = [];
                                                     foreach ($task_notes as $task_note):
                                                       ?>
                                                       <tr>
@@ -293,13 +294,13 @@ else:
 
                                                 <div class="card-footer p-2">
                                                   <!-- dugme koje briše zadatka -->
-                                                  <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete zadatak?');" href="?view&project_id=<?php echo $project_id; ?>&task_id=<?php echo $project_task['id']; ?>&delTask">
+                                                  <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete zadatak?');" href="?view&project_id=<?php echo $project_id; ?>&task_id=<?php echo $project_task->getId() ?>&delTask">
                                                     <button type="button" class="btn btn-default btn-xs btn pull-left" title="Obriši zadatak!">
                                                       <i class="fas fa-trash-alt"></i>
                                                     </button>
                                                   </a>
                                                   <!-- dugme koje otvara formu za izmenu zadatka -->
-                                                  <a href="?editTask&task_id=<?php echo $project_task['id'] ?>&project_id=<?php echo $project_id; ?>">
+                                                  <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
                                                     <button type="button" class="btn btn-default btn-xs pull-right" title="Idi na izmenu zadatka!">
                                                       <i class="fa fa-edit"></i>
                                                     </button>
