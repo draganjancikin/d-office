@@ -35,7 +35,7 @@
           <div class="row">
 
             <!-- Tools Meni -->
-            <?php include '../../templates/project/includes/toolsMenu.php'; ?>
+            <?php include '../../templates/project/includes/tools_menu.php'; ?>
             <!-- End of Tools Meni -->
             
             <div class="col-lg-12 px-2">
@@ -52,7 +52,7 @@
               else:
                       
                 if(isset($_GET['new'])) include '../../templates/project/includes/formNew.php';
-                if(isset($_GET['view']) && isset($_GET['project_id'])) include '../../templates/project/includes/formView.php';
+                if(isset($_GET['view']) && isset($_GET['project_id'])) include '../../templates/project/includes/form_view_project.php';
                 if(isset($_GET['edit']) && isset($_GET['project_id'])) include '../../templates/project/includes/formEdit.php';
                 if(isset($_GET['editTask'])) include '../../templates/project/includes/formEditTask.php';
                       
