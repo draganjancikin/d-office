@@ -195,7 +195,7 @@ class ProjectController extends Database {
         return $projects;
     }
 
-
+/*
     // sve beleške jednog projekta
     public function getNotesByProject($project_id){
 
@@ -222,7 +222,7 @@ class ProjectController extends Database {
 
         return $notes;
     }
-
+*/
 
     // svi zadatci jednog projekta
     public function projectTasks($project_id){

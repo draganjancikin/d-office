@@ -227,4 +227,28 @@ class ProjectRepository extends EntityRepository {
     return $result;
   }
   
+  /**
+   * Method that return Notes by Project
+   * 
+   * @param int $project_id
+   * 
+   * @return array
+   */
+  public function getNotesByProject($project_id) {
+    
+    $qb = $this->_em->createQueryBuilder();
+
+    $qb->select('pn')
+      ->from('Roloffice\Entity\ProjectNote','pn')
+      ->where(
+        $qb->expr()->eq("pn.project", "$project_id")
+      )
+      ->orderBy('pn.id', 'ASC');;
+
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+  
+    return $result;
+  }
+
 }
