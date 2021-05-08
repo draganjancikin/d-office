@@ -8,7 +8,7 @@
       </div>
 
       <div class="card-body p-2">
-        <form action="<?php echo $_SERVER['PHP_SELF'] . '?new&add'; ?>" method="post">
+        <form action="<?php echo $_SERVER['PHP_SELF'] . '?createProject'; ?>" method="post">
 
           <?php
           if( isset($_GET['pidb_id']) ):
@@ -23,6 +23,15 @@
             <label for="InputDate" class="col-sm-3 col-lg-2 col-form-label text-sm-right">Datum: </label>
             <div class="col-sm-3">
               <input id="inputDate" class="form-control" type="text" value="<?php echo date("d M Y") ?>" disabled>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="selectProjectPriority" class="col-sm-3 col-lg-2 col-form-label text-sm-right">Prioritet: </label>
+            <div class="col-sm-3">
+              <select id="selectProjectPriority" name="project_priority_id" class="form-control" required>
+                <option value="3">Normalan</option>
+              </select>
             </div>
           </div>
 

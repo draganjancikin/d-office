@@ -32,10 +32,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createOrder"]) ) {
   $entityManager->persist($newOrder);
   $entityManager->flush();
   
-  // gest last id
+  // Get id of last Order.
   $new_order_id = $newOrder->getId();
   
-  // TODO Dragan: Make method that get OrdinalNumInYear
+  // Set Ordinal Number In Year.
   $entityManager->getRepository('Roloffice\Entity\Order')->setOrdinalNumInYear($new_order_id);
   
   // If exist project in Order, then add $newOrder to table v6_projects_orders.

@@ -97,6 +97,43 @@ class ProjectRepository extends EntityRepository {
 
   }
 
+/**
+   * Method that rerurn ID of last project in db table
+   *
+   * @return object
+   */
+  public function getLastProject() {
+
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('p')
+        ->from('Roloffice\Entity\Project', 'p')
+        ->orderBy('p.id', 'DESC')
+        ->setMaxResults(1);
+    $query = $qb->getQuery();
+    $last_project = $query->getResult()[0];
+    
+    return $last_project;
+  }
+
+  /**
+   * Method that rerurn ID of Project before last in db table
+   *
+   * @return object
+   */
+  public function getProjectBeforeLast() {
+
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('p')
+        ->from('Roloffice\Entity\Project', 'p')
+        ->orderBy('p.id', 'DESC')
+        ->setMaxResults(2);
+    $query = $qb->getQuery();
+    $project_before_last = $query->getResult()[1];
+    
+    return $project_before_last;
+  }
+
+
   /**
    * Method that return array of Cities
    * 

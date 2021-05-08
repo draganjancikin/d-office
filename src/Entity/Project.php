@@ -57,6 +57,7 @@ class Project {
 
  /**
    * Many Projects can have One Project Status.
+   *  ('1'=>'Is active', '2'=>'On wait', '3'=>'Is archived')
    * @ORM\ManyToOne(targetEntity="ProjectStatus")
    * @ORM\JoinColumn(name="status_id", referencedColumnName="id")
    * @var int
