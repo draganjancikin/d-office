@@ -1,4 +1,6 @@
 <?php
+require 'create_project.php';
+
 require 'add.php';
 require 'edit.php';
 require 'del.php';
@@ -13,7 +15,7 @@ require 'del.php';
         </button>
       </a>
       
-      <a href="/projects/index.php?new">
+      <a href="/projects/index.php?createProject">
         <button type="submit" class="btn btn-sm btn-outline-secondary" title="Otvaranje novog projekta!">
           <!-- <i class="fas fa-plus"> </i> <i class="fas fa-folder"> </i> -->
           <i class="fas fa-project-diagram"></i>
