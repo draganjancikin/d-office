@@ -1,27 +1,4 @@
 <?php
-use Roloffice\Core\Database;
-
-$user_id = $_SESSION['user_id'];
-$date = date('Y-m-d h:i:s');
-
-// izmena projekta
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['editProject']) ) {
-
-    $project_id = htmlspecialchars($_GET["project_id"]);
-    $client_id = htmlspecialchars($_POST["client_id"]);
-    $title = htmlspecialchars($_POST["title"]);
-    // $priority_id = htmlspecialchars($_POST["priority_id"]);
-    $priority_id = 2;
-    $status = htmlspecialchars($_POST["status"]);
-    // $note = htmlspecialchars($_POST["note"]);
-
-    $db = new Database();
-
-    // $db->connection->query("UPDATE project SET client_id='$client_id', title='$title', priority_id='$priority_id', note='$note' WHERE id = '$project_id' ") or die(mysql_error($db->connection));
-    $db->connection->query("UPDATE project SET client_id='$client_id', title='$title', priority_id='$priority_id', status='$status' WHERE id = '$project_id' ") or die(mysqli_error($db->connection));
-
-    die('<script>location.href = "?view&project_id='.$project_id.'" </script>');
-}
 
 // izmena zadatka
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['editTask']) ) {

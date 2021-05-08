@@ -2,17 +2,17 @@
 if($project_data == 'noProject'):
   die('<script>location.href = "/project/" </script>');
 else:
-  $client_data = $entityManager->find('\Roloffice\Entity\Client', $project_data['client_id']);
+  $client_data = $entityManager->find('\Roloffice\Entity\Client', $project_data->getClient()->getId() );
   ?>
   <div class="card mb-4">
     <div class="card-header p-2">
       <h6 class="m-0 text-dark">
         <i class="fa fa-folder"> </i>
-        # <?php echo str_pad($project_data['pr_id'], 4, "0", STR_PAD_LEFT).' - '.$project_data['title']; ?>
+        # <?php echo str_pad($project_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_data->getTitle() ?>
       </h6>
     </div>
     <div class="card-body p-2">
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?edit&project_id=' . $project_id . '&editProject'; ?>" method="post">
+      <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateProject&project_id=' . $project_id ?>" method="post">
         
         <div class="form-group row">
           <label for="inputDate" class="col-sm-3 col-lg-2 col-form-label text-right">Datum: </label>
@@ -20,6 +20,25 @@ else:
             <input id="inputDate" class="form-control" type="text" value="<?php echo date("d M Y") ?>" disabled/>
           </div>
         </div>
+
+        <div class="form-group row">
+            <label for="selectProjectPriority" class="col-sm-3 col-lg-2 col-form-label text-sm-right">Prioritet: </label>
+            <div class="col-sm-3">
+              <select id="selectProjectPriority" name="project_priority_id" class="form-control" required>
+                <option value="<?php echo $project_data->getPriority()->getId() ?>"><?php echo $project_data->getPriority()->getName() ?></option>
+                <?php
+                $priority_list = $entityManager->getRepository('\Roloffice\Entity\ProjectPriority')->findBy(array(), array('id' => "ASC"));
+                foreach( $priority_list as $priority_item):
+                  ?>
+                  <option value="<?php echo $priority_item->getId() ?>">
+                    <?php echo $priority_item->getName() ?>
+                  </option>
+                  <?php
+                endforeach;
+                ?>
+              </select>
+            </div>
+          </div>
 
         <div class="form-group row">
           <label for="selectClient" class="col-sm-3 col-lg-2 col-form-label text-right">Klijent: </label>
@@ -43,7 +62,7 @@ else:
         <div class="form-group row">
           <label for="inputTitle" class="col-sm-3 col-lg-2 col-form-label text-right">Naslov: </label>
           <div class="col-sm-8">
-            <input id="inputTitle" type="text" class="form-control" name="title" value="<?php echo $project_data['title']; ?>" maxlength="64" placeholder="Unesite naslov projekta">
+            <input id="inputTitle" type="text" class="form-control" name="title" value="<?php echo $project_data->getTitle() ?>" maxlength="64" placeholder="Unesite naslov projekta">
           </div>
         </div>
 
@@ -52,17 +71,17 @@ else:
           <div class="col-sm-4">
 
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="status" id="active" value="1" <?php echo ( $project_data['status'] == 1 ? 'checked' : ''); ?>>
+              <input class="form-check-input" type="radio" name="status_id" id="active" value="1" <?php echo ( $project_data->getStatus()->getId() == 1 ? 'checked' : ''); ?>>
               <label class="form-check-label" for="active">Aktivan</label>
             </div>
 
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="status" id="wait" value="2" <?php echo ( $project_data['status'] == 2 ? 'checked' : ''); ?>>
+              <input class="form-check-input" type="radio" name="status_id" id="wait" value="2" <?php echo ( $project_data->getStatus()->getId() == 2 ? 'checked' : ''); ?>>
               <label class="form-check-label" for="wait">Na čekanju</label>
             </div>
 
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="status" id="archived" value="3" <?php echo ( $project_data['status'] == 3 ? 'checked' : ''); ?>>
+              <input class="form-check-input" type="radio" name="status_id" id="archived" value="3" <?php echo ( $project_data->getStatus()->getId() == 3 ? 'checked' : ''); ?>>
               <label class="form-check-label" for="archived">U arhivi</label>
             </div>
           </div>

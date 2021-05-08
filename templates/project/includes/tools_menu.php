@@ -1,5 +1,6 @@
 <?php
 require 'create_project.php';
+require 'update_project.php';
 
 require 'add.php';
 require 'edit.php';
