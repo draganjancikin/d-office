@@ -162,19 +162,17 @@ else:
                     <?php
                 endforeach;
               endif;
-              // TODO: create method getPidbsByProject() in Repository
-              $pidbs = []; //$pidb->getPidbsByProjectId($project_id)
-              if ($pidbs):
+              if ($accounting_documents = $entityManager->find("\Roloffice\Entity\Project", $project_id)->getAccountingDocuments()):
                 echo "<br><h5>Dokumenti:</h5>";
-                foreach ($pidbs as $pidb):
+                foreach ($accounting_documents as $accounting_document):
                   ?>
-                  <a href="/pidb/?view&pidb_id=<?php echo $pidb['id'] ?>">
-                    <?php if($pidb['tip_id'] == 1) { echo "P";} ?>
-                    <?php if($pidb['tip_id'] == 2) { echo "O";} ?>
-                    <?php echo str_pad($pidb['y_id'], 4, "0", STR_PAD_LEFT) . '_' . date('m_Y', strtotime($pidb['date'])) ?>
+                  <a href="/pidb/?view&pidb_id=<?php echo $accounting_document->getId()?>">
+                    <?php if($accounting_document->getType()->getId() == 1) { echo "P";} ?>
+                    <?php if($accounting_document->getType()->getId() == 2) { echo "O";} ?>
+                    <?php echo str_pad($accounting_document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $accounting_document->getDate()->format('m_Y') ?>
                   </a>
-                  <?php echo $pidb['client_name'] ?>
-                  - <?php echo $pidb['title'] ?><br>
+                  <?php echo $accounting_document->getClient()->getName() ?>
+                  - <?php echo $accounting_document->getTitle() ?><br>
                   <?php
                 endforeach;
               endif;
@@ -241,18 +239,20 @@ else:
 
                                               <div id="collapse<?php echo $count ?>" class="collapse" >
                                                 <div class="card-body p-2">
+                                                <?php
+                                                ?>
                                                   <table>
                                                     <tr>
                                                       <td>start: </td>
-                                                      <td><?php echo ($project_task->getStartDate()->format('d-M-Y H:i:s') == '0001-01-01 00:00:00' ? '__________' : $project_task->getStartDate()->format('d-M-Y')  ); ?></td>
+                                                      <td><?php echo ($project_task->getStartDate()->format('Y-m-d H:i:s') == '1970-01-01 00:00:00' ? '__________' : $project_task->getStartDate()->format('d-M-Y')  ); ?></td>
                                                     </tr>
                                                     <tr>
                                                       <td>izvršilac: </td>
-                                                      <td><?php // echo ( $project_task->getEmployee() ? $project_task->getEmployee()->getName() : '__________' ) ?></td>
+                                                      <td><?php echo ($project_task->getEmployee()->getName() == "" ? "__________" : $project_task->getEmployee()->getName() )  ?></td>
                                                     </tr>
                                                     <tr>
                                                       <td>end: </td>
-                                                      <td><?php echo ($project_task->getEndDate()->format('Y-M-d H:i:s') == '0000-01-01 00:00:00' ? '__________' : $project_task->getEndDate()->format('d-M-Y') ); ?></td>
+                                                      <td><?php echo ($project_task->getEndDate()->format('Y-m-d H:i:s') == '1970-01-01 00:00:00' ? '__________' : $project_task->getEndDate()->format('d-M-Y') ); ?></td>
                                                     </tr>
                                                     <tr>
                                                       <td>beleške: </td>
@@ -260,32 +260,28 @@ else:
                                                     </tr>
                                                     <?php
                                                     $date_temp = "";
-                                                    // TODO: 
-                                                    // $task_notes = $project->getTaskNotesByProject($project_task['id']);
-                                                    $task_notes = [];
+                                                    $task_notes = $entityManager->getRepository('\Roloffice\Entity\Project')->getNotesByProjectTask($project_task->getId());
                                                     foreach ($task_notes as $task_note):
                                                       ?>
                                                       <tr>
                                                         <td>
                                                           <span>
                                                             <?php
-                                                            if(date('d-M-Y', strtotime($task_note['date'])) == $date_temp) {
-                                                                
-                                                            }else{
-                                                              echo date('d-M-Y', strtotime($task_note['date']));
+                                                            if($task_note->getCreatedAt()->format('d-M-Y') != $date_temp) {
+                                                              echo $task_note->getCreatedAt()->format('d-M-Y');
                                                             }
                                                             ?>
                                                           </span>
                                                         </td>
                                                         <td>
                                                           <span class="direct-chat-name">
-                                                            <?php echo '- ' .$task_note['note']; ?>
+                                                            <?php echo '- ' .$task_note->getNote() ?>
                                                           </span>
-                                                          <?php echo ($user_role_id==1 ? '<small class="label bg-gray">' .$task_note['user_name']. '</small>' : '' ); ?>
+                                                          <?php echo ($user_role_id==1 ? '<small class="label bg-gray">' .$task_note->getCreatedByUser()->getUsername(). '</small>' : '' ); ?>
                                                         </td>
                                                       </tr>
                                                       <?php
-                                                      $date_temp = date('d-M-Y', strtotime($task_note['date']));
+                                                      $date_temp = $task_note->getCreatedAt()->format('d-M-Y');
                                                     endforeach;
                                                     ?>
                                                   </table>
