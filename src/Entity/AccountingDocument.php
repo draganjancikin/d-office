@@ -57,6 +57,7 @@ class AccountingDocument {
    */
   protected $parent;
 
+  // TODO: This is old way. Need update schema without this.
   /**
    * Meny Accounting Documents belongs to the One Project.
    * @ORM\ManyToOne(targetEntity="Project")
@@ -65,7 +66,7 @@ class AccountingDocument {
    */
   protected $project;
 
-    /**
+  /**
    * @ORM\Column(type="string", length=48)
    * @var string
    */
