@@ -317,22 +317,6 @@ class OrderController extends Database {
         }
     }
 
-    /**
-     * Method thah return orders by project ID
-     * 
-     * @param integer $project_id
-     * 
-     * @return array
-     */
-    public function getOrdersByProjectId($project_id) {
-        $result = $this->get("SELECT orderm.id, orderm.o_id, orderm.date, orderm.project_id, orderm.title, orderm.status, orderm.is_archived, v6_clients.name as supplier_name "
-                        . "FROM orderm "
-                        . "JOIN (v6_clients) "
-                        . "ON (orderm.supplier_id = v6_clients.id) "
-                        . "WHERE (orderm.project_id = $project_id) "
-                        . "ORDER BY orderm.id DESC ");
-        return $result;
-    }
 
     /**
      * Method that duplicate material in order
