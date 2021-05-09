@@ -2,14 +2,9 @@
 if(isset($_GET['group_id']) AND $_GET['group_id']<>""  ){
     
   $group_id = $_GET['group_id'];
-    
-  if ($group_id == 0) $title = "Cenovnik: Svi proizvodi";
-  if ($group_id == 1) $title = "Cenovnik: Agro program";
-  if ($group_id == 2) $title = "Cenovnik: PVC ograda";
-  if ($group_id == 3) $title = "Cenovnik: Građevinski program";
-  if ($group_id == 4) $title = "Cenovnik: Ostalo";
-  if ($group_id == 5) $title = "Cenovnik: Transport";
-    
+  $group = $entityManager->find("\Roloffice\Entity\ArticleGroup", $group_id);
+  $title = "Cenovnik: " . $group->getName();
+ 
   $count = 0;
   ?>
   
