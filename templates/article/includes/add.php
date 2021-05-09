@@ -1,6 +1,5 @@
 <?php
-use Roloffice\Core\Database;
-// dodaj artikal
+// Create Article.
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newArticle"]) ) {
 
     $user_id = $_SESSION['user_id'];

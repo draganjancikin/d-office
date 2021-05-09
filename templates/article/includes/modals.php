@@ -18,7 +18,9 @@
                 <select id="selectProperty" class="form-control" name="property_item_id" required>
                 <option value="">izaberi osobinu</option>
                   <?php
-                  $property_list = $article->getPropertys();
+                  // $property_list = $article->getPropertys();
+                  // TODO
+                  $property_list = []; 
                   foreach ($property_list as $property_item) {
                     echo '<option value="' .$property_item['id']. '">' .$property_item['name']. '</option>';
                   }

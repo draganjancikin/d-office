@@ -5,11 +5,10 @@
   <div class="form-group row">
     <div class="col-sm-5">
       <select class="form-control" name="group_id">
-        <option value="0">Izaberi cenovnik</option>
         <?php
-        $article_groups = $article->getArticleGroups();
+        $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->findAll();
         foreach ($article_groups as $article_group) {
-          echo '<option value="' .$article_group['id']. '">' .$article_group['name']. '</option>';
+          echo '<option value="' .$article_group->getId(). '">' .$article_group->getName(). '</option>';
         }
         ?>
       </select>
@@ -48,14 +47,15 @@
         </tfoot>
         <tbody>
           <?php
-          $articles = $article->getLastArticles(10);
-          foreach ($articles as $articl):
+          $last_articles = $entityManager->getRepository('\Roloffice\Entity\Article')->getLastArticles(15);
+          $preferences = $entityManager->find('\Roloffice\Entity\Preferences', 1);
+          foreach ($last_articles as $article_data):
             ?>
             <tr>
-              <td><a href="?view&article_id=<?php echo $articl['id'] ?>"><?php echo $articl['name'] ?></a></td>
-              <td class="text-center"><?php echo $articl['unit_name'] ?></td>
-              <td class="text-right"><?php echo number_format( ($articl['price'] * $article->getKurs() * ($article->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
-              <td class="text-right"><?php echo number_format( ($articl['price'] * ($article->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
+              <td><a href="?view&article_id=<?php echo $article_data->getId() ?>"><?php echo $article_data->getName() ?></a></td>
+              <td class="text-center"><?php echo $article_data->getUnit()->getName() ?></td>
+              <td class="text-right"><?php echo number_format( ($article_data->getPrice() * $preferences->getKurs() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
+              <td class="text-right"><?php echo number_format( ($article_data->getPrice() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
             </tr>
             <?php
           endforeach;

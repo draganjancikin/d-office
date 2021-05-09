@@ -1,6 +1,4 @@
 <?php
-use Roloffice\Core\Database;
-
 $user_id = $_SESSION['user_id'];
 
 // izmena artikla

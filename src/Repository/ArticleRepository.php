@@ -18,5 +18,21 @@ class ArticleRepository extends EntityRepository {
     $count = $qb->getQuery()->getSingleScalarResult();
     return $count;
   }
+
+    /**
+   * Method that return last $limit Articles
+   * 
+   * @return 
+   */
+  public function getLastArticles($limit = 5) {
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('a')
+        ->from('Roloffice\Entity\Article', 'a')
+        ->orderBy('a.id', 'DESC')
+        ->setMaxResults( $limit );
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    return $result;
+  }
   
 }
