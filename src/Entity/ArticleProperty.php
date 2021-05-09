@@ -5,7 +5,7 @@ namespace Roloffice\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity (repositoryClass="Roloffice\Repository\ArticlePropertyRepository")
  * @ORM\Table(name="v6_articles_properties")
  */
 class ArticleProperty {
@@ -66,19 +66,19 @@ class ArticleProperty {
     return $this->property;
   }
 
-  public function setMinDimension($min_dimension) {
-    $this->min_dimension = $min_dimension;
+  public function setMinSize($min_size) {
+    $this->min_size = $min_size;
   }
   
-  public function getMinDimension() {
-    return $this->min_dimension;
+  public function getMinSize() {
+    return $this->min_size;
   }
 
-  public function setMaxDimension($max_dimension) {
-    $this->max_dimension = $max_dimension;
+  public function setMaxSize($max_size) {
+    $this->max_size = $max_size;
   }
   
-  public function getMaxDimension() {
-    return $this->max_dimension;
+  public function getMaxSize() {
+    return $this->max_size;
   }
 }

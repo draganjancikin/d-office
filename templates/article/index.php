@@ -43,7 +43,7 @@
                 if (empty($_GET)): // ako je $_GET prazan
                   include '../../templates/article/includes/list_last.php';
                 else:
-                  if(isset($_GET['view'])) include '../../templates/article/includes/formView.php';
+                  if(isset($_GET['view'])) include '../../templates/article/includes/form_view.php';
                   if(isset($_GET['edit'])) include '../../templates/article/includes/formEdit.php';
                   if(isset($_GET['new'])) include '../../templates/article/includes/formNew.php';
 

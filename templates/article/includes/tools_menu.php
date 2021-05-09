@@ -13,7 +13,8 @@ require 'del.php';
       <?php
       if(isset($_GET['view']) || isset($_GET['edit'])):
         $article_id = filter_input(INPUT_GET, 'article_id');
-        $article_data = $article->getArticleById($article_id);
+        $article_data = $entityManager->find("\Roloffice\Entity\Article", $article_id);
+        $article_properties = $entityManager->getRepository('\Roloffice\Entity\ArticleProperty')->getArticleProperties($article_id);
         
         // in view case show edit button
         if(isset($_GET['view'])):

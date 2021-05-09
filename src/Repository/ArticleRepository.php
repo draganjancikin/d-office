@@ -50,38 +50,33 @@ class ArticleRepository extends EntityRepository {
     $query = $qb->getQuery();
     $result = $query->getResult();
     return $result;
-
-/*
-
-    $qb = $this->_em->createQueryBuilder();
-    $qb->select('m')
-      ->from('Roloffice\Entity\Material', 'm')
-    
-    
-      ->join('m.street', 's', 'WITH', 'm.street = s.id')
-      ->join('m.city', 'c', 'WITH', 'm.city = c.id')
-      
-      ->where(
-        $qb->expr()->like('m.name', $qb->expr()->literal("%$term%")),
-        )
-      ->orderBy('m.name', 'ASC');
-
-
-
-
-
-
-
-
-$result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price "
-                        . "FROM $this->table_article "
-                        . "JOIN (unit) "
-                        . "ON (article.unit_id = unit.id) "
-                        . "WHERE (article.group_id = $group_id )"
-                        . "ORDER BY article.name ");
-        return $result;
-*/
-
-
   }
+
+  /**
+   * Method that return Article Properties
+   * 
+   * @param int $article_id
+   * 
+   * @return array
+   */
+  public function getArticleProperties($article_id) {
+    // Create a QueryBilder instance
+    $qb = $this->_em->createQueryBuilder();
+    /*
+    $qb->select('ap, pr')
+      ->from('Roloffice\Entity\ArticleProperty', 'ap')
+      ->join('ap.property', 'pr', 'WITH', 'ap.property = pr.id')
+      ->where(
+        $qb->expr()->eq('ap.article', $article_id),
+      )
+      ->distinct();
+      */
+    
+      
+      
+        $query = $qb->getQuery();
+    $result = $query->getResult();
+    return $result;
+  } 
+
 }

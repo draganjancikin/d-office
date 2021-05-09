@@ -70,23 +70,6 @@ class ArticleController extends Database {
     }
 
     /**
-     * Method that return all articles in group
-     * 
-     * @param integer $group_id
-     * 
-     * @return array
-     */
-    public function getArticlesByGroup($group_id) {
-        $result = $this->get("SELECT article.id, article.name, unit.name as unit_name, article.price "
-                        . "FROM $this->table_article "
-                        . "JOIN (unit) "
-                        . "ON (article.unit_id = unit.id) "
-                        . "WHERE (article.group_id = $group_id )"
-                        . "ORDER BY article.name ");
-        return $result;
-    }
-
-    /**
      * Method that return array of article groups
      * 
      * @return array
@@ -128,23 +111,8 @@ class ArticleController extends Database {
         return $result;
     }
 
-    /**
-     * Methor that return propertys by article ID
-     * 
-     * @param integer $article_id
-     * 
-     * @return array 
-     */
-    public function getPropertyByArticleId($article_id) {
-        $result = $this->get("SELECT property.id, property.name "
-                        . "FROM article_property "
-                        . "JOIN (property) "
-                        . "ON (article_property.property_id = property.id) "
-                        . "WHERE article_property.article_id = $article_id ");
-        return $result;
-    }
-
-    /**
+   
+   /**
      * Method that return article price
      * 
      * @param integer $article_id
