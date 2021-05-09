@@ -65,7 +65,11 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-sm font-weight-bold text-success text-uppercase mb-1">Dokumenti</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $db->numRows('pidb') ?></div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <?php 
+                                      echo $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getNumberOfAccountingDocuments(); 
+                                    ?>
+                                    </div>
                                 </div>
                                 <div class="col-auto">
                                     <i class="fas fa-list fa-2x text-success"></i>
