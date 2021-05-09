@@ -35,7 +35,7 @@
           <div class="row">
 
             <!-- Tools Meni -->
-            <?php include '../../templates/article/includes/toolsMenu.php'; ?>
+            <?php include '../../templates/article/includes/tools_menu.php'; ?>
             <!-- End of Tools Meni -->
 
             <div class="col-lg-12 px-2">
@@ -47,7 +47,7 @@
                   if(isset($_GET['edit'])) include '../../templates/article/includes/formEdit.php';
                   if(isset($_GET['new'])) include '../../templates/article/includes/formNew.php';
 
-                  if(isset($_GET['priceList'])) include '../../templates/article/includes/priceList.php';
+                  if(isset($_GET['priceList'])) include '../../templates/article/includes/price_list.php';
                   
                   if(isset($_GET['search'])) include '../../app/includes/search.php';
                 endif;

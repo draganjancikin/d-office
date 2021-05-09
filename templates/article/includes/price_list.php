@@ -18,12 +18,13 @@ if(isset($_GET['group_id']) AND $_GET['group_id']<>""  ){
     <div class="form-group row">
       <div class="col-sm-5">
         <select class="form-control" name="group_id">
-          <option value="0">Izaberi cenovnik</option>
           <?php
-          $article_groups = $article->getArticleGroups();
-          foreach ($article_groups as $article_group) {
-            echo '<option value="' .$article_group['id']. '">' .$article_group['name']. '</option>';
-          }
+          $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->findAll();
+          foreach ($article_groups as $article_group) :
+            ?>
+            <option value="<?php echo $article_group->getId() ?>"><?php echo $article_group->getName() ?></option>
+            <?php
+          endforeach;
           ?>
         </select>
       </div>
@@ -62,16 +63,17 @@ if(isset($_GET['group_id']) AND $_GET['group_id']<>""  ){
           </tfoot>
           <tbody>
             <?php
-            $articles_by_group = $article->getArticlesByGroup($group_id);
+            $articles_by_group = $entityManager->getRepository('\Roloffice\Entity\Article')->getArticlesByGroup($group_id);
+            $preferences = $entityManager->find('\Roloffice\Entity\Preferences', 1);
             foreach ($articles_by_group as $article_by_group):
               $count++;
               ?>
               <tr>
                 <td class="px-1"><?php echo $count ?></td>  
-                <td class="px-1"><a href="?view&article_id=<?php echo $article_by_group['id'] ?>"><?php echo $article_by_group['name'] ?></a></td>
-                <td class="px-1"><?php echo $article_by_group['unit_name'] ?></td>
-                <td class="px-1"><?php echo number_format( ($article_by_group['price'] * $article->getKurs() * ($article->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
-                <td class="px-1"><?php echo number_format( ($article_by_group['price'] * ($article->getTax()/100 + 1) ) , 4, ",", ".") ?></td>
+                <td class="px-1"><a href="?view&article_id=<?php echo $article_by_group->getId() ?>"><?php echo $article_by_group->getName() ?></a></td>
+                <td class="px-1"><?php echo $article_by_group->getUnit()->getName() ?></td>
+                <td class="px-1"><?php echo number_format( ($article_by_group->getPrice() * $preferences->getKurs() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
+                <td class="px-1"><?php echo number_format( ($article_by_group->getPrice() * ($preferences->getTax()/100 + 1) ) , 4, ",", ".") ?></td>
               </tr>
               <?php
             endforeach;
