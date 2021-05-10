@@ -17,7 +17,7 @@
         <label for="selectGroup" class="col-sm-3 col-lg-2 col-form-label text-right">Grupa proizvoda:</label>
         <div class="col-sm-3">
           <select id="selectGroup" class="form-control" name="group_id">
-            <option value="">Izaberi grupu proizvoda</option>
+            <option value="4">Ostalo</option>
             <?php
             $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->getArticleGroups();
             foreach ($article_groups as $article_group) :

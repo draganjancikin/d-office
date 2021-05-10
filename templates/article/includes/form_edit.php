@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">Izmena artkla: <strong><?php echo $article_data->getName() ?></strong></h6>
   </div>
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?editArticle&article_id=' .$article_id ?>" method="post">
+    <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateArticle&article_id=' .$article_id ?>" method="post">
 
       <div class="form-group row">
         <label for="selectGroup" class="col-sm-3 col-lg-2 col-form-label text-right">Grupa proizvoda:</label>
@@ -62,7 +62,7 @@
       <div class="form-group row">
         <label class="col-sm-3 col-lg-2 col-form-label text-right" for="inputMinCalcMeasure">Min obrač. mera: </label>
         <div class="col-sm-2">
-          <input class="form-control" id="inputMinCalcMeasure" type="text" name="min_cals_measure" value="<?php echo $article_data->getMinCalcMeasure() ?>" >
+          <input class="form-control" id="inputMinCalcMeasure" type="text" name="min_calc_measure" value="<?php echo $article_data->getMinCalcMeasure() ?>" >
         </div>
       </div>
 
