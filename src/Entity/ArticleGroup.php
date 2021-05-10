@@ -5,7 +5,7 @@ namespace Roloffice\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity (repositoryClass="Roloffice\Repository\ArticleGroupRepository")
  * @ORM\Table(name="v6_article_groups")
  */
 class ArticleGroup {
