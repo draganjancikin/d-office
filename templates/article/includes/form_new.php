@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">Upis podataka o novom proizvodu</h6>
   </div>
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?new&newArticle'; ?>" method="post" >
+    <form action="<?php echo $_SERVER['PHP_SELF'] . '?createArticle'; ?>" method="post" >
     
       <div class="form-group row">
         <label for="inputDate" class="col-sm-3 col-lg-2 col-form-label text-right">Datum:</label>
@@ -19,10 +19,12 @@
           <select id="selectGroup" class="form-control" name="group_id">
             <option value="">Izaberi grupu proizvoda</option>
             <?php
-            $article_groups = $article->getArticleGroups();
-            foreach ($article_groups as $article_group) {
-              echo '<option value="' .$article_group['id']. '">' .$article_group['name']. '</option>';
-            }
+            $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->getArticleGroups();
+            foreach ($article_groups as $article_group) :
+              ?>
+              <option value="<?php echo $article_group->getId() ?>"><?php echo $article_group->getName() ?></option>
+              <?php
+            endforeach;
             ?>
           </select>
         </div>
@@ -41,10 +43,12 @@
           <select id="selectUnit" class="form-control" name="unit_id" required>
             <option value="">Izaberi jedinicu mere</option>
             <?php
-            $units = $article->getUnits();
-            foreach ($units as $unit) {
-              echo '<option value="' .$unit['id']. '">' .$unit['name']. '</option>';
-            }
+            $units = $entityManager->getRepository('\Roloffice\Entity\Unit')->findBy(array(), array('name' => 'ASC'));
+            foreach ($units as $unit) :
+              ?>
+              <option value="<?php echo $unit->getId() ?>"><?php echo $unit->getName() ?></option>
+              <?php
+            endforeach;
             ?>
           </select>
         </div>
@@ -61,7 +65,7 @@
       <div class="form-group row">
         <label for="inputMin" class="col-sm-3 col-lg-2 col-form-label text-right">Min obrač. mera:</label>
         <div class="col-sm-2">
-          <input id="inputMin" class="form-control" name="min_obrac_mera" maxlength="5" value="1">
+          <input id="inputMin" class="form-control" name="min_calc_measure" maxlength="5" value="1">
         </div>
       </div>
 

@@ -64,7 +64,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createClient"])) {
   $newClient->setNote($note);
   $newClient->setCreatedAt(new DateTime("now"));
   $newClient->setCreatedByUser($user);
-  $newClient->setModifiedAt(new DateTime("0000-01-01 00:00:00"));
+  $newClient->setModifiedAt(new DateTime("1970-01-01 00:00:00"));
 
   $entityManager->persist($newClient);
   $entityManager->flush();

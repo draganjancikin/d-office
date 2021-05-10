@@ -1,0 +1,51 @@
+<?php
+// Create a new Article.
+if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createArticle"]) ) {
+  
+  // Curent logged user.
+  $user_id = $_SESSION['user_id'];
+  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+
+  $group_id = htmlspecialchars($_POST['group_id']);
+  $group = $entityManager->find("\Roloffice\Entity\ArticleGroup", $group_id);
+
+  $name = htmlspecialchars($_POST['name']);
+
+  if($name == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
+  
+  $unit_id = htmlspecialchars($_POST['unit_id']);
+  $unit = $entityManager->find("\Roloffice\Entity\Unit", $unit_id);
+  
+
+  if($_POST['weight']) {
+    $weight = htmlspecialchars($_POST['weight']);
+  } else {
+    $weight = 0;
+  }
+
+  $min_calc_measure = str_replace(",", ".", htmlspecialchars($_POST['min_calc_measure']));
+  $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
+  $note = htmlspecialchars($_POST['note']);
+  
+  $newArticle = new \Roloffice\Entity\Article();
+
+  $newArticle->setGroup($group);
+  $newArticle->setUnit($unit);
+  $newArticle->setName($name);
+  $newArticle->setWeight($weight);
+  $newArticle->setMinCalcMeasure($min_calc_measure);
+  $newArticle->setPrice($price);
+
+  $newArticle->setNote($note);
+  $newArticle->setCreatedAt(new DateTime("now"));
+  $newArticle->setCreatedByUser($user);
+  $newArticle->setModifiedAt(new DateTime("1970-01-01 00:00:00"));
+
+  $entityManager->persist($newArticle);
+  $entityManager->flush();
+
+  // gest last id and redirect
+  $new_article_id = $newArticle->getId();
+
+  die('<script>location.href = "?view&article_id='.$new_article_id.'" </script>');
+}

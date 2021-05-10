@@ -45,7 +45,7 @@
                 else:
                   if(isset($_GET['view'])) include '../../templates/article/includes/form_view.php';
                   if(isset($_GET['edit'])) include '../../templates/article/includes/form_edit.php';
-                  if(isset($_GET['new'])) include '../../templates/article/includes/formNew.php';
+                  if(isset($_GET['new'])) include '../../templates/article/includes/form_new.php';
 
                   if(isset($_GET['priceList'])) include '../../templates/article/includes/price_list.php';
                   

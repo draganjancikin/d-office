@@ -1,34 +1,4 @@
 <?php
-// Create Article.
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newArticle"]) ) {
-
-    $user_id = $_SESSION['user_id'];
-
-    $date = date('Y-m-d h:i:s');
-    $group_id = htmlspecialchars($_POST['group_id']);
-    $name = htmlspecialchars($_POST['name']);
-
-    if($name == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
-
-    $unit_id = htmlspecialchars($_POST['unit_id']);
-    if($_POST['weight']) {
-      $weight = htmlspecialchars($_POST['weight']);
-    } else {
-      $weight = 0;
-    }
-
-    $min_obrac_mera = str_replace(",", ".", htmlspecialchars($_POST['min_obrac_mera']));
-    $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
-
-    $db = new Database();
-
-    $db->connection->query("INSERT INTO article (date, group_id, name, unit_id, weight, min_obrac_mera, price ) VALUES ('$date', '$group_id', '$name', '$unit_id', '$weight', '$min_obrac_mera', '$price'  )") or die(mysqli_error($db->connection));
-
-    $article_id = $db->connection->insert_id;
-
-    die('<script>location.href = "?view&article_id='.$article_id.'" </script>');
-    
-}
 
 // dodaj osobinu artiklu
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newProperty"]) ) {
