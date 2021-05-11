@@ -1,5 +1,6 @@
 <?php
 require 'create_article.php';
+require 'add_property_to_article.php';
 require 'update_article.php';
 
 require 'add.php';
@@ -17,6 +18,7 @@ require 'del.php';
         $article_id = filter_input(INPUT_GET, 'article_id');
         $article_data = $entityManager->find("\Roloffice\Entity\Article", $article_id);
         $article_properties = $entityManager->getRepository('\Roloffice\Entity\ArticleProperty')->getArticleProperties($article_id);
+        // $material_propertys = $entityManager->getRepository('\Roloffice\Entity\MaterialProperty')->getMaterialProperties($material_id);
         
         // in view case show edit button
         if(isset($_GET['view'])):

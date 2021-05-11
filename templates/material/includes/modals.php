@@ -13,8 +13,8 @@ if(isset($_GET['id'])):
           </button>
         </div>
 
-        <form action="<?php echo $_SERVER['PHP_SELF'] . '?addSupplier&id='.$id ; ?>" method="post">
-          <input type="hidden" name="id" value="<?php echo $id ?>">
+        <form action="<?php echo $_SERVER['PHP_SELF'] . '?addSupplier&id='.$material_id ; ?>" method="post">
+          <input type="hidden" name="id" value="<?php echo $material_id ?>">
 
           <div class="modal-body">
 
@@ -72,8 +72,8 @@ if(isset($_GET['id'])):
           </button>
         </div>
 
-        <form action="<?php echo $_SERVER['PHP_SELF'] . '?addProperty&id='.$id; ?>" method="post">
-          <input type="hidden" name="id" value="<?php echo $id ?>">
+        <form action="<?php echo $_SERVER['PHP_SELF'] . '?addProperty&id='.$material_id; ?>" method="post">
+          <input type="hidden" name="id" value="<?php echo $material_id ?>">
 
           <div class="modal-body">
 

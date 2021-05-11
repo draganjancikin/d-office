@@ -27,7 +27,7 @@ require 'delete_property.php';
         // In view case show edit button.
         if(isset($_GET['view'])):
           ?>
-          <a href="?edit&id=<?php echo $id ?>">
+          <a href="?edit&id=<?php echo $material_id ?>">
             <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o materijalu!">
               <i class="fas fa-edit"> </i> Izmena
             </button>
@@ -38,7 +38,7 @@ require 'delete_property.php';
         // in edit case show view button
         if(isset($_GET['edit'])):
           ?>
-          <a href="?view&id=<?php echo $id ?>">
+          <a href="?view&id=<?php echo $material_id ?>">
             <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o materijalu!">
               <i class="fas fa-eye"> </i> Pregled
             </button>

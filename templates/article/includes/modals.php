@@ -8,14 +8,14 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?edit&article_id=' . $article_id . '&newProperty'; ?>" method="post" >
+      <form action="<?php echo $_SERVER['PHP_SELF'] . '?addPropertyToArticle&article_id=' . $article_id; ?>" method="post" >
         <input type="hidden" name="article_id" value="<?php echo $article_id ?>">
         <div class="modal-body">
 
           <div class="form-group row">
             <label for="selectProperty" class="col-sm-3 col-form-label text-right">Osobina</label>
             <div class="col-sm-5">
-                <select id="selectProperty" class="form-control" name="property_item_id" required>
+                <select id="selectProperty" class="form-control" name="property_id" required>
                 <option value="">izaberi osobinu</option>
                   <?php
                   $property_list = $entityManager->getRepository('\Roloffice\Entity\Property')->findAll();
@@ -32,14 +32,14 @@
           <div class="form-group row">
             <label for="InputMin" class="col-sm-3 col-form-label text-right">Min</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="inputMin" name="min" value="0" />
+              <input type="text" class="form-control" id="inputMin" name="min_size" value="0" />
             </div>
           </div>
               
           <div class="form-group row">
             <label for="max" class="col-sm-3 col-form-label text-right">Max</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" name="max" value="0" />
+              <input type="text" class="form-control" name="max_size" value="0" />
             </div>
           </div>
 

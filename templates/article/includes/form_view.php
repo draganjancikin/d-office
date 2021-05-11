@@ -88,7 +88,6 @@
 
     <?php
     foreach ($article_properties as $article_property):
-      $property = $entityManager->find("\Roloffice\Entity\Property", $article_property->getProperty()->getId());
       ?>
       <form method="post">
         <fieldset disabled>
@@ -96,7 +95,7 @@
           <div class="form-group row">
             <div class="col-sm-4">
               <select class="form-control">
-                <option value="<?php echo $property->getId() ?>"><?php echo $property->getName() ?></option>
+                <option value="<?php echo $article_property->getProperty()->getId() ?>"><?php echo $article_property->getProperty()->getName() ?></option>
               </select>
             </div>
             <div class="col-sm-2">

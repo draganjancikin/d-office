@@ -99,18 +99,17 @@
   <div class="card-body p-2">
     <?php
     foreach ($article_properties as $article_property):
-      $property = $entityManager->find("\Roloffice\Entity\Property", $article_property->getProperty()->getId());
       ?>
       <form method="post">
                         
         <div class="form-group row">
           <div class="col-sm-4">
             <select class="form-control" name="material_id">
-              <option value="<?php echo $property->getID() ?>"><?php echo $property->getName() ?></option>
+              <option value="<?php echo $article_property->getProperty()->getId() ?>"><?php echo $article_property->getProperty()->getName() ?></option>
             </select>
           </div>
           <div class="col-sm-2">
-            <a href="<?php echo $_SERVER['PHP_SELF'] . '?delProperty&article_id=' .$article_id. '&property_id=' .$property->getId() ?>" class="btn btn-sm btn-danger">
+            <a href="<?php echo $_SERVER['PHP_SELF'] . '?delProperty&article_id=' .$article_id. '&property_id=' .$article_property->getProperty()->getId() ?>" class="btn btn-sm btn-danger">
               <i class="fas fa-trash-alt"> </i>
             </a>
           </div>
