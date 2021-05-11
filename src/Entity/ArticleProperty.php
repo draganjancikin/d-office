@@ -28,7 +28,7 @@ class ArticleProperty {
 
   /**
    * Meny ...
-   * @ORM\ManyToOne(targetEntity="ArticleProperty")
+   * @ORM\ManyToOne(targetEntity="Property")
    * @ORM\JoinColumn(name="property_id", referencedColumnName="id")
    * @var int
    */
