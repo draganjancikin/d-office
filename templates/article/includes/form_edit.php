@@ -109,7 +109,7 @@
             </select>
           </div>
           <div class="col-sm-2">
-            <a href="<?php echo $_SERVER['PHP_SELF'] . '?delProperty&article_id=' .$article_id. '&property_id=' .$article_property->getProperty()->getId() ?>" class="btn btn-sm btn-danger">
+            <a href="<?php echo $_SERVER['PHP_SELF'] . '?removePropertyFromArticle&article_id=' .$article_id. '&property_id=' .$article_property->getId() ?>" class="btn btn-sm btn-danger">
               <i class="fas fa-trash-alt"> </i>
             </a>
           </div>
