@@ -84,9 +84,11 @@ if(isset($_GET['id'])):
                   <option value="">izaberi osobinu</option>
                   <?php
                   $property_list = $entityManager->getRepository('\Roloffice\Entity\Property')->findAll();
-                  foreach ($property_list as $property_item) {
-                    echo '<option value="' .$property_item->getId(). '">' .$property_item->getName(). '</option>';
-                  }
+                  foreach ($property_list as $property_item) :
+                    ?>
+                    <option value="<?php echo $property_item->getId() ?>"><?php echo $property_item->getName() ?></option>
+                    <?php
+                  endforeach;
                   ?>
                 </select>
               </div>
