@@ -3,8 +3,6 @@ require 'create_article.php';
 require 'add_property_to_article.php';
 require 'update_article.php';
 require 'remove_property_from_article.php';
-
-require 'add.php';
 ?>
 <div class="col-lg-12 px-2" id="topMeni">
   <div class="card mb-2">
