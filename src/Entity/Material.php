@@ -42,7 +42,7 @@ class Material {
    * @ORM\Column(type="decimal", precision=11, scale=2)
    * @var float
    */
-  protected $min_obrac_mera;
+  protected $min_calc_measure;
 
   /**
    * @ORM\Column(type="decimal", precision=11, scale=4)
@@ -112,12 +112,12 @@ class Material {
     return $this->weight;
   }
 
-  public function setMinObracMera($min_obrac_mera) {
-    $this->min_obrac_mera = $min_obrac_mera;
+  public function setMinCalcMeasure($min_calc_measure) {
+    $this->min_calc_measure = $min_calc_measure;
   }
 
-  public function getMinObracMera() {
-    return $this->min_obrac_mera;
+  public function getMinCalcMeasure() {
+    return $this->min_calc_measure;
   }
 
   public function setNote($note) {
