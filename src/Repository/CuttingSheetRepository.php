@@ -36,6 +36,29 @@ class CuttingSheetRepository extends EntityRepository {
   }
 
   /**
+   * Method that return all Articles on CuttingSheet
+   * 
+   * @param int $cutting_sheet_id
+   * 
+   * @return array
+   */
+  public function getArticlesOnCuttingSheet($cutting_sheet_id) {
+    // Create a QueryBilder instance
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('csa')
+        ->from('Roloffice\Entity\CuttingSheetArticle', 'csa')
+        ->join('csa.fence_model', 'fm', 'csa.fence_model = fm.id')
+        ->where(
+          $qb->expr()->eq('csa.cutting_sheet', $cutting_sheet_id),
+        )
+        ->orderBy('csa.id', 'ASC');
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    
+    return $result;
+  }
+
+  /**
    * 
    */
   /*

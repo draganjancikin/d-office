@@ -18,7 +18,7 @@ class OrderMaterial {
    */
   protected $id;
 
-    /**
+  /**
    * Meny ...
    * @ORM\ManyToOne(targetEntity="Order")
    * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
