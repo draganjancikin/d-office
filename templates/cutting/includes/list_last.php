@@ -19,15 +19,15 @@
         </tfoot>
         <tbody>
           <?php
-          $cuttings = $cutting->getLastCuttings(10);
-          foreach ($cuttings as $cutting):
+          $cutting_sheets = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getLastCuttingSheets(10);
+          foreach ($cutting_sheets as $cutting_sheet):
             ?>
             <tr>
               <td class="centar">
-                <a href="?view&cutting_id=<?php echo $cutting['id'] ?>">KL_<?php echo str_pad($cutting['c_id'], 4, "0", STR_PAD_LEFT) ?></a>
+                <a href="?view&cutting_id=<?php echo $cutting_sheet->getId() ?>">KL_<?php echo str_pad($cutting_sheet->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?></a>
               </td>
               <td>
-                <?php echo $cutting['client_name'] ?>
+                <?php echo $cutting_sheet->getClient()->getName() ?>
               </td>
             </tr>
             <?php

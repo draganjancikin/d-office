@@ -19,7 +19,7 @@ class CuttingController extends Database {
     protected $task_id;
     protected $client_id;
 
-    
+    /*
     //metoda koja daje zadnjih $number materijala upisanih u bazu
     public function getLastCuttings($limit){
         
@@ -43,7 +43,7 @@ class CuttingController extends Database {
 
         return $cuttings;
     }
-
+*/
 
     //metoda koja vraća artikle u zavisnosti od datog pojma u pretrazi
     public function search($name){

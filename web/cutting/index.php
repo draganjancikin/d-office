@@ -7,9 +7,9 @@ session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $user_role_id = $_SESSION['user_role_id'];
-    $pidb = new \Roloffice\Controller\PidbController();
-    $article = new \Roloffice\Controller\ArticleController();
-    $cutting = new \Roloffice\Controller\CuttingController();
+    // $pidb = new \Roloffice\Controller\PidbController();
+    // $article = new \Roloffice\Controller\ArticleController();
+    // $cutting = new \Roloffice\Controller\CuttingController();
     include filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../templates/cutting/index.php';
 else:
     header('Location: /');

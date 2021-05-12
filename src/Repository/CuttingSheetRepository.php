@@ -24,18 +24,17 @@ class CuttingSheetRepository extends EntityRepository {
    * 
    * @return 
    */
-  /*
-  public function getLastArticles($limit = 5) {
+  public function getLastCuttingSheets($limit = 5) {
     $qb = $this->_em->createQueryBuilder();
-    $qb->select('a')
-        ->from('Roloffice\Entity\Article', 'a')
-        ->orderBy('a.id', 'DESC')
+    $qb->select('cs')
+        ->from('Roloffice\Entity\CuttingSheet', 'cs')
+        ->orderBy('cs.id', 'DESC')
         ->setMaxResults( $limit );
     $query = $qb->getQuery();
     $result = $query->getResult();
     return $result;
   }
-*/
+
   /**
    * 
    */
