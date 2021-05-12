@@ -3,7 +3,7 @@
   
   <div class="card-header p-2">
     <h6 class="m-0 font-weight-bold text-dark">
-      Krojna lista: KL <?php echo str_pad($cutting_data['c_id'], 4, "0", STR_PAD_LEFT).' - '.date('m', strtotime($cutting_data['date']))  . ' <span class="font-weight-normal">(' . date('d-M-Y', strtotime($cutting_data['date'])) . ')</span>';?>
+      Krojna lista: KL <?php echo str_pad($cutting_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$cutting_data->getCreatedAt()->format('m') . ' <span class="font-weight-normal">(' . $cutting_data->getCreatedAt()->format('d-M-Y') . ')</span>';?>
     </h6>
   </div>
   <div class="card-body p-2">
@@ -40,39 +40,32 @@
           $count = 0;
           $total_picket_lenght = 0;
           $total_kap = 0;
-          $articles_on_cuttig = $cutting->getArticlesOnCutting($cutting_id);
-          $fence_models = $cutting->getFenceModels();
-          foreach ($articles_on_cuttig as $article_on_cuttig):
+          $cutting_sheet_articles = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getArticlesOnCuttingSheet($cutting_sheet_id);
+          foreach ($cutting_sheet_articles as $cutting_sheet_article):
             $count ++;
             ?>
             <form >
               <fieldset disabled>
-                <input type="hidden" name="cutting_fence_article_id" value="<?php echo $article_on_cuttig['cutting_fence_article_id'] ?>" />
-                <input type="hidden" name="cutting_fence_id" value="<?php echo $article_on_cuttig['cutting_fence_id'] ?>" />
+                <input type="hidden" name="cutting_fence_article_id" value="<?php echo $cutting_sheet_article->getId() ?>" />
+                <input type="hidden" name="cutting_fence_id" value="<?php echo $cutting_sheet_id ?>" />
         
                 <tr>
                   <td class="px-1"><?php echo $count; ?>.</td>
                   <td class="px-1">
                     <select name="cutting_fence_model_id" required disabled>
-                    <option value="<?php echo $article_on_cuttig['cutting_fence_model_id'] ?>"><?php echo $article_on_cuttig['cutting_fence_model_name'] ?></option>
-                    <?php
-                    foreach ($fence_models as $fence_model):
-                      echo '<option value="'.$fence_model['id'].'">'.$fence_model['name'].'</option>'; 
-                    endforeach;
-                    ?>
+                    <option value="<?php echo $cutting_sheet_article->getFenceModel()->getId() ?>"><?php echo $cutting_sheet_article->getFenceModel()->getName() ?></option>
                   </select>
                 </td>
-                <td class="px-1"><input class="input-box-65" type="text" name="width" value="<?php echo $article_on_cuttig['cutting_fence_model_width'] ?>" disabled ></td>
-                <td class="px-1"><input class="input-box-65" type="text" name="height" value="<?php echo $article_on_cuttig['cutting_fence_article_height'] ?>" disabled ></td>
-                <td class="px-1"><input class="input-box-65" type="text" name="mid_height" value="<?php echo $article_on_cuttig['cutting_fence_article_mid_height'] ?>" disabled ></td>
-                <td class="px-1"><input class="input-box-45" type="text" name="space" value="<?php echo $article_on_cuttig['cutting_fence_article_space'] ?>" disabled ></td>
-                <td class="px-1"><input class="input-box-45"type="text" name="field_number" value="<?php echo $article_on_cuttig['cutting_fence_article_field_number'] ?>" disabled ></td>
+                <td class="px-1"><input class="input-box-65" type="text" name="width" value="<?php echo $cutting_sheet_article->getWidth() ?>" disabled ></td>
+                <td class="px-1"><input class="input-box-65" type="text" name="height" value="<?php echo $cutting_sheet_article->getHeight() ?>" disabled ></td>
+                <td class="px-1"><input class="input-box-65" type="text" name="mid_height" value="<?php echo $cutting_sheet_article->getMidHeight() ?>" disabled ></td>
+                <td class="px-1"><input class="input-box-45" type="text" name="space" value="<?php echo $cutting_sheet_article->getSpace() ?>" disabled ></td>
+                <td class="px-1"><input class="input-box-45"type="text" name="field_number" value="<?php echo $cutting_sheet_article->getNumberOfFields() ?>" disabled ></td>
                 
                 <td class="px-1">
                   <button type="submit" class="btn btn-mini btn-outline-secondary disabled" disabled>
-                  <i class="fas fa-save"></i>
+                    <i class="fas fa-save"></i>
                   </button>  
-                
                   <a>
                     <button class="btn btn-mini btn-secondary disabled" type="button" disabled>
                       <i class="fas fa-trash"></i>
@@ -83,8 +76,11 @@
               </fieldset>
             </form>
             <?php
-            $total_picket_lenght = $total_picket_lenght + $article_on_cuttig['temp_picket_lenght'];
-            $total_kap = $total_kap + $article_on_cuttig['temp_kap'];
+            // TODO:
+            $cutting_sheet__article__kap_number = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getArticleKapNumber($cutting_sheet_article->getId());
+            $cutting_sheet__article__picket_lenght = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getArticlePicketLength($cutting_sheet_article->getId());
+            $total_picket_lenght = $total_picket_lenght + $cutting_sheet__article__picket_lenght;
+            $total_kap = $total_kap + $cutting_sheet__article__kap_number;
           endforeach;
           ?>
           <tr>
