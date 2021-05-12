@@ -35,13 +35,13 @@
           <div class="row">
 
             <!-- Tools Meni -->
-            <?php include '../../templates/cutting/includes/toolsMenu.php'; ?>
+            <?php include '../../templates/cutting/includes/tools_menu.php'; ?>
             <!-- End of Tools Meni -->   
             
             <div class="col-lg-12 col-xl-10 px-2">
               <?php 
                 if (empty($_GET)): // ako je $_GET prazan
-                  include '../../templates/cutting/includes/listLast.php';
+                  include '../../templates/cutting/includes/list_last.php';
                 else:
                   if(isset($_GET['view'])) include '../../templates/cutting/includes/formView.php';
                   if(isset($_GET['edit'])) include '../../templates/cutting/includes/formEdit.php';

@@ -88,7 +88,11 @@
                     <div class="row no-gutters align-items-center">
                       <div class="col mr-2">
                         <div class="text-sm font-weight-bold text-danger text-uppercase mb-1">Krojne liste</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $db->numRows('cutting_fence') ?></div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                          <?php 
+                            echo $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getNumberOfCuttingSheets(); 
+                          ?>
+                        </div>
                       </div>
                       <div class="col-auto">
                         <i class="fas fa-cut fa-2x text-danger"></i>
