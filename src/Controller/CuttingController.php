@@ -19,31 +19,6 @@ class CuttingController extends Database {
     protected $task_id;
     protected $client_id;
 
-    /*
-    //metoda koja daje zadnjih $number materijala upisanih u bazu
-    public function getLastCuttings($limit){
-        
-        $cutting = array();
-        $cuttings = array();
-
-        // izlistavanje zadnjih $limit materijala
-        $result = $this->connection->query("SELECT cutting_fence.id, cutting_fence.c_id, cutting_fence.client_id, v6_clients.name "
-                                         . "FROM cutting_fence "
-                                         . "JOIN (v6_clients)"
-                                         . "ON (cutting_fence.client_id = v6_clients.id)"
-                                         . "ORDER BY cutting_fence.id DESC LIMIT $limit") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)):
-            $cutting = array(
-                'id' => $row['id'],
-                'c_id' => $row['c_id'],
-                'client_name' => $row['name']
-            );
-            array_push($cuttings, $cutting);
-        endwhile;
-
-        return $cuttings;
-    }
-*/
 
     //metoda koja vraća artikle u zavisnosti od datog pojma u pretrazi
     public function search($name){
@@ -75,7 +50,7 @@ class CuttingController extends Database {
         return $cuttings;
     }
 
-
+/*
     //metoda koja vraća podatke o krojnoj listi od id krojne liste
     public function getCutting($cutting_id){
 
@@ -96,7 +71,7 @@ class CuttingController extends Database {
 
         return $cutting;
     }
-
+*/
 
     // metoda koja daje artikle u krojnoj listi
     public function getArticlesOnCutting($cutting_id){
@@ -291,7 +266,7 @@ class CuttingController extends Database {
         return $articles;
     }
 
-
+/*
     public function brojLetvica($sir_p, $vis_p, $max_vis_p, $zelj_raz_l, $sir_l){
         $cont_br_letvica = ($sir_p - $zelj_raz_l) / ($sir_l + $zelj_raz_l);
         $zaok_cont_br_letvica = ceil(($sir_p - $zelj_raz_l) / ($sir_l + $zelj_raz_l));
@@ -313,7 +288,7 @@ class CuttingController extends Database {
         // return $this->type;
         return $br_letvica;
     }
-
+*/
 
     // metoda koja definiše i dodeljuje vrednost y_id
     public function setCid(){
