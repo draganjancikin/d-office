@@ -1,21 +1,4 @@
 <?php
-use Roloffice\Core\Database;
-
-$user_id = $_SESSION['user_id'];
-$date = date('Y-m-d h:i:s');
-
-// dell article from cutting
-if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delCuttingArticle"])) {
-    $cutting_fence_id = htmlspecialchars($_GET['cutting_fence_id']);
-    $cutting_fence_article_id = htmlspecialchars($_GET['cutting_fence_article_id']);
-
-    $db = new Database();
-
-    $db->connection->query("DELETE FROM cutting_fence_article WHERE id='$cutting_fence_article_id' ") or die(mysqli_error($db->connection));
-
-    die('<script>location.href = "?edit&cutting_id='.$cutting_fence_id.'" </script>');
-}
-
 
 // del cutting
 if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delCutting"])) { 

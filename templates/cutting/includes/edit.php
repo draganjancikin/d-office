@@ -1,8 +1,4 @@
 <?php
-use Roloffice\Core\Database;
-
-$user_id = $_SESSION['user_id'];
-$date = date('Y-m-d h:i:s');
 
 // edit cutting article
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editCuttingArticle"]) ) {

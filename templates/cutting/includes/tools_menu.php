@@ -1,5 +1,7 @@
 <?php
 require 'create__cutting_sheet.php';
+require 'update__cutting_sheet.php';
+require 'remove__article__form__cutting_sheet.php';
 
 require 'add.php';
 require 'edit.php';
@@ -16,10 +18,10 @@ require 'export.php';
       <?php
       if(isset($_GET['view']) || isset($_GET['edit'])):
         
-        if ( isset($_GET['cutting_id']) ) {
-          $cutting_sheet_id = filter_input(INPUT_GET, 'cutting_id') ;
+        if ( isset($_GET['cutting_sheet_id']) ) {
+          $cutting_sheet_id = filter_input(INPUT_GET, 'cutting_sheet_id') ;
         } else {
-          $cutting_sheet_id = htmlspecialchars($_POST['cutting_id']);
+          $cutting_sheet_id = htmlspecialchars($_POST['cutting_sheet_id']);
         }
         $cutting_data = $entityManager->find('\Roloffice\Entity\CuttingSheet', $cutting_sheet_id);
         $client_data = $entityManager->find('\Roloffice\Entity\Client', $cutting_data->getClient());
