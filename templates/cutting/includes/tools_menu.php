@@ -1,10 +1,10 @@
 <?php
 require 'create__cutting_sheet.php';
 require 'update__cutting_sheet.php';
+require 'add__article__to__cutting_sheet.php';
 require 'update__cutting_sheet__article.php';
-require 'remove__article__form__cutting_sheet.php';
+require 'remove__article__from__cutting_sheet.php';
 
-require 'add.php';
 require 'del.php';
 require 'export.php';
 ?>

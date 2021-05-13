@@ -9,19 +9,21 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="<?php echo $_SERVER['PHP_SELF']. '?addArticleToCutting' ?>" method="post">
+      <form action="<?php echo $_SERVER['PHP_SELF']. '?addArticleToCuttingSheet' ?>" method="post">
         <div class="modal-body">
         
-          <input type="hidden" name="cutting_id" value="<?php echo $cutting_id; ?>" />
+          <input type="hidden" name="cutting_sheet_id" value="<?php echo $cutting_sheet_id; ?>" />
 
           <div class="form-group row">
             <label for="selectFenceModel" class="col-sm-4 col-form-label text-right">Model:</label>
             <div class="col-sm-5">
-              <select id="selectFenceModel" class="form-control" name="cutting_fence_model_id" required>
+              <select id="selectFenceModel" class="form-control" name="cutting_sheet__fence_model_id" required>
                 <option value="">izaberite model</option>
                 <?php
                 foreach ($fence_models as $fence_model):
-                  echo '<option value="'.$fence_model['id'].'">'.$fence_model['name'].'</option>'; 
+                  ?>
+                  <option value="<?php echo $fence_model->getId() ?>"><?php echo $fence_model->getName() ?></option> 
+                  <?php
                 endforeach;
                 ?>
               </select>
@@ -57,9 +59,9 @@
           </div>
       
           <div class="form-group row">
-            <label for="inputFieldNumber" class="col-sm-4 col-form-label text-right"> Broj polja: </label>
+            <label for="inputNumberOfFields" class="col-sm-4 col-form-label text-right"> Broj polja: </label>
             <div class="col-sm-2"> 
-              <input class="form-control" id="inputFieldNumber" type="text" name="field_number" value="0">
+              <input class="form-control" id="inputNumberOfFields" type="text" name="number_of_fields" value="0">
             </div>
           </div>
     
