@@ -19,7 +19,6 @@ require 'export.php';
         } else {
           $cutting_sheet_id = htmlspecialchars($_POST['cutting_id']);
         }
-        // TODO:
         $cutting_data = $entityManager->find('\Roloffice\Entity\CuttingSheet', $cutting_sheet_id);
         $client_data = $entityManager->find('\Roloffice\Entity\Client', $cutting_data->getClient());
         $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());

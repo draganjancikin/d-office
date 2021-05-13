@@ -76,8 +76,7 @@
               </fieldset>
             </form>
             <?php
-            // TODO:
-            $cutting_sheet__article__kap_number = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getArticleKapNumber($cutting_sheet_article->getId());
+            $cutting_sheet__article__kap_number = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getCuttingSheetArticleCapNumber($cutting_sheet_article->getId());
             $cutting_sheet__article__picket_lenght = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getArticlePicketLength($cutting_sheet_article->getId());
             $total_picket_lenght = $total_picket_lenght + $cutting_sheet__article__picket_lenght;
             $total_kap = $total_kap + $cutting_sheet__article__kap_number;

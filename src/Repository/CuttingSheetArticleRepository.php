@@ -20,16 +20,42 @@ class CuttingSheetArticleRepository extends EntityRepository {
   }
 
   /**
-   * Method that return number of kaps in one field
+   * Method that return number of kaps in one CuttingSheetArticle (fence field).
    * 
    * @param $cutting_sheet_article_id
    * 
    * @return int
    */
-  public function getArticleKapNumber($cutting_sheet_article_id) {
-    //TODO:
+  public function getCuttingSheetArticleCapNumber($cutting_sheet_article_id) {
+    
+    // Get CuttingSheetArticle by $cutting_sheet_article_id.
+    $cutting_sheet_article = $this->_em->find('\Roloffice\Entity\CuttingSheetArticle', $cutting_sheet_article_id);
 
-    return 0;
+    // Field width.
+    $width = $cutting_sheet_article->getWidth();
+    
+    // Space between picket.
+    $space = $cutting_sheet_article->getSpace();
+    
+    // Picket width.
+    // TODO: ubaciti na krojnu listu odrešivanje i širine letvice
+    $picket_width = 80;
+
+    $control_cap_number = ($width - $space) / ($picket_width + $space);
+
+    $rounded_cap_number = ceil(($width - $space) / ($picket_width + $space));
+
+    $razlika = $control_cap_number-($rounded_cap_number-1);
+
+    if($razlika < 0.5){
+      $cap_number = ceil(($width - $space) / ($picket_width + $space))-1;
+    }
+
+    if($razlika >= 0.5){
+      $cap_number = ceil(($width - $space) / ($picket_width + $space));
+    }
+
+    return $cap_number;
   }
 
 }
