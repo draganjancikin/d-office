@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">Otvaranje nove krojne liste:</h6>
   </div>
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?newCutting'; ?>" method="post">
+    <form action="<?php echo $_SERVER['PHP_SELF'] . '?createCuttingSheet'; ?>" method="post">
 
       <div class="form-group row">
         <label for="date" class="col-sm-3 col-lg-2 col-form-label text-right">Datum: </label>

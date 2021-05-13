@@ -59,6 +59,97 @@ class CuttingSheetRepository extends EntityRepository {
   }
 
   /**
+   * Method that set ordinal number in year of CuttingSheet
+   *
+   * @param int $cutting_sheet_id
+   * 
+   * @return void
+   */
+  public function setOrdinalNumInYear($cutting_sheet_id) {
+    
+    // count number of records in database table v6_cutting_sheets
+    $order_count = $this->getNumberOfCuttingSheets();
+
+    // get year of last order
+    $year_of_last_order = $this->getLastCuttingSheet()->getCreatedAt()->format('Y');
+
+    // get ordinal number in year of order before last
+    $ordinal_number_of_order_before_last = $this->getCuttingSheetBeforeLast()->getOrdinalNumInYear();
+
+    // year of order before last
+    $year_of_order_before_last = $this->getCuttingSheetBeforeLast()->getCreatedAt()->format('Y');
+
+    if($order_count ==0){  // prvi slučaj kada je tabela $table prazna
+    
+      return die("Table order is empty!");
+    
+    }elseif($order_count ==1){  // drugi slučaj - kada postoji jedan unos u tabeli $table
+    
+      $ordinal_number_in_year = 1; // pošto postoji samo jedan unos u tabelu $table $b_on dobija vrednost '1'
+    
+    }else{  // svi ostali slučajevi kada ima više od jednog unosa u tabeli $table
+    
+      if($year_of_last_order < $year_of_order_before_last){
+        return die("Godina zadnjeg unosa je manja od godine predzadnjeg unosa! Verovarno datum nije podešen");
+      }elseif($year_of_last_order == $year_of_order_before_last){ //nema promene godine
+        $ordinal_number_in_year = $ordinal_number_of_order_before_last + 1;
+      }else{  // došlo je do promene godine
+        $ordinal_number_in_year = 1;
+      }
+    
+    }
+
+    // update ordinal_number_in_year
+    $cutting_sheet = $this->_em->find('\Roloffice\Entity\CuttingSheet', $cutting_sheet_id);
+
+    if ($cutting_sheet === null) {
+      echo "Order with ID $cutting_sheet_id does not exist.\n";
+      exit(1);
+    }
+
+    $cutting_sheet->setOrdinalNumInYear($ordinal_number_in_year);
+
+    $this->_em->flush();
+
+  }
+
+  /**
+   * Method that return last CuttingSheet in db table.
+   *
+   * @return object
+   */
+  public function getLastCuttingSheet() {
+
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('cs')
+        ->from('Roloffice\Entity\CuttingSheet', 'cs')
+        ->orderBy('cs.id', 'DESC')
+        ->setMaxResults(1);
+    $query = $qb->getQuery();
+    $last__cutting_sheet = $query->getResult()[0];
+    
+    return $last__cutting_sheet;
+  }
+
+  /**
+   * Method that return before last CuttingSheet in db table
+   *
+   * @return object
+   */
+  public function getCuttingSheetBeforeLast() {
+
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('cs')
+        ->from('Roloffice\Entity\CuttingSheet', 'cs')
+        ->orderBy('cs.id', 'DESC')
+        ->setMaxResults(2);
+    $query = $qb->getQuery();
+    $cutting_sheet__before_last = $query->getResult()[1];
+    
+    return $cutting_sheet__before_last;
+  }
+
+  /**
    * 
    */
   /*

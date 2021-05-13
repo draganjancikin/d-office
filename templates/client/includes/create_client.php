@@ -1,8 +1,8 @@
 <?php
-// create client
+// Create Client.
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createClient"])) {
   
-  // curent loged user
+  // Curent logged User.
   $user_id = $_SESSION['user_id'];
   $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
 

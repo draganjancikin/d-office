@@ -1,24 +1,4 @@
 <?php
-use Roloffice\Core\Database;
-
-// new cutting
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["newCutting"]) ) {
-    
-    $user_id = $_SESSION['user_id'];
-    $date = date('Y-m-d h:i:s');
-    $client_id = htmlspecialchars($_POST['client_id']);
-    
-    $db = new Database();
-    
-    $db->connection->query(" INSERT INTO cutting_fence ( date, client_id) " 
-                     . " VALUES ( '$date', '$client_id')") or die(mysqli_error($db->connection));
-
-    $cutting_id = $db->connection->insert_id;
-    $c_id = $cutting->setCid();
-    
-    die('<script>location.href = "?view&cutting_id='.$cutting_id.'" </script>');
-}
-
 
 // add new article to cutting
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleToCutting"]))  {
