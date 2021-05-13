@@ -1,10 +1,10 @@
 <?php
 require 'create__cutting_sheet.php';
 require 'update__cutting_sheet.php';
+require 'update__cutting_sheet__article.php';
 require 'remove__article__form__cutting_sheet.php';
 
 require 'add.php';
-require 'edit.php';
 require 'del.php';
 require 'export.php';
 ?>
@@ -32,7 +32,7 @@ require 'export.php';
         // in view case show edit button
         if(isset($_GET['view'])):
           ?>
-          <a href="?edit&cutting_id=<?php echo $cutting_sheet_id ?>">
+          <a href="?edit&cutting_sheet_id=<?php echo $cutting_sheet_id ?>">
             <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu krojne liste!">
               <i class="fas fa-edit"> </i> Izmena
             </button>
@@ -43,7 +43,7 @@ require 'export.php';
         // in edit case show view button
         if(isset($_GET['edit'])):
           ?>
-          <a href="?view&cutting_id=<?php echo $cutting_sheet_id ?>">
+          <a href="?view&cutting_sheet_id=<?php echo $cutting_sheet_id ?>">
             <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled krojne liste!">
               <i class="fas fa-eye"> </i> Pregled
             </button>

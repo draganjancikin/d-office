@@ -42,15 +42,15 @@
           foreach ($cutting_sheet_articles as $cutting_sheet_article):
             $count ++;
             ?>
-            <form action="<?php echo $_SERVER['PHP_SELF']. '?editCuttingArticle&cutting_id='. $cutting_sheet_id?>" method="post">
+            <form action="<?php echo $_SERVER['PHP_SELF']. '?updateCuttingSheetArticle'?>" method="post">
 
-              <input type="hidden" name="cutting_fence_article_id" value="<?php echo $cutting_sheet_article->getId() ?>" />
-              <input type="hidden" name="cutting_fence_id" value="<?php echo $cutting_sheet_id ?>" />
+              <input type="hidden" name="cutting_sheet__article_id" value="<?php echo $cutting_sheet_article->getId() ?>" />
+              <input type="hidden" name="cutting_sheet_id" value="<?php echo $cutting_sheet_id ?>" />
         
               <tr>
                 <td class="px-1"><?php echo $count; ?>.</td>
                 <td class="px-1">
-                  <select name="cutting_fence_model_id" required >
+                  <select name="fence_model_id" required >
                   <option value="<?php echo $cutting_sheet_article->getFenceModel()->getId() ?>"><?php echo $cutting_sheet_article->getFenceModel()->getName() ?></option>
                     <?php
                     $fence_models = $entityManager->getRepository('\Roloffice\Entity\FenceModel')->findBy(array(), array('name' => 'ASC'));
@@ -64,7 +64,7 @@
                 <td class="px-1"><input class="input-box-65" type="text" name="height" value="<?php echo $cutting_sheet_article->getHeight() ?>" ></td>
                 <td class="px-1"><input class="input-box-65" type="text" name="mid_height" value="<?php echo $cutting_sheet_article->getMidHeight() ?>" ></td>
                 <td class="px-1"><input class="input-box-45" type="text" name="space" value="<?php echo $cutting_sheet_article->getSpace() ?>" ></td>
-                <td class="px-1"><input class="input-box-45"type="text" name="field_number" value="<?php echo $cutting_sheet_article->getNumberOfFields() ?>" ></td>
+                <td class="px-1"><input class="input-box-45"type="text" name="number_of_fields" value="<?php echo $cutting_sheet_article->getNumberOfFields() ?>" ></td>
                 
                 <td class="px-1">
                   <button type="submit" class="btn btn-outline-secondary btn-mini">
