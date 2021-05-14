@@ -17,7 +17,7 @@
           <div class="form-group row">
             <label for="selectFenceModel" class="col-sm-4 col-form-label text-right">Model:</label>
             <div class="col-sm-5">
-              <select id="selectFenceModel" class="form-control" name="cutting_sheet__fence_model_id" required>
+              <select id="selectFenceModel" class="form-control" name="fence_model_id" required>
                 <option value="">izaberite model</option>
                 <?php
                 foreach ($fence_models as $fence_model):

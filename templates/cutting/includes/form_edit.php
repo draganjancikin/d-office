@@ -53,7 +53,6 @@
                   <select name="fence_model_id" required >
                   <option value="<?php echo $cutting_sheet_article->getFenceModel()->getId() ?>"><?php echo $cutting_sheet_article->getFenceModel()->getName() ?></option>
                     <?php
-                    $fence_models = $entityManager->getRepository('\Roloffice\Entity\FenceModel')->findBy(array(), array('name' => 'ASC'));
                     foreach ($fence_models as $fence_model):
                       echo '<option value="'.$fence_model->getId().'">'.$fence_model->getName().'</option>'; 
                     endforeach;
