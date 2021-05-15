@@ -73,6 +73,7 @@ class CuttingController extends Database {
     }
 */
 
+
     // metoda koja daje artikle u krojnoj listi
     public function getArticlesOnCutting($cutting_id){
 

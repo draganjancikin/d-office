@@ -22,15 +22,16 @@
       <table class="table">
         <thead>
           <tr>
-            <th>red.<br />broj</td>
+            <th>red.<br />broj</th>
             <th class="px-1">vrsta polja</th>
+            <th class="px-1">širina<br /> letvice</th>
             <th class="px-1">širina<br />polja</th>
             <th class="px-1">visina<br />polja</th>
             <th class="px-1">srednja<br />visina<br />polja</th>
             <th class="px-1">razmak<br />letvica</th>
             <th class="px-1">broj<br />polja</th>
             <th></th>
-            <th></th> 
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -54,20 +55,22 @@
                     <option value="<?php echo $cutting_sheet_article->getFenceModel()->getId() ?>"><?php echo $cutting_sheet_article->getFenceModel()->getName() ?></option>
                     <?php
                     foreach ($fence_models as $fence_model):
-                      echo '<option value="'.$fence_model->getId().'">'.$fence_model->getName().'</option>'; 
+                      ?>
+                      <option value="<?php echo $fence_model->getId() ?>"><?php echo $fence_model->getName() ?></option>
+                      <?php 
                     endforeach;
                     ?>
                   </select>
                 </td>
                 <td class="px-1">
-                  <select name="picket_width" required >
-                    <option value="<?php echo $cutting_sheet_article->getPicketWidth() ?>"><?php echo $cutting_sheet_article->getPicketWidth() ?></option>
-                    <option value="35">35</option>
-                    <option value="60">60</option>
-                    <option value="80">80</option>
-                    <option value="100">100</option>
-                  </select>
-                <td>
+                    <select name="picket_width" required>
+                      <option value="<?php echo $cutting_sheet_article->getPicketWidth() ?>"><?php echo $cutting_sheet_article->getPicketWidth() ?></option>
+                      <option value="35">35</option>
+                      <option value="60">60</option>
+                      <option value="80">80</option>
+                      <option value="100">100</option>
+                    </select>
+                  </td>
                 <td class="px-1"><input class="input-box-65" type="text" name="width" value="<?php echo $cutting_sheet_article->getWidth() ?>" ></td>
                 <td class="px-1"><input class="input-box-65" type="text" name="height" value="<?php echo $cutting_sheet_article->getHeight() ?>" ></td>
                 <td class="px-1"><input class="input-box-65" type="text" name="mid_height" value="<?php echo $cutting_sheet_article->getMidHeight() ?>" ></td>
@@ -89,21 +92,22 @@
               </tr>
             </form>
             <?php
-            $cutting_sheet__article__kap_number = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getCuttingSheetArticleCapNumber($cutting_sheet_article->getId());
-            $cutting_sheet__article__picket_lenght = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getArticlePicketLength($cutting_sheet_article->getId());
-            $total_kap = $total_kap + $cutting_sheet__article__kap_number;
+            $cutting_sheet__article__picket_number = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getCuttingSheetArticlePicketNumber($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
+
+            $cutting_sheet__article__picket_lenght = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getArticlePicketLength($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
+
+            $total_kap = $total_kap + $cutting_sheet__article__picket_number;
             $total_picket_lenght = $total_picket_lenght + $cutting_sheet__article__picket_lenght;
           endforeach;
           ?>
           <tr>
             <td colspan="3">Ukupno letvica (m): </td>
             <td><?php echo number_format($total_picket_lenght/1000,2,".","") ?></td>
-            <td colspan="3">
+            <td colspan="5">
               <a href="<?php echo $_SERVER['PHP_SELF']. '?exportCuttingToPidb&cutting_id=' .$cutting_sheet_id. '&total_picket_lenght=' .$total_picket_lenght. '&total_kap=' .$total_kap; ?>">
                 <button type="submit" class="btn btn-outline-secondary btn-sm">Otvori novi predracun</button>
               </a>
             </td>
-            <td></td>
             <td></td>
           </tr>
           <tr>
