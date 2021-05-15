@@ -26,6 +26,7 @@
           <tr>
             <th>red.<br />broj</td>
             <th class="px-1">vrsta polja</th>
+            <th class="px-1">širina letvice</th>
             <th class="px-1">širina<br />polja</th>
             <th class="px-1">visina<br />polja</th>
             <th class="px-1">srednja<br />visina<br />polja</th>
@@ -56,6 +57,7 @@
                     <option value="<?php echo $cutting_sheet_article->getFenceModel()->getId() ?>"><?php echo $cutting_sheet_article->getFenceModel()->getName() ?></option>
                   </select>
                 </td>
+                <td class="px-1"><input class="input-box-45" type="text" name="picket_width" value="<?php echo $cutting_sheet_article->getPicketWidth() ?>" disabled ></td>
                 <td class="px-1"><input class="input-box-65" type="text" name="width" value="<?php echo $cutting_sheet_article->getWidth() ?>" disabled ></td>
                 <td class="px-1"><input class="input-box-65" type="text" name="height" value="<?php echo $cutting_sheet_article->getHeight() ?>" disabled ></td>
                 <td class="px-1"><input class="input-box-65" type="text" name="mid_height" value="<?php echo $cutting_sheet_article->getMidHeight() ?>" disabled ></td>

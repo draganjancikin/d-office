@@ -38,6 +38,12 @@ class CuttingSheetArticle {
    * @ORM\Column(type="decimal", precision=11, scale=0)
    * @var float
    */
+  protected $picket_width;
+
+  /**
+   * @ORM\Column(type="decimal", precision=11, scale=0)
+   * @var float
+   */
   protected $width;
 
   /**
@@ -82,6 +88,14 @@ class CuttingSheetArticle {
 
   public function getFenceModel() {
     return $this->fence_model;
+  }
+
+  public function setPicketWidth($picket_width) {
+    $this->picket_width = $picket_width;
+  }
+
+  public function getPicketWidth() {
+    return $this->picket_width;
   }
 
   public function setWidth($width) {

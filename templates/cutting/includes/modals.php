@@ -1,4 +1,4 @@
-<!-- Modal addFence -->
+<!-- Modal add Article to CuttingSheet -->
 <div class="modal fade" id="addFence" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -30,6 +30,18 @@
             </div>
           </div>
 
+          <div class="form-group row">
+            <label for="selectPicketWidth" class="col-sm-4 col-form-label text-right">Širina letvice: </label>
+            <div class="col-sm-5">
+            <select id="selectPicketWidth" class="form-control" name="fence_model_id" required>
+              <option value="35">35</option>
+              <option value="60">60</option>
+              <option value="80">80</option>
+              <option value="100">100</option>
+            </select>
+            </div> 
+          </div>
+          
           <div class="form-group row">
             <label for="inputWidth" class="col-sm-4 col-form-label text-right">Širina polja: </label>
             <div class="col-sm-3"> 

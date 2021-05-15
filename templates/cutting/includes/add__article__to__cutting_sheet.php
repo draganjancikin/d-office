@@ -8,6 +8,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleToCuttingShee
   $fence_model_id = htmlspecialchars($_POST['fence_model_id']);
   $fence_model = $entityManager->find("\Roloffice\Entity\FenceModel", $fence_model_id);
 
+  $picket_width = htmlspecialchars($_POST['picket_width']);
   $width = htmlspecialchars($_POST['width']);
   $height = htmlspecialchars($_POST['height']);
   if($_POST['mid_height']){
@@ -23,6 +24,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleToCuttingShee
 
   $newCuttingShettArticle->setCuttingSheet($cutting_sheet);
   $newCuttingShettArticle->setFenceModel($fence_model);
+  $newCuttingShettArticle->setPicketWidth($picket_width);
   $newCuttingShettArticle->setWidth($width);
   $newCuttingShettArticle->setHeight($height);
   $newCuttingShettArticle->setMidHeight($mid_height);

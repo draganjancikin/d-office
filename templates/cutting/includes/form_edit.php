@@ -51,7 +51,7 @@
                 <td class="px-1"><?php echo $count; ?>.</td>
                 <td class="px-1">
                   <select name="fence_model_id" required >
-                  <option value="<?php echo $cutting_sheet_article->getFenceModel()->getId() ?>"><?php echo $cutting_sheet_article->getFenceModel()->getName() ?></option>
+                    <option value="<?php echo $cutting_sheet_article->getFenceModel()->getId() ?>"><?php echo $cutting_sheet_article->getFenceModel()->getName() ?></option>
                     <?php
                     foreach ($fence_models as $fence_model):
                       echo '<option value="'.$fence_model->getId().'">'.$fence_model->getName().'</option>'; 
@@ -59,6 +59,15 @@
                     ?>
                   </select>
                 </td>
+                <td class="px-1">
+                  <select name="picket_width" required >
+                    <option value="<?php echo $cutting_sheet_article->getPicketWidth() ?>"><?php echo $cutting_sheet_article->getPicketWidth() ?></option>
+                    <option value="35">35</option>
+                    <option value="60">60</option>
+                    <option value="80">80</option>
+                    <option value="100">100</option>
+                  </select>
+                <td>
                 <td class="px-1"><input class="input-box-65" type="text" name="width" value="<?php echo $cutting_sheet_article->getWidth() ?>" ></td>
                 <td class="px-1"><input class="input-box-65" type="text" name="height" value="<?php echo $cutting_sheet_article->getHeight() ?>" ></td>
                 <td class="px-1"><input class="input-box-65" type="text" name="mid_height" value="<?php echo $cutting_sheet_article->getMidHeight() ?>" ></td>
