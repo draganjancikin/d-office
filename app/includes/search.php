@@ -26,16 +26,13 @@ if($page == "clients"):
           <tbody>
             <?php
             foreach ($clients as $client_data):
-              $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry() );
-              $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity() );
-              $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet() );
               ?>
               <tr>
                 <td>
-                  <a href="?viewClient&client_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a>
+                  <a href="?view&client_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a>
                 </td>
                 <td>
-                <?php echo ( $client_street->getName() == "" ? "" : $client_street->getName() . " " . $client_data->getHomeNumber() .  ", " ) . $client_city->getName(). ', ' .$client_country->getName() ?>                              </td>
+                <?php echo ( $client_data->getStreet()->getName() == "" ? "" : $client_data->getStreet()->getName() . " " . $client_data->getHomeNumber() .  ", " ) . $client_data->getCity()->getName(). ', ' .$client_data->getCountry()->getName() ?>                              </td>
               </tr>
               <?php
             endforeach;

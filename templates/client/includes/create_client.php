@@ -71,6 +71,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createClient"])) {
 
   // gest last id and redirect
   $new_client_id = $newClient->getId();
-  die('<script>location.href = "?viewClient&client_id='.$new_client_id.'" </script>');
+  die('<script>location.href = "?view&client_id='.$new_client_id.'" </script>');
 
 }

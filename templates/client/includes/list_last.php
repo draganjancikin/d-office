@@ -12,13 +12,10 @@
           <?php
           $last_clients = $entityManager->getRepository('\Roloffice\Entity\Client')->getLastClients(10);
           foreach ($last_clients as $client):
-            $country = $entityManager->find('\Roloffice\Entity\Country', $client->getCountry() );
-            $city = $entityManager->find('\Roloffice\Entity\City', $client->getCity() );
-            $street = $entityManager->find('\Roloffice\Entity\Street', $client->getStreet() );
             ?>
             <tr>
-              <td><a href="?viewClient&client_id=<?php echo $client->getId() ?>"><?php echo $client->getName() ?></a></td>
-              <td><?php echo ( $street->getName() == "" ? "" : $street->getName() . " " . $client->getHomeNumber() .  ", " ) . $city->getName(). ', ' .$country->getName() ?></td>
+              <td><a href="?view&client_id=<?php echo $client->getId() ?>"><?php echo $client->getName() ?></a></td>
+              <td><?php echo ( $client->getStreet()->getName() == "" ? "" : $client->getStreet()->getName() . " " . $client->getHomeNumber() .  ", " ) . $client->getCity()->getName(). ', ' .$client->getCountry()->getName() ?></td>
             </tr>
             <?php
           endforeach;

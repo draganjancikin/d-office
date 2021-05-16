@@ -29,5 +29,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateContact"])) {
 
   $entityManager->flush();
 
-  die('<script>location.href = "?viewClient&client_id='.$client_id.'" </script>');
+  die('<script>location.href = "?view&client_id='.$client_id.'" </script>');
 }

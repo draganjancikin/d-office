@@ -7,11 +7,11 @@ use Doctrine\ORM\EntityRepository;
 class ClientRepository extends EntityRepository {
 
   /**
-   * Method that return number of clients
+   * Method that return total number of Clients
    *
    * @return int
    */
-  public function getNumberOfClients() {
+  public function getTotalNumberOfClients() {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('count(c.id)')
         ->from('Roloffice\Entity\Client','c');
