@@ -28,7 +28,7 @@ else:
             <dt class="col-sm-4 col-md-3">datum</dt>
             <dd class="col-sm-8 col-md-9"><?php echo $project_data->getCreatedAt()->format('d-M-Y') ?></dd>
             <dt class="col-sm-4 col-md-3">klijent</dt>
-            <dd class="col-sm-8 col-md-9"><a href="/clients/index.php?viewClient&client_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a></dd>
+            <dd class="col-sm-8 col-md-9"><a href="/clients/index.php?view&client_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a></dd>
             <dt class="col-sm-4 col-md-3">adresa</dt>
             <dd class="col-sm-8 col-md-9"><?php echo $client_street->getName(). ' ' . $client_data->getHomeNumber() . ($client_city->getName()<>""?", ".$client_city->getName() : "") . ', ' . $client_country->getName() . '<br/>' . $client_data->getAddressNote() ?></dd>
             <?php

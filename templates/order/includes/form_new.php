@@ -29,8 +29,7 @@
             if(isset($_GET['project_id'])){
                 $project_id = htmlspecialchars($_GET["project_id"]);
                 $project_data = $entityManager->find('\Roloffice\Entity\Project', $project_id); 
-                $client_data = $entityManager->find('\Roloffice\Entity\Client', $project_data['client_id']);
-                echo '<option value="'.$project_data->getId().'">' .$project_data->getOrdinalNumInYear(). ' ' .$client_data->getName(). ': ' .$project_data->getTitle().'</option>';
+                echo '<option value="'.$project_data->getId().'">' .$project_data->getOrdinalNumInYear(). ' ' .$project_data->getClient()->getName(). ': ' .$project_data->getTitle().'</option>';
             }else{
                 echo '<option value="">izaberi projekat</option>';
             }
