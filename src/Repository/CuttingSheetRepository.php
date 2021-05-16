@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityRepository;
 class CuttingSheetRepository extends EntityRepository {
 
   /**
-   * Method that return number of AccountingDocuments
+   * Method that return number of CuttingSheets
    *
    * @return int
    */
@@ -20,7 +20,7 @@ class CuttingSheetRepository extends EntityRepository {
   }
 
   /**
-   * Method that return last $limit Articles
+   * Method that return last $limit CuttingSheets
    * 
    * @return 
    */
@@ -150,51 +150,25 @@ class CuttingSheetRepository extends EntityRepository {
   }
 
   /**
+   * Search method by criteria: Client name.
    * 
-   */
-  /*
-  public function getArticlesByGroup($group_id) {
-    // Create a QueryBilder instance
-    $qb = $this->_em->createQueryBuilder();
-    $qb->select('a')
-      ->from('Roloffice\Entity\Article', 'a')
-      ->where(
-        $qb->expr()->eq('a.group', $group_id),
-      )
-      ->orderBy('a.name', 'ASC');
-    $query = $qb->getQuery();
-    $result = $query->getResult();
-    return $result;
-    
-  }
-  */
-
-  /**
-   * Method that return Article Properties
-   * 
-   * @param int $article_id
+   * @param string $term
    * 
    * @return array
    */
-  /*
-  public function getArticleProperties($article_id) {
+  public function search($term) {
     // Create a QueryBilder instance
     $qb = $this->_em->createQueryBuilder();
-    
-    $qb->select('ap, pr')
-      ->from('Roloffice\Entity\ArticleProperty', 'ap')
-      ->join('ap.property', 'pr', 'WITH', 'ap.property = pr.id')
+    $qb->select('cs')
+      ->from('Roloffice\Entity\CuttingSheet', 'cs')
+      ->join('cs.client', 'cl', 'WITH', 'cs.client = cl.id')
       ->where(
-        $qb->expr()->eq('ap.article', $article_id),
-      )
-      ->distinct();
-        
-      
-      
-        $query = $qb->getQuery();
-    $result = $query->getResult();
-    return $result;
-  } 
-  */
+        $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
+        )
+      ->orderBy('cs.id', 'DESC');
+    $query = $qb->getQuery();
+    $cutting_sheet = $query->getResult();
+    return $cutting_sheet;
+  }
 
 }

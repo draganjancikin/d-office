@@ -320,8 +320,8 @@ if($page == "pidb"):
 endif;
 
 if($page == "cutting"):
-    $name = filter_input(INPUT_GET, 'search');
-    $cuttings = $cutting->search($name);
+    $term = filter_input(INPUT_GET, 'search');
+    $cuttings = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->search($term);
     ?>
     <div class="card mb-4">
         <div class="card-header p-2">
@@ -350,12 +350,13 @@ if($page == "cutting"):
                           ?>
                           <tr>
                               <td class="centar">
-                                  <a href="?view&cutting_id=<?php echo $cutting['id'] ?>">KL_<?php echo str_pad($cutting['c_id'], 4, "0", STR_PAD_LEFT) ?></a>
+                                  <a href="?view&cutting_sheet_id=<?php echo $cutting->getId() ?>">KL_<?php echo str_pad($cutting->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?></a>
                               </td>
-                              <td><?php echo $cutting['client_name'] ?></td>
+                              <td><?php echo $cutting->getClient()->getName() ?></td>
                               <td>
-                                  <?php 
-                                  echo ( $cutting['id'] == $cutting['last_id'] ? '<a href="' .$_SERVER['PHP_SELF']. '?name=&search=&delCutting&cutting_id=' .$cutting['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>' : '');
+                                  <?php
+                                  $last_cutting_sheet = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getLastCuttingSheet();
+                                  echo ( $cutting->getId() == $last_cutting_sheet->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?deleteCS&cs_id=' .$cutting->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>' : '');
                                   ?>
                               </td>
                           </tr>

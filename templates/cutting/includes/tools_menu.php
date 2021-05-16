@@ -4,8 +4,8 @@ require 'update__cutting_sheet.php';
 require 'add__article__to__cutting_sheet.php';
 require 'update__cutting_sheet__article.php';
 require 'remove__article__from__cutting_sheet.php';
+require 'delete__cutting_sheet.php';
 
-require 'del.php';
 require 'export.php';
 ?>
 <div class="col-lg-12 col-xl-10 px-2" id="topMeni">

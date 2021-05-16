@@ -19,8 +19,7 @@ class CuttingController extends Database {
     protected $task_id;
     protected $client_id;
 
-
-    //metoda koja vraća artikle u zavisnosti od datog pojma u pretrazi
+/*
     public function search($name){
 
         $cutting = array();
@@ -49,7 +48,7 @@ class CuttingController extends Database {
 
         return $cuttings;
     }
-
+*/
 /*
     //metoda koja vraća podatke o krojnoj listi od id krojne liste
     public function getCutting($cutting_id){

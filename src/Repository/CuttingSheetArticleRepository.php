@@ -188,4 +188,21 @@ class CuttingSheetArticleRepository extends EntityRepository {
     return $cap_number;
   }
 
+  /**
+   * Method that return Artiles in CuttingSheet.
+   * 
+   * @param obj $cs CuttingSheet
+   * @return 
+   */
+  public function getCuttingSheetArticles($cs) {
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('csa')
+      ->from('Roloffice\Entity\CuttingSheetArticle', 'csa')
+      ->where(
+        $qb->expr()->eq('csa.cutting_sheet', $cs)
+      );
+      $query = $qb->getQuery();
+      $result = $query->getResult();
+      return $result;
+  }
 }
