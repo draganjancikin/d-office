@@ -20,59 +20,6 @@ class CuttingController extends Database {
     protected $client_id;
 
 /*
-    public function search($name){
-
-        $cutting = array();
-        $cuttings = array();
-
-        $result = $this->connection->query("SELECT id FROM cutting_fence ORDER by id desc") or die(mysqli_error($this->connection));
-            $row = mysqli_fetch_array($result);
-            $last_id = $row['id'];
-
-        // izlistavanje iz baze svih artikala sa nazivom koji je sličan $name
-        $result = $this->connection->query("SELECT cutting_fence.id, cutting_fence.c_id, cutting_fence.client_id, v6_clients.name "
-                                         . "FROM cutting_fence "
-                                         . "JOIN (v6_clients)"
-                                         . "ON (cutting_fence.client_id = v6_clients.id)"
-                                         . "WHERE (v6_clients.name LIKE '%$name%') "
-                                         . "ORDER BY v6_clients.name ") or die(mysqli_error($this->connection));
-        while($row = mysqli_fetch_array($result)):
-            $cutting = array(
-                'id' => $row['id'],
-                'last_id' => $last_id,
-                'c_id' => $row['c_id'],
-                'client_name' => $row['name']
-            );
-            array_push($cuttings, $cutting);
-        endwhile;
-
-        return $cuttings;
-    }
-*/
-/*
-    //metoda koja vraća podatke o krojnoj listi od id krojne liste
-    public function getCutting($cutting_id){
-
-        $result = $this->connection->query("SELECT cutting_fence.id, cutting_fence.c_id, cutting_fence.date, cutting_fence.client_id, v6_clients.name  "
-                                       . "FROM cutting_fence "
-                                       . "JOIN (v6_clients) "
-                                       . "ON (cutting_fence.client_id = v6_clients.id) "
-                                       . "WHERE cutting_fence.id = $cutting_id ") or die(mysqli_error($this->connection));
-        $row = mysqli_fetch_array($result);
-
-        $cutting = array(
-            'id' => $row['id'],
-            'c_id' => $row['c_id'],
-            'date' => $row['date'],
-            'client_id' => $row['client_id'],
-            'client_name' => $row['name']
-        );
-
-        return $cutting;
-    }
-*/
-
-
     // metoda koja daje artikle u krojnoj listi
     public function getArticlesOnCutting($cutting_id){
 
@@ -265,6 +212,7 @@ class CuttingController extends Database {
 
         return $articles;
     }
+    */
 
 /*
     public function brojLetvica($sir_p, $vis_p, $max_vis_p, $zelj_raz_l, $sir_l){
@@ -290,6 +238,7 @@ class CuttingController extends Database {
     }
 */
 
+/*
     // metoda koja definiše i dodeljuje vrednost y_id
     public function setCid(){
 
@@ -337,7 +286,7 @@ class CuttingController extends Database {
         $this->connection->query("UPDATE cutting_fence SET c_id = '$c_id' WHERE id = '$last_id' ") or die(mysqli_error($this->connection));
 
     }
-
+*/
 
     // metoda koja daje sve modele
     public function getFenceModels (){
