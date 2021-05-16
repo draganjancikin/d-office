@@ -287,15 +287,15 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
                  <table>
                    <tr><td><h3>model: PANONKA ('.$article_picket_width.'x20mm)</h3></td><td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td></tr>
                    <tr><td colspan="4"><hr /></td></tr>
-                   <tr><td>sirina polja: <br />'.$article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak medju letvicama: <br />'.number_format($real_picket_space, 1, ",", ".").'mm </td></tr>
+                   <tr><td>sirina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak medju letvicama: <br />'.number_format($real_picket_space, 1, ",", ".").'mm </td></tr>
                  </table>
                  <hr />';
         $pdf->writeHTML($html, true, false, true, false, '');
         
-        $raz_l = ($article_width - $number_of_pickets*$sir_l)/($number_of_pickets+1);
+        $raz_l = ($cutting_sheet__article_width - $number_of_pickets*$article_picket_width)/($number_of_pickets+1);
         $min_max_l = $article_mid_height - $article_height;
         
-        $omega = 360 / $article_width;	//ugaona brzina
+        $omega = 360 / $cutting_sheet__article_width;	//ugaona brzina
         $teta = 90;										// fazno pomeranje za 90stepeni
         
         $html = '<table>
@@ -305,7 +305,7 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
         
         for( $i=1; $i<=ceil($number_of_pickets/2); $i++ ){
             $count++;
-            $ras_l = $raz_l + $sir_l*($i-1) + $raz_l*($i-1);
+            $ras_l = $raz_l + $article_picket_width*($i-1) + $raz_l*($i-1);
             
             $y = sin(deg2rad($omega*$ras_l - $teta));
             
