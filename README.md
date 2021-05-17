@@ -1,16 +1,12 @@
-# RolOffice v5.3.5 - 6.0.5
+# RolOffice 6.1.0
 
 Web Application
 
-## For next version 5.3.5 - 6.1.0
+## For next version 6.1.0
 
-- Implement Doctrine ORM to Material
-- Implement Doctrine ORM to Unit
-- Implement Doctrine ORM to Order
-
-## For next version 5.3.5 - 6.0.6
-
-- resolved issue #99
+- Implement Doctrine to all Project
+- Add picket width to CuttingSheet
+- Resolved issue #99
 
 ## New in version 5.3.5 - 6.0.5
 
