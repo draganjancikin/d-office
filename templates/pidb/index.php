@@ -35,7 +35,7 @@
           <div class="row">
 
             <!-- Tools Meni -->
-            <?php include '../../templates/pidb/includes/toolsMenu.php'; ?>
+            <?php include '../../templates/pidb/includes/tools_menu.php'; ?>
             <!-- End of Tools Meni -->
 
             
@@ -43,7 +43,7 @@
             <div class="col-lg-12 px-2">
               <?php 
                 if (empty($_GET)): // ako je $_GET prazan
-                  include '../../templates/pidb/includes/listLast.php';
+                  include '../../templates/pidb/includes/list_last.php';
                 else:
                   if(isset($_GET['view'])) include '../../templates/pidb/includes/formView.php';
                   if(isset($_GET['new'])) include '../../templates/pidb/includes/formNew.php';
