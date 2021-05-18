@@ -45,7 +45,7 @@
                 if (empty($_GET)): // ako je $_GET prazan
                   include '../../templates/pidb/includes/list_last.php';
                 else:
-                  if(isset($_GET['view'])) include '../../templates/pidb/includes/formView.php';
+                  if(isset($_GET['view'])) include '../../templates/pidb/includes/form_view.php';
                   if(isset($_GET['new'])) include '../../templates/pidb/includes/formNew.php';
                   if(isset($_GET['edit'])) include '../../templates/pidb/includes/formEdit.php';
                   if(isset($_GET['editArticle']) && isset($_GET['pidb_article_id'])) include '../../templates/pidb/includes/formEditArticle.php';

@@ -1,5 +1,5 @@
 <?php
-switch ($pidb_data['tip_id']) {
+switch ($pidb_data->getType()->getId()) {
   case 1:
     $vrsta = "Predračun";
     $oznaka = "P_";
@@ -29,9 +29,9 @@ switch ($pidb_data['tip_id']) {
   <div class="card-header bg-<?php echo $style; ?> p-2">
     <h6 class="m-0 font-weight-bold text-white">
       <?php echo $vrsta;?> 
-      <?php echo str_pad($pidb_data['y_id'], 4, "0", STR_PAD_LEFT). ' - ' .date('m', strtotime($pidb_data['date'])) . ' <span class="font-weight-normal">(' . date('d-M-Y', strtotime($pidb_data['date'])) . ')</span>'; ?>
+      <?php echo str_pad($pidb_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT). ' - ' .$pidb_data->getCreatedAt()->format('m') . ' <span class="font-weight-normal">(' . $pidb_data->getCreatedAt()->format('d-M-Y') . ')</span>'; ?>
       <span class="font-weight-normal">
-        <?php echo ": " . $pidb_data['title']; ?>
+        <?php echo ": " . $pidb_data->getTitle() ?>
       </span>
     </h6>
   </div>
@@ -85,41 +85,44 @@ switch ($pidb_data['tip_id']) {
         <tbody>
           <?php
           $count = 0;
-          $articles_on_pidb = $pidb->getArticlesOnPidb($pidb_id);
-          foreach ($articles_on_pidb as $article_on_pidb):
-            $propertys = $article_on_pidb['propertys'];
+          // TODO: Dragan
+          $ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($pidb_id);
+          foreach ($ad_articles as $ad_article):
             $count++;
             ?>
             <form action="#" class="form-horizontal" role="form" method="post">
               <tr>
                 <td class="px-1 text-center"><?php echo $count ;?></td>
                 <td class="px-1">
-                  <?php echo $article_on_pidb['name'] ?>
+                  <?php echo $ad_article->getArticle()->getName() ?>
                   <br />
-                  kom <input class="input-box-pieces" type="text" name="pieces" value="<?php echo $article_on_pidb['pieces']; ?>" placeholder="(kom)" disabled >
+                  kom <input class="input-box-pieces" type="text" name="pieces" value="<?php echo $ad_article->getPieces() ?>" placeholder="(kom)" disabled >
                   <?php
+                  // TODO: Dragan
+                  $propertys = $ad_article['propertys'];
+                  
                   foreach ($propertys as $property):
                     echo $property['property_name'] . ' <input class="input-box-55" type="text" name="' .$property['property_name']. '" value="' .number_format($property['property_quantity'], 2, ",", "."). '" title="(cm)" disabled > ';
                   endforeach;
                   ?>
                   <br />
-                  <?php echo ( $article_on_pidb['note'] == "" ? "" : $article_on_pidb['note'] ) ?>
+                  <?php echo ( $ad_article['note'] == "" ? "" : $ad_article['note'] ) ?>
                 </td>
-                <td class="px-1 text-center"><?php echo $article_on_pidb['unit_name'] ;?></td>
+                <td class="px-1 text-center"><?php echo $ad_article['unit_name'] ;?></td>
                 <td class="px-1 input-box-45">
                   <!-- količina artikla, treba da se izračunava -->
-                  <?php  echo number_format($article_on_pidb['quantity'], 2, ",", "."); ?>
+                  <?php  echo number_format($ad_article['quantity'], 2, ",", "."); ?>
                 </td>
                 <td class="px-1 text-center">
-                  <input class="input-box-price" type="text" name="price" value="<?php echo number_format($article_on_pidb['price'], 4, ",", "."); ?>" disabled >
+                  <input class="input-box-price" type="text" name="price" value="<?php echo number_format($ad_article['price'], 4, ",", "."); ?>" disabled >
                 </td>
                 <td class="px-1 text-center">
-                  <input class="input-box-discounts" type="text" name="discounts" value="<?php echo number_format($article_on_pidb['discounts'], 2, ",", "."); ?>" disabled >
+                  <input class="input-box-discounts" type="text" name="discounts" value="<?php echo number_format($ad_article['discounts'], 2, ",", "."); ?>" disabled >
                 </td>
-                <td class="px-1 input-box-65"><?php echo number_format($article_on_pidb['tax_base']*$pidb->getKurs(), 2, ",", ".") ;?></td>
-                <td class="px-1 text-center"><?php echo $article_on_pidb['tax'] ;?></td>
-                <td class="px-1 input-box-45"><?php echo number_format($article_on_pidb['tax_amount']*$pidb->getKurs(), 2, ",", "."); ?></td>
-                <td class="px-1 input-box-65"><?php echo number_format($article_on_pidb['sub_total']*$pidb->getKurs(), 2, ",", ".");?></td>
+                <td class="px-1 input-box-65"><?php echo number_format($ad_article['tax_base']*$pidb->getKurs(), 2, ",", ".") ;?></td>
+                <td class="px-1 text-center"><?php echo $ad_article['tax'] ;?></td>
+                <td class="px-1 input-box-45"><?php echo number_format($ad_article['tax_amount']*$pidb->getKurs(), 2, ",", "."); ?></td>
+                <td class="px-1 input-box-65"><?php echo number_format($ad_article['sub_total']*$pidb->getKurs(), 2, ",", ".");?></td>
                 <td class="px-1 text-center">
                   <button type="submit" class="btn btn-mini btn-outline-secondary px-1 disabled" disabled>
                     <i class="fas fa-save" title="Snimi izmenu"> </i> 

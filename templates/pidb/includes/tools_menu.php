@@ -16,12 +16,15 @@ require 'export.php';
       <?php
       if( isset($_GET['view']) || isset($_GET['edit']) || isset($_GET['editArticle']) ):
         $pidb_id = filter_input(INPUT_GET, 'pidb_id');
-        $pidb_data = $pidb->getPidb($pidb_id);
-        $client_data = $entityManager->find('\Roloffice\Entity\Client', $pidb_data['client_id']);
+        $pidb_data = $entityManager->find('\Roloffice\Entity\AccountingDocument', $pidb_id);
+        $client_data = $entityManager->find('\Roloffice\Entity\Client', $pidb_data->getClient());
         $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
         $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
         $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
-        $all_articles = $article->getAllArticles();
+        
+        // TODO: Dragan
+        // $all_articles = $article->getAllArticles();
+
         // In view case show edit button.
         if(isset($_GET['view'])):
           ?>
@@ -64,7 +67,7 @@ require 'export.php';
           </a>
 
           <?php
-          if($pidb_data['tip_id'] == 2):
+          if($pidb_data->getType()->getId() == 2):
             ?>
             <a href="/tcpdf/examples/printPidbI.php?pidb_id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
               <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
@@ -80,15 +83,15 @@ require 'export.php';
           endif;
 
           // export proforma
-          if($pidb_data['tip_id'] == 1):
+          if($pidb_data->getType()->getId() == 1):
             ?>
             <a href="?edit&pidb_id=<?php echo $pidb_id ?>&exportProformaToDispatch">
-              <button type="button" class="btn btn-sm btn-outline-secondary mr-1" <?php echo ($pidb_data['archived'] == 1 ? 'title="Predračun je arhiviran i nije ga moguće izvesti u otpremnicu" disabled' : 'title="Izvezi u otpremnicu" ' ) ?> >
+              <button type="button" class="btn btn-sm btn-outline-secondary mr-1" <?php echo ($pidb_data->getIsArchived() == 1 ? 'title="Predračun je arhiviran i nije ga moguće izvesti u otpremnicu" disabled' : 'title="Izvezi u otpremnicu" ' ) ?> >
                 <i class="fas fa-share"> </i> Otpremnica
               </button>
             </a>
 
-            <a href="/projects/index.php?new&client_id=<?php echo $pidb_data['client_id'] ?>&pidb_id=<?php echo $pidb_id ?>">
+            <a href="/projects/index.php?new&client_id=<?php echo $pidb_data->getClient()->getId() ?>&pidb_id=<?php echo $pidb_id ?>">
               <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Novi projekat!">
                 <i class="fas fa-share"> </i> <i class="fas fa-project-diagram"></i> <!-- Projekat -->
               </button>
@@ -123,7 +126,7 @@ require 'export.php';
       if( isset($_GET['view']) || isset($_GET['edit'])):
         ?>
         <!-- Button trigger modal za evidentiranje transakcije -->
-        <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addPayment" <?php echo ($pidb_data['archived'] == 1 ? 'title="Predračun je arhiviran i nije moguće videntiranje transakcija" disabled' : 'title="Evidentiranje transakcija" ' ) ?>>
+        <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addPayment" <?php echo ($pidb_data->getIsArchived() == 1 ? 'title="Predračun je arhiviran i nije moguće videntiranje transakcija" disabled' : 'title="Evidentiranje transakcija" ' ) ?>>
           <i class="fas fa-hand-holding-usd"></i>
         </button>
         <a href="/pidb/index.php?transactions&pidb_id=<?php echo $pidb_id ?>">
