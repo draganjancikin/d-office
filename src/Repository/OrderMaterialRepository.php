@@ -11,7 +11,7 @@ class OrderMaterialRepository extends EntityRepository {
    * @param int $material_on_order_id
    * @return array
    */
-  public function getPropertiesOnOrderMaterial($material_on_order_id) {
+  public function getProperties($material_on_order_id) {
     // Create a QueryBilder instance
     $qb = $this->_em->createQueryBuilder();
     $qb->select('omp')
@@ -38,7 +38,7 @@ class OrderMaterialRepository extends EntityRepository {
    * @return float 
    */
   public function getQuantity($material_on_order_id, $min_obrac_mera, $pieces) {
-    $properties = $this->getPropertiesOnOrderMaterial($material_on_order_id);
+    $properties = $this->getProperties($material_on_order_id);
     $temp_quantity = 1;
     
     foreach ($properties as $property) {
@@ -82,7 +82,8 @@ class OrderMaterialRepository extends EntityRepository {
   }
 
   /**
-   * 
+   * @param float $tax_base
+   * @param float $tax_amount
    */
   public function getSubTotal($tax_base, $tax_amount) {
     return $tax_base + $tax_amount;

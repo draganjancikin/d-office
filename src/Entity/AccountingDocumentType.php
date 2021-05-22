@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="v6_accounting_document_types")
+ * @ORM\Table(name="v6__accounting_document__types")
  */
 class AccountingDocumentType {
 

@@ -69,7 +69,7 @@
                   <br />
                   kol. <input class="input-box-45" type="text" name="pieces" value="<?php echo $material_on_order->getPieces() ?>" placeholder="(kol)" disabled >
                   <?php
-                  $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getPropertiesOnOrderMaterial($material_on_order->getId());
+                  $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getProperties($material_on_order->getId());
                   foreach ($material_on_order_properties as $material_on_order_property):
                     echo $material_on_order_property->getProperty()->getName() . ' <input class="input-box-50" type="text" name="' .$material_on_order_property->getProperty()->getName(). '" value="' .number_format($material_on_order_property->getQuantity(), 2, ",", "."). '" placeholder="(cm)" disabled > ';
                   endforeach;
@@ -83,7 +83,7 @@
                 <td class="px-1 input-box-45">
                   <!-- količina artikla, treba da se izračunava kao proizvod property-a -->
                   <?php 
-                  echo number_format($material_on_order_quantity = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getQuantity($material_on_order->getId(), $material_on_order->getMaterial()->getMinObracMera(), $material_on_order->getPieces() ), 2, ",", ".");
+                  echo number_format($material_on_order_quantity = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getQuantity($material_on_order->getId(), $material_on_order->getMaterial()->getMinCalcMeasure(), $material_on_order->getPieces() ), 2, ",", ".");
                   ?>
                 </td>
                 <td class="px-1 text-center">
@@ -100,7 +100,8 @@
                 </td>
                 <td class="px-1 text-center"><?php echo $material_on_order->getTax() ?></td>
                 <td class="px-1 input-box-45">
-                  <?php $tax_amount = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getTaxAmount($tax_base, $material_on_order->getTax() );
+                  <?php 
+                  $tax_amount = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getTaxAmount($tax_base, $material_on_order->getTax() );
                   echo number_format($tax_amount * $kurs, 2, ",", ".");
                   ?>
                 </td>

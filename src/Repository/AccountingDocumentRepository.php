@@ -41,5 +41,28 @@ class AccountingDocumentRepository extends EntityRepository {
       ->setMaxResults( $limit );
     return $qb->getQuery()->getResult();
   }
+
+  /**
+   * Method that return all Articles on AccountingDocument
+   * 
+   * @param int $ad_id AccountingDocument ID
+   * 
+   * @return array
+   */
+  public function getArticles($ad_id) {
+    // Create a QueryBilder instance
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('ada')
+        ->from('Roloffice\Entity\AccountingDocumentArticle', 'ada')
+        ->join('ada.article', 'a', 'ada.article = a.id')
+        ->where(
+          $qb->expr()->eq('ada.accounting_document', $ad_id),
+        )
+        ->orderBy('ada.id', 'ASC');
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    
+    return $result;
+  }
   
 }
