@@ -106,4 +106,56 @@ class AccountingDocumentRepository extends EntityRepository {
     }
     return $income;
   }
+
+  /**
+   * Method that return previous AccountingDocument
+   * 
+   * @param int $accd_id
+   * @param int $accd_type_id
+   * 
+   * @return object
+   */
+  public function getPrevious($accd_id, $accd_type_id){
+    // Create a QueryBilder instance
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('ad')
+        ->from('Roloffice\Entity\AccountingDocument', 'ad')
+        ->where(
+          $qb->expr()->andX(
+            $qb->expr()->lt('ad.id', $accd_id),
+            $qb->expr()->eq('ad.type', $accd_type_id)
+          )
+        )
+        ->orderBy('ad.id', 'DESC');
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    
+    return $result[0];
+  }
+
+  /**
+   * Method that return next AccountingDocument
+   * 
+   * @param int $accd_id
+   * @param int $accd_type_id
+   * 
+   * @return object
+   */
+  public function getNext($accd_id, $accd_type_id){
+    // Create a QueryBilder instance
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('ad')
+        ->from('Roloffice\Entity\AccountingDocument', 'ad')
+        ->where(
+          $qb->expr()->andX(
+            $qb->expr()->gt('ad.id', $accd_id),
+            $qb->expr()->eq('ad.type', $accd_type_id)
+          )
+        )
+        ->orderBy('ad.id', 'DESC');
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    
+    return $result[0];
+  }
 }

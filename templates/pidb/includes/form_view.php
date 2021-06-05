@@ -107,7 +107,7 @@ switch ($pidb_data->getType()->getId()) {
                   // AccountingDocument Article Properties
                   $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($ad_article->getId());
                   foreach ($ad_a_properties as $ad_a_property):
-                    echo $ad_a_property->getProperty()->getName() . ' <input class="input-box-55" type="text" name="' .$ad_a_property->getProperty()->getName(). '" value="' .number_format($ad_a_property->getQuantity(), 2, ",", "."). '" title="(cm)" disabled > ';
+                    echo $ad_a_property->getProperty()->getName() . ' <input class="input-box-55" type="text" name="' .$ad_a_property->getProperty()->getName(). '" value="' . number_format($ad_a_property->getQuantity(), 2, ",", "."). '" title="(cm)" disabled > ';
                   endforeach;
                   ?>
                   <br />
@@ -162,12 +162,12 @@ switch ($pidb_data->getType()->getId()) {
               </tr>
             </form>
             <?php
-          $total_tax_base = $total_tax_base + $tax_base;
-          $total_tax_amount = $total_tax_amount + $tax_amount;
+            $total_tax_base = $total_tax_base + $tax_base;
+            $total_tax_amount = $total_tax_amount + $tax_amount;
           endforeach;
           $total = $total_tax_base + $total_tax_amount;
           $avans = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAvans($pidb_id);
-          $income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($pidb_id);;
+          $income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($pidb_id);
           ?>
         </tbody>
         <tfoot>

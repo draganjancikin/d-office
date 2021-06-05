@@ -82,16 +82,61 @@
 </div>
 
 <?php
+// Don't delete code below. This is for database checking
+/*
+$svi_materijali_na_svim_narudzbenicama = $entityManager->getRepository('Roloffice\Entity\OrderMaterial')->findAll();
 
-//get all OrderMaterial
-$orders_materials = $entityManager->getRepository('Roloffice\Entity\Order')->getAllMaterialsInAllOrders();
-foreach ($orders_materials as $orders_material) {
-  // Check if $orders_material exist in Material
-  if ($mat = $orders_material->getMaterial()) {
-echo "ima ID: " . $mat->getId() . " </br>";
-  } else {
-    echo "nema materijala za: " . $orders_material->getId() . "</br>";
+foreach ($svi_materijali_na_svim_narudzbenicama as $jedan_materijal_na_narudzbenici) {
+  $id_jednog_materijala_na_narudzbenici = $jedan_materijal_na_narudzbenici->getId();
+  $id_materijala_na_narudzbenici = $jedan_materijal_na_narudzbenici->getMaterial()->getId();
+
+  if ($id_jednog_materijala_na_narudzbenici > 2300) {
+    echo $id_jednog_materijala_na_narudzbenici . " - " . $id_materijala_na_narudzbenici . "<br>";
+
+    $svi_materijali = $entityManager->getRepository('Roloffice\Entity\Material')->findAll();
+    $control = FALSE;
+    foreach ($svi_materijali as $jedan_materijal) {
+      if ($id_materijala_na_narudzbenici == $jedan_materijal->getId()) {
+        $control = TRUE;
+      }
+    }
+    if(!$control) {
+      echo "Materijal na narudžbenici sa ID: " . $id_jednog_materijala_na_narudzbenici . " treba brisati";
+      exit();
+    }
+
   }
-  
 }
+*/
+
+/*
+$sve_osobine_svih_materijala_na_svim_narudzbenicama = $entityManager->getRepository('Roloffice\Entity\OrderMaterialProperty')->findAll();
+
+foreach ($sve_osobine_svih_materijala_na_svim_narudzbenicama as $jedna_osobina_materijala) {
+  $id_jedne_osobine_materijala = $jedna_osobina_materijala->getId();
+  $id_materijala_na_narudzbenici = $jedna_osobina_materijala->getOrderMaterial()->getId();
+  
+  if ($id_jedne_osobine_materijala > 2000) {
+
+    // echo "ID Osobine materijala na narudžbenicama: " . $id_jedne_osobine_materijala . "</br>";
+    // echo "ID materijala na narudžbenici: " . $id_materijala_na_narudzbenici  . "</br>";
+    echo $id_jedne_osobine_materijala . "<br>";
+    
+    $svi_materijali_na_narudzbenicama = $entityManager->getRepository('Roloffice\Entity\OrderMaterial')->findAll();
+    $control = FALSE;
+    foreach ($svi_materijali_na_narudzbenicama as $jedan_materijal_na_narudzbenici) {
+      if ($id_materijala_na_narudzbenici == $jedan_materijal_na_narudzbenici->getId()) {
+        $control = TRUE;
+      }
+    }
+    if(!$control) {
+      echo "Osobinu materijala sa ID: " . $id_jedne_osobine_materijala . " treba brisati";
+      exit();
+    }
+    
+  }
+
+
+}
+*/
 

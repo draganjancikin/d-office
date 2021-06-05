@@ -1,5 +1,5 @@
 <?php
-switch ($pidb_data['tip_id']) {
+switch ($pidb_data->getType()->getId()) {
   case 1:
     $vrsta = "Predračun";
     $oznaka = "P_";
@@ -29,9 +29,9 @@ switch ($pidb_data['tip_id']) {
   <div class="card-header bg-<?php echo $style; ?> p-2">
     <h6 class="m-0 font-weight-bold text-white">
       <?php echo $vrsta;?>
-      <?php echo str_pad($pidb_data['y_id'], 4, "0", STR_PAD_LEFT). ' - ' .date('m', strtotime($pidb_data['date'])) . ' <span class="font-weight-normal">(' . date('d-M-Y', strtotime($pidb_data['date'])) . ')</span>'; ?>
+      <?php echo str_pad($pidb_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT). ' - ' . $pidb_data->getDate()->format('m') . ' <span class="font-weight-normal">(' . $pidb_data->getDate()->format('d-M-Y') . ')</span>'; ?>
       <span class="font-weight-normal">
-        <?php echo ": " . $pidb_data['title']; ?>
+        <?php echo ": " . $pidb_data->getTitle() ?>
       </span>
     </h6>
   </div>
@@ -84,100 +84,127 @@ switch ($pidb_data['tip_id']) {
         <tbody>
           <?php
           $count = 0;
-          $articles_on_pidb = $pidb->getArticlesOnPidb($pidb_id);
-          foreach ($articles_on_pidb as $article_on_pidb):
-            $propertys = $article_on_pidb['propertys'];
+          $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+          $kurs = $preferences->getKurs();
+
+          $total_tax_base = 0;
+          $total_tax_amount = 0;
+          $total = 0;
+
+          $ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($pidb_id);
+          foreach ($ad_articles as $ad_article):
             $count++;
             ?>
             <form action="<?php echo $_SERVER['PHP_SELF']. '?editArticleInPidb&pidb_id='.$pidb_id.'&pidb_article_id=' .$article_on_pidb['id']; ?>" class="form-horizontal" role="form" method="post">
-              <input type="hidden" name="article_id" value="<?php echo $article_on_pidb['article_id']; ?>" />
-              <input type="hidden" name="pidb_tip_id" value="<?php echo $pidb_data['tip_id']; ?>" />
+              <input type="hidden" name="article_id" value="<?php echo $ad_article->getId() ?>" />
+              <input type="hidden" name="pidb_tip_id" value="<?php echo $pidb_data->getType()->getId() ?>" />
               <tr>
                 <td class="px-1 text-center"><?php echo $count ;?></td>
                 <td class="px-1">
-                  <?php echo $article_on_pidb['name'] ?>
+                  <?php echo $ad_article->getArticle()->getName() ?>
                   <br />
-                  kom <input class="input-box-pieces" type="text" name="pieces" value="<?php echo $article_on_pidb['pieces']; ?>" placeholder="(kom)" />
+                  kom <input class="input-box-pieces" type="text" name="pieces" value="<?php echo $ad_article->getPieces() ?>" placeholder="(kom)" />
                   <?php
-                  foreach ($propertys as $property):
-                      echo $property['property_name'] . ' <input class="input-box-55" type="text" name="' .$property['property_name']. '" value="' .number_format($property['property_quantity'], 2, ",", ""). '" title="(cm)" /> ';
+                  // AccountingDocument Article Properties
+                  $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($ad_article->getId());
+                  foreach ($ad_a_properties as $ad_a_property):
+                      echo $ad_a_property->getProperty()->getName() . ' <input class="input-box-55" type="text" name="' .$ad_a_property->getProperty()->getName() . '" value="' . number_format($ad_a_property->getQuantity(), 2, ",", "") . '" title="(cm)" /> ';
                   endforeach;
                   ?>
                   <br />
-                  <input class="in-article-note" type="text" name="note" value="<?php echo $article_on_pidb['note']; ?>" />
+                  <input class="in-article-note" type="text" name="note" value="<?php echo $ad_article->getNote() ?>" />
                 </td>
-                <td class="px-1 text-center"><?php echo $article_on_pidb['unit_name'] ;?></td>
+                <td class="px-1 text-center"><?php echo $ad_article->getArticle()->getUnit()->getName() ?></td>
                 <td class="px-1 input-box-45">
                   <!-- količina artikla, treba da se izračunava -->
-                  <?php  echo number_format($article_on_pidb['quantity'], 2, ",", "."); ?>
+                  <?php  
+                    echo number_format($ad_a_quantity = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces() ), 2, ",", ".");
+                  ?>
                 </td>
                 <td class="px-1 text-center">
-                  <input class="input-box-price" type="text" name="price" value="<?php echo number_format($article_on_pidb['price'], 4, ",", ""); ?>" title="Nemojte koristiti tačku ili zarez za odvajanje hiljada, već samo za decimale!" />
+                  <input class="input-box-price" type="text" name="price" value="<?php echo number_format($ad_article->getPrice(), 4, ",", ""); ?>" title="Nemojte koristiti tačku ili zarez za odvajanje hiljada, već samo za decimale!" />
                 </td>
                 <td class="px-1 text-center">
-                  <input class="input-box-discounts" type="text" name="discounts" value="<?php echo number_format($article_on_pidb['discounts'], 2, ",", "."); ?>" />
+                  <input class="input-box-discounts" type="text" name="discounts" value="<?php echo number_format($ad_article->getDiscount(), 2, ",", "."); ?>" />
                 </td>
-                <td class="px-1 input-box-65"><?php echo number_format($article_on_pidb['tax_base']*$pidb->getKurs(), 2, ",", ".") ;?></td>
-                <td class="px-1 text-center"><?php echo $article_on_pidb['tax'] ;?></td>
-                <td class="px-1 input-box-45"><?php echo number_format($article_on_pidb['tax_amount']*$pidb->getKurs(), 2, ",", "."); ?></td>
-                <td class="px-1 input-box-65"><?php echo number_format($article_on_pidb['sub_total']*$pidb->getKurs(), 2, ",", ".");?></td>
+                <td class="px-1 input-box-65">
+                  <?php
+                    //echo number_format($article_on_pidb['tax_base']*$pidb->getKurs(), 2, ",", ".") ;
+                    $tax_base = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
+                    echo number_format($tax_base * $kurs, 2, ",", ".") 
+                  ?>
+                </td>
+                <td class="px-1 text-center"><?php echo $ad_article->getTax() ;?></td>
+                <td class="px-1 input-box-45">
+                  <?php 
+                    $tax_amount = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxAmount($tax_base, $ad_article->getTax() );
+                    echo number_format($tax_amount * $kurs, 2, ",", ".");
+                  ?>
+                </td>
+                <td class="px-1 input-box-65">
+                  <?php 
+                    $sub_total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getSubTotal($tax_base, $tax_amount );
+                    echo number_format($sub_total * $kurs, 2, ",", ".");
+                  ?>
+                </td>
                 <td class="px-1 text-center">
                   <button type="submit" class="btn btn-mini btn-outline-success px-1">
                     <i class="fas fa-save" title="Snimi izmenu"> </i>
                   </button>
 
-                  <a href="<?php echo $_SERVER['PHP_SELF']. '?editArticle&pidb_article_id=' . $article_on_pidb['id'] . '&pidb_id='.$pidb_id.'&pidb_tip_id=' . $pidb_data['tip_id'] ?>" class="btn btn-mini btn-outline-info px-1">
+                  <a href="<?php echo $_SERVER['PHP_SELF']. '?editArticle&pidb_article_id=' . $ad_article->getId() . '&pidb_id='.$pidb_id.'&pidb_tip_id=' . $pidb_data->getType()->getId() ?>" class="btn btn-mini btn-outline-info px-1">
                     <i class="fas fa-edit" title="Promeni artikal"> </i>
                   </a>
 
-                  <a href="<?php echo $_SERVER['PHP_SELF']. '?duplicateArticleInPidb&pidb_id='.$pidb_id.'&pidb_tip_id='.$pidb_data['tip_id'].'&pidb_article_id=' .$article_on_pidb['id']; ?>" class="btn btn-mini btn-outline-info px-1">
+                  <a href="<?php echo $_SERVER['PHP_SELF'] . '?duplicateArticleInPidb&pidb_id=' . $pidb_id . '&pidb_tip_id=' .$pidb_data->getType()->getId() . '&pidb_article_id=' .$ad_article->getId() ?>" class="btn btn-mini btn-outline-info px-1">
                     <i class="fas fa-plus" title="Dupliciraj artikal"> </i>
                   </a>
 
-                  <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete artikal?')"  href="<?php echo $_SERVER['PHP_SELF']. '?delArticleInPidb&pidb_id='.$pidb_id.'&pidb_tip_id='.$pidb_data['tip_id'].'&pidb_article_id=' .$article_on_pidb['id']; ?>" class="btn btn-mini btn-outline-danger px-1">
+                  <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete artikal?')"  href="<?php echo $_SERVER['PHP_SELF']. '?delArticleInPidb&pidb_id='.$pidb_id.'&pidb_tip_id='.$pidb_data->getType()->getId().'&pidb_article_id=' .$ad_article->getId() ?>" class="btn btn-mini btn-outline-danger px-1">
                     <i class="fas fa-trash" title="Obriši artikal"> </i>
                   </a>
                 </td>
               </tr>
             </form>
             <?php
+            $total_tax_base = $total_tax_base + $tax_base;
+            $total_tax_amount = $total_tax_amount + $tax_amount;
           endforeach;
-          $total_tax_base = $pidb->getTotalAmountsByPidbId($pidb_id)['tax_base'];
-          $total_tax_amount = $pidb->getTotalAmountsByPidbId($pidb_id)['tax_amount'];
-          $total = $pidb->getTotalAmountsByPidbId($pidb_id)['total'];
+          $total = $total_tax_base + $total_tax_amount;
+          $avans = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAvans($pidb_id);
+          $income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($pidb_id);
           ?>
           <tr class="table-<?php echo $style; ?>">
             <td colspan="3" rowspan="6">
               <td colspan="3">ukupno poreska osnovica</td>
-              <td class="text-right"><?php echo number_format($total_tax_base*$pidb->getKurs(), 2, ",", ".") ?></td>
+              <td class="text-right"><?php echo number_format($total_tax_base * $kurs, 2, ",", ".") ?></td>
             </td>
             <td colspan="5"></td>
           </tr>
           <tr class="table-<?php echo $style; ?>">
             <td colspan="5">ukupno iznos PDV-a</td>
-            <td class="text-right"><?php echo number_format($total_tax_amount*$pidb->getKurs(), 2, ",", ".") ?></td>
+            <td class="text-right"><?php echo number_format($total_tax_amount * $kurs, 2, ",", ".") ?></td>
             <td colspan="3"></td>
           </tr>
           <tr class="table-<?php echo $style; ?>">
             <td colspan="5">UKUPNO</td>
             <td class="text-right"></td>
-            <td class="text-right""><?php echo number_format($total*$pidb->getKurs(), 2, ",", ".") ?></td>
+            <td class="text-right""><?php echo number_format($total * $kurs, 2, ",", ".") ?></td>
             <td colspan="2" class="text-right">(&#8364; <?php echo number_format($total, 4, ",", ".") ?>)</td>
           </tr>
           <tr class="table-<?php echo $style; ?>">
             <td colspan="5">Avans</td>
             <td class="text-right"></td>
-            <td class="text-right""><?php echo  number_format(($avans = $pidb->getAvansIncome($pidb_id))*$article->getKurs(), 2, ",", ".") ?></td>
+            <td class="text-right""><?php echo  number_format(($avans * $kurs), 2, ",", ".") ?></td>
             <td colspan="2" class="text-right">(&#8364; <?php echo number_format($avans, 4, ",", ".") ?>)</td>
           </tr>
           <?php
-          $income = $pidb->getIncome($pidb_id);
-          if ($pidb_data['tip_id'] == 2) :
+          if ($pidb_data->getType()->getId() == 2) :
             ?>
             <tr class="table-<?php echo $style; ?>">
               <td colspan="5">Uplaćeno</td>
               <td class="text-right"></td>
-              <td class="text-right""><?php echo  number_format(($income)*$article->getKurs(), 2, ",", ".") ?></td>
+              <td class="text-right""><?php echo  number_format(($income * $kurs), 2, ",", ".") ?></td>
               <td colspan="2" class="text-right">(&#8364; <?php echo number_format($income, 4, ",", ".") ?>)</td>
             </tr>
             <?php
@@ -186,8 +213,8 @@ switch ($pidb_data['tip_id']) {
           <tr class="table-<?php echo $style; ?>">
             <td colspan="5"><strong>OSTALO ZA UPLATU</strong></td>
             <td class="text-right"></td>
-            <td class="text-right""><strong><?php echo number_format(($total-$avans)*$article->getKurs(), 2, ",", ".") ?></strong></td>
-            <td colspan="2" class="text-right">(&#8364; <?php echo number_format($total-$avans, 4, ",", ".") ?>)</td>
+            <td class="text-right""><strong><?php echo number_format(($total-$avans-$income) * $kurs, 2, ",", ".") ?></strong></td>
+            <td colspan="2" class="text-right">(&#8364; <?php echo number_format($total-$avans-$income, 4, ",", ".") ?>)</td>
           </tr>
         </tbody>
       </table>
@@ -199,7 +226,7 @@ switch ($pidb_data['tip_id']) {
           <tr class="table-<?php echo $style; ?>">
             <td width="110">Naslov:</td>
             <td colspan="2">
-              <input class="form-control" type="text" name="title" value="<?php echo $pidb_data['title'] ?>" >
+              <input class="form-control" type="text" name="title" value="<?php echo $pidb_data->getTitle() ?>" >
             </td>
           </tr>
           <tr class="table-<?php echo $style; ?>">
@@ -228,11 +255,11 @@ switch ($pidb_data['tip_id']) {
             <td>Arhivirano:</td>
             <td>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="archived" id="archived1" value="0" <?php if ($pidb_data['archived'] == 0) echo 'checked="checked" '; ?> >
+                <input class="form-check-input" type="radio" name="archived" id="archived1" value="0" <?php if ($pidb_data->getIsArchived() == 0) echo 'checked="checked" '; ?> >
                 <label class="form-check-label" for="archived1"> nije</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="archived" id="archived2" value="1" <?php if ($pidb_data['archived'] == 1) echo 'checked="checked" '; ?> >
+                <input class="form-check-input" type="radio" name="archived" id="archived2" value="1" <?php if ($pidb_data->getIsArchived() == 1) echo 'checked="checked" '; ?> >
                 <label class="form-check-label" for="archived2"> jeste</label>
               </div>
             </td>
@@ -241,7 +268,7 @@ switch ($pidb_data['tip_id']) {
           <tr class="table-<?php echo $style; ?>">
             <td>Napomena:</td>
             <td colspan="2">
-              <textarea class="form-control" rows="3" name="note"><?php echo $pidb_data['note']; ?></textarea>
+              <textarea class="form-control" rows="3" name="note"><?php echo $pidb_data->getNote() ?></textarea>
             </td>
           </tr>  
           <tr class="table-<?php echo $style; ?>">

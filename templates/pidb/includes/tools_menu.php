@@ -29,7 +29,7 @@ require 'export.php';
         if(isset($_GET['view'])):
           ?>
           <a href="?edit&pidb_id=<?php echo $pidb_id ?>">
-            <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o klijentu!">
+            <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o projektu!">
               <i class="fas fa-edit"> </i> <!-- Izmena -->
             </button>
           </a>
@@ -40,7 +40,7 @@ require 'export.php';
         if(isset($_GET['edit'])):
           ?>
           <a href="?view&pidb_id=<?php echo $pidb_id ?>">
-            <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o klijentu!">
+            <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o projektu!">
               <i class="fas fa-eye"> </i> <!-- Pregled -->
             </button>
           </a>
@@ -103,16 +103,18 @@ require 'export.php';
           
         // Next and Previuos button
         if($user_role_id == 1 && isset($_GET['edit'])):
+          $previous = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getPrevious( $pidb_id, $pidb_data->getType()->getId() );
+          $next = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getNext( $pidb_id, $pidb_data->getType()->getId() );
           ?>
-          <a href="?edit&pidb_id=<?php echo $pidb->getPreviousPidb($pidb_id, $pidb_data['tip_id']) ?>">
+          <a href="?edit&pidb_id=<?php echo $previous->getId() ?>">
             <button type="submit" class="btn btn-sm btn-outline-secondary mr-1">
               <i class="fas fa-arrow-left"> </i>
             </button>
           </a>
           <?php
-          if($pidb->getNextPidb($pidb_id, $pidb_data['tip_id']) != "") :
+          if($next) :
             ?>
-            <a href="?edit&pidb_id=<?php echo $pidb->getNextPidb($pidb_id, $pidb_data['tip_id']) ?>">
+            <a href="?edit&pidb_id=<?php echo $next->getId() ?>">
               <button type="submit" class="btn btn-sm btn-outline-secondary mr-1">
                 <i class="fas fa-arrow-right"> </i>
               </button>
