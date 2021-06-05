@@ -126,7 +126,6 @@ switch ($pidb_data->getType()->getId()) {
                 <td class="px-1 text-center">
                   <input class="input-box-discounts" type="text" name="discounts" value="<?php echo number_format($ad_article->getDiscount(), 2, ",", "."); ?>" disabled >
                 </td>
-                <!-- TODO: -->
                 <td class="px-1 input-box-65">
                   <?php 
                   $tax_base = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
@@ -163,10 +162,12 @@ switch ($pidb_data->getType()->getId()) {
               </tr>
             </form>
             <?php
-          endforeach;
           $total_tax_base = $total_tax_base + $tax_base;
           $total_tax_amount = $total_tax_amount + $tax_amount;
+          endforeach;
           $total = $total_tax_base + $total_tax_amount;
+          $avans = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAvans($pidb_id);
+          $income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($pidb_id);;
           ?>
         </tbody>
         <tfoot>
@@ -188,16 +189,15 @@ switch ($pidb_data->getType()->getId()) {
           </tr>
           <tr class="table-<?php echo $style; ?>">
             <td colspan="6">Avans</td>
-            <td class="text-right"><?php echo  number_format(($avans = $pidb->getAvansIncome($pidb_id))*$article->getKurs(), 2, ",", ".") ?></td>
+            <td class="text-right"><?php echo  number_format(($avans * $kurs), 2, ",", ".") ?></td>
             <td class="text-right">(&#8364; <?php echo number_format($avans, 4, ",", ".") ?>)</td>
           </tr>
           <?php
-          $income = $pidb->getIncome($pidb_id);
-          if ($pidb_data['tip_id'] == 2) :
+          if ($pidb_data->getType()->getId() == 2) :
             ?>
             <tr class="table-<?php echo $style; ?>">
               <td colspan="6">Uplaćeno</td>
-              <td class="text-right""><?php echo  number_format(($income)*$article->getKurs(), 2, ",", ".") ?></td>
+              <td class="text-right""><?php echo  number_format(($income * $kurs), 2, ",", ".") ?></td>
               <td class="text-right">(&#8364; <?php echo number_format($income, 4, ",", ".") ?>)</td>
             </tr>
             <?php
@@ -205,7 +205,7 @@ switch ($pidb_data->getType()->getId()) {
           ?>
           <tr class="table-<?php echo $style; ?>">
             <td colspan="6"><strong>OSTALO ZA UPLATU<strong></td>
-            <td class="text-right"><strong><?php echo number_format(($total-$avans-$income)*$article->getKurs(), 2, ",", ".") ?></strong></td>
+            <td class="text-right"><strong><?php echo number_format(($total-$avans-$income) * $kurs, 2, ",", ".") ?></strong></td>
             <td class="text-right">(&#8364; <?php echo number_format($total-$avans-$income, 4, ",", ".") ?>)</td>
           </tr>
         </tfoot>
@@ -216,7 +216,7 @@ switch ($pidb_data->getType()->getId()) {
           <tbody>
             <tr class="table-<?php echo $style; ?>">
               <td width="110">Naslov: </td>
-              <td><?php echo $pidb_data['title'] ?></td>
+              <td><?php echo $pidb_data->getTitle() ?></td>
               <td></td>
             </tr>
             <tr class="table-<?php echo $style; ?>">
@@ -226,13 +226,13 @@ switch ($pidb_data->getType()->getId()) {
             </tr> 
             <tr class="table-<?php echo $style; ?>">
               <td>Arhivirano: </td>
-              <td><?php echo ($pidb_data['archived'] == 0 ? "nije" : "jeste" ) ?></td>
+              <td><?php echo ($pidb_data->getIsArchived() == 0 ? "nije" : "jeste" ) ?></td>
               <td></td>
             </tr>
             <tr class="table-<?php echo $style; ?>">
               <td>Napomena:</td>
               <td colspan="2">
-                <textarea class="form-control" rows="3" name="note" disabled><?php echo $pidb_data['note']; ?></textarea>
+                <textarea class="form-control" rows="3" name="note" disabled><?php echo $pidb_data->getNote() ?></textarea>
               </td>
             </tr>
             <tr class="table-<?php echo $style; ?>">

@@ -22,7 +22,7 @@ class ArticleRepository extends EntityRepository {
   /**
    * Method that return last $limit Articles
    * 
-   * @return 
+   * @return array
    */
   public function getLastArticles($limit = 5) {
     $qb = $this->_em->createQueryBuilder();
