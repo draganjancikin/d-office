@@ -104,6 +104,14 @@ class AccountingDocument {
    */
   protected $modified_by_user;
 
+  /**
+   * Unidirectional - Many Projects have many payments
+   *
+   * @ORM\ManyToMany(targetEntity="Payment")
+   * @ORM\JoinTable(name="v6__accounting_documents__payments")
+   */
+  private $payments;
+
   public function getId() {
     return $this->id;
   }
@@ -202,6 +210,10 @@ class AccountingDocument {
 
   public function getModifiedByUser() {
     return $this->modified_by_user;
+  }
+
+  public function getPayments() {
+    return $this->payments;
   }
   
 }

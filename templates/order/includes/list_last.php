@@ -80,3 +80,18 @@
     </div>
   </div>
 </div>
+
+<?php
+
+//get all OrderMaterial
+$orders_materials = $entityManager->getRepository('Roloffice\Entity\Order')->getAllMaterialsInAllOrders();
+foreach ($orders_materials as $orders_material) {
+  // Check if $orders_material exist in Material
+  if ($mat = $orders_material->getMaterial()) {
+echo "ima ID: " . $mat->getId() . " </br>";
+  } else {
+    echo "nema materijala za: " . $orders_material->getId() . "</br>";
+  }
+  
+}
+

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="v6_properties")
+ * @ORM\Table(name="v6__properties")
  */
 class Property {
 

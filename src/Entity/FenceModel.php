@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="v6_fence_models")
+ * @ORM\Table(name="v6__fence__models")
  */
 class FenceModel {
 

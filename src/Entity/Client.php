@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity (repositoryClass="Roloffice\Repository\ClientRepository")
- * @ORM\Table(name="v6_clients")
+ * @ORM\Table(name="v6__clients")
  */
 class Client {
 
@@ -93,7 +93,7 @@ class Client {
    * Unidirectional - Many users have many contacts
    *
    * @ORM\ManyToMany(targetEntity="Contact")
-   * @ORM\JoinTable(name="v6_clients_contacts")
+   * @ORM\JoinTable(name="v6__clients__contacts")
    */
   private $contacts;
 

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="v6_preferences")
+ * @ORM\Table(name="v6__preferences")
  */
 class Preferences {
 

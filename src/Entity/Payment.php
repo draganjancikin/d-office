@@ -19,6 +19,32 @@ class Payment {
   protected $id;
 
   /**
+   * Meny Payments belongs to the One Payment Type.
+   * @ORM\ManyToOne(targetEntity="PaymentType")
+   * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
+   * @var int
+   */
+  protected $type;
+
+  /**
+   * @ORM\Column(type="decimal", precision=11, scale=4)
+   * @var float
+   */
+  protected $amount;
+
+  /**
+   * @ORM\Column(type="text")
+   * @var string
+   */
+  protected $note;
+
+  /**
+   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
+   * @var DateTime
+   */
+  protected $date;
+
+  /**
    * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
    * @var DateTime
    */
@@ -34,6 +60,38 @@ class Payment {
 
   public function getId() {
     return $this->id;
+  }
+
+  public function setType($type) {
+    $this->type = $type;
+  }
+
+  public function getType() {
+    return $this->type;
+  }
+
+  public function setAmount($amount) {
+    $this->amount = $amount;
+  }
+
+  public function getAmount() {
+    return $this->amount;
+  }
+
+  public function setNote($note) {
+    $this->note = $note;
+  }
+
+  public function getNote() {
+    return $this->note;
+  }
+
+  public function setDate(\DateTime $date) {
+    $this->date = $date;
+  }
+
+  public function getDate() {
+    return $this->date;
   }
 
   public function setCreatedAt(\DateTime $created_at) {

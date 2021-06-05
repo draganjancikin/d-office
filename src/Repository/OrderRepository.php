@@ -183,4 +183,20 @@ class OrderRepository extends EntityRepository {
     return $orders;
   }
 
+  /**
+   * Method that return all Materials in all Orders 
+   * 
+   * @return array
+   */
+  public function getAllMaterialsInAllOrders() {
+    // Create a QueryBilder instance
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('om')
+        ->from('Roloffice\Entity\OrderMaterial', 'om')
+        ->orderBy('om.id', 'ASC');
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    
+    return $result;
+  }
 }

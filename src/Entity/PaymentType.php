@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="v6__project__priorities")
+ * @ORM\Table(name="v6__payment__types")
  */
-class ProjectPriority {
+class PaymentType {
 
   /**
    * @ORM\Id
@@ -19,7 +19,7 @@ class ProjectPriority {
   protected $id;
 
   /**
-   * @ORM\Column(type="string", unique=TRUE, length=48)
+   * @ORM\Column(type="string", length=48)
    * @var string
    */
   protected $name;
@@ -31,9 +31,9 @@ class ProjectPriority {
   public function setName($name) {
     $this->name = $name;
   }
-  
+
   public function getName() {
     return $this->name;
   }
-  
+
 }

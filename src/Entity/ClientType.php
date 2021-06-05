@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="v6_client_types")
+ * @ORM\Table(name="v6__client__types")
  */
 class ClientType {
 

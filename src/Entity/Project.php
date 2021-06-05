@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity (repositoryClass="Roloffice\Repository\ProjectRepository")
- * @ORM\Table(name="v6_projects")
+ * @ORM\Table(name="v6__projects")
  */
 class Project {
 
@@ -76,7 +76,7 @@ class Project {
    * Unidirectional - Many Projects have many Orders
    *
    * @ORM\ManyToMany(targetEntity="Order")
-   * @ORM\JoinTable(name="v6_projects_orders")
+   * @ORM\JoinTable(name="v6__projects__orders")
    */
   private $orders;
 

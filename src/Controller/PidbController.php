@@ -556,11 +556,13 @@ class PidbController extends Database {
      * 
      * @return float
      */
-    public function getAvansIncome($pidb_id){
+    /*
+     public function getAvansIncome($pidb_id){
         $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (type_id = 1 OR type_id = 2) ");
         $avans = $this->sumAllValuesByKey($result, "amount");
         return $avans;
     }
+    */
 
     /**
      * Method that return all income payments by $pidb_id

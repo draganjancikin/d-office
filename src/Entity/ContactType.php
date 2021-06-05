@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="v6_contact_types")
+ * @ORM\Table(name="v6__contact__types")
  */
 class ContactType {
 

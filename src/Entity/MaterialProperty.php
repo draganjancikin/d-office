@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity (repositoryClass="Roloffice\Repository\MaterialPropertyRepository")
- * @ORM\Table(name="v6_materials_properties")
+ * @ORM\Table(name="v6__materials__properties")
  */
 class MaterialProperty {
 

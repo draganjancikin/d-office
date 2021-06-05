@@ -73,7 +73,7 @@
                 <br />
                 kol. <input class="input-box-45" type="text" name="pieces" value="<?php echo $material_on_order->getPieces() ?>" placeholder="(kom)" />
                 <?php
-                $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getPropertiesOnOrderMaterial($material_on_order->getId());
+                $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getProperties($material_on_order->getId());
                 foreach ($material_on_order_properties as $material_on_order_property):
                   echo $material_on_order_property->getProperty()->getName() . ' <input class="input-box-50" type="text" name="' .$material_on_order_property->getProperty()->getName(). '" value="' .number_format($material_on_order_property->getQuantity(), 2, ",", "."). '" placeholder="(cm)" > ';
                 endforeach;

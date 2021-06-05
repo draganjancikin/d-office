@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity (repositoryClass="Roloffice\Repository\CuttingSheetArticleRepository")
- * @ORM\Table(name="v6_cutting_sheets_article")
+ * @ORM\Table(name="v6__cutting_sheets__article")
  */
 class CuttingSheetArticle {
 
