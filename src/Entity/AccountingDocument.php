@@ -57,15 +57,6 @@ class AccountingDocument {
    */
   protected $parent;
 
-  // TODO: This is old way. Need update schema without this.
-  /**
-   * Meny Accounting Documents belongs to the One Project.
-   * @ORM\ManyToOne(targetEntity="Project")
-   * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $project;
-
   /**
    * @ORM\Column(type="string", length=48)
    * @var string
@@ -155,14 +146,6 @@ class AccountingDocument {
 
   public function getParent() {
     return $this->parent;
-  }
-
-  public function setProject($project) {
-    $this->project = $project;
-  }
-
-  public function getProject() {
-    return $this->project;
   }
 
   public function setTitle($title) {

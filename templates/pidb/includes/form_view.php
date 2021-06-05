@@ -188,7 +188,6 @@ switch ($pidb_data->getType()->getId()) {
           </tr>
           <tr class="table-<?php echo $style; ?>">
             <td colspan="6">Avans</td>
-            <!-- TODO -->
             <td class="text-right"><?php echo  number_format(($avans = $pidb->getAvansIncome($pidb_id))*$article->getKurs(), 2, ",", ".") ?></td>
             <td class="text-right">(&#8364; <?php echo number_format($avans, 4, ",", ".") ?>)</td>
           </tr>

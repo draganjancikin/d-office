@@ -68,7 +68,7 @@ class Project {
    * Unidirectional - Many projects have many accounting documents
    *
    * @ORM\ManyToMany(targetEntity="AccountingDocument")
-   * @ORM\JoinTable(name="v6_projects_accounting_documents")
+   * @ORM\JoinTable(name="v6__projects__accounting_documents")
    */
   private $accounting_documents;
 
