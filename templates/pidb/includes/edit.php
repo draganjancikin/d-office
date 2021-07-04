@@ -1,10 +1,11 @@
 <?php
-use Roloffice\Core\Database;
+// use Roloffice\Core\Database;
 
-$user_id = $_SESSION['user_id'];
-$date = date('Y-m-d h:i:s');
+// $user_id = $_SESSION['user_id'];
+// $date = date('Y-m-d h:i:s');
 
 // edit documents
+/*
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editPidb"]) ) {
 
   $pidb_id = htmlspecialchars($_GET["pidb_id"]);
@@ -20,6 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editPidb"]) ) {
 
   die('<script>location.href = "?edit&pidb_id='.$pidb_id.'" </script>');
 }
+*/
 
 // edit article in document
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleInPidb"]) ) {

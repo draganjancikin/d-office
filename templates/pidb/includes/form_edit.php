@@ -219,7 +219,7 @@ switch ($pidb_data->getType()->getId()) {
         </tbody>
       </table>
 
-      <form  action="<?php echo $_SERVER['PHP_SELF']. '?editPidb&pidb_id='.$pidb_id; ?>" method="post">
+      <form  action="<?php echo $_SERVER['PHP_SELF']. '?updateAcountingDocument&pidb_id='.$pidb_id; ?>" method="post">
 
         <input type="hidden" name="pidb_id" value="<?php echo $pidb_id; ?>" />
         <table class="table">
