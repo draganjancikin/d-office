@@ -20,6 +20,15 @@ class ArticleRepository extends EntityRepository {
   }
 
   /**
+   * Method that return all Articles sort by name ASC
+   * 
+   * @return array
+   */
+  public function findAll() {
+    return $this->findBy(array(), array('name' => 'ASC'));
+  }
+  
+  /**
    * Method that return last $limit Articles
    * 
    * @return array

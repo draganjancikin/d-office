@@ -23,10 +23,8 @@ require 'export.php';
         $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
         $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
         $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
+        $all_articles = $entityManager->getRepository('\Roloffice\Entity\Article')->findAll();
         
-        // TODO: Dragan
-        // $all_articles = $article->getAllArticles();
-
         // In view case show edit button.
         if(isset($_GET['view'])):
           ?>

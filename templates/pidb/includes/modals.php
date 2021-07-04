@@ -1,4 +1,4 @@
-<!-- Modal addArticle -->
+<!-- Modal add Article to Accounting Document -->
 <div class="modal" id="addArticle" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -23,7 +23,7 @@
                   <?php
                   foreach ($all_articles as $article) :
                       ?>
-                      <option value="<?php echo $article['id'] ?>"><?php echo $article['name'] ?></option>
+                      <option value="<?php echo $article->getId() ?>"><?php echo $article->getName() ?></option>
                       <?php
                   endforeach;
                   ?>
