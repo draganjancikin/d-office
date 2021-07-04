@@ -58,5 +58,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createAccountingDocumen
     $project_id = NULL;
   }
 
-  die('<script>location.href = "?view&pidb_id='.$pidb_id.'&pidb_tip_id='.$accd_type_id.'" </script>');
+  die('<script>location.href = "?view&pidb_id='.$new_accounting_document_id.'&pidb_tip_id='.$accd_type_id.'" </script>');
 }

@@ -239,4 +239,22 @@ class AccountingDocumentRepository extends EntityRepository {
     return $last_accd;
   }
 
+  /**
+   * Method that rerurn ID of AccountingDocument before last in db table
+   *
+   * @return object
+   */
+  public function getAccountingDocumentBeforeLast() {
+
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('ad')
+        ->from('Roloffice\Entity\AccountingDocument', 'ad')
+        ->orderBy('ad.id', 'DESC')
+        ->setMaxResults(2);
+    $query = $qb->getQuery();
+    $accd_before_last = $query->getResult()[1];
+    
+    return $accd_before_last;
+  }
+
 }
