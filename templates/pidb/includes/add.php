@@ -1,36 +1,4 @@
 <?php
-// add article in document
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleInPidb"]) ) {
-
-  $pidb_id = htmlspecialchars($_POST["pidb_id"]);
-  $article_id = htmlspecialchars($_POST["article_id"]);
-  $note = htmlspecialchars($_POST["note"]);
-  $pieces = htmlspecialchars($_POST["pieces"]);
-  $price = $article->getPrice($article_id);
-  $tax = $pidb->getTax();
-
-  $db = new Database();
-
-  $db->connection->query("INSERT INTO pidb_article (pidb_id, article_id, note, pieces, price, tax) " 
-                        . " VALUES ('$pidb_id', '$article_id', '$note', '$pieces', '$price', '$tax' )") or die(mysqli_error($db->connection));
-  
-  // treba nam i pidb_article_id (id artikla u pidb dokumentu) to je u stvari zadnji unos
-  $pidb_article_id = $db->connection->insert_id;;
-
-  //insert property-a artikla u tabelu pidb_article_property
-  $propertys = $db->connection->query( "SELECT * FROM article_property WHERE article_id ='$article_id'");
-  while($row_property = mysqli_fetch_array($propertys)){
-
-    $property_id = $row_property['property_id'];
-    $quantity = 0;
-
-    $db->connection->query("INSERT INTO pidb_article_property (pidb_article_id, property_id, quantity) " 
-                          ."VALUES ('$pidb_article_id', '$property_id', '$quantity' )") or die(mysqli_error($db->connection));
-  }
-
-  die('<script>location.href = "?edit&pidb_id='.$pidb_id.' " </script>');
-}
-
 // add payment
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
 

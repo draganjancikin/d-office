@@ -8,6 +8,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addMaterialToOrder"]) )
   
   $material_id = htmlspecialchars($_POST["materijal_id"]);
   $material = $entityManager->find("\Roloffice\Entity\Material", $material_id);
+  
   $price = $material->getPrice();
   $weight = $material->getWeight();
   

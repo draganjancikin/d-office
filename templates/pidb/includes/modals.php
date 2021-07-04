@@ -9,7 +9,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?addArticleInPidb&pidb_id='. $pidb_id ?>" method="post" role="form">
+      <form action="<?php echo $_SERVER['PHP_SELF'] . '?addArticleToAccountingDocument&pidb_id='. $pidb_id ?>" method="post" role="form">
         <input type="hidden" name="pidb_id" value="<?php echo $pidb_id ?>">
 
         <div class="modal-body">
