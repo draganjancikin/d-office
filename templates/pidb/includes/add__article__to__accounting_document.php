@@ -2,20 +2,15 @@
 // Add Article to Accounting Document
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleToAccountingDocument"]) ) {
 
-  
   $ad_id = htmlspecialchars($_POST["pidb_id"]);
   $accounting_document = $entityManager->find("\Roloffice\Entity\AccountingDocument", $ad_id);
 
   $article_id = htmlspecialchars($_POST["article_id"]);
   $article = $entityManager->find("\Roloffice\Entity\Article", $article_id);
 
-  // Get Article price
-  $price = 0;
-  // Get Article discounts price
+  $price = $article->getPrice();
   $discount = 0;
-  // Get article Weight
-  $weight = 0;
-
+  $weight = $article->getWeight();
   $pieces = htmlspecialchars($_POST["pieces"]);
   
   $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
