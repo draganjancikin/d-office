@@ -2,7 +2,7 @@
 // Create a new Project.
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['createProject']) ) {
   
-  // curent loged user
+  // Current loged user.
   $user_id = $_SESSION['user_id'];
   $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
 

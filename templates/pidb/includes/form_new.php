@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">Otvaranje novog dokumenta:</h6>
   </div>
   <div class="card-body p-2">
-    <form class="form-horizontal" role="form" action="<?php echo $_SERVER['PHP_SELF'] . '?new&addPidb'; ?>" method="post">
+    <form class="form-horizontal" role="form" action="<?php echo $_SERVER['PHP_SELF'] . '?createAccountingDocument'; ?>" method="post">
       <?php 
       if(isset($_GET['project_id'])):
         ?>
@@ -14,10 +14,10 @@
       ?>
 
       <div class="form-group row">
-        <label for="select_pidb_tip_id" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta dokumenta:</label>
+        <label for="select_pidb_type_id" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta dokumenta:</label>
         <div class="col-sm-4">
           <div id="type">
-            <select id="select_pidb_tip_id" name="pidb_tip_id" class="form-control">
+            <select id="select_pidb_type_id" name="pidb_type_id" class="form-control">
               <option value="1">Predračun</option>
               <option value="2">Otpremnica</option>
               <option value="4">Povratnica</option>

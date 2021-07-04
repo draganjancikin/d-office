@@ -158,4 +158,85 @@ class AccountingDocumentRepository extends EntityRepository {
     
     return $result[0];
   }
+
+  /**
+   * Method that set Ordinal AccountingDocument number in year.
+   *
+   * @param int $acd_id
+   *  AccountingDocument ID
+   * @return void
+   */
+  public function setOrdinalNumInYear($acd_id) {
+    
+    // count number of records in database table of AccountingDocument
+    $acd_count = $this->getNumberOfAccountingDocuments();
+    
+    // get ID of last project
+    // TODO: Dragan
+    $id_of_last_acd = $this->getLastAccountingDocument()->getId();
+
+    // get year of last project
+    $year_of_last_acd = $this->getLastAccountingDocument()->getCreatedAt()->format('Y');
+    
+    // get ID of project before last
+    $id_of_acd_before_last = $this->getAccountingDocumentBeforeLast()->getId();
+
+    // get ordinal number in year of project before last
+    $ordinal_number_of_acd_before_last = $this->getAccountingDocumentBeforeLast()->getOrdinalNumInYear();
+
+    // year of project before last
+    $year_of_acd_before_last = $this->getAccountingDocumentBeforeLast()->getCreatedAt()->format('Y');
+
+    if($acd_count ==0){  // prvi slučaj kada je tabela $table prazna
+    
+      return die("Table of AccountingDocument is empty!");
+    
+    }elseif($acd_count ==1){  // drugi slučaj - kada postoji jedan unos u tabeli $table
+    
+      $ordinal_number_in_year = 1; // pošto postoji samo jedan unos u tabelu $table $b_on dobija vrednost '1'
+    
+    }else{  // svi ostali slučajevi kada ima više od jednog unosa u tabeli $table
+    
+      if($year_of_last_acd < $year_of_acd_before_last){
+        return die("Godina zadnjeg unosa je manja od godine predzadnjeg unosa! Verovarno datum nije podešen");
+      }elseif($year_of_last_acd == $year_of_acd_before_last){ //nema promene godine
+        $ordinal_number_in_year = $ordinal_number_of_acd_before_last + 1;
+      }else{  // došlo je do promene godine
+        $ordinal_number_in_year = 1;
+      }
+    
+    }
+
+    // update ordinal_number_in_year
+    $acd = $this->_em->find('\Roloffice\Entity\AccountingDocument', $acd_id);
+
+    if ($acd === null) {
+      echo "AccountingDocument with ID $acd_id does not exist.\n";
+      exit(1);
+    }
+
+    $acd->setOrdinalNumInYear($ordinal_number_in_year);
+
+    $this->_em->flush();
+
+  }
+
+  /**
+   * Method that rerurn ID of last AccountingDocument in db table
+   *
+   * @return object
+   */
+  public function getLastAccountingDocument() {
+
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('ad')
+        ->from('Roloffice\Entity\AccountingDocument', 'ad')
+        ->orderBy('ad.id', 'DESC')
+        ->setMaxResults(1);
+    $query = $qb->getQuery();
+    $last_accd = $query->getResult()[0];
+    
+    return $last_accd;
+  }
+
 }

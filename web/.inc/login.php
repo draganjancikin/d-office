@@ -2,7 +2,7 @@
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/dbConfig.php';
 session_start();
 
-$table = "v6_users";    // the table that this script will set up and use.
+$table = "v6__users";    // the table that this script will set up and use.
 
 // Create connection
 $mysqli = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);

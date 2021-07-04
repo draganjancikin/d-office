@@ -97,7 +97,7 @@ class ProjectRepository extends EntityRepository {
 
   }
 
-/**
+  /**
    * Method that rerurn ID of last project in db table
    *
    * @return object

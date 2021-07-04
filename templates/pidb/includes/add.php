@@ -1,7 +1,8 @@
 <?php
-use Roloffice\Core\Database;
+// use Roloffice\Core\Database;
 
 // add new document
+/*
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPidb"]) ) {
 
   $user_id = $_SESSION['user_id'];
@@ -35,7 +36,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPidb"]) ) {
 
   die('<script>location.href = "?view&pidb_id='.$pidb_id.'&pidb_tip_id='.$pidb_tip_id.'" </script>');
 }
-
+*/
 // add article in document
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleInPidb"]) ) {
 

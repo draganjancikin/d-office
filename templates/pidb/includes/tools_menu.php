@@ -1,5 +1,6 @@
 <?php
 require 'update_preferences.php';
+require 'create__accounting_document.php';
 
 require 'add.php';
 require 'edit.php';
