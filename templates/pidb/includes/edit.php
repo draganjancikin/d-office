@@ -1,28 +1,4 @@
 <?php
-// use Roloffice\Core\Database;
-
-// $user_id = $_SESSION['user_id'];
-// $date = date('Y-m-d h:i:s');
-
-// edit documents
-/*
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editPidb"]) ) {
-
-  $pidb_id = htmlspecialchars($_GET["pidb_id"]);
-
-  $title = htmlspecialchars($_POST["title"]);
-  $client_id = htmlspecialchars($_POST["client_id"]);
-  $archived = htmlspecialchars($_POST["archived"]);
-  $note = htmlspecialchars($_POST["note"]);
-
-  $db = new Database();
-
-  $db->connection->query("UPDATE pidb SET title='$title', client_id='$client_id', archived='$archived', note='$note'  WHERE id = '$pidb_id' ") or die(mysqli_error($db->connection));
-
-  die('<script>location.href = "?edit&pidb_id='.$pidb_id.'" </script>');
-}
-*/
-
 // edit article in document
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleInPidb"]) ) {
 
