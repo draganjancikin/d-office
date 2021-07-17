@@ -20,7 +20,7 @@
     <div id="klijenti" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <a class="collapse-item" href="/clients/">Klijenti</a>
-        <a class="collapse-item" href="/clients/index.php?newClient"><i class="fas fa-plus"></i> Novi klijent</a>
+        <a class="collapse-item" href="/clients/index.php?new"><i class="fas fa-plus"></i> Novi klijent</a>
         <a class="collapse-item" href="/clients/index.php?advancedSearch"><i class="fas fa-search"></i> Detajna pretraga</a>
         <hr class="sidebar-divider">
         <a class="collapse-item" href="/clients/index.php?newCountry"><i class="fas fa-plus"></i> Dodaj državu</a>
