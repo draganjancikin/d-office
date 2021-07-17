@@ -48,7 +48,7 @@
                   if(isset($_GET['view'])) include '../../templates/pidb/includes/form_view.php';
                   if(isset($_GET['new'])) include '../../templates/pidb/includes/form_new.php';
                   if(isset($_GET['edit'])) include '../../templates/pidb/includes/form_edit.php';
-                  if(isset($_GET['editArticle']) && isset($_GET['pidb_article_id'])) include '../../templates/pidb/includes/formEditArticle.php';
+                  if(isset($_GET['editArticle']) && isset($_GET['pidb_article_id'])) include '../../templates/pidb/includes/form_edit_article.php';
 
                   if(isset($_GET['transactions']) AND isset($_GET['pidb_id'])) include '../../templates/pidb/includes/transactionsByPidb.php';
                   if(isset($_GET['transactions']) AND !isset($_GET['pidb_id'])) include '../../templates/pidb/includes/listLastTransactions.php';

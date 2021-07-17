@@ -4,9 +4,9 @@ require 'create__accounting_document.php';
 require 'update__accounting_document.php';
 require 'add__article__to__accounting_document.php';
 require 'edit__article__in__accounting_document.php';
+require 'change__article__in__accounting_document.php';
 
 require 'add.php';
-require 'edit.php';
 require 'del.php';
 require 'export.php';
 ?>

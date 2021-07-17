@@ -33,7 +33,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleToAccountingD
   $entityManager->flush();
 
   // Last inserted Accounting Document Article.
-  $last__accounting_document__article_id = $newAccountingDocumentArticle->getId();
+  // $last__accounting_document__article_id = $newAccountingDocumentArticle->getId();
 
   //insert Article properties in table v6__accounting_documents__articles__properties
   $article_properties = $entityManager->getRepository('\Roloffice\Entity\ArticleProperty')->getArticleProperties($article->getId());
