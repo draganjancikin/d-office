@@ -3,6 +3,7 @@ require 'update_preferences.php';
 require 'create__accounting_document.php';
 require 'update__accounting_document.php';
 require 'add__article__to__accounting_document.php';
+require 'edit__article__in__accounting_document.php';
 
 require 'add.php';
 require 'edit.php';

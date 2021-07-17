@@ -95,7 +95,7 @@ switch ($pidb_data->getType()->getId()) {
           foreach ($ad_articles as $ad_article):
             $count++;
             ?>
-            <form action="<?php echo $_SERVER['PHP_SELF']. '?editArticleInPidb&pidb_id='.$pidb_id.'&pidb_article_id=' .$article_on_pidb['id']; ?>" class="form-horizontal" role="form" method="post">
+            <form action="<?php echo $_SERVER['PHP_SELF']. '?editArticleInAccountingDocument&pidb_id='.$pidb_id.'&pidb_article_id=' .$ad_article->getId(); ?>" class="form-horizontal" role="form" method="post">
               <input type="hidden" name="article_id" value="<?php echo $ad_article->getId() ?>" />
               <input type="hidden" name="pidb_tip_id" value="<?php echo $pidb_data->getType()->getId() ?>" />
               <tr>

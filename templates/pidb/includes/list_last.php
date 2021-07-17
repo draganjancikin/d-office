@@ -1,6 +1,6 @@
 <!-- Predračuni -->
 <?php
-$proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getLast(1, 0,10);
+$proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getLast(1, 0, 10);
 ?>
 <div class="card  border-info mb-4">
   <div class="card-header bg-info p-2">
