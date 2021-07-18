@@ -65,6 +65,7 @@ class PidbController extends Database {
      * 
      * @return array
      */
+    /*
     public function getPidb($pidb_id){
         $result = $this->get("SELECT pidb.id, pidb.tip_id, pidb.y_id, pidb.date, pidb.client_id, pidb.title, pidb.archived, pidb.note, v6_clients.name as client_name "
                             . "FROM pidb "
@@ -87,6 +88,7 @@ class PidbController extends Database {
             return $result[0];
         }
     }
+    */
 
     /**
      * Method that return client by pidb_id

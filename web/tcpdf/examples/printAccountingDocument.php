@@ -52,14 +52,26 @@ $pdf->AddPage();
 $pidb = new \Roloffice\Controller\PidbController();
 $article = new \Roloffice\Controller\ArticleController();
 
-$pidb_id = $_GET['pidb_id'];
-$pidb_data = $pidb->getPidb($pidb_id);
-if( $pidb_data['tip_id'] == 1) $pidb_name = "Predracun";
-if( $pidb_data['tip_id'] == 2) $pidb_name = "Otpremnica";
-if( $pidb_data['tip_id'] == 3) $pidb_name = "Racun";
-if( $pidb_data['tip_id'] == 4) $pidb_name = "Povratnica";
+$accounting_document__id = $_GET['accounting_document__id'];
 
-$client_data = $entityManager->find('Roloffice\Entity\Client', $pidb_data['client_id']);
+$accounting_document__data = $entityManager->find("\Roloffice\Entity\AccountingDocument", $accounting_document__id);
+
+switch ($accounting_document__data->getType()->getId()) {
+  case 1:
+    $accounting_document__type = "Predracun";
+    break;
+  case 2:
+    $accounting_document__type = "Otpremnica";
+    break;
+  case 4:
+    $accounting_document__type = "Povratnica";
+    break;
+  default:
+    # code...
+    break;
+}
+
+$client_data = $accounting_document__data->getClient();
 $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
 $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
 $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
@@ -82,6 +94,8 @@ if (!empty($client_contacts)) {
   endforeach;
     
 }
+$preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+$kurs = $preferences->getKurs();
 
 $html = '
 <style type="text/css">
@@ -103,10 +117,10 @@ $html = '
     <td width="350px">Kupac:<br />'.$client_data->getName().' '.($client_data->getLb()<>""?'<br />PIB '.$client_data->getLb():"").'<br />'.$client_street->getName().' '.$client_data->getHomeNumber().'<br />'.$client_city->getName().', '.$client_country->getName().'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>
   <tr>
-    <td colspan="3"><h2>'.$pidb_name.' broj: '.str_pad($pidb_data['y_id'], 4, "0", STR_PAD_LEFT).' - '.date('m', strtotime($pidb_data['date'])).'</h2></td>
+    <td colspan="3"><h2>'.$accounting_document__type.' broj: '.str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$accounting_document__data->getDate()->format('m').'</h2></td>
   </tr>
   <tr>
-    <td colspan="3">Datum i mesto izdavanja: '.date('d M Y', strtotime($pidb_data['date'])).'.g. Bačka Palanka</td>
+    <td colspan="3">Datum i mesto izdavanja: '.$accounting_document__data->getDate()->format('d M Y').'.g. Bačka Palanka</td>
   </tr>
 </table>
 ';
@@ -117,10 +131,10 @@ $html = '
 <table border="1" >
   <tr>
     <td width="30px" align="center">red.<br />br.</td>
-    <td '.($pidb_data['tip_id'] == 2 ? 'width="495px"' : 'width="190px"'). ' align="center">naziv proizvoda</td>
+    <td '.($accounting_document__data->getType()->getId() == 2 ? 'width="495px"' : 'width="190px"'). ' align="center">naziv proizvoda</td>
     <td width="35px" align="center">jed.<br />mere</td>
     <td width="53px" align="center">kol.</td>
-    '.($pidb_data['tip_id'] == 2 ? "" : '
+    '.($accounting_document__data->getType()->getId() == 2 ? "" : '
     <td width="70px" align="center">cena po<br />jed. mere</td>
     <td width="37px" align="center">rabat<br />%</td>
     <td width="80px" align="center">poreska<br />osnovica</td>
@@ -139,40 +153,45 @@ $total_tax_base = 0;
 $total_tax_amount = 0;
 $total = 0;
 $total_eur = 0;
-$articles_on_pidb = $pidb->getArticlesOnPidb($pidb_id);
 
-foreach ($articles_on_pidb as $article_on_pidb):
+$ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($accounting_document__id);
+
+foreach ($ad_articles as $ad_article):
     
-    $propertys = $article_on_pidb['propertys'];
+    $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($ad_article->getId());
     $property_temp = '';
     $property_counter = 0;
-    foreach ($propertys as $property):
+    foreach ($ad_a_properties as $ad_a_property):
       $property_counter ++;
-      $property_name = $property['property_name'];
-      $property_quantity = number_format($property['property_quantity'], 2, ",", ".");
+      $property_name = $ad_a_property->getProperty()->getName();
+      $property_quantity = number_format($ad_a_property->getQuantity(), 2, ",", ".");
       $property_temp = $property_temp . ( $property_counter==2 ? 'x' : '' ) .$property_quantity . 'cm';
-      // old $property_temp = $property_temp . ', ' .$property_name . ' ' .$property_quantity . ' cm';
-      // $property_temp = $property_temp . ' x' .$property_quantity . ' cm';
     endforeach;
     
     $count++;
     
+    $ad_a_quantity = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces() );
+
+    $tax_base = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
+
+    $tax_amount = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxAmount($tax_base, $ad_article->getTax() );
+
     $html = '
     <style type="text/css"> table{ padding: 0px; margin: 0px; }</style>
     <table border="0" style="font-size: 10px">
       <tr>
         <td width="30px" align="center">' .$count. '</td>
-        <td '.($pidb_data['tip_id'] == 2 ? 'width="495px"' : 'width="190px"'). '>' .$article_on_pidb['name'] . '<span style="font-size: 7">' . ( $article_on_pidb['note'] == "" ? "" : ', '.$article_on_pidb['note'] ) . '</span>'
-            . '<br />' .$property_temp. ' ' .$article_on_pidb['pieces']. ' kom </td>
-        <td align="center" width="35px">' .$article_on_pidb['unit_name']. '</td>
-        <td width="53px" align="right">'.number_format($article_on_pidb['quantity'], 2, ",", "."). '</td>' 
-        .($pidb_data['tip_id'] == 2 ? "" : '
-            <td width="70px" align="right">' .number_format($article_on_pidb['price']*$article->getKurs(), 2, ",", "."). '</td>
-            <td width="37px" align="right">' .number_format($article_on_pidb['discounts'], 2, ",", "."). '</td>
-            <td width="80px" align="right">' .number_format($article_on_pidb['tax_base']*$article->getKurs(), 2, ",", "."). '</td>
-            <td width="37px" align="right">' .number_format($article_on_pidb['tax'], 2, ",", ".").'</td>
-            <td width="70px" align="right">' .number_format($article_on_pidb['tax_amount']*$article->getKurs(), 2, ",", "."). '</td>
-            <td width="80px" align="right">' .number_format($article_on_pidb['sub_total']*$article->getKurs(), 2, ",", "."). '</td>
+        <td '.($accounting_document__data->getType()->getId() == 2 ? 'width="495px"' : 'width="190px"'). '>' .$ad_article->getArticle()->getName() . '<span style="font-size: 7">' . ( $ad_article->getArticle()->getNote() == "" ? "" : ', '.$ad_article->getArticle()->getNote() ) . '</span>'
+            . '<br />' .$property_temp. ' ' .$ad_article->getPieces(). ' kom </td>
+        <td align="center" width="35px">' .$ad_article->getArticle()->getUnit()->getName(). '</td>
+        <td width="53px" align="right">'.number_format($ad_a_quantity, 2, ",", "."). '</td>' 
+        .($accounting_document__data->getType()->getId() == 2 ? "" : '
+            <td width="70px" align="right">' .number_format( $ad_article->getPrice() * $kurs, 2, ",", "."). '</td>
+            <td width="37px" align="right">' .number_format( $ad_article->getDiscount(), 2, ",", "."). '</td>
+            <td width="80px" align="right">' .number_format( $tax_base * $kurs, 2, ",", "."). '</td>
+            <td width="37px" align="right">' .number_format( $ad_article->getTax(), 2, ",", ".").'</td>
+            <td width="70px" align="right">' .number_format( $tax_amount * $kurs, 2, ",", "."). '</td>
+            <td width="80px" align="right">' .number_format( $sub_total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getSubTotal($tax_base, $tax_amount ) * $kurs, 2, ",", "."). '</td>
         '). '
       </tr>
     </table>
@@ -180,15 +199,16 @@ foreach ($articles_on_pidb as $article_on_pidb):
     
     $pdf->writeHTML($html, true, false, true, false, '');
     
-    $total_tax_base = $total_tax_base + $article_on_pidb['tax_base'];
-    $total_tax_amount = $total_tax_amount + $article_on_pidb['tax_amount'];
+    $total_tax_base = $total_tax_base + $tax_base;
+    $total_tax_amount = $total_tax_amount + $tax_amount;
+    
     $total = $total_tax_base + $total_tax_amount;
     
 endforeach;
 
-$income = $pidb->getIncome($pidb_id);
+$income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($accounting_document__id);
 
-$html = ''.($pidb_data['tip_id'] == 2 ? "" : '
+$html = ''.($accounting_document__data->getType()->getId() == 2 ? "" : '
 <style type="text/css">table {	padding: 0px; margin: 0px; }</style>
 
 <table><tr><td width="685px" colspan="10" style="border-bottom-width: inherit;"></td></tr></table>
@@ -197,31 +217,31 @@ $html = ''.($pidb_data['tip_id'] == 2 ? "" : '
   <tr>
     <td colspan="3" width="265px"></td>
     <td colspan="2" width="135px" style="border-bottom-width: inherit;">ukupno poreska osnovica</td>
-    <td colspan="2" width="100px" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_base*$article->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" width="100px" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_base * $kurs, 2, ",", ".").'</td>
     <td colspan="2" width="105px"></td><td width="80px"></td>
   </tr>
   <tr>
     <td colspan="3"></td>
     <td colspan="4" style="border-bottom-width: inherit;">ukupno iznos PDV-a</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount*$article->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount * $kurs, 2, ",", ".").'</td>
     <td></td>
   </tr>
  <tr>
     <td colspan="3"></td>
     <td colspan="5" style="border-bottom-width: inherit;">UKUPNO</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total*$pidb->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total * $kurs, 2, ",", ".").'</td>
     <td></td>
   </tr>
   <tr>
     <td colspan="3"></td>
     <td colspan="5" style="border-bottom-width: inherit;">Avans</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format(($avans = $pidb->getAvansIncome($pidb_id))*$article->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format(($avans = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAvans($accounting_document__id)) * $kurs, 2, ",", ".").'</td>
     <td></td>
   </tr>
   <tr style="font-weight:bold;">
     <td colspan="3"></td>
     <td colspan="5" style="border-bottom-width: inherit;">OSTALO ZA UPLATU</td>
-    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format(($total-$avans-$income)*$article->getKurs(), 2, ",", ".").'</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format(($total-$avans-$income) * $kurs, 2, ",", ".").'</td>
   </tr>
 
   <tr>
@@ -235,24 +255,24 @@ $html = ''.($pidb_data['tip_id'] == 2 ? "" : '
 
 $pdf->writeHTML($html, true, false, true, false, '');
 
-$html = ''.($pidb_data['tip_id'] == 2 ? "" : '
+$html = ''.($accounting_document__data->getType()->getId() == 2 ? "" : '
 <style type="text/css">table { padding: 0px; margin: 0px; }</style>
 <table>
   <tr><td width="105px">Slovima: </td><td width="580px" style="background-color: #E0E0E0;"></td></tr>
   <tr><td>Način plaćanja: </td>       <td style="background-color: #E0E0E0;">Virmanom - nalogom za prenos</td></tr>
   <tr><td>Rok plaćanja: </td>         <td style="background-color: #E0E0E0;"></td></tr>
-  <tr><td>Poziv na broj: </td>        <td style="background-color: #E0E0E0;">'.str_pad($pidb_data['y_id'], 3, "0", STR_PAD_LEFT).' - '.date('m', strtotime($pidb_data['date'])).'</td></tr>
+  <tr><td>Poziv na broj: </td>        <td style="background-color: #E0E0E0;">'.str_pad($accounting_document__data->getOrdinalNumInyear(), 3, "0", STR_PAD_LEFT).' - '.$accounting_document__data->getDate()->format('m').'</td></tr>
   <tr><td></td></tr>
 </table>
 ').'
 <table border="1">
-  <tr><td width="685px">Napomena:<br />'.nl2br($pidb_data['note']).'</td></tr>
+  <tr><td width="685px">Napomena:<br />'.nl2br($accounting_document__data->getNote()).'</td></tr>
 </table>
 ';
 
 $pdf->writeHTML($html, true, false, true, false, '');
 
-if($pidb_data['tip_id'] == 2){
+if($accounting_document__data->getType()->getId() == 2){
   $html = '
   <table>
     <tr><td></td><td></td><td></td></tr>
@@ -283,7 +303,7 @@ $pdf->lastPage();
 // ---------------------------------------------------------
 
 //Close and output PDF document
-$pdf->Output( $pidb_name .'_'. str_pad($pidb_data['y_id'], 4, "0", STR_PAD_LEFT) .'-'. date('m', strtotime($pidb_data['date'])) .'.pdf', 'I');
+$pdf->Output( $accounting_document__type .'_'. str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) .'-'.$accounting_document__data->getDate()->format('m') .'.pdf', 'I');
 
 //============================================================+
 // END OF FILE                                                

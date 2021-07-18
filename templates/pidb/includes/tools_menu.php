@@ -59,7 +59,7 @@ require 'export.php';
           </button>
 
           <!-- Print Buttons -->
-          <a href="/tcpdf/examples/printPidb.php?pidb_id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
+          <a href="/tcpdf/examples/printAccountingDocument.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
             <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
               <i class="fas fa-print"> </i>
             </button>
