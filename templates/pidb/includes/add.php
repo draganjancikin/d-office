@@ -28,18 +28,3 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
     
   die('<script>location.href = "?view&pidb_id='.$pidb_id.' " </script>');
 }
-
-// duplicate article in document
-if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["duplicateArticleInPidb"])) {
-
-  $pidb_id = htmlspecialchars($_GET["pidb_id"]);
-  $pidb_tip_id = htmlspecialchars($_GET["pidb_tip_id"]);
-
-  // id in table pidb_article
-  $pidb_article_id = htmlspecialchars($_GET["pidb_article_id"]);
-
-  // sledeća metoda duplicira artikal iz pidb_article i property-e iz pidb_article_property
-  $pidb->duplicateArticleInPidb($pidb_article_id);
-
-  die('<script>location.href = "?edit&pidb_id='.$pidb_id.'" </script>');
-}

@@ -32,16 +32,3 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delPidb"]) ) {
 
     die('<script>location.href = "?name=&search" </script>');
 }
-
-// brisanje artikala iz dokumenta
-if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delArticleInPidb"])) {
-    
-    $pidb_id = htmlspecialchars($_GET["pidb_id"]);
-    $pidb_tip_id = htmlspecialchars($_GET["pidb_tip_id"]);
-    $pidb_article_id = htmlspecialchars($_GET["pidb_article_id"]);
-    
-    // sledeća metoda briše i artikal iz pidb_article i property-e iz pidb_article_property
-    $pidb->delArticleFromPidb($pidb_article_id);
-  
-    die('<script>location.href = "?edit&pidb_id='.$pidb_id.'" </script>');
-}

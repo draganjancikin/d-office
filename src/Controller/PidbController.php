@@ -689,6 +689,7 @@ class PidbController extends Database {
      * 
      * @return array
      */
+    /*
     public function duplicateArticleInPidb($pidb_article_id){
 
         $article = $this->getArticleInPidb($pidb_article_id);
@@ -719,7 +720,7 @@ class PidbController extends Database {
         }
 
     }
-
+*/
 
     // za brisanje
     // metoda koja daje prethodni račune koji nisu plaćeni

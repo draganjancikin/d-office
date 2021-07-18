@@ -83,7 +83,7 @@ class AccountingDocumentArticleRepository extends EntityRepository {
     return round( ($tax_base * ($tax/100)), 4 );
   }
 
-   /**
+  /**
    * @param float $tax_base
    * @param float $tax_amount
    */
@@ -91,5 +91,46 @@ class AccountingDocumentArticleRepository extends EntityRepository {
     return $tax_base + $tax_amount;
   }
 
+  /**
+   * Method that duplicate article in document (Accounting Document)
+   * 
+   * @param integer $accounting_document___article__id
+   */
+  public function duplicateArticleInAccountingDocument($accounting_document___article__id){
+    $accounting_document__article = $this->_em->find("\Roloffice\Entity\AccountingDocumentArticle", $accounting_document___article__id);
+
+    $article = $this->_em->find("\Roloffice\Entity\Article", $accounting_document__article->getArticle()->getId());
+        
+    $newAccountingDocumentArticle = new \Roloffice\Entity\AccountingDocumentArticle();
+
+    $newAccountingDocumentArticle->setAccountingDocument($accounting_document__article->getAccountingDocument());
+    $newAccountingDocumentArticle->setArticle($accounting_document__article->getArticle());
+    $newAccountingDocumentArticle->setPieces($accounting_document__article->getPieces());
+    $newAccountingDocumentArticle->setPrice($accounting_document__article->getPrice());
+    $newAccountingDocumentArticle->setDiscount($accounting_document__article->getDiscount());
+    $newAccountingDocumentArticle->setTax($accounting_document__article->getTax());
+    $newAccountingDocumentArticle->setWeight($accounting_document__article->getWeight());
+    $newAccountingDocumentArticle->setNote($accounting_document__article->getNote());
+
+    $this->_em->persist($newAccountingDocumentArticle);
+    $this->_em->flush();
+
+
+    //insert Article properties in table v6__accounting_documents__articles__properties
+    $article_properties = $this->_em->getRepository('\Roloffice\Entity\ArticleProperty')->getArticleProperties($article->getId());
+    
+    foreach ($article_properties as $article_property) {
+      // insert to table v6__accounting_documents__articles__properties
+      $newAccountingDocumentArticleProperty = new \Roloffice\Entity\AccountingDocumentArticleProperty();
+    
+      $newAccountingDocumentArticleProperty->setAccountingDocumentArticle($newAccountingDocumentArticle);
+      $newAccountingDocumentArticleProperty->setProperty($article_property->getProperty());
+      $newAccountingDocumentArticleProperty->setQuantity(0);
+
+      $this->_em->persist($newAccountingDocumentArticleProperty);
+      $this->_em->flush();
+    }
+    
+  }
 
 }
