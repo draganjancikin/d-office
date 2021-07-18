@@ -48,12 +48,7 @@ $pdf->SetFont('dejavusans', '', 10);
 // add a page
 $pdf->AddPage();
 
-// generisanje potrebnih objekata
-$pidb = new \Roloffice\Controller\PidbController();
-$article = new \Roloffice\Controller\ArticleController();
-
 $accounting_document__id = $_GET['accounting_document__id'];
-
 $accounting_document__data = $entityManager->find("\Roloffice\Entity\AccountingDocument", $accounting_document__id);
 
 switch ($accounting_document__data->getType()->getId()) {
