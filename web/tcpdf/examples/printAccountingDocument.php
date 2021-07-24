@@ -112,10 +112,10 @@ $html = '
     <td width="350px">Kupac:<br />'.$client_data->getName().' '.($client_data->getLb()<>""?'<br />PIB '.$client_data->getLb():"").'<br />'.$client_street->getName().' '.$client_data->getHomeNumber().'<br />'.$client_city->getName().', '.$client_country->getName().'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>
   <tr>
-    <td colspan="3"><h2>'.$accounting_document__type.' broj: '.str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$accounting_document__data->getDate()->format('m').'</h2></td>
+    <td colspan="3"><h2>'.$accounting_document__type.' broj: '.str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '. $accounting_document__data->getDate()->format('m') .'</h2></td>
   </tr>
   <tr>
-    <td colspan="3">Datum i mesto izdavanja: '.$accounting_document__data->getDate()->format('d M Y').'.g. Bačka Palanka</td>
+    <td colspan="3">Datum i mesto izdavanja: ' . $accounting_document__data->getDate()->format('d M Y') . '.g. Bačka Palanka</td>
   </tr>
 </table>
 ';
@@ -153,15 +153,15 @@ $ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocume
 
 foreach ($ad_articles as $ad_article):
     
-    $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($ad_article->getId());
-    $property_temp = '';
-    $property_counter = 0;
-    foreach ($ad_a_properties as $ad_a_property):
-      $property_counter ++;
-      $property_name = $ad_a_property->getProperty()->getName();
-      $property_quantity = number_format($ad_a_property->getQuantity(), 2, ",", ".");
-      $property_temp = $property_temp . ( $property_counter==2 ? 'x' : '' ) .$property_quantity . 'cm';
-    endforeach;
+  $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($ad_article->getId());
+  $property_temp = '';
+  $property_counter = 0;
+  foreach ($ad_a_properties as $ad_a_property):
+    $property_counter ++;
+    $property_name = $ad_a_property->getProperty()->getName();
+    $property_quantity = number_format($ad_a_property->getQuantity(), 2, ",", ".");
+    $property_temp = $property_temp . ( $property_counter==2 ? 'x' : '' ) .$property_quantity . 'cm';
+  endforeach;
     
     $count++;
     
@@ -177,16 +177,16 @@ foreach ($ad_articles as $ad_article):
       <tr>
         <td width="30px" align="center">' .$count. '</td>
         <td '.($accounting_document__data->getType()->getId() == 2 ? 'width="495px"' : 'width="190px"'). '>' .$ad_article->getArticle()->getName() . '<span style="font-size: 7">' . ( $ad_article->getArticle()->getNote() == "" ? "" : ', '.$ad_article->getArticle()->getNote() ) . '</span>'
-            . '<br />' .$property_temp. ' ' .$ad_article->getPieces(). ' kom </td>
-        <td align="center" width="35px">' .$ad_article->getArticle()->getUnit()->getName(). '</td>
-        <td width="53px" align="right">'.number_format($ad_a_quantity, 2, ",", "."). '</td>' 
+            . '<br />' .$property_temp. ' ' . $ad_article->getPieces() . ' kom </td>
+        <td align="center" width="35px">' . $ad_article->getArticle()->getUnit()->getName() . '</td>
+        <td width="53px" align="right">'. number_format($ad_a_quantity, 2, ",", "."). '</td>' 
         .($accounting_document__data->getType()->getId() == 2 ? "" : '
-            <td width="70px" align="right">' .number_format( $ad_article->getPrice() * $kurs, 2, ",", "."). '</td>
-            <td width="37px" align="right">' .number_format( $ad_article->getDiscount(), 2, ",", "."). '</td>
-            <td width="80px" align="right">' .number_format( $tax_base * $kurs, 2, ",", "."). '</td>
-            <td width="37px" align="right">' .number_format( $ad_article->getTax(), 2, ",", ".").'</td>
-            <td width="70px" align="right">' .number_format( $tax_amount * $kurs, 2, ",", "."). '</td>
-            <td width="80px" align="right">' .number_format( $sub_total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getSubTotal($tax_base, $tax_amount ) * $kurs, 2, ",", "."). '</td>
+        <td width="70px" align="right">' .number_format( $ad_article->getPrice() * $kurs, 2, ",", "."). '</td>
+        <td width="37px" align="right">' .number_format( $ad_article->getDiscount(), 2, ",", "."). '</td>
+        <td width="80px" align="right">' .number_format( $tax_base * $kurs, 2, ",", "."). '</td>
+        <td width="37px" align="right">' .number_format( $ad_article->getTax(), 2, ",", ".").'</td>
+        <td width="70px" align="right">' .number_format( $tax_amount * $kurs, 2, ",", "."). '</td>
+        <td width="80px" align="right">' .number_format( $sub_total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getSubTotal($tax_base, $tax_amount ) * $kurs, 2, ",", "."). '</td>
         '). '
       </tr>
     </table>
@@ -196,7 +196,6 @@ foreach ($ad_articles as $ad_article):
     
     $total_tax_base = $total_tax_base + $tax_base;
     $total_tax_amount = $total_tax_amount + $tax_amount;
-    
     $total = $total_tax_base + $total_tax_amount;
     
 endforeach;

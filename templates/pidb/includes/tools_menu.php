@@ -73,12 +73,12 @@ require 'export.php';
           <?php
           if($pidb_data->getType()->getId() == 2):
             ?>
-            <a href="/tcpdf/examples/printPidbI.php?pidb_id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
+            <a href="/tcpdf/examples/printAccountingDocumentI.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
               <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                 <i class="fas fa-print"> </i> I
               </button>
             </a>
-            <a href="/tcpdf/examples/printPidbIW.php?pidb_id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
+            <a href="/tcpdf/examples/printAccountingDocumentIW.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
               <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                 <i class="fas fa-print"> </i> IW
               </button>
