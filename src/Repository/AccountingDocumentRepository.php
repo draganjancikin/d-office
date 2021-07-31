@@ -306,11 +306,4 @@ class AccountingDocumentRepository extends EntityRepository {
     return $total;
   }
 
-  /**
-   * 
-   */
-  public function getTotalIncomeByAccountingDocument($accounting_document_id) {
-    return 0;
-  }
-
 }
