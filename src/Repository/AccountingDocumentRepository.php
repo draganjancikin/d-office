@@ -7,14 +7,27 @@ use Doctrine\ORM\EntityRepository;
 class AccountingDocumentRepository extends EntityRepository {
 
   /**
-   * Method that return number of AccountingDocuments
+   * Method that return number of AccountingDocuments with given AccountingDocumentType ID
    *
+   * @param $type_id
+   * 
    * @return int
    */
-  public function getNumberOfAccountingDocuments() {
+  public function getNumberOfAccountingDocuments($type_id = NULL) {
     $qb = $this->_em->createQueryBuilder();
-    $qb->select('count(ad.id)')
+
+    if ($type_id) {
+      // If exist type_id query only AccountingDocument for given type_id
+      $qb->select('count(ad.id)')
+      ->from('Roloffice\Entity\AccountingDocument','ad')
+      ->where(
+        $qb->expr()->eq('ad.type', $type_id),
+      );
+    } else {
+      // If type_id dont exist query all Accounting Document
+      $qb->select('count(ad.id)')
         ->from('Roloffice\Entity\AccountingDocument','ad');
+    }
     $count = $qb->getQuery()->getSingleScalarResult();
     return $count;
   }
@@ -68,7 +81,7 @@ class AccountingDocumentRepository extends EntityRepository {
   /**
    * Methot that return avans income by AccountingDocument
    * 
-   * @param $accd_id
+   * @param int $accd_id
    *  AccountingDocument ID
    * 
    * @return float
@@ -89,7 +102,7 @@ class AccountingDocumentRepository extends EntityRepository {
   /**
    * Method that return income by AccountingDocument
    * 
-   * @param $accd_id
+   * @param int $accd_id
    *  AccountingDocument ID
    * 
    * @return float
@@ -152,7 +165,7 @@ class AccountingDocumentRepository extends EntityRepository {
             $qb->expr()->eq('ad.type', $accd_type_id)
           )
         )
-        ->orderBy('ad.id', 'DESC');
+        ->orderBy('ad.id', 'ASC');
     $query = $qb->getQuery();
     $result = $query->getResult();
     
@@ -160,7 +173,7 @@ class AccountingDocumentRepository extends EntityRepository {
   }
 
   /**
-   * Method that set Ordinal AccountingDocument number in year.
+   * Method that set Ordinal AccountingDocument number in year for given AccountingDocument.
    *
    * @param int $acd_id
    *  AccountingDocument ID
@@ -168,30 +181,28 @@ class AccountingDocumentRepository extends EntityRepository {
    */
   public function setOrdinalNumInYear($acd_id) {
     
-    // count number of records in database table of AccountingDocument
-    $acd_count = $this->getNumberOfAccountingDocuments();
+    // Given AccountingDocument.
+    $acd = $this->_em->find("\Roloffice\Entity\AccountingDocument", $acd_id);
+    // Type of given AccountingDocument.
+    $acd__type_id = $acd->getType()->getId();
     
-    // get ID of last project
-    // TODO: Dragan
-    $id_of_last_acd = $this->getLastAccountingDocument()->getId();
+    // count number of records in database table v6__accounting_documents for given AccountingDocumentType
+    $acd_count = $this->getNumberOfAccountingDocuments($acd__type_id);
 
-    // get year of last project
+    // get year of last AccountingDocument
     $year_of_last_acd = $this->getLastAccountingDocument()->getCreatedAt()->format('Y');
     
-    // get ID of project before last
-    $id_of_acd_before_last = $this->getAccountingDocumentBeforeLast()->getId();
+    // get ordinal number in year of AccountingDocument before last with same type_id
+    $ordinal_number_of_acd_before_last = $this->getAccountingDocumentBeforeLast($acd__type_id)->getOrdinalNumInYear();
+    
+    // year of AccountingDocument before last
+    $year_of_acd_before_last = $this->getAccountingDocumentBeforeLast($acd__type_id)->getCreatedAt()->format('Y');
 
-    // get ordinal number in year of project before last
-    $ordinal_number_of_acd_before_last = $this->getAccountingDocumentBeforeLast()->getOrdinalNumInYear();
-
-    // year of project before last
-    $year_of_acd_before_last = $this->getAccountingDocumentBeforeLast()->getCreatedAt()->format('Y');
-
-    if($acd_count ==0){  // prvi slučaj kada je tabela $table prazna
+    if($acd_count == 0){  // prvi slučaj kada je tabela $table prazna
     
       return die("Table of AccountingDocument is empty!");
     
-    }elseif($acd_count ==1){  // drugi slučaj - kada postoji jedan unos u tabeli $table
+    }elseif($acd_count == 1){  // drugi slučaj - kada postoji jedan unos u tabeli $table
     
       $ordinal_number_in_year = 1; // pošto postoji samo jedan unos u tabelu $table $b_on dobija vrednost '1'
     
@@ -240,16 +251,21 @@ class AccountingDocumentRepository extends EntityRepository {
   }
 
   /**
-   * Method that rerurn ID of AccountingDocument before last in db table
+   * Method that rerurn ID of AccountingDocument before last in db table for given AccountingDocumentType
    *
+   * @param int $type_id
+   * 
    * @return object
    */
-  public function getAccountingDocumentBeforeLast() {
+  public function getAccountingDocumentBeforeLast($type_id) {
 
     $qb = $this->_em->createQueryBuilder();
     $qb->select('ad')
         ->from('Roloffice\Entity\AccountingDocument', 'ad')
         ->orderBy('ad.id', 'DESC')
+        ->where(
+          $qb->expr()->eq('ad.type', $type_id)
+        )
         ->setMaxResults(2);
     $query = $qb->getQuery();
     $accd_before_last = $query->getResult()[1];
