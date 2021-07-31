@@ -7,10 +7,10 @@ require 'edit__article__in__accounting_document.php';
 require 'change__article__in__accounting_document.php';
 require 'duplicate__article__in__accounting_document.php';
 require 'remove__article__from__accounting_document.php';
+require 'export__proforma__to__dispatch.php';
 
 require 'add.php';
 require 'del.php';
-require 'export.php';
 ?>
 <div class="col-lg-12 px-2" id="topMeni">
 

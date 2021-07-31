@@ -74,14 +74,15 @@ class OrderRepository extends EntityRepository {
   }
 
   /**
-   * Undocumented function
+   * Method that set Ordinal Order number in year.
    *
    * @param int $order_id
+   *  Order ID
    * @return void
    */
   public function setOrdinalNumInYear($order_id) {
     
-    // count number of records in database table orders
+    // count number of records in database table v6__orders
     $order_count = $this->getNumberOfOrders();
 
     // get year of last order
