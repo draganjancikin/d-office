@@ -37,17 +37,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
   $entityManager->persist($newPayment);
   $entityManager->flush();
   
-  // TODO: Dragan - Add Payment to AccountingDocument
-  
+  // Add Payment to AccountingDocument
   $accounting_document->getPayments()->add($newPayment);
-  
   $entityManager->flush();
 
-  // echo "transaction in progress ...";
-  // exit();
   /*
-  $client_id = htmlspecialchars($_POST["client_id"]);q
-    
   if ($type_id == 6) {
     $amount = "-".$amount;
   }
