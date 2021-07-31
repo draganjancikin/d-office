@@ -1,11 +1,13 @@
 <?php
 if(isset($_GET['pidb_id'])) :
-    $pidb_id = $_GET['pidb_id'];
-    $pidb_data = $pidb->getPidb($pidb_id);
-    $client_data = $entityManager->find('\Roloffice\Entity\Client',$pidb_data['client_id']);
-    $transactions = $pidb->getTransactionsByPidbId($pidb_id);
-    $total = $pidb->getTotalAmountsByPidbId($pidb_id)['total'];
-    $total_income = $pidb->getAvansIncome($pidb_id) + $pidb->getIncome($pidb_id);
+    $accounting_document_id = $_GET['pidb_id'];
+    $pidb_data = $entityManager->find('\Roloffice\Entity\AccountingDocument', $accounting_document_id);
+    $client_data = $entityManager->find('\Roloffice\Entity\Client',$pidb_data->getClient());
+    $transactions = $pidb_data->getPayments();
+    $total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getTotalAmountsByAccountingDocument($accounting_document_id);
+    $avans = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAvans($accounting_document_id);
+    $income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($accounting_document_id);
+    $total_income = $avans + $income;
 else :
     die('<script>location.href = "/pidb/index.php?transactions" </script>');
 endif;
@@ -16,9 +18,9 @@ endif;
             <div class="card-header p-2">
                 <h6 class="m-0 font-weight-bold text-primary">
                     Transakcije dokumenta: 
-                    <a href="?view&pidb_id=<?php echo $pidb_id ?>">
-                        <?php echo $pidb_data['type_name'] ?>
-                        <?php echo str_pad($pidb_data['y_id'], 4, "0", STR_PAD_LEFT). ' - ' .date('m', strtotime($pidb_data['date'])) ?>
+                    <a href="?view&pidb_id=<?php echo $pidb_data->getId() ?>">
+                        <?php echo $pidb_data->getType()->getName() ?>
+                        <?php echo str_pad($pidb_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT). ' - ' .$pidb_data->getDate()->format('m') ?>
                         <?php echo $client_data->getName() ?>
                     </a>
                 </h6>
@@ -38,7 +40,7 @@ endif;
                         
                         <tbody>
                             <tr>
-                                <td class="text-center"><?php echo date('d-m-Y', strtotime($pidb_data['date'])) ?></td>
+                                <td class="text-center"><?php echo $pidb_data->getDate()->format('d-m-Y') ?></td>
                                 <td class="text-center"></td>
                                 <td class="text-right"><?php echo number_format($total, 4, ",", ".") ?></td>
                                 <td class="text-right"></td>
@@ -48,14 +50,14 @@ endif;
                             foreach($transactions as $transaction) :
                                 ?>
                                 <tr>
-                                    <td class="text-center"><?php echo date('d-m-Y', strtotime($transaction['date'])) ?></td>
-                                    <td class="text-center"><?php echo $transaction['type_name'] ?></td>
+                                    <td class="text-center"><?php echo $transaction->getDate()->format('d-m-Y') ?></td>
+                                    <td class="text-center"><?php echo $transaction->getType()->getName() ?></td>
                                     <td class="text-right">
                                        
                                     </td>
                                     <td class="text-right">
                                         <?php
-                                        echo number_format($transaction['amount'], 4, ",", ".");
+                                        echo number_format($transaction->getAmount(), 4, ",", ".");
                                         ?>
                                     </td>
                                     <td></td>

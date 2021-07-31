@@ -273,4 +273,44 @@ class AccountingDocumentRepository extends EntityRepository {
     return $accd_before_last;
   }
 
+  /**
+   * Total Debit Per Document
+   * Ukupno zaduženje po dokumentu
+   * Total Indebtedness In The Accounting Document
+   * Ukupno zaduženje u računovodstvenom dokumentu
+   * 
+   * @param int $accounting_document_id
+   * @return array
+   */
+  public function getTotalAmountsByAccountingDocument($accounting_document_id) {
+    // Get all Articles in AccountingDocument.
+    $ad_articles = $this->getArticles($accounting_document_id);
+
+    $total_tax_base = 0;
+    $total_tax_amount = 0;
+    
+    foreach ($ad_articles as $ad_article) {
+      // Get AcountingDocument Article quantity
+      $ad_a_quantity = $this->_em->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces() );
+
+      $tax_base = $this->_em->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
+      
+      $tax_amount = $this->_em->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxAmount($tax_base, $ad_article->getTax() );
+
+      $total_tax_base = $total_tax_base + $tax_base;
+      $total_tax_amount = $total_tax_amount + $tax_amount;
+    }
+
+    $total = $total_tax_base + $total_tax_amount;
+
+    return $total;
+  }
+
+  /**
+   * 
+   */
+  public function getTotalIncomeByAccountingDocument($accounting_document_id) {
+    return 0;
+  }
+
 }

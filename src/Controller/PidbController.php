@@ -543,6 +543,7 @@ class PidbController extends Database {
      * @param int $pidb_id
      * @return float
      */
+    /*
     public function getTotalAmountsByPidbId($pidb_id) {
         $all_articles_on_pidb = $this->getArticlesOnPidb($pidb_id);
         $tax_base = $this->sumAllValuesByKey($all_articles_on_pidb, "tax_base");
@@ -550,7 +551,7 @@ class PidbController extends Database {
         $total = $tax_base + $tax_amount;
         return array('tax_base' => $tax_base, 'tax_amount' => $tax_amount, 'total' => $total);
     }
-
+*/
     /**
      * Method that return all avans payments by $pidb_id
      * 
