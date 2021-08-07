@@ -155,7 +155,7 @@ class AccountingDocumentRepository extends EntityRepository {
    * @return object
    */
   public function getNext($accd_id, $accd_type_id){
-    // Create a QueryBilder instance
+    // Create a QueryBilder instance.
     $qb = $this->_em->createQueryBuilder();
     $qb->select('ad')
         ->from('Roloffice\Entity\AccountingDocument', 'ad')
@@ -258,7 +258,7 @@ class AccountingDocumentRepository extends EntityRepository {
    * @return object
    */
   public function getAccountingDocumentBeforeLast($type_id) {
-
+    // Create a QueryBilder instance.
     $qb = $this->_em->createQueryBuilder();
     $qb->select('ad')
         ->from('Roloffice\Entity\AccountingDocument', 'ad')
@@ -304,6 +304,44 @@ class AccountingDocumentRepository extends EntityRepository {
     $total = $total_tax_base + $total_tax_amount;
 
     return $total;
+  }
+
+  /**
+   * Method that return last transactions
+   * 
+   * @param int $limit
+   * 
+   * @return array
+   */
+  public function getLastTransactions($limit){
+    // Create a QueryBilder instance.
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('p')
+        ->from('Roloffice\Entity\Payment', 'p')
+        ->orderBy('p.id', 'DESC')
+        ->setMaxResults($limit);
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    return $result;
+  }
+
+  /**
+   * Method that return AccountingDocuent by Transaction.
+   * 
+   * @param int $transaction_id
+   * 
+   * @return object
+   */
+  public function getAccountingDocumentByTransaction($transaction_id) {
+    // Create a Query.
+    $query = $this->_em->createQuery('SELECT ad, p '
+                                    . 'FROM Roloffice\Entity\AccountingDocument ad '
+                                    . 'JOIN ad.payments p '
+                                    . 'WITH p.id = :payment_id');
+    $query->setParameter('payment_id', $transaction_id);
+    $accounting_documents = $query->getResult();
+    
+    return ($accounting_documents ? $accounting_documents[0] : NULL );
   }
 
 }

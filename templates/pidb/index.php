@@ -51,7 +51,7 @@
                   if(isset($_GET['editArticle']) && isset($_GET['pidb_article_id'])) include '../../templates/pidb/includes/form_edit_article.php';
 
                   if(isset($_GET['transactions']) AND isset($_GET['pidb_id'])) include '../../templates/pidb/includes/transactions__by__accounting_document.php';
-                  if(isset($_GET['transactions']) AND !isset($_GET['pidb_id'])) include '../../templates/pidb/includes/listLastTransactions.php';
+                  if(isset($_GET['transactions']) AND !isset($_GET['pidb_id'])) include '../../templates/pidb/includes/list_last_transactions.php';
 
                   if( isset($_GET['cashRegister']) ) include '../../templates/pidb/includes/cashRegister.php';
 
