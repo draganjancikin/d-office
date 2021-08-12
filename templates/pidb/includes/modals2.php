@@ -12,9 +12,9 @@
 
       <form action="<?php echo $_SERVER['PHP_SELF'] . '?addPayment' ?>" method="post" role="form">
 
-        <input type="hidden" name="pidb_id" value="0">
-        <input type="hidden" name="client_id" value="0">
-        <input type="hidden" name="date" value="<?php echo $pidb->getDate() ?>">
+        <!-- <input type="hidden" name="pidb_id" value="0"> -->
+        <!-- <input type="hidden" name="client_id" value="0"> -->
+        <!-- <input type="hidden" name="date" value="<?php // echo $pidb->getDate() ?>"> -->
 
         <div class="modal-body">
 
@@ -69,7 +69,7 @@
       <form action="<?php echo $_SERVER['PHP_SELF'] . '?addPayment' ?>" method="post" role="form">
         <input type="hidden" name="pidb_id" value="0">
         <input type="hidden" name="client_id" value="0">
-        <input type="hidden" name="date" value="<?php echo $pidb->getDate() ?>">
+        <input type="hidden" name="date" value="<?php // echo $pidb->getDate() ?>">
         
         <div class="modal-body">
 

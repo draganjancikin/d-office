@@ -33,7 +33,7 @@ $daily_cash_saldo = $entityManager->getRepository('\Roloffice\Entity\Payment')->
                 <td><?php echo $transaction->getType()->getName() ?></td>
                 <td>
                   <?php
-                  if ($accounting_document->getOrdinalNumInYear() <> 0): 
+                  if ($accounting_document && $accounting_document->getOrdinalNumInYear() <> 0):
                     ?>
                     <a href="/pidb?view&pidb_id=<?php echo $accounting_document->getId()?>">
                       <?php echo str_pad($accounting_document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?>

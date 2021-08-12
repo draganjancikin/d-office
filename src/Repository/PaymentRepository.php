@@ -172,4 +172,34 @@ class PaymentRepository extends EntityRepository {
     
   }
 
+  /**
+   * Method that check if exist first cash input in current day.
+   * 
+   * @return bool
+   */
+  public function ifExistFirstCashInput() {
+    
+    $from = new \DateTime(date('Y-m-d') . " 00:00:00");
+    $to   = new \DateTime(date('Y-m-d') . " 23:59:59");
+    // Create a QueryBilder instance.
+    $qb = $this->_em->createQueryBuilder();
+    $qb
+      ->select('p')
+      ->from('Roloffice\Entity\Payment', 'p')
+      ->where(
+        $qb->expr()->andX(
+          $qb->expr()->eq('p.type', '5'),
+          $qb->expr()->between('p.created_at', ':from', ':to'),
+        ),
+      )
+      ->setParameter('from', $from )
+      ->setParameter('to', $to);
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    if (empty($result)) {
+      return false;
+    }
+    return true;
+  }
+
 }
