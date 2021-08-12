@@ -163,7 +163,8 @@ require 'del.php';
         if (isset($_GET['date'])) {
           $date = $_GET['date'];
         } else {
-          $date = $pidb->getDate();
+          // $date = $pidb->getDate();
+          $date = date('Y-m-d');
         }
         ?>
         <!--

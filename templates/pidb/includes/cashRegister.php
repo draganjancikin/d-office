@@ -4,8 +4,8 @@ if(isset($_GET['date'])){
 } else {
   $date = "";
 }
-$daily_transactions = $pidb->getDailyCashTransactions($date);
-$daily_cash_saldo = $pidb->getDailyCashSaldo($date);
+$daily_transactions = $entityManager->getRepository('\Roloffice\Entity\Payment')->getDailyCashTransactions($date);
+$daily_cash_saldo = $entityManager->getRepository('\Roloffice\Entity\Payment')->getDailyCashSaldo($date);
 ?>
 <div class="row">
   <div class="col-lg-10 col-md-12">
@@ -27,24 +27,25 @@ $daily_cash_saldo = $pidb->getDailyCashSaldo($date);
             <tbody>
               <?php
             foreach($daily_transactions as $transaction) :
+              $accounting_document = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId());
               ?>
               <tr>
-                <td><?php echo $transaction['type_name'] ?></td>
+                <td><?php echo $transaction->getType()->getName() ?></td>
                 <td>
                   <?php
-                  if ($transaction['pidb_y_id'] <> 0): 
+                  if ($accounting_document->getOrdinalNumInYear() <> 0): 
                     ?>
-                    <a href="/pidb?view&pidb_id=<?php echo $transaction['pidb_id']?>">
-                      <?php echo str_pad($transaction['pidb_y_id'], 4, "0", STR_PAD_LEFT) ?>
-                      <?php echo $transaction['client_name'] ?>
-                      <?php echo $transaction['pidb_title'] ?>
+                    <a href="/pidb?view&pidb_id=<?php echo $accounting_document->getId()?>">
+                      <?php echo str_pad($accounting_document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?>
+                      <?php echo $accounting_document->getClient()->getName() ?>
+                      <?php echo $accounting_document->getTitle() ?>
                     </a>
                     <?php
                   endif;
                   ?>
                 </td>
-                <td><?php echo $transaction['note'] ?></td>
-                <td class="text-right"><?php echo $transaction['amount'] ?></td>
+                <td><?php echo $transaction->getNote() ?></td>
+                <td class="text-right"><?php echo $transaction->getAmount() ?></td>
               </tr>
               <?php
             endforeach;
