@@ -53,7 +53,7 @@ class PaymentRepository extends EntityRepository {
       )
       ->setParameter('from', $from )
       ->setParameter('to', $to)
-      ->orderBy('p.date', 'ASC');
+      ->orderBy('p.id', 'ASC');
     $query = $qb->getQuery();
     $result = $query->getResult();
     return $result;
@@ -151,7 +151,8 @@ class PaymentRepository extends EntityRepository {
             $qb->expr()->eq('p.type', '1'),
             $qb->expr()->eq('p.type', '3'),
             $qb->expr()->eq('p.type', '5'),
-            $qb->expr()->eq('p.type', '6')
+            $qb->expr()->eq('p.type', '6'),
+            $qb->expr()->eq('p.type', '7')
           )
         )
       )

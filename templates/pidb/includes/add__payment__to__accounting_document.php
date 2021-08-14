@@ -1,12 +1,7 @@
 <?php
 // Add Payment to AccountingDocument.
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
-  if ($entityManager->getRepository('Roloffice\Entity\Payment')->ifExistFirstCashInput()) {
-    // TODO Dragan: Created error message
-    echo "Već ste uneli početno stanje!";
-    die();
-  }
-
+  
   // Curent logged User.
   $user_id = $_SESSION['user_id'];
   $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
@@ -14,6 +9,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
   $payment_type_id = htmlspecialchars($_POST["type_id"]);
   $payment_type = $entityManager->find("\Roloffice\Entity\PaymentType", $payment_type_id);
   
+  if ($payment_type_id == 5 && $entityManager->getRepository('Roloffice\Entity\Payment')->ifExistFirstCashInput()) {
+    // TODO Dragan: Created error message
+    ?>
+    <p>Već ste uneli početno stanje!</p>
+    <a href="/pidb/?cashRegister">Povratak na Kasu</a>
+    <?php
+    exit();
+  }
+
   // Date from new payment form.
   if (!isset($_POST["date"])) {
     $date = date('Y-m-d H:i:s');
@@ -31,11 +35,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
   $newPayment = new \Roloffice\Entity\Payment();
   
   $newPayment->setType($payment_type);
-  /*
-  if ($type_id == 6) {
+  
+  if ($payment_type_id == 6 || $payment_type_id == 7) {
     $amount = "-".$amount;
   }
-  */  
+    
   $newPayment->setAmount($amount);
   $newPayment->setDate(new DateTime($date));
   $newPayment->setNote($note);

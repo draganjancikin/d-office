@@ -1,6 +1,8 @@
 <?php
 
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/appConfig.php';
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.php';
 
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
@@ -48,12 +50,15 @@ $pdf->AddPage();
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 
 // generisanje potrebnih objekata
-$pidb = new \Roloffice\Controller\PidbController();
+// $pidb = new \Roloffice\Controller\PidbController();
 
 $date = $_GET['date'];
 
-$daily_transactions = $pidb->getDailyCashTransactions($date);
-$daily_cash_saldo = $pidb->getDailyCashSaldo($date);
+// $daily_transactions = $pidb->getDailyCashTransactions($date);
+// $daily_cash_saldo = $pidb->getDailyCashSaldo($date);
+
+$daily_transactions = $entityManager->getRepository('\Roloffice\Entity\Payment')->getDailyCashTransactions($date);
+$daily_cash_saldo = $entityManager->getRepository('\Roloffice\Entity\Payment')->getDailyCashSaldo($date);
 
 $html = '
   <h1>Dnevni izveštaj</h1>
@@ -72,19 +77,20 @@ $html = '
 $pdf->writeHTML($html, true, false, true, false, '');
 
 foreach($daily_transactions as $transaction):
-  if ($transaction['pidb_id'] <> 0) {
-    $pidb_data = $pidb->getPidb($transaction['pidb_id']);
-    $pidb_data = $pidb_data['y_id']. ' ' .$pidb_data['client_name']. ' ' .$pidb_data['title'];
+  $accounting_document = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId());
+  if ($accounting_document) {
+    // $pidb_data = $pidb->getPidb($transaction['pidb_id']);
+    $accounting_document_data = $accounting_document->getOrdinalNumInYear(). ' ' .$accounting_document->getClient()->getName(). ' ' .$accounting_document->getTitle();
   } else {
-    $pidb_data = "";
+    $accounting_document_data = "";
   }
   $html = '
   <table>
     <tr>
-      <td>' . $transaction['type_name'] . '</td>
-      <td>'.$pidb_data.'</td>
-      <td>' . $transaction['note'] . '</td>
-      <td align="right">' . $transaction['amount'] . '</td>
+      <td>' . $transaction->getType()->getName()  . '</td>
+      <td>'.$accounting_document_data.'</td>
+      <td>' . $transaction->getNote() . '</td>
+      <td align="right">' . $transaction->getAmount() . '</td>
     </tr>
   </table>
   ';
