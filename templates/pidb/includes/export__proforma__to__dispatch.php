@@ -61,49 +61,46 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
     $result = $queryBuilder ->execute();
   }
 
-  // TODO Dragan: Get articles from proforma and save to dispatch.
+  // Get articles from proforma.
+  $proforma_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($proforma->getId());
 
+  // Save articles to dispatch.
 
+  foreach($proforma_articles as $proforma_article) {
+    $newDispatchArticle = new \Roloffice\Entity\AccountingDocumentArticle();
 
+    $newDispatchArticle->setAccountingDocument($newDispatch);
+    $newDispatchArticle->setArticle($proforma_article->getArticle());
+    $newDispatchArticle->setPieces($proforma_article->getPieces());
+    $newDispatchArticle->setPrice($proforma_article->getPrice());
+    $newDispatchArticle->setDiscount($proforma_article->getDiscount());
+    $newDispatchArticle->setTax($proforma_article->getTax());
+    $newDispatchArticle->setWeight($proforma_article->getWeight());
+    $newDispatchArticle->setNote($proforma_article->getNote());
 
+    $entityManager->persist($newDispatchArticle);
+    $entityManager->flush();
 
-  echo "exporting ...";
-  exit();
-
-  /*
-    // get articles from proforma and save to dispatch
-    $result_pidb_articles = $db->connection->query("SELECT * FROM pidb_article WHERE pidb_id = '$pidb_id'") or die(mysqli_error($db->connection));
-    while($row_pidb_article = $result_pidb_articles->fetch_assoc()){
-        $pidb_article_id = $row_pidb_article['id'];
-        $article_id = $row_pidb_article['article_id'];
-        $article_note = $row_pidb_article['note'];
-        $article_pieces = $row_pidb_article['pieces'];
-        $article_price = $row_pidb_article['price'];
-        $article_discounts = $row_pidb_article['discounts'];
-        $article_tax = $row_pidb_article['tax'];
-        $article_weight = $row_pidb_article['weight'];
-
-        $db->connection->query("INSERT INTO pidb_article (pidb_id, article_id, note, pieces, price, discounts, tax, weight) " 
-                        . " VALUES ('$pidb_id_last', '$article_id', '$article_note', '$article_pieces', '$article_price', '$article_discounts', '$article_tax', '$article_weight' )") or die(mysqli_error($db->connection));
-
-        $pidb_article_id_last = $db->connection->insert_id;
-
-        // za svaki artikal u predračunu treba proveriti da li postoji property i ako postoji upisati 
-        // ga i za novootvorenu otpremnicu
-
-        $result_pidb_articles_propertys = $db->connection->query("SELECT * FROM pidb_article_property WHERE pidb_article_id = '$pidb_article_id'") or die(mysqli_error($db->connection));
-        while($row_pidb_articles_property = $result_pidb_articles_propertys->fetch_assoc()){
-            $property_id = $row_pidb_articles_property['property_id'];
-            $quantity = $row_pidb_articles_property['quantity'];
-
-            $db->connection->query("INSERT INTO pidb_article_property (pidb_article_id, property_id, quantity) VALUES ('$pidb_article_id_last', '$property_id', '$quantity' )") or die(mysqli_error($db->connection));
-        }
-
+    // Get $proforma_article properies
+    $proforma_article_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($proforma_article->getId());
+    
+    // Save $proforma_article properies to $newDispatchArticle
+    foreach ($proforma_article_properties as $article_property) {
+      $newDispatchArticleProperty = new \Roloffice\Entity\AccountingDocumentArticleProperty();
+      
+      $newDispatchArticleProperty->setAccountingDocumentArticle($newDispatchArticle);
+      $newDispatchArticleProperty->setProperty($article_property->getProperty());
+      $newDispatchArticleProperty->setQuantity($article_property->getQuantity());
+      $entityManager->persist($newDispatchArticleProperty);
+      $entityManager->flush();
     }
 
-    // proforma go to archive
-    $db->connection->query("UPDATE pidb SET archived='1' WHERE id = '$pidb_id' ") or die(mysqli_error($db->connection));
-    */
+  }
+
+  // Proforma go to archive.
+  // $db->connection->query("UPDATE pidb SET archived='1' WHERE id = '$pidb_id' ") or die(mysqli_error($db->connection));
+  $proforma->setIsArchived(1);
+  $entityManager->flush();
     
   die('<script>location.href = "?view&pidb_id='.$last_accounting_document_id.'" </script>');
 }
