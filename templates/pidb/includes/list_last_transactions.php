@@ -33,7 +33,7 @@ $transactions = $entityManager->getRepository('\Roloffice\Entity\AccountingDocum
                 ?>
                 <tr>
                   <td class="text-center"><?php echo $transaction->getDate()->format('d-m-Y') ?></td>
-                  <td><?php echo $accounting_document->getClient()->getName() ?></td>
+                  <td><?php // echo $accounting_document->getClient()->getName() ?></td>
                   <td>
                     <a href="/pidb/index.php?transactions&pidb_id=<?php echo $accounting_document->getId() ?>">
                       <?php echo $accounting_document->getType()->getName() . " " . str_pad($accounting_document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $accounting_document->getDate()->format('m / Y') ?>

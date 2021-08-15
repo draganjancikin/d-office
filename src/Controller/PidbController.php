@@ -148,21 +148,6 @@ class PidbController extends Database {
         return $documents;
     }
 
-    /**
-     * Method that return last transactions
-     * 
-     * @param int $limit
-     * 
-     * @return array
-     */
-    public function getLastTransactions($limit){
-        $result = $this->get("SELECT $this->transaction_table.id, $this->transaction_table.date, $this->transaction_table.pidb_id, $this->transaction_table.amount, v6_clients.name as client_name, pidb.y_id as pidb_y_id  "
-                            . "FROM $this->transaction_table "
-                            . "JOIN (v6_clients, pidb)"
-                            . "ON ($this->transaction_table.client_id = v6_clients.id AND $this->transaction_table.pidb_id = pidb.id )"
-                            . "ORDER BY id DESC LIMIT $limit ");
-        return $result;
-    }
 
     /**
      * 

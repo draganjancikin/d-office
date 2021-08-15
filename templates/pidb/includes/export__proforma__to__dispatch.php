@@ -38,32 +38,30 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
   
   // Set Ordinal Number In Year.
   $entityManager->getRepository('Roloffice\Entity\AccountingDocument')->setOrdinalNumInYear($last_accounting_document_id);
-
   
-  // @TODO: DRAGAN - payment update (change payment document from proforma to dispatch)
-  // Get proforma payments
+  // Get proforma payments.
   $payments = $proforma->getPayments();
-$i = 1;
+  // Update all payment.
   foreach ($payments as $payment) {
-    echo $i . "------------------------------------ <br>";
-    // var_dump($payments->getAmount());
-    $i++;
+    // TODO Dragan: Rešiti bolje konekciju na bazu.
+    $conn = \Doctrine\DBAL\DriverManager::getConnection([
+      'dbname' => DB_NAME,
+      'user' => DB_USERNAME,
+      'password' => DB_PASSWORD,
+      'host' => DB_SERVER,
+      'driver' => 'mysqli',
+    ]);
+    $queryBuilder = $conn->createQueryBuilder();
+    $queryBuilder
+      ->update('v6__accounting_documents__payments')
+      ->set('accountingdocument_id', ':dispatch')
+      ->where('payment_id = :payment')
+      ->setParameter('dispatch', $last_accounting_document_id)
+      ->setParameter('payment', $payment->getId());
+    $result = $queryBuilder ->execute();
   }
 
-
-die('EVO NAS');
-
-  $accounting_document->setTitle($title);
-  $entityManager->flush();
-
-  // Remove $contact from table v6_client_contacts.
-  $proforma->getPayments()->removeElement($payment);
-
-
-
-
-
-
+  // TODO Dragan: Get articles from proforma and save to dispatch.
 
 
 
@@ -73,12 +71,6 @@ die('EVO NAS');
   exit();
 
   /*
-    $db->connection->query("UPDATE payment "
-                        . "SET pidb_id='$pidb_id_last' "
-                        . "WHERE pidb_id = '$pidb_id' ") or die(mysqli_error($db->connection));
-
-    $y_id = $pidb->setYid($pidb_tip_id);
-
     // get articles from proforma and save to dispatch
     $result_pidb_articles = $db->connection->query("SELECT * FROM pidb_article WHERE pidb_id = '$pidb_id'") or die(mysqli_error($db->connection));
     while($row_pidb_article = $result_pidb_articles->fetch_assoc()){
@@ -112,28 +104,6 @@ die('EVO NAS');
     // proforma go to archive
     $db->connection->query("UPDATE pidb SET archived='1' WHERE id = '$pidb_id' ") or die(mysqli_error($db->connection));
     */
-
-
-
-    /* --------------  OVO VEROVATNO NETREBA -----------------------------------
-    // check if proforma has avans payment, if has then save avans to dispatch
-    
-    $result_pidb_avans = $db->connection->query("SELECT * FROM payment WHERE pidb_id = '$pidb_id'") or die(mysqli_error($db->connection));
-    if($result_pidb_avans->num_rows) {
-
-        // get avans form proforma $pidb_id
-        $row = $result_pidb_avans->fetch_assoc();
-        $date = $row['date'];
-        $payment_type_id = $row['payment_type_id'];
-        $amount = $row['amount'];
-
-        // save avans to dispatch $pidb_id_last
-        $db->connection->query("INSERT INTO payment (date, pidb_id, payment_type_id, amount) VALUES ('$date', '$pidb_id_last', '$payment_type_id', '$amount' )") or die(mysqli_error($db->connection)); 
-    }
-    ----------------------  OVO VEROVATNO NETREBA  -------------------------------------*/
-
-
-
     
   die('<script>location.href = "?view&pidb_id='.$last_accounting_document_id.'" </script>');
 }

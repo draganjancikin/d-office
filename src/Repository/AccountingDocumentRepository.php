@@ -319,7 +319,12 @@ class AccountingDocumentRepository extends EntityRepository {
     $qb->select('p')
         ->from('Roloffice\Entity\Payment', 'p')
         ->where(
-          $qb->expr()->neq('p.type', '5'),
+          $qb->expr()->orX(
+            $qb->expr()->eq('p.type', '1'),
+            $qb->expr()->eq('p.type', '2'),
+            $qb->expr()->eq('p.type', '3'),
+            $qb->expr()->eq('p.type', '4'),
+          ),
         )
         ->orderBy('p.id', 'DESC')
         ->setMaxResults($limit);
