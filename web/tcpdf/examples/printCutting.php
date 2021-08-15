@@ -50,13 +50,7 @@ $pdf->AddPage();
 
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 
-// generisanje potrebnih objekata
-// $client = new \Roloffice\Controller\ClientController();
-// $contact = new \Roloffice\Controller\ContactController();
-// $cutting = new \Roloffice\Controller\CuttingController();
-
 $cutting_sheet_id = $_GET['cutting_id'];
-
 $cutting_data = $order_data = $entityManager->find("\Roloffice\Entity\CuttingSheet", $cutting_sheet_id);
 
 
@@ -68,7 +62,6 @@ $html = '<style type="text/css">table { padding-top: 0px; padding-bottom: 0px; }
 
 $pdf->writeHTML($html, true, false, true, false, '');
 
-
 $picket_number = 0;
 $picket_lenght = 0;
 $total_picket_lenght = 0;
@@ -77,7 +70,7 @@ $total_kap = 0;
 
 $cutting_sheet_articles = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getArticlesOnCuttingSheet($cutting_sheet_id);
 
-// Ovde pocinje petlja iscitavanja artikala iz krojnie liste
+// Ovde pocinje petlja iscitavanja artikala iz krojnie liste.
 foreach ($cutting_sheet_articles as $cutting_sheet_article):
     
     $count = 0;
@@ -90,19 +83,16 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
     $article_space = $cutting_sheet_article->getSpace();
     $article_field_number = $cutting_sheet_article->getNumberOfFields();
 
-    // Izracunavanje broja letvica u zavisnosti od sirine polja
+    // Izracunavanje broja letvica u zavisnosti od sirine polja.
     $number_of_pickets = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getCuttingSheetArticlePicketNumber($cutting_sheet_article->getId());
 
-    // Izracunavanje stvarnog razmaka medju letvicama
-    $real_picket_space = ($cutting_sheet__article_width - $article_picket_width*$picket_number) / ($picket_number+1);
-
-    $duzina_letvica_polja = 0; // reset promenljive
+    // Variable reset.
+    $duzina_letvica_polja = 0;
     
     // Real space between pickets.
     $real_space_between_pickets = ($cutting_sheet__article_width - $number_of_pickets*$article_picket_width)/($number_of_pickets+1);
 
-    
-    // Classic =====================================
+    // Classic =================================================================
     if($cutting_fence_model_id==1){
         
         $count++;
@@ -118,7 +108,7 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
                       <h3>broj polja: '.$article_field_number.'</h3>
                     </td>
                   </tr>
-                  <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td colspan="2">razmak među letvicama: <br />'.number_format($real_picket_space, 1, ",", ".").'mm </td></tr>
+                  <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td colspan="2">razmak među letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
                  </table>
                  <hr />
                  <table>
@@ -128,13 +118,9 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
                  </table>';
         
         $pdf->writeHTML($html, true, false, true, false, '');
-        
     }
     
-    
-    
-    
-    // Alpina ======================================
+    // Alpina ==================================================================
     if($cutting_fence_model_id==2){
         
         $min_max_l = $article_mid_height - $article_height;
@@ -144,12 +130,12 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
         $html = '<hr />
                  <table>
                    <tr><td><h3>model: ALPINA ('.$article_picket_width.'x20mm)</h3></td><td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td></tr>
-                   <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak među letvicama: <br />'.number_format($real_picket_space, 1, ",", ".").'mm </td></tr>
+                   <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak među letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
                  </table>
                  <hr />
                  <table>
-		   <tr><th width="60px">red. br.</th><th width="100px">dužina letvice</th><th>količina</th></tr>
-		 </table>';
+		              <tr><th width="60px">red. br.</th><th width="100px">dužina letvice</th><th>količina</th></tr>
+		            </table>';
         
         $pdf->writeHTML($html, true, false, true, false, '');
         
@@ -176,10 +162,7 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
         
     }
     
-    
-    
-    
-    // Arizona =========================================
+    // Arizona =================================================================
     if($cutting_fence_model_id==3){
         
         $min_max_l = $article_mid_height - $article_height;
@@ -189,14 +172,14 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
         $r = $tetiva / (2*cos(deg2rad($ugao_beta)));
         
         $html = '<hr />
-		 <table>
-		   <tr><td><h3>model: ARIZONA ('.$article_picket_width.'x20mm)</h3></td><td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td></tr>
-		   <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak među letvicama: <br />'.number_format($real_picket_space, 1, ",", ".").'mm </td></tr>
-		 </table>
-		 <hr />
-                 <table>
+                <table>
+                  <tr><td><h3>model: ARIZONA ('.$article_picket_width.'x20mm)</h3></td><td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td></tr>
+                  <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak među letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
+                </table>
+                <hr />
+                <table>
                   <tr><th width="60px">red. br.</th><th width="100px">dužina letvice</th><th>količina</th></tr>
-                 </table>';
+                </table>';
         $pdf->writeHTML($html, true, false, true, false, '');
         
 	for( $i=1; $i<=ceil($number_of_pickets/2); $i++ ){
@@ -225,19 +208,14 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
         
     }
     
-    
-    
-    
-
-    
-    // Pacific =========================================
+    // Pacific =================================================================
     if($cutting_fence_model_id==4){
         $html = '<hr />
-		 <table>
+		            <table>
                    <tr><td><h3>model: PACIFIC ('.$article_picket_width.'x20mm)</h3></td><td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td></tr>
                    <tr><td colspan="4"><hr /></td></tr>
-                   <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak među letvicama: <br />'.number_format($real_picket_space, 1, ",", ".").'mm </td></tr>
-		 </table>
+                   <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak među letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
+		            </table>
                  <hr />';
         $pdf->writeHTML($html, true, false, true, false, '');
         
@@ -276,18 +254,15 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
         }
         $html = '';
         $pdf->writeHTML($html, true, false, true, false, '');
-        
     }
     
-    
-    
-    // Panonka  ======================================
+    // Panonka  ================================================================
     if($cutting_fence_model_id==5){
         $html = '<hr />
                  <table>
                    <tr><td><h3>model: PANONKA ('.$article_picket_width.'x20mm)</h3></td><td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td></tr>
                    <tr><td colspan="4"><hr /></td></tr>
-                   <tr><td>sirina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak medju letvicama: <br />'.number_format($real_picket_space, 1, ",", ".").'mm </td></tr>
+                   <tr><td>sirina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak medju letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
                  </table>
                  <hr />';
         $pdf->writeHTML($html, true, false, true, false, '');
@@ -315,7 +290,7 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
                 $duzina_letvica_polja = $duzina_letvica_polja + $vis_l;
                 $html = '<table>
                            <tr><td width="60px">'.$count.'</td><td width="100px">'.number_format($vis_l, 0, ",", ".").' mm</td><td>1 kom</td></tr>
-			 </table>';
+			                  </table>';
                 $pdf->writeHTML($html, true, false, true, false, '');
             }else{
                 $duzina_letvica_polja = $duzina_letvica_polja + $vis_l*2;
@@ -327,20 +302,11 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
         }
         $html = '';
         $pdf->writeHTML($html, true, false, true, false, '');
-        
     }
     
     
 endforeach;
-
-
-    // $total_picket_lenght = $total_picket_lenght + $duzina_letvica_polja*$article_field_number;
-    // $total_kap = $total_kap + $picket_number*$article_field_number; 
-	  
-	  
-// kraj petlje while za iscitavanje artikala iz tabele cutting_article
-
-
+// kraj petlje za iscitavanje artikala iz tabele cutting_article.
 
 // reset pointer to the last page
 $pdf->lastPage();
@@ -353,4 +319,3 @@ $pdf->Output('rolostil_krojna_lista.pdf', 'I');
 //============================================================+
 // END OF FILE                                                
 //============================================================+
-
