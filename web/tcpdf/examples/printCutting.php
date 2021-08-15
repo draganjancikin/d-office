@@ -100,10 +100,7 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
         $html = '<hr />
                 <table>
                   <tr>
-                    <td>
-                      <h3>model: CLASSIC ('.$article_picket_width.'x20mm)</h3> 
-                      
-                    </td>
+                    <td><h3>model: CLASSIC (letvica '.$article_picket_width.'mm)</h3></td>
                     <td colspan="3">
                       <h3>broj polja: '.$article_field_number.'</h3>
                     </td>
@@ -128,12 +125,15 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
         $ugao_alfa = rad2deg(atan($min_max_l/(($cutting_sheet__article_width-2*$real_space_between_pickets)/2) ));
         
         $html = '<hr />
-                 <table>
-                   <tr><td><h3>model: ALPINA ('.$article_picket_width.'x20mm)</h3></td><td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td></tr>
-                   <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak među letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
-                 </table>
-                 <hr />
-                 <table>
+                <table>
+                  <tr>
+                    <td><h3>model: ALPINA  (letvica '.$article_picket_width.'mm)</h3></td>
+                    <td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td>
+                  </tr>
+                  <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak među letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
+                </table>
+                <hr />
+                <table>
 		              <tr><th width="60px">red. br.</th><th width="100px">dužina letvice</th><th>količina</th></tr>
 		            </table>';
         
@@ -173,7 +173,10 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
         
         $html = '<hr />
                 <table>
-                  <tr><td><h3>model: ARIZONA ('.$article_picket_width.'x20mm)</h3></td><td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td></tr>
+                  <tr>
+                    <td><h3>model: ARIZONA (letvica '.$article_picket_width.'mm)</h3></td>
+                    <td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td>
+                  </tr>
                   <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak među letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
                 </table>
                 <hr />
@@ -212,11 +215,14 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
     if($cutting_fence_model_id==4){
         $html = '<hr />
 		            <table>
-                   <tr><td><h3>model: PACIFIC ('.$article_picket_width.'x20mm)</h3></td><td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td></tr>
-                   <tr><td colspan="4"><hr /></td></tr>
-                   <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak među letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
+                  <tr>
+                    <td><h3>model: PACIFIC (letvica '.$article_picket_width.'mm)</h3></td>
+                    <td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td>
+                  </tr>
+                  <tr><td colspan="4"><hr /></td></tr>
+                  <tr><td>širina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak među letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
 		            </table>
-                 <hr />';
+                <hr />';
         $pdf->writeHTML($html, true, false, true, false, '');
         
         // $raz_l = ($cutting_sheet__article_width - $number_of_pickets*$real_space_between_pickets)/($number_of_pickets+1);
@@ -259,12 +265,15 @@ foreach ($cutting_sheet_articles as $cutting_sheet_article):
     // Panonka  ================================================================
     if($cutting_fence_model_id==5){
         $html = '<hr />
-                 <table>
-                   <tr><td><h3>model: PANONKA ('.$article_picket_width.'x20mm)</h3></td><td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td></tr>
-                   <tr><td colspan="4"><hr /></td></tr>
-                   <tr><td>sirina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak medju letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
-                 </table>
-                 <hr />';
+                <table>
+                  <tr>
+                    <td><h3>model: PANONKA (letvica '.$article_picket_width.'mm)</h3></td>
+                    <td colspan="3"><h3>broj polja: '.$article_field_number.'</h3></td>
+                  </tr>
+                  <tr><td colspan="4"><hr /></td></tr>
+                  <tr><td>sirina polja: <br />'.$cutting_sheet__article_width.'mm</td><td>visina polja: <br />'.$article_height.'mm</td><td>visina sredine polja: <br />'.$article_mid_height.'mm</td><td>razmak medju letvicama: <br />'.number_format($real_space_between_pickets, 1, ",", ".").'mm </td></tr>
+                </table>
+                <hr />';
         $pdf->writeHTML($html, true, false, true, false, '');
         
         $raz_l = ($cutting_sheet__article_width - $number_of_pickets*$article_picket_width)/($number_of_pickets+1);

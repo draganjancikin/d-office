@@ -6,7 +6,7 @@ require 'update__cutting_sheet__article.php';
 require 'remove__article__from__cutting_sheet.php';
 require 'delete__cutting_sheet.php';
 
-require 'export.php';
+require 'export__cutting_sheet__to__accounting_document.php';
 ?>
 <div class="col-lg-12 col-xl-10 px-2" id="topMeni">
   <div class="card mb-2">

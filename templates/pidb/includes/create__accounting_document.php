@@ -13,12 +13,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createAccountingDocumen
   $accd_type_id = htmlspecialchars($_POST["pidb_type_id"]);
   $accd_type = $entityManager->find("\Roloffice\Entity\AccountingDocumentType", $accd_type_id);
   
-  
-
   $title = htmlspecialchars($_POST["title"]);
   $note = htmlspecialchars($_POST["note"]);
 
-  // Save a new AccountingDocument.
+  // Create a new AccountingDocument.
   $newAccountingDocument = new \Roloffice\Entity\AccountingDocument();
 
   $newAccountingDocument->setOrdinalNumInYear($ordinal_num_in_year);
