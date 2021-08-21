@@ -1,6 +1,7 @@
 <?php
 require 'create_project.php';
 require 'update_project.php';
+require 'create_task.php';
 
 require 'add.php';
 require 'edit.php';
@@ -55,7 +56,7 @@ require 'del.php';
 
         <!-- Button, okidač za modal addTask -->
         <a href="#">
-          <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addTask" title="Dodavanje novog zadatka!">
+          <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#createTask" title="Dodavanje novog zadatka!">
             <i class="fas fa-plus"></i> <i class="fa fa-tasks"> </i>
           </button>
         </a>

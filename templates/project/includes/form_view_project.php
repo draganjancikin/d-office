@@ -248,7 +248,7 @@ else:
                                                     </tr>
                                                     <tr>
                                                       <td>izvršilac: </td>
-                                                      <td><?php echo ($project_task->getEmployee()->getName() == "" ? "__________" : $project_task->getEmployee()->getName() )  ?></td>
+                                                      <td><?php echo (empty($project_task->getEmployee()) ? "__________" : $project_task->getEmployee()->getName() )  ?></td>
                                                     </tr>
                                                     <tr>
                                                       <td>end: </td>

@@ -1,5 +1,5 @@
 <!-- Modal: addTask (dodaj zadatak) -->
-<div class="modal fade" id="addTask" tabindex="-1" role="dialog">
+<div class="modal fade" id="createTask" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       
@@ -10,7 +10,7 @@
         </button>
       </div>
 
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?view&project_id=' .$project_id. '&addTask'; ?>" method="post">
+      <form action="<?php echo $_SERVER['PHP_SELF'] . '?view&project_id=' .$project_id. '&createTask' ?>" method="post">
 
         <input type="hidden" name="status_id" value="1">
         
@@ -19,7 +19,7 @@
           <div class="form-group row">
             <label for="selectTip" class="col-sm-3 col-lg-2 col-form-label text-md-right">Tip: </label>
             <div class="col-sm-6">
-              <select id="selectTip" name="tip_id" class="form-control" required="required">
+              <select id="selectTip" name="type_id" class="form-control" required="required">
                 <option value="">Izaberite tip zadatka</option>
                 <option value="1">Merenje</option>
                 <option value="2">Ponuda</option>

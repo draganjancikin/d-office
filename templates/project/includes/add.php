@@ -17,25 +17,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addNote']) ) {
     die('<script>location.href = "?view&project_id=' .$project_id. '" </script>');
 }
 
-// novi zadatak
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addTask']) ) {
-
-    $date = date('Y-m-d h:i:s');
-    $project_id = $_GET["project_id"];
-    $status_id = $_POST["status_id"];
-    $user_id = $_SESSION['user_id'];
-
-    $tip_id = $_POST["tip_id"];
-    $title = htmlspecialchars($_POST['title']);
-
-    $db = new Database();
-
-    $db->connection->query("INSERT INTO project_task (date, project_id, created_at_user_id, tip_id, status_id, title) VALUES ( '$date','$project_id', '$user_id', '$tip_id', '$status_id', '$title' )") or die(mysqli_error($db->connection));
-
-    // ovde link da vodi na pregled projekta
-    die('<script>location.href = "?view&project_id=' .$project_id. '" </script>');
-}
-
 // nova beleška uz zadatak
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addTaskNote']) ) {
 
