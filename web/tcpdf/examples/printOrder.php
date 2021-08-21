@@ -119,7 +119,8 @@ $materials_on_order = $entityManager->getRepository('\Roloffice\Entity\Order')->
 foreach ($materials_on_order as $material_on_order):
     
     // $propertys = $material_on_order['propertys'];
-    $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getPropertiesOnOrderMaterial($material_on_order->getId());
+    // $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getPropertiesOnOrderMaterial($material_on_order->getId());
+    $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getProperties($material_on_order->getId());
     $property_temp = '';
     $property_counter = 0;
     foreach ($material_on_order_properties as $material_on_order_property):
@@ -144,7 +145,7 @@ foreach ($materials_on_order as $material_on_order):
             . ( $material_on_order->getNote() == "" ? "" : ', ' .$material_on_order->getNote() )
             .'<br />'.$property_temp. ' - ' .$material_on_order->getPieces(). (($material_on_order->getMaterial()->getUnit()->getName() == "set" OR $material_on_order->getMaterial()->getUnit()->getName() == "par" ) ? " " .$material_on_order->getMaterial()->getUnit()->getName() : " kom " ).  '</td>
         <td align="center" width="45px">'.$material_on_order->getMaterial()->getUnit()->getName().'</td>
-        <td width="65px" align="right">'.number_format($material_on_order_quantity = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getQuantity($material_on_order->getId(), $material_on_order->getMaterial()->getMinObracMera(), $material_on_order->getPieces()), 2, ",", ".").'</td>
+        <td width="65px" align="right">'.number_format($material_on_order_quantity = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getQuantity($material_on_order->getId(), $material_on_order->getMaterial()->getMinCalcMeasure(), $material_on_order->getPieces() ), 2, ",", ".").'</td>
         
       </tr>
     </table>

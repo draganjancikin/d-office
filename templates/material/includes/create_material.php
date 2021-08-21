@@ -46,7 +46,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createMaterial"])) {
   $newMaterial->setUnit($unit);
   $newMaterial->setWeight($weight);
   $newMaterial->setPrice($price);
-  $newMaterial->setMinObracMera($min_obrac_mera);
+  $newMaterial->setMinCalcMeasure($min_obrac_mera);
   $newMaterial->setNote($note);
   $newMaterial->setCreatedAt(new DateTime("now"));
   $newMaterial->setCreatedByUser($user);

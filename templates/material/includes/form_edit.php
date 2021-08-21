@@ -4,7 +4,7 @@
   <h6 class="m-0 text-dark">Pregled materiala: <strong><?php echo $material->getName() ?></strong></h6>
   </div>
     <div class="card-body p-2">
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterial&id=' .$id; ?>" method="post">
+      <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterial&id=' . $material_id ?>" method="post">
 
         <div class="form-group row">
           <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
@@ -74,7 +74,7 @@
     <?php
     foreach ($material_suppliers as $material_supplier):
       ?>
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterialSupplier&id=' .$id ?>" method="post">
+      <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterialSupplier&id=' .$material_id ?>" method="post">
         <input class="form-control" type="hidden" name="material_supplier_id" value="<?php echo $material_supplier->getId() ?>" />
 
         <div class="form-group row">
@@ -100,7 +100,7 @@
 
           <div class="col-sm-2">
             <button type="submit" class="btn btn-mini btn-success"><i class="fas fa-save"> </i> </button>
-            <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&id=' .$id. '&material_supplier_id=' .$material_supplier->getId(). '&deleteMaterialSupplier'; ?>" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"> </i> </a>
+            <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&id=' .$material_id. '&material_supplier_id=' .$material_supplier->getId(). '&deleteMaterialSupplier'; ?>" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"> </i> </a>
           </div>
 
         </div>
