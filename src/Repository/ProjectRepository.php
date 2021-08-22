@@ -295,6 +295,10 @@ class ProjectRepository extends EntityRepository {
    * 
    * @return array
    */
+  /* ima jednostavniji način
+  ------------------------------------------------------------------------------
+  $task_notes = $entityManager->getRepository('\Roloffice\Entity\ProjectTaskNote')->findBy(array('project_task' => $project_task));
+  ------------------------------------------------------------------------------
   public function getNotesByProjectTask($project_task_id) {
 
     $qb = $this->_em->createQueryBuilder();
@@ -311,5 +315,6 @@ class ProjectRepository extends EntityRepository {
   
     return $result;
   }
+  */
 
 }

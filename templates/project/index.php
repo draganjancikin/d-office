@@ -54,7 +54,7 @@
                 if(isset($_GET['new'])) include '../../templates/project/includes/form_new_project.php';
                 if(isset($_GET['view']) && isset($_GET['project_id'])) include '../../templates/project/includes/form_view_project.php';
                 if(isset($_GET['edit']) && isset($_GET['project_id'])) include '../../templates/project/includes/form_edit_project.php';
-                if(isset($_GET['editTask'])) include '../../templates/project/includes/formEditTask.php';
+                if(isset($_GET['editTask'])) include '../../templates/project/includes/form_edit_task.php';
                       
                 if(isset($_GET['search'])) include '../../app/includes/search.php';
                 if(isset($_GET['advancedSearch'])) include '../../templates/project/includes/advancedSearch.php';

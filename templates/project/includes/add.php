@@ -1,40 +1,5 @@
 <?php
 
-// nova beleška
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addNote']) ) {
-
-    $date = date('Y-m-d h:i:s');
-    $project_id = $_GET["project_id"];
-    $user_id = $_SESSION['user_id'];
-
-    $note = htmlspecialchars($_POST['note']);
-
-    $db = new Database();
-
-    $db->connection->query("INSERT INTO project_note (date, project_id, created_at_user_id, note) VALUES ( '$date','$project_id', '$user_id', '$note' )") or die(mysqli_error($db->connection));
-
-    // ovde link da vodi na pregled projekta
-    die('<script>location.href = "?view&project_id=' .$project_id. '" </script>');
-}
-
-// nova beleška uz zadatak
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addTaskNote']) ) {
-
-    $date = date('Y-m-d h:i:s');
-    $project_id = $_GET["project_id"];
-    $task_id = $_GET["task_id"];
-    $user_id = $_SESSION['user_id'];
-
-    $note = htmlspecialchars($_POST['note']);
-
-    $db = new Database();
-
-    $db->connection->query("INSERT INTO project_task_note (date, project_task_id, created_at_user_id, note) VALUES ( '$date','$task_id', '$user_id', '$note' )") or die(mysqli_error($db->connection));
-
-    // ovde link da vodi na pregled zadatka
-    die('<script>location.href = "?editTask&task_id=' .$task_id. '&project_id=' .$project_id. '" </script>');
-}
-
 // dodavanje fajla
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addFile']) ) {
 

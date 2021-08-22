@@ -1,11 +1,15 @@
 <?php
 require 'create_project.php';
 require 'update_project.php';
+require 'create_project_note.php';
+require 'delete_project_note.php';
 require 'create_task.php';
+require 'update_task.php';
+require 'update_task_start_end.php';
+require 'delete_task.php';
+require 'create_task_note.php';
+require 'delete_task_note.php';
 
-require 'add.php';
-require 'edit.php';
-require 'del.php';
 ?>
 <div class="col-lg-12 px-2" id="topMeni">
   <div class="card mb-2">

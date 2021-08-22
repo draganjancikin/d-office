@@ -260,7 +260,7 @@ else:
                                                     </tr>
                                                     <?php
                                                     $date_temp = "";
-                                                    $task_notes = $entityManager->getRepository('\Roloffice\Entity\Project')->getNotesByProjectTask($project_task->getId());
+                                                    $task_notes = $entityManager->getRepository('\Roloffice\Entity\ProjectTaskNote')->findBy(array('project_task' => $project_task));
                                                     foreach ($task_notes as $task_note):
                                                       ?>
                                                       <tr>

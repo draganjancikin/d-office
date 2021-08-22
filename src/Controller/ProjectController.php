@@ -195,7 +195,7 @@ class ProjectController extends Database {
         return $projects;
     }
 
-
+/*
     // metoda koja daje podatke o zadatku (tasku)
     public function getTask ($task_id){
 
@@ -290,12 +290,13 @@ class ProjectController extends Database {
             }
 
     }
+    */
 
-
+/*
     public function getEmployees (){
         return $this->get("SELECT id, name FROM employee ORDER BY name");
     }
-
+*/
 
     public function delNoteFromProjectTask($project_task_note_id){
         return $this->delete("DELETE FROM project_task_note WHERE id=$project_task_note_id");
