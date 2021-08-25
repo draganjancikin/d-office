@@ -698,26 +698,26 @@ if($page == "projects"):
         <div class="card-body p-2">
             <div class="table-responsive">
                 <table class="dataTable table table-hover" id="" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th class="w-25 text-center">projekti</th>
-                            <!--<th class="px-1 text-center order-status" title="Status projekta">s</th>-->
-                            <th class="w-25 text-center">za realizaciju</th>
-                            <th class="w-25 text-center">u realizaciji</th>
-                            <th class="w-25 text-center">realizovano</th>
-                        </tr>
-                    </thead>
-                    <tfoot class="thead-light">
-                        <tr>
-                            <th class="w-25 text-center">projekti</th>
-                            <!--<th class="px-1 text-center order-status" title="Status projekta">s</th>-->
-                            <th class="w-25 text-center">za realizaciju</th>
-                            <th class="w-25 text-center">u realizaciji</th>
-                            <th class="w-25 text-center">realizovano</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                    <?php
+                  <thead class="thead-light">
+                    <tr>
+                      <th class="w-25 text-center">projekti</th>
+                      <!--<th class="px-1 text-center order-status" title="Status projekta">s</th>-->
+                      <th class="w-25 text-center">za realizaciju</th>
+                      <th class="w-25 text-center">u realizaciji</th>
+                      <th class="w-25 text-center">realizovano</th>
+                    </tr>
+                  </thead>
+                  <tfoot class="thead-light">
+                    <tr>
+                      <th class="w-25 text-center">projekti</th>
+                      <!--<th class="px-1 text-center order-status" title="Status projekta">s</th>-->
+                      <th class="w-25 text-center">za realizaciju</th>
+                      <th class="w-25 text-center">u realizaciji</th>
+                      <th class="w-25 text-center">realizovano</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                  <?php
                     foreach( $project_list as $project_item):
                         if ($project_item->getStatus()->getId() == 1 || $project_item->getStatus()->getId() == 2):
                             $project_id = $project_item->getId();
