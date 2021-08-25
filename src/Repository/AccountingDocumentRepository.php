@@ -352,4 +352,36 @@ class AccountingDocumentRepository extends EntityRepository {
     return ($accounting_documents ? $accounting_documents[0] : NULL );
   }
 
+  /**
+   * Method that return all AccountingDocuments (pidbs) where client name or client name note 
+   * or pidb year ID like $name
+   * 
+   * @param array $arr
+   * @return array
+   */
+  public function search($arr) {
+    
+    $type = $arr[0];
+    $term = $arr[1];
+    $is_archived = $arr[2];
+
+    // Create a QueryBilder instance.
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('ad')
+      ->from('Roloffice\Entity\AccountingDocument', 'ad')
+      ->join('ad.client', 'cl', 'WITH', 'ad.client = cl.id')
+      ->where(
+        $qb->expr()->andX(
+          $qb->expr()->orX(
+            $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
+            $qb->expr()->like('cl.name_note', $qb->expr()->literal("%$term%"))
+          ),
+          $qb->expr()->eq('ad.type', $type),
+          $qb->expr()->eq('ad.is_archived', $is_archived),
+        )
+      );
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    return $result;
+  }
 }

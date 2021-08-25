@@ -47,197 +47,197 @@ if($page == "clients"):
 endif;
 
 if($page == "pidb"):
-    require '../../templates/pidb/includes/del.php';
-    $name = filter_input(INPUT_GET, 'search');
-    $last_pidb_id = $pidb->getlastIdPidb();
-    ?>
-    <div class="card border-info mb-4">
+  require '../../templates/pidb/includes/del.php';
+  $term = filter_input(INPUT_GET, 'search');
+  $last_pidb = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getLastAccountingDocument();
+  ?>
+  <div class="card border-info mb-4">
 
-        <div class="card-header bg-info p-2">
-          <h6 class="m-0 font-weight-bold text-white">Predračun</h6>
-        </div>
-
-        <div class="card-body p-2">
-            <div class="table-responsive">
-                <table class="table table-hover" id="" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>oznaka</th>
-                            <th>naziv klijenta</th>
-                            <th>opis dokumenta</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tfoot class="thead-light">
-                        <tr>
-                            <th>oznaka</th>
-                            <th>naziv klijenta</th>
-                            <th>opis dokumenta</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <?php
-                        $proformas = $pidb->search( array( 1, $name, 0 )); 
-                        foreach ($proformas as $proforma):
-                            ?>
-                            <tr>
-                                <td>
-                                    <a href="?view&pidb_id=<?php echo $proforma['id']; ?>&pidb_tip_id=<?php echo $proforma['tip_id']; ?>">
-                                        P_<?php echo str_pad($proforma['y_id'], 4, "0", STR_PAD_LEFT) . ' - ' . date('m / Y', strtotime($proforma['date'])); ?>
-                                    </a>
-                                </td>
-                                <td><?php echo $proforma['client_name'] ; ?></td>
-                                <td><?php echo $proforma['title']; ?></td>
-                                <td>
-                                  <?php 
-                                  echo ( $proforma['id'] == $last_pidb_id ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '&pidb_tip_id=' .$proforma['tip_id'].'" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
-                                  ?>
-                                </td>
-                            </tr>
-                            <?php
-                        endforeach;
-                        ?> 
-                    </tbody>
-                </table>
-                <h5>Arhivirano</h5>
-                <table class="table table-hover dataTable" id="" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>oznaka</th>
-                            <th>naziv klijenta</th>
-                            <th>opis dokumenta</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tfoot class="thead-light">
-                        <tr>
-                            <th>oznaka</th>
-                            <th>naziv klijenta</th>
-                            <th>opis dokumenta</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                <?php      
-                        // archived
-                        $proformas = $pidb->search( array( 1, $name, 1 )); 
-                        foreach ($proformas as $proforma):
-                            ?>
-                            <tr class="table-secondary">
-                                <td>
-                                  <a href="?view&pidb_id=<?php echo $proforma['id']; ?>&pidb_tip_id=<?php echo $proforma['tip_id']; ?>">
-                                      P_<?php echo str_pad($proforma['y_id'], 4, "0", STR_PAD_LEFT) . ' - ' . date('m / Y', strtotime($proforma['date'])); ?>
-                                  </a>
-                                </td>
-                                <td><?php echo $proforma['client_name']; ?></td>
-                                <td><?php echo $proforma['title']; ?></td>
-                                <td>
-                                  <?php 
-                                  echo ( $proforma['id'] == $last_pidb_id ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
-                                  ?>
-                                </td>
-                            </tr>
-                            <?php
-                        endforeach;
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="card-header bg-info p-2">
+      <h6 class="m-0 font-weight-bold text-white">Predračun</h6>
     </div>
 
-    <div class="card border-secondary mb-4">
+    <div class="card-body p-2">
+      <div class="table-responsive">
+        <table class="table table-hover" id="" width="100%" cellspacing="0">
+          <thead class="thead-light">
+            <tr>
+              <th>oznaka</th>
+              <th>naziv klijenta</th>
+              <th>opis dokumenta</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tfoot class="thead-light">
+            <tr>
+              <th>oznaka</th>
+              <th>naziv klijenta</th>
+              <th>opis dokumenta</th>
+              <th></th>
+            </tr>
+          </tfoot>
+          <tbody>
+            <?php
+            $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 1, $term, 0 ));
+            foreach ($proformas as $proforma):
+              ?>
+              <tr>
+                <td>
+                  <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
+                    P_<?php echo str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $proforma->getDate()->format('m / Y') ?>
+                  </a>
+                </td>
+                <td><?php echo $proforma->getClient()->getName() ?></td>
+                <td><?php echo $proforma->getTitle() ?></td>
+                <td>
+                  <?php 
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma->getId(). '&pidb_type_id=' . $proforma->getType()->getId().'" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  ?>
+                </td>
+              </tr>
+              <?php
+            endforeach;
+            ?> 
+          </tbody>
+        </table>
+        <h5>Arhivirano</h5>
+        <table class="table table-hover dataTable" id="" width="100%" cellspacing="0">
+          <thead class="thead-light">
+            <tr>
+              <th>oznaka</th>
+              <th>naziv klijenta</th>
+              <th>opis dokumenta</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tfoot class="thead-light">
+            <tr>
+              <th>oznaka</th>
+              <th>naziv klijenta</th>
+              <th>opis dokumenta</th>
+              <th></th>
+            </tr>
+          </tfoot>
+          <tbody>
+            <?php      
+            // Archived proforma.
+            $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 1, $term, 1 ));
+            foreach ($proformas as $proforma):
+              ?>
+              <tr class="table-secondary">
+                <td>
+                  <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
+                    P_<?php echo str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' .$proforma->getDate()->format('m / Y') ?>
+                  </a>
+                </td>
+                <td><?php echo $proforma->getClient()->getName() ?></td>
+                <td><?php echo $proforma->getTitle() ?></td>
+                <td>
+                  <?php 
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  ?>
+                </td>
+              </tr>
+              <?php
+            endforeach;
+            ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-        <div class="card-header bg-secondary p-2">
-            <h6 class="m-0 font-weight-bold text-white">Otpremnica</h6>
-        </div>
+  <div class="card border-secondary mb-4">
+
+    <div class="card-header bg-secondary p-2">
+      <h6 class="m-0 font-weight-bold text-white">Otpremnica</h6>
+    </div>
 
         <div class="card-body p-2">
             <div class="table-responsive">
                 <table class="table table-hover" id="" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>oznaka</th>
-                            <th>naziv klijenta</th>
-                            <th>opis dokumenta</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tfoot class="thead-light">
-                        <tr>
-                            <th>oznaka</th>
-                            <th>naziv klijenta</th>
-                            <th>opis dokumenta</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <?php
-                        $proformas = $pidb->search( array( 2, $name, 0 )); 
-                        foreach ($proformas as $proforma):
-                            ?>
-                            <tr>
-                                <td>
-                                  <a href="?view&pidb_id=<?php echo $proforma['id']; ?>&pidb_tip_id=<?php echo $proforma['tip_id']; ?>">
-                                      O_<?php echo str_pad($proforma['y_id'], 4, "0", STR_PAD_LEFT) . ' - ' . date('m / Y', strtotime($proforma['date'])); ?>
-                                  </a>
-                                </td>
-                                <td><?php echo $proforma['client_name'] ; ?></td>
-                                <td><?php echo $proforma['title']; ?></td>
-                                <td>
-                                  <?php 
-                                  echo ( $proforma['id'] == $last_pidb_id ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '&pidb_tip_id=' .$proforma['tip_id'].'" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
-                                  ?>
-                                </td>
-                            </tr>
-                            <?php
-                        endforeach;
-                        ?>
-                    </tbody>
+                  <thead class="thead-light">
+                    <tr>
+                      <th>oznaka</th>
+                      <th>naziv klijenta</th>
+                      <th>opis dokumenta</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tfoot class="thead-light">
+                    <tr>
+                      <th>oznaka</th>
+                      <th>naziv klijenta</th>
+                      <th>opis dokumenta</th>
+                      <th></th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    <?php
+                    $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 2, $term, 0 ));
+                    foreach ($proformas as $proforma):
+                      ?>
+                      <tr>
+                        <td>
+                          <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
+                            O_<?php echo str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $proforma->getDate()->format('m / Y') ?>
+                          </a>
+                        </td>
+                        <td><?php echo $proforma->getClient()->getName() ?></td>
+                        <td><?php echo $proforma->getTitle() ?></td>
+                        <td>
+                          <?php 
+                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma->getId(). '&pidb_type_id=' .$proforma->getType()->getId().'" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                          ?>
+                        </td>
+                      </tr>
+                      <?php
+                    endforeach;
+                    ?>
+                  </tbody>
                 </table>
                 <h5>Arhivirano</h5>
                 <table class="table table-hover dataTable" id="" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>oznaka</th>
-                            <th>naziv klijenta</th>
-                            <th>opis dokumenta</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tfoot class="thead-light">
-                        <tr>
-                            <th>oznaka</th>
-                            <th>naziv klijenta</th>
-                            <th>opis dokumenta</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
-                    <?php
-                        // archived
-                        $proformas = $pidb->search( array( 2, $name, 1 )); 
-                        foreach ($proformas as $proforma):
-                            ?>
-                            <tr class="table-secondary">
-                                <td>
-                                  <a href="?view&pidb_id=<?php echo $proforma['id']; ?>&pidb_tip_id=<?php echo $proforma['tip_id']; ?>">
-                                      O_<?php echo str_pad($proforma['y_id'], 4, "0", STR_PAD_LEFT) . ' - ' . date('m / Y', strtotime($proforma['date'])); ?>
-                                  </a>
-                                </td>
-                                <td><?php echo $proforma['client_name']; ?></td>
-                                <td><?php echo $proforma['title']; ?></td>
-                                <td>
-                                  <?php 
-                                  echo ( $proforma['id'] == $last_pidb_id ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
-                                  ?>
-                                </td>
-                            </tr>
-                            <?php
-                        endforeach;
+                  <thead class="thead-light">
+                    <tr>
+                      <th>oznaka</th>
+                      <th>naziv klijenta</th>
+                      <th>opis dokumenta</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tfoot class="thead-light">
+                    <tr>
+                      <th>oznaka</th>
+                      <th>naziv klijenta</th>
+                      <th>opis dokumenta</th>
+                      <th></th>
+                    </tr>
+                  </tfoot>
+                  <?php
+                  // Archived dispatch.
+                  $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 2, $term, 1 ));
+                  foreach ($proformas as $proforma):
+                    ?>
+                    <tr class="table-secondary">
+                      <td>
+                      <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
+                        O_<?php echo str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $proforma->getDate()->format('m / Y') ?>
+                      </a>
+                      </td>
+                      <td><?php echo $proforma->getClient()->getName() ?></td>
+                      <td><?php echo $proforma->getTitle() ?></td>
+                      <td>
+                        <?php 
+                        echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                         ?>
-                    </tbody>
-                </table>
+                      </td>
+                    </tr>
+                    <?php
+                  endforeach;
+                  ?>
+                </tbody>
+              </table>
             </div>
         </div>
     </div>
@@ -251,64 +251,66 @@ if($page == "pidb"):
         <div class="card-body p-2">
             <div class="table-responsive">
                 <table class="table table-hover" id="" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>oznaka</th>
-                            <th>naziv klijenta</th>
-                            <th>opis dokumenta</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tfoot class="thead-light">
-                        <tr>
-                            <th>oznaka</th>
-                            <th>naziv klijenta</th>
-                            <th>opis dokumenta</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <?php
-                        $proformas = $pidb->search( array( 4, $name, 0 )); 
-                        foreach ($proformas as $proforma):
-                            ?>
-                            <tr>
-                                <td>
-                                    <a href="?view&pidb_id=<?php echo $proforma['id']; ?>&pidb_tip_id=<?php echo $proforma['tip_id']; ?>">
-                                        POV_<?php echo str_pad($proforma['y_id'], 4, "0", STR_PAD_LEFT) . ' - ' . date('m / Y', strtotime($proforma['date'])); ?>
-                                    </a>
-                                </td>
-                                <td><?php echo $proforma['client_name'] ; ?></td>
-                                <td><?php echo $proforma['title']; ?></td>
-                                <td>
-                                    <?php 
-                                    echo ( $proforma['id'] == $last_pidb_id ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '&pidb_tip_id=' .$proforma['tip_id'].'" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
-                                    ?>
-                                </td>
-                            </tr>
-                            <?php
-                        endforeach;
+                  <thead class="thead-light">
+                    <tr>
+                      <th>oznaka</th>
+                      <th>naziv klijenta</th>
+                      <th>opis dokumenta</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tfoot class="thead-light">
+                    <tr>
+                      <th>oznaka</th>
+                      <th>naziv klijenta</th>
+                      <th>opis dokumenta</th>
+                      <th></th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    <?php
+                    $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 4, $term, 0 ));
+                    foreach ($proformas as $proforma):
+                      ?>
+                      <tr>
+                        <td>
+                          <a href="?view&pidb_id=<?php echo $proforma['id']; ?>">
+                            POV_<?php echo str_pad($proforma['y_id'], 4, "0", STR_PAD_LEFT) . ' - ' . date('m / Y', strtotime($proforma['date'])); ?>
+                          </a>
+                        </td>
+                        <td><?php echo $proforma['client_name'] ; ?></td>
+                        <td><?php echo $proforma['title']; ?></td>
+                        <td>
+                          <?php 
+                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '&pidb_tip_id=' .$proforma['tip_id'].'" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                          ?>
+                        </td>
+                      </tr>
+                      <?php
+                    endforeach;
                         
-                        // archived
-                        $proformas = $pidb->search( array( 4, $name, 1 )); 
-                        foreach ($proformas as $proforma):
-                            ?>
-                            <tr class="table-secondary">
-                                <td>
-                                  <a href="?view&pidb_id=<?php echo $proforma['id']; ?>&pidb_tip_id=<?php echo $proforma['tip_id']; ?>">
-                                      POV_<?php echo str_pad($proforma['y_id'], 4, "0", STR_PAD_LEFT) . ' - ' . date('m / Y', strtotime($proforma['date'])); ?></a></td>
-                                <td><?php echo $proforma['client_name']; ?></td>
-                                <td><?php echo $proforma['title']; ?></td>
-                                <td>
-                                    <?php 
-                                    echo ( $proforma['id'] == $last_pidb_id ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
-                                    ?>
-                                </td>
-                            </tr>
-                            <?php
-                        endforeach;
-                        ?>
-                    </tbody>
+                    // Archived.
+                    $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 4, $term, 1 ));
+                    foreach ($proformas as $proforma):
+                      ?>
+                      <tr class="table-secondary">
+                        <td>
+                          <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
+                              POV_<?php echo str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $proforma->getDate()->format('m / Y') ?>
+                          </a>
+                        </td>
+                        <td><?php echo $proforma->getClient()->getName() ?></td>
+                        <td><?php echo $proforma->getTitle() ?></td>
+                        <td>
+                          <?php 
+                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                          ?>
+                        </td>
+                      </tr>
+                      <?php
+                    endforeach;
+                    ?>
+                  </tbody>
                 </table>
             </div>
         </div>
