@@ -57,7 +57,7 @@
                 if(isset($_GET['editTask'])) include '../../templates/project/includes/form_edit_task.php';
                       
                 if(isset($_GET['search'])) include '../../app/includes/search.php';
-                if(isset($_GET['advancedSearch'])) include '../../templates/project/includes/advancedSearch.php';
+                if(isset($_GET['advancedSearch'])) include '../../templates/project/includes/advanced_search.php';
                       
               endif;
               ?>

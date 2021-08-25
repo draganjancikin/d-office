@@ -263,6 +263,43 @@ class ProjectRepository extends EntityRepository {
   
     return $result;
   }
+
+  /**
+   * Method that return all project with client name or client name note like $client
+   * and project title like $title and client city like $city.
+   * 
+   * @param string $client
+   *  Client name.
+   * @param string $title
+   *  Project title.
+   * @param string $city
+   *  City name.
+   * 
+   * @return array
+   */
+  public function advancedSearch($client, $title, $city) {
+    
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('p')
+      ->from('Roloffice\Entity\Project','p')
+      ->join('p.client', 'cl', 'WITH', 'p.client = cl.id')
+      ->join('cl.city', 'ci', 'WITH', 'cl.city = ci.id')
+      ->where(
+        $qb->expr()->andX(
+          $qb->expr()->orX(
+            $qb->expr()->like('cl.name', $qb->expr()->literal("%$client%")),
+            $qb->expr()->like('cl.name_note', $qb->expr()->literal("%$client%")),
+          ),
+          $qb->expr()->like('p.title', $qb->expr()->literal("%$title%")),
+          $qb->expr()->like('ci.name', $qb->expr()->literal("%$city%")),
+        )
+      )
+      ->orderBy('p.ordinal_num_in_year', 'ASC');
+
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    return $result;
+  }
   
   /**
    * Method that return Notes by Project

@@ -40,33 +40,11 @@
 
 <?php
 if (isset($_GET["result"]) ) {
-  $client_name = $_POST["client"];
-  $street_name = $_POST["street"];
-  $city_name = $_POST["city"];
+  $term = $_POST["client"];
+  $street = $_POST["street"];
+  $city = $_POST["city"];
 
-  // Create a QueryBilder instance.
-  $qb = $entityManager->createQueryBuilder();
-  
-  $qb->select('cl')
-      ->from('Roloffice\Entity\Client', 'cl')
-      ->join('cl.street', 's', 'WITH', 'cl.street = s.id')
-      ->join('cl.city', 'c', 'WITH', 'cl.city = c.id')
-      ->where(
-        $qb->expr()->orX(
-          $qb->expr()->like('cl.name', $qb->expr()->literal("%$client_name%")),
-          $qb->expr()->like('cl.name_note', $qb->expr()->literal("%$client_name%"))
-        )
-      )
-      ->andWhere(
-        $qb->expr()->like('s.name', $qb->expr()->literal("%$street_name%"))
-      )
-      ->andWhere(
-        $qb->expr()->like('c.name', $qb->expr()->literal("%$city_name%"))
-      ) 
-      ->orderBy('cl.name', 'ASC');
-
-  $query = $qb->getQuery();
-  $clients_data = $query->getResult();
+  $clients_data = $entityManager->getRepository('\Roloffice\Entity\Client')->advancedSearch($term, $street, $city);
   ?>
   
   <div class="card mb-4">
