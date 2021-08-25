@@ -88,4 +88,25 @@ class ArticleRepository extends EntityRepository {
     return $result;
   } 
 
+  /**
+   * Method that return all Article where name $term.
+   * 
+   * @param string $term
+   * 
+   * @return array
+   */
+  public function search($term) {
+
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('a')
+      ->from('Roloffice\Entity\Article', 'a')
+      ->where(
+        $qb->expr()->like('a.name', $qb->expr()->literal("%$term%")),
+      )
+      ->orderBy('a.name', 'ASC');
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+    return $result;
+  }
+
 }

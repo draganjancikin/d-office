@@ -613,23 +613,23 @@ if($page == "orders"):
 endif;
 
 if($page == "articles"):
-    $name = filter_input(INPUT_GET, 'search');
+    $term = filter_input(INPUT_GET, 'search');
     ?>
     
     <!--  *********** Start OLD CODE **************** -->
     <form class="form-horizontal" role="form" method="get">
         <div class="form-group row">
-            <div class="col-md-5">
-                <select class="form-control" name="group_id">
-                    <option value="0">Izaberi cenovnik</option>
-                    <?php
-                    $article_groups = $article->getArticleGroups();
-                    foreach ($article_groups as $article_group) {
-                        echo '<option value="' .$article_group['id']. '">' .$article_group['name']. '</option>';
-                    }
-                    ?>
-                </select>
-            </div>
+          <div class="col-md-5">
+            <select class="form-control" name="group_id">
+              <option value="0">Izaberi cenovnik</option>
+              <?php
+              $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->findAll();
+              foreach ($article_groups as $article_group) {
+                  echo '<option value="' .$article_group->getId(). '">' .$article_group->getName(). '</option>';
+              }
+              ?>
+            </select>
+          </div>
                 
             <div class="col-sm-5">
                 <button type="submit" class="btn btn-mini btn-outline-secondary" name="priceList" >Prikaži cenovnik</button>
@@ -645,37 +645,38 @@ if($page == "articles"):
         <div class="card-body p-2">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>naziv artikla</th>
-                            <th class="text-center">jed. mere</th>
-                            <th class="text-center">cena <br />(RSD sa PDV-om)</th>
-                            <th class="text-center">cena <br />(EUR sa PDV-om)</th>
-                        </tr>
-                    </thead>
-                    <tfoot class="thead-light">
-                        <tr>
-                            <th>naziv artikla</th>
-                            <th class="text-center">jed. mere</th>
-                            <th class="text-center">cena <br />(RSD sa PDV-om)</th>
-                            <th class="text-center">cena <br />(EUR sa PDV-om)</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <?php
-                        $articles = $article->search($name);
-                        foreach ($articles as $articl):
-                            ?>
-                            <tr>
-                                <td><a href="?view&article_id=<?php echo $articl['id'] ?>" title="<?php echo $articl['note'] ?>"><?php echo $articl['name'] ?></a></td>
-                                <td class="text-center"><?php echo $articl['unit_name'] ?></td>
-                                <td class="text-right"><?php echo number_format( ($articl['price'] * $article->getKurs() * ($article->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
-                                <td class="text-right"><?php echo number_format( ($articl['price'] * ($article->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
-                            </tr>
-                            <?php
-                        endforeach;
-                        ?>
-                    </tbody>    
+                  <thead class="thead-light">
+                    <tr>
+                      <th>naziv artikla</th>
+                      <th class="text-center">jed. mere</th>
+                      <th class="text-center">cena <br />(RSD sa PDV-om)</th>
+                      <th class="text-center">cena <br />(EUR sa PDV-om)</th>
+                    </tr>
+                  </thead>
+                  <tfoot class="thead-light">
+                    <tr>
+                      <th>naziv artikla</th>
+                      <th class="text-center">jed. mere</th>
+                      <th class="text-center">cena <br />(RSD sa PDV-om)</th>
+                      <th class="text-center">cena <br />(EUR sa PDV-om)</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    <?php
+                    $articles = $entityManager->getRepository('\Roloffice\Entity\Article')->search($term);
+                    $preferences = $entityManager->find('\Roloffice\Entity\Preferences', 1);
+                    foreach ($articles as $articl):
+                      ?>
+                      <tr>
+                        <td><a href="?view&article_id=<?php echo $articl->getId() ?>" title="<?php echo $articl->getNote() ?>"><?php echo $articl->getName() ?></a></td>
+                        <td class="text-center"><?php echo $articl->getUnit()->getName() ?></td>
+                        <td class="text-right"><?php echo number_format( ($articl->getPrice() * $preferences->getKurs() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
+                        <td class="text-right"><?php echo number_format( ($articl->getPrice() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
+                      </tr>
+                      <?php
+                    endforeach;
+                    ?>
+                  </tbody>    
                 </table>
             </div>
         </div>

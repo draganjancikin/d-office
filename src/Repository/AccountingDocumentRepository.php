@@ -357,6 +357,7 @@ class AccountingDocumentRepository extends EntityRepository {
    * or pidb year ID like $name
    * 
    * @param array $arr
+   * 
    * @return array
    */
   public function search($arr) {
