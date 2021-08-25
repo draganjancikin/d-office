@@ -55,13 +55,12 @@ $pdf->SetFont('dejavusans', '', 10);
 $pdf->AddPage();
 
 // generisanje potrebnih objekata
-$project = new \Roloffice\Controller\ProjectController();
 
 $project_id = $_GET['project_id'];
-$project_data = $project->getProject($project_id);
+$project = $entityManager->find('Roloffice\Entity\Project', $project_id);
 
-$client_data = $entityManager->find('Roloffice\Entity\Client', $project_data['client_id']);
-$client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
+$client = $entityManager->find('Roloffice\Entity\Client', $project->getClient()->getId());
+$client_city = $entityManager->find('\Roloffice\Entity\City', $client->getCity());
 
 $html = '
   <img src="../images/logo.png" >
@@ -71,9 +70,9 @@ $html = '
   <hr>
   <div>Datum: ______________ Adresa montaže: ___________________________________</div>
   
-  <div>Naručilac: <u>   '.$client_data->getName().', '.$client_city->getName().'   </u></div>
+  <div>Naručilac: <u>   '.$client->getName().', '.$client_city->getName().'   </u></div>
   
-  <div>Ugovor broj: _________________________ Projekat broj: <u>   '.str_pad($project_data['pr_id'], 4, "0", STR_PAD_LEFT).'/'.date('Y', strtotime($project_data['date'])).'   </u></div> 
+  <div>Ugovor broj: _________________________ Projekat broj: <u>   '.str_pad($project->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).'/'.$project->getCreatedAt()->format('Y').'   </u></div> 
   <hr>
   
   <pre style="color: #000000">

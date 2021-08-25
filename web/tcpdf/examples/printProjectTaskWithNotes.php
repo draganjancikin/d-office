@@ -46,20 +46,15 @@ $pdf->SetFont('dejavusans', '', 10);
 // add a page
 $pdf->AddPage();
 
-// generisanje potrebnih objekata
-$project = new \Roloffice\Controller\ProjectController();
-$date = date('d M Y');
-
 $project_id = $_GET['project_id'];
+$project = $entityManager->find('Roloffice\Entity\Project', $project_id);
 
-$project_data = $project->getProject($project_id);
+$client = $entityManager->find('Roloffice\Entity\Client', $project->getClient()->getId());
+$client_country = $entityManager->find('\Roloffice\Entity\Country', $client->getCountry());
+$client_city = $entityManager->find('\Roloffice\Entity\City', $client->getCity());
+$client_street = $entityManager->find('\Roloffice\Entity\Street', $client->getStreet());
 
-$client_data = $entityManager->find('Roloffice\Entity\Client', $project_data['client_id']);
-$client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
-$client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
-$client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
-
-$client_contacts = $client_data->getContacts();
+$client_contacts = $client->getContacts();
     
 $contact_item[0] = "";
 $contact_item[1] = "";
@@ -82,32 +77,32 @@ $html = '
   <style type="text/css">table {padding: 3px 10px 3px 10px; }</style>
   
   <table border="0">
-    <tr><td width="150px"><h3>RADNI NALOG </h3> </td><td width="400px">za projekat #'.str_pad($project_data['pr_id'], 4, "0", STR_PAD_LEFT).'</td><td>'.date('d-M-Y', strtotime($project_data['date'])).'</td></tr>
+    <tr><td width="150px"><h3>RADNI NALOG </h3> </td><td width="400px">za projekat #'.str_pad($project->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).'</td><td>'.$project->getCreatedAt()->format('d-M-Y').'</td></tr>
   </table>
   
   <table border="0">
-    <tr><td width="80px">klijent:</td> <td width="auto">'.$client_data->getName() . ($client_data->getNameNote()<>""?', '.$client_data->getNameNote():"").'</td></tr>
-    <tr><td>adresa:</td>               <td>'.$client_street->getName().' '.$client_data->getHomeNumber().', '.$client_city->getName().', '.$client_country->getName().', '.$client_data->getAddressNote().'</td></tr>
+    <tr><td width="80px">klijent:</td> <td width="auto">'.$client->getName() . ($client->getNameNote()<>""?', '.$client->getNameNote():"").'</td></tr>
+    <tr><td>adresa:</td>               <td>'.$client_street->getName().' '.$client->getHomeNumber().', '.$client_city->getName().', '.$client_country->getName().', '.$client->getAddressNote().'</td></tr>
     <tr><td></td>                      <td>' .$contact_item[0]. '</td></tr>
     ' .( $contact_item[1]=="" ? "" : '<tr><td></td><td>' .$contact_item[1]. '</td></tr>' ). '
   </table>
   
   <table border="1">
-    <tr><td>'.$project_data['title'].'</td></tr>
+    <tr><td>'.$project->getTitle().'</td></tr>
   </table>
 ';
 
 $pdf->writeHTML($html, true, false, true, false, '');
 
-// ispisivanje beležaka uz projekat
-$project_notes = $project->getNotesByProject($project_id);
-foreach ($project_notes as $project_note):
-    
+// Get amd print project notes.
+$date_temp = "";
+$notes = $entityManager->getRepository('\Roloffice\Entity\Project')->getNotesByProject($project_id);
+foreach ($notes as $note):
   $html = '
-    <table><tr><td width="90px">' . date('d-M-Y', strtotime($project_note['date'])) . '</td><td width="695px">'.nl2br($project_note['note']).'</td></tr></table>
+    <table><tr><td width="90px">' . ( $note->getCreatedAt()->format('d-M-Y') != $date_temp ? $note->getCreatedAt()->format('d-M-Y') : "" ) . '</td><td width="695px">'.nl2br($note->getNote()).'</td></tr></table>
   ';
   $pdf->writeHTML($html, true, false, true, false, '');
-    
+  $date_temp = $note->getCreatedAt()->format('d-M-Y');
 endforeach;
                 
 // reset pointer to the last page
@@ -116,7 +111,7 @@ $pdf->lastPage();
 // ---------------------------------------------------------
 
 //Close and output PDF document
-$pdf->Output('nalog_' .$client_data->getName(). '.pdf', 'I');
+$pdf->Output('nalog_' .$client->getName(). '.pdf', 'I');
 
 //============================================================+
 // END OF FILE                                                
