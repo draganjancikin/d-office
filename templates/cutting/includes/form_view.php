@@ -94,9 +94,15 @@
             <td colspan="3">Ukupno letvica (m): </td>
             <td><?php echo number_format($total_picket_lenght/1000,2,".","") ?></td>
             <td colspan="5">
-              <a href="<?php echo $_SERVER['PHP_SELF']. '?exportCuttingSheetToAccountingDocument&cutting_id=' .$cutting_sheet_id. '&total_picket_lenght=' .$total_picket_lenght. '&total_kap=' .$total_kap. '&picket_width=' .$cutting_sheet_article->getPicketWidth(); ?>">
-                <button type="submit" class="btn btn-outline-secondary btn-sm">Otvori novi predracun</button>
-              </a>
+              <?php
+              if ($cutting_sheet_articles):
+                ?>
+                <a href="<?php echo $_SERVER['PHP_SELF']. '?exportCuttingSheetToAccountingDocument&cutting_id=' .$cutting_sheet_id. '&total_picket_lenght=' .$total_picket_lenght. '&total_kap=' .$total_kap. '&picket_width=' . $cutting_sheet_article->getPicketWidth() ?>">
+                  <button type="submit" class="btn btn-outline-secondary btn-sm">Otvori novi predracun</button>
+                </a>
+                <?php
+              endif;
+              ?>
             </td>
             <td></td>
           </tr>
