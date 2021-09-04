@@ -27,7 +27,7 @@ class Article {
   protected $group;
 
   /**
-   * @ORM\Column(type="string", length=48)
+   * @ORM\Column(type="string", length=96)
    * @var string
    */
   protected $name;
