@@ -58,7 +58,7 @@ class AccountingDocument {
   protected $parent;
 
   /**
-   * @ORM\Column(type="string", length=48)
+   * @ORM\Column(type="string", length=64)
    * @var string
    */
   protected $title;
