@@ -2,9 +2,10 @@ RolOffice v4.0.code-workspace
 .vscode/
 
 # Ignore LIVE enviroments files an folders
-/config/dbConfig.live.php
-web/projects/upload/
 /app/config/dbConfig.php
+/config/dbConfig.live.php
+/config/database/
+web/projects/upload/
 
 # Ignore DEV enviroments files an folders
 /config/dbConfig.dev.php
