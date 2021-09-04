@@ -52,7 +52,7 @@ class Order {
   */
 
   /**
-   * @ORM\Column(type="string", length=48)
+   * @ORM\Column(type="string", length=196)
    * @var string
    */
   protected $title;
