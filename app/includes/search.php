@@ -47,7 +47,7 @@ if($page == "clients"):
 endif;
 
 if($page == "pidb"):
-  require '../../templates/pidb/includes/del.php';
+  require '../../templates/pidb/includes/delete_accounting_document.php';
   $term = filter_input(INPUT_GET, 'search');
   $last_pidb = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getLastAccountingDocument();
   ?>
