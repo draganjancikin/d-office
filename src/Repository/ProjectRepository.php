@@ -325,33 +325,4 @@ class ProjectRepository extends EntityRepository {
     return $result;
   }
 
-  /**
-   * Method that return all notes by ProjectTask
-   * 
-   * @param int $project_task_id
-   * 
-   * @return array
-   */
-  /* ima jednostavniji način
-  ------------------------------------------------------------------------------
-  $task_notes = $entityManager->getRepository('\Roloffice\Entity\ProjectTaskNote')->findBy(array('project_task' => $project_task));
-  ------------------------------------------------------------------------------
-  public function getNotesByProjectTask($project_task_id) {
-
-    $qb = $this->_em->createQueryBuilder();
-
-    $qb->select('ptn')
-      ->from('Roloffice\Entity\ProjectTaskNote','ptn')
-      ->where(
-        $qb->expr()->eq("ptn.project_task", "$project_task_id")
-      )
-      ->orderBy('ptn.created_at', 'ASC');;
-
-    $query = $qb->getQuery();
-    $result = $query->getResult();
-  
-    return $result;
-  }
-  */
-
 }
