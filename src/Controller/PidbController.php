@@ -537,21 +537,7 @@ class PidbController extends Database {
         return array('tax_base' => $tax_base, 'tax_amount' => $tax_amount, 'total' => $total);
     }
 */
-    /**
-     * Method that return all avans payments by $pidb_id
-     * 
-     * @param integer $pidb_id
-     * 
-     * @return float
-     */
-    /*
-     public function getAvansIncome($pidb_id){
-        $result = $this->get("SELECT amount FROM payment WHERE pidb_id = '$pidb_id' AND (type_id = 1 OR type_id = 2) ");
-        $avans = $this->sumAllValuesByKey($result, "amount");
-        return $avans;
-    }
-    */
-
+    
     /**
      * Method that return all income payments by $pidb_id
      * 
