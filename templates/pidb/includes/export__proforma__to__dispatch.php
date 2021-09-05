@@ -97,10 +97,19 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
 
   }
 
-  // Proforma go to archive.
-  // $db->connection->query("UPDATE pidb SET archived='1' WHERE id = '$pidb_id' ") or die(mysqli_error($db->connection));
+  // Set Proforma to archive.
   $proforma->setIsArchived(1);
   $entityManager->flush();
+
+  // Check if proforma belong to any Project
+  // TODO Dragan: ako proforma pripada nekom projektu pridružiti i otpremnicu tom projektu
+  $project = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getProjectByAccountingDocument($proforma->getId());
+
+  if($project) {
+    // Set same project to dispatch.
+    $project->getAccountingDocuments()->add($newDispatch);
+    $entityManager->flush();
+  }
     
   die('<script>location.href = "?view&pidb_id='.$last_accounting_document_id.'" </script>');
 }
