@@ -141,7 +141,7 @@ foreach ($materials_on_order as $material_on_order):
         <td width="35px" align="center">'.$count.'</td>
         <td width="100px" class="center">' . ' ' . '</td>
 
-        <td width="440px">'.$material_on_order->getNote()
+        <td width="440px">'.$material_on_order->getMaterial()->getName()
             . ( $material_on_order->getNote() == "" ? "" : ', ' .$material_on_order->getNote() )
             .'<br />'.$property_temp. ' - ' .$material_on_order->getPieces(). (($material_on_order->getMaterial()->getUnit()->getName() == "set" OR $material_on_order->getMaterial()->getUnit()->getName() == "par" ) ? " " .$material_on_order->getMaterial()->getUnit()->getName() : " kom " ).  '</td>
         <td align="center" width="45px">'.$material_on_order->getMaterial()->getUnit()->getName().'</td>
