@@ -2,4 +2,4 @@
 
 Web Application
 
-Comunication with database: Doctrine 2.8.4
+Comunication with database: Doctrine 2.8.5
