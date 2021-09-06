@@ -1,4 +1,5 @@
 <?php
+require 'add.php';
 require 'create_project.php';
 require 'update_project.php';
 require 'create_project_note.php';
