@@ -91,7 +91,7 @@ if($page == "pidb"):
                 <td><?php echo $proforma->getTitle() ?></td>
                 <td>
                   <?php 
-                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma->getId(). '&pidb_type_id=' . $proforma->getType()->getId().'" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                   ?>
                 </td>
               </tr>
@@ -134,7 +134,7 @@ if($page == "pidb"):
                 <td><?php echo $proforma->getTitle() ?></td>
                 <td>
                   <?php 
-                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                   ?>
                 </td>
               </tr>
@@ -187,7 +187,7 @@ if($page == "pidb"):
                         <td><?php echo $proforma->getTitle() ?></td>
                         <td>
                           <?php 
-                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma->getId(). '&pidb_type_id=' .$proforma->getType()->getId().'" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                           ?>
                         </td>
                       </tr>
@@ -229,7 +229,7 @@ if($page == "pidb"):
                       <td><?php echo $proforma->getTitle() ?></td>
                       <td>
                         <?php 
-                        echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                        echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                         ?>
                       </td>
                     </tr>
@@ -282,7 +282,7 @@ if($page == "pidb"):
                         <td><?php echo $proforma['title']; ?></td>
                         <td>
                           <?php 
-                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '&pidb_tip_id=' .$proforma['tip_id'].'" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' . $_SERVER['PHP_SELF'] . '?search&deleteAccountingDocument&acc_doc_id=' . $proforma['id'] . '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                           ?>
                         </td>
                       </tr>
@@ -303,7 +303,7 @@ if($page == "pidb"):
                         <td><?php echo $proforma->getTitle() ?></td>
                         <td>
                           <?php 
-                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?search&delPidb&pidb_id=' .$proforma['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a href="' . $_SERVER['PHP_SELF'] . '?search&deleteAccountingDocument&acc_doc_id=' . $proforma['id'] . '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                           ?>
                         </td>
                       </tr>

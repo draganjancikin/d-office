@@ -1,34 +1,94 @@
 <?php
 // Delete Acconting Document.
-if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delPidb"]) ) {
-    echo "Deleting has been soon ...";
-    exit();
-    
-    $pidb_id = htmlspecialchars($_GET["pidb_id"]);
-    $pidb_tip_id = htmlspecialchars($_GET["pidb_type_id"]);
+if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["deleteAccountingDocument"]) ) {
+  
+  $acc_doc_id = htmlspecialchars($_GET["acc_doc_id"]);
+  
+  // Check if exist AccountingDocument.
+  if ($accounting_document = $entityManager->find("\Roloffice\Entity\AccountingDocument", $acc_doc_id)) {
+  
+    // Check if AccountingDocument have Payments, where PaymentType is Income.
+    if ( $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getPaymentsByIncome($acc_doc_id) ) {
+          
+      echo "Brisanje dokumenta nije moguće jer postoje uplate vezane za ovaj dokument!";
+      exit();
 
-    $db = new Database();
+    } else {
+      
+      // Parent Accounting Document update.
+      // Check if parent exist.
+      if ($parent = $accounting_document->getParent()) {
 
-    // brisanje artikala dokumenta iz tabele pidb_article i brisanje property-a iz pidb_article_property
-    $result_pidb_articles = $db->connection->query("SELECT * FROM pidb_article WHERE pidb_id='$pidb_id'") or die(mysqli_error($db->connection));
-    while($row_pidb_article = mysqli_fetch_array($result_pidb_articles)){
-        $pidb_article_id = $row_pidb_article['id'];
-        // sledeća metoda briše i artikal iz pidb_article i property-e iz pidb_article_property
-        $pidb->delArticleFromPidb($pidb_article_id);
+        // Update Payments.
+        // Get all AccountingDocument Payments.
+        $payments = $accounting_document->getPayments();
+
+        // Update all payment.
+        foreach ($payments as $payment) {
+          // TODO Dragan: Rešiti bolje konekciju na bazu.
+          $conn = \Doctrine\DBAL\DriverManager::getConnection([
+            'dbname' => DB_NAME,
+            'user' => DB_USERNAME,
+            'password' => DB_PASSWORD,
+            'host' => DB_SERVER,
+            'driver' => 'mysqli',
+          ]);
+          $queryBuilder = $conn->createQueryBuilder();
+          $queryBuilder
+            ->update('v6__accounting_documents__payments')
+            ->set('accountingdocument_id', ':parent')
+            ->where('payment_id = :payment')
+            ->setParameter('parent', $parent->getId())
+            ->setParameter('payment', $payment->getId());
+          $result = $queryBuilder ->execute();
+        }
+
+        // Set Parent to active
+        $parent->setIsArchived(0);
+        $entityManager->flush();
+        
+      } else {
+
+        if ( $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getPaymentsByAvans($acc_doc_id) ){
+        
+          echo "Brisanje dokumenta nije moguće jer postoje avansi vezani za ovaj dokument!";
+          exit();
+
+        }
+
+      }
+
     }
 
-    // get parent_id from pidb_id
-    $result_parent_id = $db->connection->query("SELECT parent_id FROM pidb WHERE id = '$pidb_id' ") or die(mysqli_error($db->connection));
-    $row_parent_id =  mysqli_fetch_array($result_parent_id);
-    $parent_id = $row_parent_id['parent_id'];
+    // Check if exist Articles in AccountingDocument.
+    if ($accounting_document__articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->findBy(array('accounting_document' => $acc_doc_id), array())) {
 
-    // update payment where pidb_id = $pidb_id
-    $db->connection->query("UPDATE payment "
-                        . "SET pidb_id='$parent_id' "
-                        . "WHERE pidb_id = '$pidb_id' ") or die(mysqli_error($db->connection));
+      // Loop trough all articles.
+      foreach ($accounting_document__articles as $accounting_document__article) {
 
-    // brisanje dokumenta iz tabele pidb
-    $db->connection->query("DELETE FROM pidb WHERE id='$pidb_id' ") or die(mysqli_error($db->connection));
+        // Check if exist Properties in AccontingDocument Article.
+        if ($accounting_document__article__properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $accounting_document__article))) {
 
-    die('<script>location.href = "?name=&search" </script>');
+          // Remove AccountingDocument Article Properties.
+          foreach ($accounting_document__article__properties as $accounting_document__article__property) {
+            $entityManager->remove($accounting_document__article__property);
+            $entityManager->flush();
+          }
+
+        }
+
+        // Delete Article from AccountingDocument.
+        $entityManager->remove($accounting_document__article);
+        $entityManager->flush();
+
+      }
+
+    }
+
+    // Delete AccountingDocument.
+    $entityManager->remove($accounting_document);
+    $entityManager->flush();
+  }
+
+  die('<script>location.href = "?name=&search" </script>');
 }

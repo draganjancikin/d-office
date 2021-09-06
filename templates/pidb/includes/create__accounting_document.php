@@ -43,18 +43,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createAccountingDocumen
 
 
   if(isset($_POST["project_id"])) {
-    // $project_id = htmlspecialchars($_POST["project_id"]);
-    /*
-    $accounting_document_id = $GET['accounting_document_id'];
-    $accounting_document = $entityManager->find("\Roloffice\Entity\AccountingDocument", $accounting_document_id);
+    $project_id = htmlspecialchars($_POST["project_id"]);
+    $project = $entityManager->find("\Roloffice\Entity\Project", $project_id);
 
-    $newProject->getAccountingDocuments()->add($accounting_document);
+    $project->getAccountingDocuments()->add($newAccountingDocument);
   
     $entityManager->flush();
-    */
+    
   } else {
     $project_id = NULL;
   }
 
-  die('<script>location.href = "?view&pidb_id='.$new_accounting_document_id.'&pidb_tip_id='.$accd_type_id.'" </script>');
+  die('<script>location.href = "?view&pidb_id=' . $new_accounting_document_id . '" </script>');
 }

@@ -385,4 +385,68 @@ class AccountingDocumentRepository extends EntityRepository {
     $result = $query->getResult();
     return $result;
   }
+
+  /**
+   * Method that return Project by AccontingDocument
+   * 
+   * @param int $acc_doc_id
+   * 
+   * @return object
+   */
+  public function getProjectByAccountingDocument($acc_doc_id) {
+    // Create a Query.
+    $query = $this->_em->createQuery('SELECT p, acd '
+                                    . 'FROM Roloffice\Entity\Project p '
+                                    . 'JOIN p.accounting_documents acd '
+                                    . 'WITH acd.id = :acc_doc_id');
+    $query->setParameter('acc_doc_id', $acc_doc_id);
+    $project = $query->getResult();
+    
+    return ($project ? $project[0] : NULL );
+  }
+
+  /**
+   * Method that return AccountingDocument Payments by PaymentTypes Income.
+   * 
+   * @param int $acc_doc_id
+   * @param array $payment_types
+   * 
+   * @return array
+   */
+  public function getPaymentsByIncome($acc_doc_id) {
+
+    $acc_doc = $this->_em->find('\Roloffice\Entity\AccountingDocument', $acc_doc_id);
+    $payments = $acc_doc->getPayments();
+    
+    foreach ($payments as $payment) {
+      if ($payment->getType()->getId() == 3 || $payment->getType()->getId() == 4) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Method that return AccountingDocument Payments by PaymentTypes Avans.
+   * 
+   * @param int $acc_doc_id
+   * @param array $payment_types
+   * 
+   * @return array
+   */
+  public function getPaymentsByAvans($acc_doc_id) {
+
+    $acc_doc = $this->_em->find('\Roloffice\Entity\AccountingDocument', $acc_doc_id);
+    $payments = $acc_doc->getPayments();
+    
+    foreach ($payments as $payment) {
+      if ($payment->getType()->getId() == 1 || $payment->getType()->getId() == 2) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
 }

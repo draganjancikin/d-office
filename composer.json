@@ -1,6 +1,6 @@
 {
   "name": "rolostil/roloffice",
-  "version": "5.3.5",
+  "version": "6.0.0",
   "type": "project",
   "description": "Web application for Rolostil company.",
   "keywords": [
@@ -24,6 +24,6 @@
     }
   },
   "require": {
-    "doctrine/orm": "2.8.4"
+    "doctrine/orm": "2.8.5"
   }
 }
