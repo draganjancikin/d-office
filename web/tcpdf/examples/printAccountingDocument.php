@@ -176,7 +176,7 @@ foreach ($ad_articles as $ad_article):
     <table border="0" style="font-size: 10px">
       <tr>
         <td width="30px" align="center">' .$count. '</td>
-        <td '.($accounting_document__data->getType()->getId() == 2 ? 'width="495px"' : 'width="190px"'). '>' .$ad_article->getArticle()->getName() . '<span style="font-size: 7">' . ( $ad_article->getArticle()->getNote() == "" ? "" : ', '.$ad_article->getArticle()->getNote() ) . '</span>'
+        <td '.($accounting_document__data->getType()->getId() == 2 ? 'width="495px"' : 'width="190px"'). '>' .$ad_article->getArticle()->getName() . '<span style="font-size: 7">' . ( $ad_article->getNote() == "" ? "" : ', '.$ad_article->getNote() ) . '</span>'
             . '<br />' .$property_temp. ' ' . $ad_article->getPieces() . ' kom </td>
         <td align="center" width="35px">' . $ad_article->getArticle()->getUnit()->getName() . '</td>
         <td width="53px" align="right">'. number_format($ad_a_quantity, 2, ",", "."). '</td>' 
