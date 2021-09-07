@@ -46,15 +46,33 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['createProject']) ) {
   // Set Ordinal Number In Year.
   $entityManager->getRepository('Roloffice\Entity\Project')->setOrdinalNumInYear($new_project_id);
   
-  // TODO: ako se otvara novi projekat iz accounting documenta preuzeti accounting document ID i upisati u Project (getAccountingDocuments()->add($newAccountingDocument) )
+  if (isset($_POST['acc_doc_id'])) {
 
-  if (isset($_GET['accounting_document_id'])) {
-    $accounting_document_id = $GET['accounting_document_id'];
-    $accounting_document = $entityManager->find("\Roloffice\Entity\AccountingDocument", $accounting_document_id);
+    $acc_doc_id = $_POST['acc_doc_id'];
+    // Insert Project and AccountingDocument to table v6__projects__accounting_documents
 
-    $newProject->getAccountingDocuments()->add($accounting_document);
-  
-    $entityManager->flush();
+    // TODO Dragan: Rešiti bolje konekciju na bazu.
+    $conn = \Doctrine\DBAL\DriverManager::getConnection([
+      'dbname' => DB_NAME,
+      'user' => DB_USERNAME,
+      'password' => DB_PASSWORD,
+      'host' => DB_SERVER,
+      'driver' => 'mysqli',
+    ]);
+    $queryBuilder = $conn->createQueryBuilder();
+    
+    $queryBuilder
+      ->insert('v6__projects__accounting_documents')
+      ->values(
+        array(
+            'project_id' => ':project',
+            'accountingdocument_id' => ':accountingdocument'
+        )
+      )
+      ->setParameter('project', $new_project_id)
+      ->setParameter('accountingdocument', $acc_doc_id);
+
+    $result = $queryBuilder ->execute();
   }
 
   die('<script>location.href = "?view&project_id=' .$new_project_id. '" </script>');
