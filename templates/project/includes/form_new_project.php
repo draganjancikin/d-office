@@ -11,10 +11,10 @@
         <form action="<?php echo $_SERVER['PHP_SELF'] . '?createProject'; ?>" method="post">
 
           <?php
-          if( isset($_GET['pidb_id']) ):
+          if( isset($_GET['acc_doc_id']) ):
             // hiden input for $pidb_id
             ?>
-            <input type="hidden" name="pidb_id" value="<?php echo $_GET['pidb_id'] ?>">
+            <input type="hidden" name="acc_doc_id" value="<?php echo $_GET['acc_doc_id'] ?>">
             <?php
             endif;
           ?>
