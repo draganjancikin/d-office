@@ -152,8 +152,10 @@ $total_eur = 0;
 $ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($accounting_document__id);
 
 foreach ($ad_articles as $ad_article):
-    
-  $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($ad_article->getId());
+
+  // TODO DRAGAN: Remove unnecessary code.
+  // $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($ad_article->getId());
+  $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article->getId()), array());
   $property_temp = '';
   $property_counter = 0;
   foreach ($ad_a_properties as $ad_a_property):
