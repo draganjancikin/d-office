@@ -15,7 +15,6 @@ class ArticleGroupRepository extends EntityRepository {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('ag')
       ->from('Roloffice\Entity\ArticleGroup', 'ag')
-      
       ->where(
         $qb->expr()->neq('ag.id', '1')
       )

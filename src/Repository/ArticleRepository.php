@@ -31,6 +31,8 @@ class ArticleRepository extends EntityRepository {
   /**
    * Method that return last $limit Articles
    * 
+   * @param int $limit
+   * 
    * @return array
    */
   public function getLastArticles($limit = 5) {
@@ -45,7 +47,11 @@ class ArticleRepository extends EntityRepository {
   }
 
   /**
+   * Method that return all Article in ArticleGroup by $group_id.
    * 
+   * @param int $group_id
+   * 
+   * @return array
    */
   public function getArticlesByGroup($group_id) {
     // Create a QueryBilder instance
@@ -61,6 +67,7 @@ class ArticleRepository extends EntityRepository {
     return $result;
   }
 
+  // TODO Dragan: Remove unnecessary code.
   /**
    * Method that return Article Properties
    * 
@@ -68,25 +75,24 @@ class ArticleRepository extends EntityRepository {
    * 
    * @return array
    */
-  public function getArticleProperties($article_id) {
-    // Create a QueryBilder instance
-    $qb = $this->_em->createQueryBuilder();
-    /*
-    $qb->select('ap, pr')
-      ->from('Roloffice\Entity\ArticleProperty', 'ap')
-      ->join('ap.property', 'pr', 'WITH', 'ap.property = pr.id')
-      ->where(
-        $qb->expr()->eq('ap.article', $article_id),
-      )
-      ->distinct();
-      */
-    
+  // public function getArticleProperties($article_id) {
+  //   // Create a QueryBilder instance
+  //   $qb = $this->_em->createQueryBuilder();
+  //   /*
+  //   $qb->select('ap, pr')
+  //     ->from('Roloffice\Entity\ArticleProperty', 'ap')
+  //     ->join('ap.property', 'pr', 'WITH', 'ap.property = pr.id')
+  //     ->where(
+  //       $qb->expr()->eq('ap.article', $article_id),
+  //     )
+  //     ->distinct();
+  //     */
+        
       
-      
-        $query = $qb->getQuery();
-    $result = $query->getResult();
-    return $result;
-  } 
+  //       $query = $qb->getQuery();
+  //   $result = $query->getResult();
+  //   return $result;
+  // } 
 
   /**
    * Method that return all Article where name $term.
