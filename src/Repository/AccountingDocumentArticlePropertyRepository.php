@@ -6,11 +6,13 @@ use Doctrine\ORM\EntityRepository;
 
 class AccountingDocumentArticlePropertyRepository extends EntityRepository {
 
+  // TODO DRAGAN: Remove unnecessary code
   /**
    * Method that return Properties by AccountingDocumentArticle.
    * 
    * @return 
    */
+  /*
   public function getAccountingDocumentArticleProperties($accounting_document__article) {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('adap')
@@ -23,5 +25,6 @@ class AccountingDocumentArticlePropertyRepository extends EntityRepository {
       $result = $query->getResult();
       return $result;
   }
+  */
 
 }
