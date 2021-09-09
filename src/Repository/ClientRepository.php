@@ -5,19 +5,19 @@ namespace Roloffice\Repository;
 use Doctrine\ORM\EntityRepository;
 
 class ClientRepository extends EntityRepository {
-
-  /**
-   * Method that return total number of Clients
-   *
-   * @return int
-   */
-  public function getTotalNumberOfClients() {
-    $qb = $this->_em->createQueryBuilder();
-    $qb->select('count(c.id)')
-        ->from('Roloffice\Entity\Client','c');
-    $count = $qb->getQuery()->getSingleScalarResult();
-    return $count;
-  }
+  // TODO Dragan: Remove unnecessary code.
+  // /**
+  //  * Method that return total number of Clients
+  //  *
+  //  * @return int
+  //  */
+  // public function getTotalNumberOfClients() {
+  //   $qb = $this->_em->createQueryBuilder();
+  //   $qb->select('count(c.id)')
+  //       ->from('Roloffice\Entity\Client','c');
+  //   $count = $qb->getQuery()->getSingleScalarResult();
+  //   return $count;
+  // }
 
   /**
    * Method that return last $limit clients
