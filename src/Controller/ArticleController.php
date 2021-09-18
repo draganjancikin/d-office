@@ -69,15 +69,18 @@ class ArticleController extends Database {
         return $result;
     }
 
+    // TODO Dragan: Remove unnecessary code.
     /**
      * Method that return array of article groups
      * 
      * @return array
      */
+    /*
     public function getArticleGroups() {
         $result = $this->get("SELECT * FROM article_group");
         return $result;
     }
+    */
 
     /**
      * Method that return article group by article group id

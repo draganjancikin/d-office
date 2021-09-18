@@ -5,7 +5,6 @@ namespace Roloffice\Repository;
 use Doctrine\ORM\EntityRepository;
 
 class MaterialSupplierRepository extends EntityRepository {
-
   /**
    * Method that return suppliers by material.
    * 

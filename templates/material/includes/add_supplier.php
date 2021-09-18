@@ -1,6 +1,7 @@
 <?php
-// Add Supplier to Material
+// Add Supplier to Material.
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addSupplier"]) ) {  
+  // echo "Evo nas"; exit();
   // Curent loged user.
   $user_id = $_SESSION['user_id'];
   $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
@@ -28,7 +29,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addSupplier"]) ) {
   $newMaterialSupplier->setPrice($price);
   $newMaterialSupplier->setCreatedAt(new DateTime("now"));
   $newMaterialSupplier->setCreatedByUser($user);
-  $newMaterialSupplier->setModifiedAt(new DateTime("0000-01-01 00:00:00"));
+  $newMaterialSupplier->setModifiedAt(new DateTime("1070-01-01 00:00:00"));
 
   $entityManager->persist($newMaterialSupplier);
   $entityManager->flush();

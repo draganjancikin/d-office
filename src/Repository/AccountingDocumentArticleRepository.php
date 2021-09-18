@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class AccountingDocumentArticleRepository extends EntityRepository {
 
+  // TODO DRAGAN: Remove unnecessary code.
   /**
    * Method that return AccountingDocument Article Properties
    * 
@@ -13,6 +14,7 @@ class AccountingDocumentArticleRepository extends EntityRepository {
    * 
    * @return array
    */
+  /*
   public function getProperties($ad_article_id) {
     // Create a QueryBilder instance
     $qb = $this->_em->createQueryBuilder();
@@ -27,6 +29,7 @@ class AccountingDocumentArticleRepository extends EntityRepository {
     
     return $result;
   }
+  */
 
   /**
    * Method that return quantity of article. If article dont have property
@@ -40,7 +43,11 @@ class AccountingDocumentArticleRepository extends EntityRepository {
    * @return float 
    */
   public function getQuantity($ad_article_id, $min_calc_measure, $pieces) {
-    $properties = $this->getProperties($ad_article_id);
+    
+    // TODO DRAGAN: Remove unnecessary code.
+    // $properties = $this->getProperties($ad_article_id);
+    $properties = $this->_em->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article_id), array());
+    
     $temp_quantity = 1;
     
     foreach ($properties as $property) {

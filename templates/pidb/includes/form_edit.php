@@ -105,8 +105,10 @@ switch ($pidb_data->getType()->getId()) {
                   <br />
                   kom <input class="input-box-pieces" type="text" name="pieces" value="<?php echo $ad_article->getPieces() ?>" placeholder="(kom)" />
                   <?php
-                  // AccountingDocument Article Properties
-                  $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($ad_article->getId());
+                  // AccountingDocument Article Properties.
+                  // TODO DRAGAN: Remove unnecessary code.
+                  // $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($ad_article->getId());
+                  $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article->getId()), array());
                   foreach ($ad_a_properties as $ad_a_property):
                       echo $ad_a_property->getProperty()->getName() . ' <input class="input-box-55" type="text" name="' .$ad_a_property->getProperty()->getName() . '" value="' . number_format($ad_a_property->getQuantity(), 2, ",", "") . '" title="(cm)" /> ';
                   endforeach;
