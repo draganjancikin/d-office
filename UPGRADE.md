@@ -3,6 +3,9 @@
 Updates:
 * Update "Doctrine/ORM" (2.8.5 => 2.9.5)
 
+New features:
+* Add Material created date to view and edit page
+
 # Upgrade to 6.0.4
 
 Resolved issues and bugfixes:
