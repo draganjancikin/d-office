@@ -1,3 +1,8 @@
+# Upgrade to 6.1.0
+
+Updates:
+* Update "Doctrine/ORM" (2.8.5 => 2.9.5)
+
 # Upgrade to 6.0.4
 
 Resolved issues and bugfixes:
