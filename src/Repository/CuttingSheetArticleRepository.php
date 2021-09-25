@@ -7,112 +7,130 @@ use Doctrine\ORM\EntityRepository;
 class CuttingSheetArticleRepository extends EntityRepository {
 
   /**
-   * Method that return sum heights of all pickets in one field
+   * Method that return sum heights of all pickets in one article (field)
    *  
-   * @param $cutting_sheet__article_id
+   * @param $article_id
    * 
    * @return float
    */
-  public function getArticlePicketLength($cutting_sheet__article_id) {
-    // TODO:
-
+  public function getPicketsLength($article_id) {
     
-    // Sum heights of all pickets in one field
-    $sum_picket_heights = 0;
+    // Get fence_model.
+    $article = $this->_em->find('\Roloffice\Entity\CuttingSheetArticle', $article_id);
+    $fence_model_id = $article->getFenceModel()->getId();
     
-    // Get fence_model
-    $cutting_sheet__article = $this->_em->find('\Roloffice\Entity\CuttingSheetArticle', $cutting_sheet__article_id);
-    $fence_model_id = $cutting_sheet__article->getFenceModel()->getId();
-    
-    $cutting_sheet__article_width = $cutting_sheet__article->getWidth();
-    $number_of_pickets =$this->getCuttingSheetArticlePicketNumber($cutting_sheet__article_id);
-    $picket_width = $cutting_sheet__article->getPicketWidth();
-    $cutting_sheet__article_height = $cutting_sheet__article->getHeight();
-    $cutting_sheet__article_mid_height = $cutting_sheet__article->getMidHeight();
-    $cutting_fence__article__number_of_fields = $cutting_sheet__article->getNumberOfFields();
+    // Get Article (fence field) width, height and middle height.
+    $article_width = $article->getWidth();
+    $article_height = $article->getHeight();
+    $article_mid_height = $article->getMidHeight();
 
-    $picket_heights_one_field = 0;
+    // Get pickets number.
+    $pickets_number = $this->getPicketsNumber($article_id);
 
+    // Get picket width.
+    $picket_width = $article->getPicketWidth();
+        
     // Real space between pickets.
-    $real_space_between_pickets = ($cutting_sheet__article_width - $number_of_pickets*$picket_width)/($number_of_pickets+1);
-    $min_max_l = $cutting_sheet__article_mid_height - $cutting_sheet__article_height;
+    $space_between_pickets = $this->getSpaceBetweenPickets($article_width, $pickets_number, $picket_width);
+    
+    // The difference between the highest and the lowest picket.
+    $min_max_l = $this->getDiffMinMax($article_height, $article_mid_height);
+    $pickets_length = 0;
 
+    // Legs of triangle for angle calculation.
+    $heigth_leg = $this->getDiffMinMax($article_height, $article_mid_height);
+    $width_leg = $this->getWidthForAngleCalc(
+      $this->isEven($pickets_number), 
+      $article_width, 
+      $space_between_pickets, 
+      $picket_width
+    );
+    
     switch ($fence_model_id) {
 
-      
       // Classic ===============================================================
       case '1':
 
-        // Loop trough all picket.
-        for( $i=1; $i<=ceil($number_of_pickets/2); $i++ ){
-          $picket_height = $cutting_sheet__article_height;
-          if( $i==ceil($number_of_pickets/2) AND (ceil($number_of_pickets/2)-($number_of_pickets/2))>0 ){
-            $picket_heights_one_field = $picket_heights_one_field + $picket_height;
-          }else{
-            $picket_heights_one_field = $picket_heights_one_field + $picket_height*2;
+        // Loop through all pickets.
+        for ( $i = 1; $i <= ceil($pickets_number/2); $i++ ){
+          $picket_height = $article_height;
+          if( $i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0 ){
+            $pickets_length = $pickets_length + $picket_height;
+          } 
+          else {
+            $pickets_length = $pickets_length + $picket_height * 2;
           }
+        }
+    
+        break;
+
+      // Alpina ================================================================
+      case '2':
+          
+        $alpha_angle = rad2deg(atan($heigth_leg / $width_leg));
+        
+        // Loop through all pickets.
+        for ( $i=1; $i <= ceil($pickets_number/2); $i++ ) {
+
+          $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1);
+          $picket_height_over_post = tan(deg2rad($alpha_angle)) * $picket_x_position;
+          $picket_height = $article_height + $picket_height_over_post;
+        
+          if ( $i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0 ) {
+            $pickets_length = $pickets_length + $picket_height;
+          }
+          else {
+            $pickets_length = $pickets_length + ($picket_height * 2);
+          }
+
         }
 
         break;
 
 
-      // Alpina ================================================================
-      case '2':
-
-        
-        $ugao_alfa = rad2deg(atan($min_max_l/($cutting_sheet__article_width/2) ));
-        for( $i=1; $i<=ceil($number_of_pickets/2); $i++ ){
-          $ras_l = $real_space_between_pickets + $picket_width*($i-1) + $real_space_between_pickets*($i-1);
-          $vis_raz_l = tan(deg2rad($ugao_alfa))*$ras_l;
-          $vis_l = $cutting_sheet__article_height + $vis_raz_l;
-          if( $i==ceil($number_of_pickets/2) AND (ceil($number_of_pickets/2)-($number_of_pickets/2))>0 ){
-            $picket_heights_one_field = $picket_heights_one_field + $vis_l;
-          }else{
-            $picket_heights_one_field = $picket_heights_one_field + $vis_l*2;
-          }
-
-          }
-          break;
-
-
       // Arizona ===============================================================
       case '3':
 
-        $tetiva = SQRT((($cutting_sheet__article_width-2*$real_space_between_pickets)/2)*(($cutting_sheet__article_width-2*$real_space_between_pickets)/2) + $min_max_l*$min_max_l);
-        $ugao_alfa = rad2deg(atan((2*$min_max_l)/($cutting_sheet__article_width-2*$real_space_between_pickets)));
-        $ugao_beta = 90 - $ugao_alfa;
-        $r = $tetiva / (2*cos(deg2rad($ugao_beta)));
-        for( $i=1; $i<=ceil($number_of_pickets/2); $i++ ){
-            $ras_l = $real_space_between_pickets + $picket_width*($i-1) + $real_space_between_pickets*($i-1);
-            $y = sqrt( $r*$r - (($cutting_sheet__article_width/2 - $ras_l)*($cutting_sheet__article_width/2 - $ras_l)) );
-            $vis_raz_l = $y - ($r - $min_max_l);
-            $vis_l = $cutting_sheet__article_height + $vis_raz_l;
-            if( $i==ceil($number_of_pickets/2) AND (ceil($number_of_pickets/2)-($number_of_pickets/2))>0 ){
-              $picket_heights_one_field = $picket_heights_one_field + $vis_l;
-            }else{
-              $picket_heights_one_field = $picket_heights_one_field + $vis_l*2;
-            }
+        // Tetiva kružnice.
+        $tendon = $this->getTendon($article_width, $space_between_pickets, $heigth_leg);
+        
+        $alpha_angle = rad2deg(atan( ($heigth_leg * 2) / ($article_width - $space_between_pickets * 2)));
+        $beta_angle = 90 - $alpha_angle;
+        $radius = $tendon / (2*cos(deg2rad($beta_angle)));;
+        
+        for ( $i=1; $i<=ceil($pickets_number/2); $i++ ) {
+          $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1);
+          $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
+          $picket_height_over_post = $y - ($radius - $heigth_leg);
+          $picket_height = $article_height + $picket_height_over_post;
+          
+          if ( $i==ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2))>0 ) {
+            $pickets_length = $pickets_length + $picket_height;
+          }
+          else {
+            $pickets_length = $pickets_length + $picket_height * 2;
+          }
         }
         break;
 
       // Pacific ===============================================================
       case '4':
       
-        $min_max_l = $cutting_sheet__article_height - $cutting_sheet__article_mid_height;
+        $tendon = $this->getTendon($article_width, $space_between_pickets, $heigth_leg);
 
-        $tetiva = SQRT((($cutting_sheet__article_width-2*$real_space_between_pickets)/2)*(($cutting_sheet__article_width-2*$real_space_between_pickets)/2) + $min_max_l*$min_max_l);
-        $ugao_alfa = rad2deg(atan((2*$min_max_l)/($cutting_sheet__article_width-2*$real_space_between_pickets)));
+        $ugao_alfa = rad2deg(atan(($heigth_leg * 2)/($article_width-$space_between_pickets * 2)));
         $ugao_beta = 90 - $ugao_alfa;
-        $r = $tetiva / (2*cos(deg2rad($ugao_beta)));
-        for( $i=1; $i<=ceil($number_of_pickets/2); $i++ ){
-          $ras_l = $real_space_between_pickets + $picket_width*($i-1) + $real_space_between_pickets*($i-1);
-          $y = sqrt( $r*$r - (($cutting_sheet__article_width/2 - $ras_l)*($cutting_sheet__article_width/2 - $ras_l)) );
-          $vis_raz_l = $y - ($r - $min_max_l);
-          $vis_l = $cutting_sheet__article_height - $vis_raz_l;
-          if( $i==ceil($number_of_pickets/2) AND (ceil($number_of_pickets/2)-($number_of_pickets/2))>0 ){
-            $picket_heights_one_field = $picket_heights_one_field + $vis_l;
-          }else{
-            $picket_heights_one_field = $picket_heights_one_field + $vis_l*2;
+        $radius = $tendon / (2*cos(deg2rad($ugao_beta)));
+        for ( $i=1; $i<=ceil($pickets_number/2); $i++ ) {
+          $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1);
+          $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
+          $picket_height_over_post = $y - ($radius - $heigth_leg);
+          $picket_height = $article_height - $picket_height_over_post;
+          if ( $i==ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2))>0 ){
+            $pickets_length = $pickets_length + $picket_height;
+          }
+          else {
+            $pickets_length = $pickets_length + $picket_height*2;
           }
         }
         break;
@@ -120,21 +138,22 @@ class CuttingSheetArticleRepository extends EntityRepository {
       // Panonka ===============================================================
       case '5':
 
-        $omega = 360 / $cutting_sheet__article_width;	//ugaona brzina
-        $teta = 90;					// fazno pomeranje za 90stepeni
+        $omega = 360 / $article_width;	//ugaona brzina
+        $teta = 90;										// fazno pomeranje za 90stepeni
 
-        for( $i=1; $i<=ceil($number_of_pickets/2); $i++ ){
-            $ras_l = $real_space_between_pickets + $picket_width*($i-1) + $real_space_between_pickets*($i-1);
-            $y = sin(deg2rad($omega*$ras_l - $teta));
-            $vis_l = $cutting_sheet__article_height + ($min_max_l / 2) + ($y*$min_max_l)/2;
+        for ( $i=1; $i <= ceil($pickets_number/2); $i++ ) {
+          $picket_x_position = $space_between_pickets + $picket_width*($i-1) + $space_between_pickets*($i-1);
+          $y = sin(deg2rad($omega*$picket_x_position - $teta));
+          $picket_height = $article_height + ($heigth_leg / 2) + ($y * $heigth_leg )/2;
 
-            if( $i==ceil($number_of_pickets/2) AND (ceil($number_of_pickets/2)-($number_of_pickets/2))>0 ){
-                $picket_heights_one_field = $picket_heights_one_field + $vis_l;
-            }else{
-                $picket_heights_one_field = $picket_heights_one_field + $vis_l*2;
-            }
-
+          if ( $i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0 ){
+            $pickets_length = $pickets_length + $picket_height;
+          }
+          else {
+            $pickets_length = $pickets_length + $picket_height*2;
+          }
         }
+        
         break;
   
   
@@ -143,49 +162,130 @@ class CuttingSheetArticleRepository extends EntityRepository {
         break;
     }
 
-    return $picket_heights_one_field;
+    return $pickets_length;
   }
 
   /**
    * Method that return number of kaps in one CuttingSheetArticle (fence field).
    * 
-   * @param $cutting_sheet_article_id
+   * @param $article_id
    * 
    * @return int
    */
-  public function getCuttingSheetArticlePicketNumber($cutting_sheet__article_id) {
+  public function getPicketsNumber($article_id) {
     
-    // Get CuttingSheetArticle by $cutting_sheet_article_id.
-    $cutting_sheet__article = $this->_em->find('\Roloffice\Entity\CuttingSheetArticle', $cutting_sheet__article_id);
+    // Get CuttingSheetArticle (fence field) by $article_id.
+    $article = $this->_em->find('\Roloffice\Entity\CuttingSheetArticle', $article_id);
 
     // Picket width.
-    $picket_width = $cutting_sheet__article->getPicketWidth();
+    $picket_width = $article->getPicketWidth();
     
-    // Field width.
-    $width = $cutting_sheet__article->getWidth();
+    // Article (field) width.
+    $width = $article->getWidth();
     
     // Space between picket.
-    $space = $cutting_sheet__article->getSpace();
+    $space = $article->getSpace();
 
-    // Number of fields of one article
-    $cutting_fence__article__number_of_fields = $cutting_sheet__article->getNumberOfFields();
-    
-    // ($width - $space) because fence field has one space more then pickets
-    $control_cap_number = ($width - $space) / ($picket_width + $space);
-
-    $rounded_cap_number = ceil(($width - $space) / ($picket_width + $space));
-
-    $razlika = $control_cap_number-($rounded_cap_number-1);
+    $control_pickets_number = ($width - $space) / ($picket_width + $space);
+    $rounded_cap_number = ceil($control_pickets_number);
+    $razlika = $control_pickets_number-($rounded_cap_number-1);
 
     if($razlika < 0.5){
-      $cap_number = ceil(($width - $space) / ($picket_width + $space))-1;
+      $pickets_number = ceil($control_pickets_number) - 1;
     }
 
     if($razlika >= 0.5){
-      $cap_number = ceil(($width - $space) / ($picket_width + $space));
+      $pickets_number = ceil($control_pickets_number);
     }
 
-    return $cap_number;
+    return $pickets_number;
+  }
+
+  /**
+   * Method that return cpace between pickets.
+   * 
+   * @param int $article_width
+   * @param int $pickets_number
+   * @param int $picket_width
+   * 
+   * @return int
+   */
+  public function getSpaceBetweenPickets($article_width, $pickets_number, $picket_width) {
+    return ($article_width - $pickets_number * $picket_width) / ($pickets_number + 1);
+  }
+
+  /**
+   * Method that return difference between Article (fence field) height and middle height.
+   * 
+   * @param int $article_height
+   * @param int $article_mid_height
+   * 
+   * @return int
+   */
+  public function getDiffMinMax($article_height, $article_mid_height) {
+    
+    if ($article_mid_height > $article_height) {
+      $diffMinMax = $article_mid_height - $article_height;
+    }
+    else if ($article_mid_height < $article_height) {
+      $diffMinMax = $article_height - $article_mid_height;
+    }
+    else {
+      return false;
+    }
+
+    return $diffMinMax;
+  }
+
+  /**
+   * Method that return true if argument even.
+   * 
+   * @param int $pickets_number
+   * 
+   * @return bool
+   */
+  public function isEven($pickets_number) {
+    return $pickets_number % 2 ? false : true;
+  }
+
+  /**
+   * Method that return width for angle calculation.
+   * 
+   * @param bool $is_even
+   * @param int $article_width
+   * @param int $space_between_pickets
+   * @param int $picket_width
+   * 
+   * @return int
+   */
+  public function getWidthForAngleCalc(
+    $is_even, 
+    $article_width, 
+    $space_between_pickets, 
+    $picket_width
+  ) {
+    $width = ($article_width / 2) - $space_between_pickets;
+    if ($is_even) {
+      $width = $width - ($space_between_pickets / 2) - $picket_width;
+    }
+    else {
+      $width = $width - ($picket_width / 2);
+    }
+    return $width;
+  }
+
+  /**
+   * Method that return length of tendon.
+   * 
+   * @param int $article_width
+   * @param int $space_between_pickets
+   * @param int $min_max_l
+   * 
+   * @return int
+   */
+  public function getTendon($article_width, $space_between_pickets, $min_max_l) {
+    $width = ($article_width - $space_between_pickets * 2) / 2;
+    return SQRT($width ** 2 + $min_max_l ** 2);
   }
 
   /**
