@@ -92,9 +92,9 @@
               </tr>
             </form>
             <?php
-            $cutting_sheet__article__picket_number = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getCuttingSheetArticlePicketNumber($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
+            $cutting_sheet__article__picket_number = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getPicketsNumber($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
 
-            $cutting_sheet__article__picket_lenght = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getArticlePicketLength($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
+            $cutting_sheet__article__picket_lenght = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getPicketsLength($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
 
             $total_kap = $total_kap + $cutting_sheet__article__picket_number;
             $total_picket_lenght = $total_picket_lenght + $cutting_sheet__article__picket_lenght;
