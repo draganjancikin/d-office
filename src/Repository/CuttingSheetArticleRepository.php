@@ -98,8 +98,15 @@ class CuttingSheetArticleRepository extends EntityRepository {
         $beta_angle = 90 - $alpha_angle;
         $radius = $tendon / (2*cos(deg2rad($beta_angle)));;
         
-        for ( $i=1; $i<=ceil($pickets_number/2); $i++ ) {
-          $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1);
+        for ( $i = 1; $i <= ceil($pickets_number/2); $i++ ) {
+          $corective_factor = 0;
+          if ($i > 1 ) {
+            $corective_factor = ($space_between_pickets / 2) / ceil($pickets_number/2);
+          }
+          if ($i > 1 && $this->isEven($pickets_number)) {
+            $corective_factor = ($picket_width + $space_between_pickets / 2) / ceil($pickets_number/2);
+          }
+          $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1) + $corective_factor * $i;
           $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
           $picket_height_over_post = $y - ($radius - $heigth_leg);
           $picket_height = $article_height + $picket_height_over_post;
@@ -122,7 +129,14 @@ class CuttingSheetArticleRepository extends EntityRepository {
         $ugao_beta = 90 - $ugao_alfa;
         $radius = $tendon / (2*cos(deg2rad($ugao_beta)));
         for ( $i=1; $i<=ceil($pickets_number/2); $i++ ) {
-          $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1);
+          $corective_factor = 0;
+          if ($i > 1 ) {
+            $corective_factor = ($space_between_pickets / 2) / ceil($pickets_number/2);
+          }
+          if ($i > 1 && $this->isEven($pickets_number)) {
+            $corective_factor = ($picket_width + $space_between_pickets / 2) / ceil($pickets_number/2);
+          }
+          $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1) + $corective_factor * $i;
           $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
           $picket_height_over_post = $y - ($radius - $heigth_leg);
           $picket_height = $article_height - $picket_height_over_post;
