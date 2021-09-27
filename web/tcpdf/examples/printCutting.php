@@ -53,7 +53,6 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
 $id = $_GET['cutting_id'];
 $cutting_sheet = $entityManager->find("\Roloffice\Entity\CuttingSheet", $id);
 
-
 $html = '<style type="text/css">table { padding-top: 0px; padding-bottom: 0px; }</style>
          <table border="0">
            <tr><td><h1>KROJNA LISTA: KL '.str_pad($cutting_sheet->getOrdinalNumInYear(), 3, "0", STR_PAD_LEFT).' - '.$cutting_sheet->getCreatedAt()->format('m').' </h1></td><td>'.$cutting_sheet->getCreatedAt()->format('d M Y').'</td></tr>
@@ -62,11 +61,7 @@ $html = '<style type="text/css">table { padding-top: 0px; padding-bottom: 0px; }
 
 $pdf->writeHTML($html, true, false, true, false, '');
 
-$picket_number = 0;
-$picket_lenght = 0;
-$total_picket_lenght = 0;
-$kap = 0;
-$total_kap = 0;
+$pickets_number = 0;
 
 $articles = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getArticlesOnCuttingSheet($id);
 
@@ -92,8 +87,6 @@ foreach ($articles as $article):
   // Real space between pickets.
   $space_between_pickets = $article_repo->getSpaceBetweenPickets($article_width, $pickets_number, $picket_width);
   
-  // $min_max_l = $article_repo->getDiffMinMax($article_height, $article_mid_height);
-
   // Legs of triangle for angle calculation.
   $heigth_leg = $article_repo->getDiffMinMax($article_height, $article_mid_height);
   $width_leg = $article_repo->getWidthForAngleCalc(
@@ -168,10 +161,10 @@ foreach ($articles as $article):
       
   }
   
-  // Arizona =================================================================
+  // Arizona ===================================================================
   if($fence_model_id == 3){
     
-    // Tetiva kružnice.
+    // Tendon of circle.
     $tendon = $article_repo->getTendon($article_width, $space_between_pickets, $heigth_leg);
     
     $alpha_angle = rad2deg(atan( ($heigth_leg * 2) / ($article_width - $space_between_pickets * 2)));
@@ -192,9 +185,16 @@ foreach ($articles as $article):
             </table>';
     $pdf->writeHTML($html, true, false, true, false, '');
       
-    for ( $i=1; $i<=ceil($pickets_number/2); $i++ ) {
+    for ( $i = 1; $i <= ceil($pickets_number/2); $i++ ) {
       $count++;
-      $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1);
+      $corective_factor = 0;
+      if ($i > 1 ) {
+        $corective_factor = ($space_between_pickets / 2) / ceil($pickets_number/2);
+      }
+      if ($i > 1 && $article_repo->isEven($pickets_number)) {
+        $corective_factor = ($picket_width + $space_between_pickets / 2) / ceil($pickets_number/2);
+      }
+      $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1) + $corective_factor * $i;
       $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
       $picket_height_over_post = $y - ($radius - $heigth_leg);
       $picket_height = $article_height + $picket_height_over_post;
@@ -213,7 +213,7 @@ foreach ($articles as $article):
       $pdf->writeHTML($html, true, false, true, false, '');
   }
   
-  // Pacific =================================================================
+  // Pacific ===================================================================
   if ($fence_model_id == 4) {
     $html = '<hr />
             <table>
@@ -229,9 +229,9 @@ foreach ($articles as $article):
       
       $tendon = $article_repo->getTendon($article_width, $space_between_pickets, $heigth_leg);
 
-      $ugao_alfa = rad2deg(atan(($heigth_leg * 2)/($article_width-$space_between_pickets * 2)));
-      $ugao_beta = 90 - $ugao_alfa;
-      $radius = $tendon / (2*cos(deg2rad($ugao_beta)));
+      $alpha_angle = rad2deg(atan(($heigth_leg * 2)/($article_width-$space_between_pickets * 2)));
+      $beta_angle = 90 - $alpha_angle;
+      $radius = $tendon / (2*cos(deg2rad($beta_angle)));
 
       $html = '<table>
                   <tr><th width="60px">red. br.</th><th width="100px">dužina letvice</th><th>količina</th></tr>
@@ -239,22 +239,29 @@ foreach ($articles as $article):
       $pdf->writeHTML($html, true, false, true, false, '');
       
       for ( $i=1; $i<=ceil($pickets_number/2); $i++ ) {
-          $count++;
-          $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1);
-          $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
-          $picket_height_over_post = $y - ($radius - $heigth_leg);
-          $picket_height = $article_height - $picket_height_over_post;
+        $count++;
+        $corective_factor = 0;
+        if ($i > 1 ) {
+          $corective_factor = ($space_between_pickets / 2) / ceil($pickets_number/2);
+        }
+        if ($i > 1 && $article_repo->isEven($pickets_number)) {
+          $corective_factor = ($picket_width + $space_between_pickets / 2) / ceil($pickets_number/2);
+        }
+        $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1) + $corective_factor * $i;;
+        $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
+        $picket_height_over_post = $y - ($radius - $heigth_leg);
+        $picket_height = $article_height - $picket_height_over_post;
 
-          if ( $i==ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2))>0 ) {
-              $pieces = 1;
-          }
-          else {
-              $pieces = 2;
-          }
-          $html = '<table>
-                          <tr><td width="60px">'.$count.'</td><td width="100px">'.number_format($picket_height, 0, ",", ".").' mm</td><td>'.$pieces.' kom</td></tr>
-                        </table>';
-              $pdf->writeHTML($html, true, false, true, false, '');
+        if ( $i==ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2))>0 ) {
+          $pieces = 1;
+        }
+        else {
+          $pieces = 2;
+        }
+        $html = '<table>
+                  <tr><td width="60px">'.$count.'</td><td width="100px">'.number_format($picket_height, 0, ",", ".").' mm</td><td>'.$pieces.' kom</td></tr>
+                </table>';
+        $pdf->writeHTML($html, true, false, true, false, '');
       }
       $html = '';
       $pdf->writeHTML($html, true, false, true, false, '');
