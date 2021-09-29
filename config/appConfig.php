@@ -1,7 +1,7 @@
 <?php
 require_once 'dbConfig.php';
 
-define("VERSION","6.0.0");
+define("VERSION","6.0.1");
 
 if(empty($page)) {
     $page = "";
