@@ -22,6 +22,9 @@ require 'delete_accounting_document.php';
       if( isset($_GET['view']) || isset($_GET['edit']) || isset($_GET['editArticle']) ):
         $pidb_id = filter_input(INPUT_GET, 'pidb_id');
         $pidb_data = $entityManager->find('\Roloffice\Entity\AccountingDocument', $pidb_id);
+        if (!$pidb_data) {
+          die('<script>location.href = "/pidb/"</script>');
+        }
         $client_data = $entityManager->find('\Roloffice\Entity\Client', $pidb_data->getClient());
         $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
         $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());

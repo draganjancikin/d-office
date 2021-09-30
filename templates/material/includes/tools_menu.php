@@ -18,6 +18,9 @@ require 'delete_property.php';
       if(isset($_GET['view']) || isset($_GET['edit'])):
         $material_id = filter_input(INPUT_GET, 'id');
         $material = $entityManager->find('\Roloffice\Entity\Material', $material_id);
+        if (!$material) {
+          die('<script>location.href = "/materials/"</script>');
+        }
         $material_suppliers = $entityManager->getRepository('\Roloffice\Entity\MaterialSupplier')->getMaterialSuppliers($material_id);
         $clients = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => 'ASC'));
         $suppliers = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC'));
