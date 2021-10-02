@@ -9,14 +9,14 @@
         <div class="form-group row">  
           <label for="disabledModified" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Izmenjen:</label>
           <div class="col-sm-5 col-sm-4 col-lg-3">
-            <input class="form-control" id="disabledModified" type="text" value="<?php echo $material->getModifiedAt()->format('d M Y H:i:s') ?>" disabled />
+            <input class="form-control" id="disabledModified" type="text" value="<?php echo $material->getModifiedAt()->format('d M Y H:i'); ?>" disabled />
           </div>
         </div>
       
         <div class="form-group row">
           <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Naziv:</label>
           <div class="col-sm-9 col-xl-8">
-            <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $material->getName() ?>" maxlength="96">
+            <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $material->getName(); ?>" maxlength="96">
           </div>
         </div>
 
@@ -24,7 +24,7 @@
           <label for="selectUnit" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Jedinica mere:</label>
           <div class="col-sm-3 col-lg-2">
             <select id="selectUnit" name="unit_id" class="form-control">
-            <option value="<?php echo $material->getUnit()->getId() ?>"><?php echo $material->getUnit()->getName() ?></option>
+            <option value="<?php echo $material->getUnit()->getId() ?>"><?php echo $material->getUnit()->getName(); ?></option>
               <?php
               $units = $entityManager->getRepository('\Roloffice\Entity\Unit')->FindAll();
               foreach ($units as $unit) {
@@ -38,7 +38,7 @@
         <div class="form-group row">
           <label for="inputWeight" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Težina:</label>
           <div class="col-sm-3 col-lg-2">
-            <input class="form-control" id="inputWeight" type="text" name="weight" value="<?php echo $material->getWeight() ?>" >
+            <input class="form-control" id="inputWeight" type="text" name="weight" value="<?php echo $material->getWeight(); ?>" >
           </div>
           <div class="col-sm-2">g</div>
         </div>
@@ -46,7 +46,7 @@
         <div class="form-group row">
           <label for="inputPrice" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Cena:</label>
           <div class="col-sm-3 col-lg-2">
-            <input class="form-control" id="inputPrice" type="text" name="price" value="<?php echo $material->getPrice() ?>" >
+            <input class="form-control" id="inputPrice" type="text" name="price" value="<?php echo $material->getPrice(); ?>" >
           </div>
           <div class="col-sm-2">&#8364; bez PDV-a</div>
         </div>   
@@ -54,7 +54,7 @@
         <div class="form-group row">
           <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Beleška: </label>
           <div class="col-sm-9 col-xl-8">
-            <textarea class="form-control" id="inputNote" rows="3" name="note" placeholder="Beleška uz materijal ..."><?php echo $material->getNote() ?></textarea>	
+            <textarea class="form-control" id="inputNote" rows="3" name="note" placeholder="Beleška uz materijal ..."><?php echo $material->getNote(); ?></textarea>	
           </div>
         </div> 
 
@@ -86,9 +86,9 @@
 
         <div class="form-group row">
 
-          <div class="col-sm-5">
+          <div class="col-sm-4 col-lg-3 col-xl-2">
             <select class="form-control" name="supplier_id" required>
-              <option value="<?php echo $material_supplier->getSupplier()->getId() ?>"><?php echo $material_supplier->getSupplier()->getName() ?></option>
+              <option value="<?php echo $material_supplier->getSupplier()->getId(); ?>"><?php echo $material_supplier->getSupplier()->getName(); ?></option>
               <?php
               foreach ($suppliers as $supplier) {
                 echo '<option value="' .$supplier->getId(). '">' .$supplier->getName(). '</option>';
@@ -98,11 +98,15 @@
           </div>
 
           <div class="col-sm-2">
-            <input class="form-control" type="text" name="note" value="<?php echo $material_supplier->getNote() ?>">
+            <input class="form-control" type="text" value="<?php echo $material_supplier->getModifiedAt()->format('d M Y'); ?>" disabled>
+          </div>
+
+          <div class="col-sm-2 col-lg-3">
+            <input class="form-control" type="text" name="note" value="<?php echo $material_supplier->getNote(); ?>">
           </div> 
 
-          <div class="col-sm-3">
-            <input class="form-control" type="text" name="price" value="<?php echo $material_supplier->getPrice() ?>">
+          <div class="col-sm-2">
+            <input class="form-control" type="text" name="price" value="<?php echo $material_supplier->getPrice(); ?>">
           </div>
 
           <div class="col-sm-2">
