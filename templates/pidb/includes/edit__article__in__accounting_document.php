@@ -27,8 +27,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleInAccounting
   $entityManager->flush();
 
   // Properies update in table v6__accounting_documents__articles__properties
-  // TODO DRAGAN: Remove unnecessary code
-  // $accounting_document__article__properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->getAccountingDocumentArticleProperties($accounting_document__article_id);
   $accounting_document__article__properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $accounting_document__article_id), array());
   foreach ($accounting_document__article__properties as $accounting_document__article__property) {
     

@@ -82,9 +82,6 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
     $entityManager->flush();
 
     // Get $proforma_article properies
-    // TODO Dragan: Remove unnecessary code
-    // $proforma_article_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($proforma_article->getId());
-
     $proforma_article_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $proforma_article->getId()), array());
     
     // Save $proforma_article properies to $newDispatchArticle
@@ -105,7 +102,6 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
   $entityManager->flush();
 
   // Check if proforma belong to any Project
-  // TODO Dragan: ako proforma pripada nekom projektu pridružiti i otpremnicu tom projektu
   $project = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getProjectByAccountingDocument($proforma->getId());
 
   if($project) {

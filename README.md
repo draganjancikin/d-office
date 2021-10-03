@@ -1,4 +1,4 @@
-# RolOffice 6.0.1
+# RolOffice 6.0.2
 
 Web Application
 

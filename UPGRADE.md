@@ -1,3 +1,15 @@
+# Upgrade to 6.0.2
+
+Resolved issues and bugfixes:
+* #125: Material view and edit of non-existent id give an error
+* #127: Accounting Document view and edit of non-existent id give an error
+* #129: Material view on mobile and small display
+* #130: CuttingSheet view and edit of non-existent id give an error
+
+Enhancement:
+* On Order add Material, list only Order Supplier Materials
+* Remove unnecessary code an code refactoring
+
 # Upgrade to 6.0.1
 
 Enhancement:

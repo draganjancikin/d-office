@@ -39,14 +39,14 @@
           $count = 0;
           $total_picket_lenght = 0;
           $total_kap = 0;
-          $cutting_sheet_articles = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getArticlesOnCuttingSheet($cutting_sheet_id);
+          $cutting_sheet_articles = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getArticlesOnCuttingSheet($id);
           foreach ($cutting_sheet_articles as $cutting_sheet_article):
             $count ++;
             ?>
-            <form action="<?php echo $_SERVER['PHP_SELF']. '?updateCuttingSheetArticle'?>" method="post">
+            <form action="<?php echo $_SERVER['PHP_SELF']. '?updateArticle'?>" method="post">
 
               <input type="hidden" name="cutting_sheet__article_id" value="<?php echo $cutting_sheet_article->getId() ?>" />
-              <input type="hidden" name="cutting_sheet_id" value="<?php echo $cutting_sheet_id ?>" />
+              <input type="hidden" name="id" value="<?php echo $id ?>" />
         
               <tr>
                 <td class="px-1"><?php echo $count; ?>.</td>
@@ -82,7 +82,7 @@
                   <i class="fas fa-save"></i>
                   </button>  
                   <!-- TODO -->
-                  <a href="<?php echo $_SERVER['PHP_SELF']. '?removeArticleFromCuttingSheet&cutting_sheet_id=' . $cutting_sheet_id .'&cutting_sheet__article_id=' .$cutting_sheet_article->getId() ?>">
+                  <a href="<?php echo $_SERVER['PHP_SELF']. '?removeArticle&id=' . $id .'&cutting_sheet__article_id=' .$cutting_sheet_article->getId() ?>">
                     <button class="btn btn-danger btn-mini" type="button">
                       <i class="fas fa-trash"></i>
                     </button>
@@ -107,7 +107,7 @@
               <?php
               if ($cutting_sheet_articles):
                 ?>
-                <a href="<?php echo $_SERVER['PHP_SELF']. '?exportCuttingSheetToAccountingDocument&cutting_id=' .$cutting_sheet_id. '&total_picket_lenght=' .$total_picket_lenght. '&total_kap=' .$total_kap. '&picket_width=' . $cutting_sheet_article->getPicketWidth() ?>">
+                <a href="<?php echo $_SERVER['PHP_SELF']. '?exportToAccountingDocument&id=' .$id. '&total_picket_lenght=' .$total_picket_lenght. '&total_kap=' .$total_kap. '&picket_width=' . $cutting_sheet_article->getPicketWidth() ?>">
                   <button type="submit" class="btn btn-outline-secondary btn-sm">Otvori novi predracun</button>
                 </a>
                 <?php

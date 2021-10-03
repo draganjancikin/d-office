@@ -24,7 +24,7 @@ require 'delete_contact.php';
             <?php
             if(isset($_GET['view']) || isset($_GET['edit'])):
                 if(isset($_GET['client_id'])) {
-                    $client_id = $client->checkGetClient($_GET['client_id']);
+                    $client_id = $entityManager->getRepository('\Roloffice\Entity\Client')->checkGetClient($_GET['client_id']);
                 } else {
                     die('<script>location.href = "/clients/" </script>');
                 }

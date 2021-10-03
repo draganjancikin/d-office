@@ -1,7 +1,7 @@
 <?php
 
 // Delete CuttingSheet
-if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["deleteCS"])) { 
+if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delete"])) { 
   
   /**
    * Cutting Sheet ID

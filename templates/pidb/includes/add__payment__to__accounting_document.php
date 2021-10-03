@@ -10,7 +10,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
   $payment_type = $entityManager->find("\Roloffice\Entity\PaymentType", $payment_type_id);
   
   if ($payment_type_id == 5 && $entityManager->getRepository('Roloffice\Entity\Payment')->ifExistFirstCashInput()) {
-    // TODO Dragan: Created error message
+    // TODO Dragan: Create error message
     ?>
     <p>Već ste uneli početno stanje!</p>
     <a href="/pidb/?cashRegister">Povratak na Kasu</a>

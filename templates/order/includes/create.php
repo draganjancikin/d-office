@@ -47,5 +47,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createOrder"]) ) {
     $entityManager->flush();
   }
   
-  die('<script>location.href = "?view&order_id=' .$new_order_id. '" </script>');
+  die('<script>location.href = "?view&id=' .$new_order_id. '" </script>');
 }

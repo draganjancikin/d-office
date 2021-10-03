@@ -135,8 +135,6 @@ $ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocume
 
 foreach ($ad_articles as $ad_article):
 
-  // TODO DRAGAN: Remove unnecessary code.
-  // $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getProperties($ad_article->getId());
   $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article->getId()), array());
   $property_temp = '';
   $property_counter = 0;

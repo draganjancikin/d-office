@@ -1,9 +1,7 @@
 ﻿<?php
 $page = "pidb";
 
-require_once '../../config/appConfig.php';
-require_once '../../config/bootstrap.php';
-require_once '../../vendor/autoload.php';
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/bootstrap.php';
 
 session_start();
 if(isset($_SESSION['username'])):

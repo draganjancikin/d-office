@@ -6,16 +6,23 @@
     <div class="card-body p-2">
       <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterial&id=' . $material_id ?>" method="post">
 
+        <div class="form-group row">  
+          <label for="disabledModified" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Izmenjen:</label>
+          <div class="col-sm-5 col-sm-4 col-lg-3">
+            <input class="form-control" id="disabledModified" type="text" value="<?php echo $material->getModifiedAt()->format('d M Y H:i:s') ?>" disabled />
+          </div>
+        </div>
+      
         <div class="form-group row">
-          <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
-          <div class="col-sm-9">
+          <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Naziv:</label>
+          <div class="col-sm-9 col-xl-8">
             <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $material->getName() ?>" maxlength="96">
           </div>
         </div>
 
         <div class="form-group row">
-          <label for="selectUnit" class="col-sm-3 col-lg-2 col-form-label text-right">Jedinica mere:</label>
-          <div class="col-sm-3">
+          <label for="selectUnit" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Jedinica mere:</label>
+          <div class="col-sm-3 col-lg-2">
             <select id="selectUnit" name="unit_id" class="form-control">
             <option value="<?php echo $material->getUnit()->getId() ?>"><?php echo $material->getUnit()->getName() ?></option>
               <?php
@@ -29,24 +36,24 @@
         </div>
 
         <div class="form-group row">
-          <label for="inputWeight" class="col-sm-3 col-lg-2 col-form-label text-right">Težina:</label>
-          <div class="col-sm-2">
+          <label for="inputWeight" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Težina:</label>
+          <div class="col-sm-3 col-lg-2">
             <input class="form-control" id="inputWeight" type="text" name="weight" value="<?php echo $material->getWeight() ?>" >
           </div>
           <div class="col-sm-2">g</div>
         </div>
 
         <div class="form-group row">
-          <label for="inputPrice" class="col-sm-3 col-lg-2 col-form-label text-right">Cena:</label>
-          <div class="col-sm-2">
+          <label for="inputPrice" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Cena:</label>
+          <div class="col-sm-3 col-lg-2">
             <input class="form-control" id="inputPrice" type="text" name="price" value="<?php echo $material->getPrice() ?>" >
           </div>
           <div class="col-sm-2">&#8364; bez PDV-a</div>
         </div>   
 
         <div class="form-group row">
-          <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-right">Beleška: </label>
-          <div class="col-sm-9">
+          <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Beleška: </label>
+          <div class="col-sm-9 col-xl-8">
             <textarea class="form-control" id="inputNote" rows="3" name="note" placeholder="Beleška uz materijal ..."><?php echo $material->getNote() ?></textarea>	
           </div>
         </div> 

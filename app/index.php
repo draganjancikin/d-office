@@ -44,8 +44,6 @@
                         <div class="text-sm font-weight-bold text-info text-uppercase mb-1">Klijenti</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                          // TODO Dragan: Remove unnecessary code.
-                          // echo $entityManager->getRepository('\Roloffice\Entity\Client')->getTotalNumberOfClients();
                           echo $entityManager->getRepository('\Roloffice\Entity\Client')->count([]);
                           ?>
                         </div>
@@ -69,8 +67,6 @@
                                     <div class="text-sm font-weight-bold text-success text-uppercase mb-1">Dokumenti</div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     <?php
-                                      // TODO Dragan: Remove unnecessary code.
-                                      // echo $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getNumberOfAccountingDocuments();
                                       echo $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->count([]);
                                     ?>
                                     </div>
@@ -94,8 +90,6 @@
                         <div class="text-sm font-weight-bold text-danger text-uppercase mb-1">Krojne liste</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                            // TODO Dragan: Remove unnecessary code.
-                            // echo $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getNumberOfCuttingSheets();
                             echo $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->count([]);
                           ?>
                         </div>
@@ -119,8 +113,6 @@
                         <div class="text-sm font-weight-bold text-success text-uppercase mb-1">Materijal</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                          // TODO Dragan: Remove unnecessary code.
-                          // echo $entityManager->getRepository('\Roloffice\Entity\Material')->getNumberOfMaterials();
                           echo $entityManager->getRepository('\Roloffice\Entity\Material')->count([]);
                           ?>
                         </div>
@@ -144,8 +136,6 @@
                         <div class="text-sm font-weight-bold text-primary text-uppercase mb-1">Nabavka</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                          // TODO Dragan: Remove unnecessary code.
-                          // echo $entityManager->getRepository('\Roloffice\Entity\Order')->getNumberOfOrders();
                           echo $entityManager->getRepository('\Roloffice\Entity\Order')->count([]);
                           ?>
                         </div>
@@ -169,8 +159,6 @@
                         <div class="text-sm font-weight-bold text-warning text-uppercase mb-1">Proizvodi</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                          // TODO Dragan: Remove unnecessary code.
-                          // echo $entityManager->getRepository('\Roloffice\Entity\Article')->getNumberOfArticles();
                           echo $entityManager->getRepository('\Roloffice\Entity\Article')->count([]);
                           ?>
                         </div>
@@ -219,8 +207,6 @@
                         <div class="text-sm font-weight-bold text-warning text-uppercase mb-1">Projekti</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                          // TODO Dragan: Remove unnecessary code.
-                          // echo $entityManager->getRepository('\Roloffice\Entity\Project')->getNumberOfProjects();
                           echo $entityManager->getRepository('\Roloffice\Entity\Project')->count([]);
                           ?>
                         </div>

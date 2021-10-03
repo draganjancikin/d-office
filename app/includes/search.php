@@ -349,13 +349,13 @@ if($page == "cutting"):
                           ?>
                           <tr>
                               <td class="centar">
-                                  <a href="?view&cutting_sheet_id=<?php echo $cutting->getId() ?>">KL_<?php echo str_pad($cutting->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?></a>
+                                  <a href="?view&id=<?php echo $cutting->getId() ?>">KL_<?php echo str_pad($cutting->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?></a>
                               </td>
                               <td><?php echo $cutting->getClient()->getName() ?></td>
                               <td>
                                   <?php
                                   $last_cutting_sheet = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getLastCuttingSheet();
-                                  echo ( $cutting->getId() == $last_cutting_sheet->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?deleteCS&cs_id=' .$cutting->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>' : '');
+                                  echo ( $cutting->getId() == $last_cutting_sheet->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?delete&cs_id=' .$cutting->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>' : '');
                                   ?>
                               </td>
                           </tr>
@@ -427,7 +427,6 @@ if($page == "materials"):
 endif;
 
 if($page == "orders"):
-    require '../../templates/order/includes/delete_order.php';
     $term = filter_input(INPUT_GET, 'search');
     $orders = $entityManager->getRepository('\Roloffice\Entity\Order')->search($term);
     ?>
@@ -464,7 +463,7 @@ if($page == "orders"):
                             ?>
                             <tr>
                                 <td class="px-1">
-                                    <a href="?view&order_id=<?php echo $order_data->getId() ?>">
+                                    <a href="?view&id=<?php echo $order_data->getId() ?>">
                                         <?php echo str_pad($order_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $order_data->getDate()->format('m_Y') ?>
                                     </a>
                                 </td>

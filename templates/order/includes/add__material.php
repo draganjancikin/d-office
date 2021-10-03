@@ -6,7 +6,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addMaterialToOrder"]) )
   $order_id = htmlspecialchars($_GET["order_id"]);
   $order = $entityManager->find("\Roloffice\Entity\Order", $order_id);
   
-  $material_id = htmlspecialchars($_POST["materijal_id"]);
+  $material_id = htmlspecialchars($_POST["material_id"]);
   $material = $entityManager->find("\Roloffice\Entity\Material", $material_id);
   
   $price = $material->getPrice();
@@ -51,5 +51,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addMaterialToOrder"]) )
 
   }
 
-  die('<script>location.href = "?edit&order_id=' .$order_id. '" </script>');
+  die('<script>location.href = "?edit&id=' .$order_id. '" </script>');
 }

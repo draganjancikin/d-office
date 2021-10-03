@@ -5,19 +5,6 @@ namespace Roloffice\Repository;
 use Doctrine\ORM\EntityRepository;
 
 class MaterialRepository extends EntityRepository {
-  // TODO Dragan: Remove unnecessary code.
-  // /**
-  //  * Method that return number of Materials.
-  //  *
-  //  * @return int
-  //  */
-  // public function getNumberOfMaterials() {
-  //   $qb = $this->_em->createQueryBuilder();
-  //   $qb->select('count(m.id)')
-  //       ->from('Roloffice\Entity\Material','m');
-  //   $count = $qb->getQuery()->getSingleScalarResult();
-  //   return $count;
-  // }
 
   /**
    * Method that return last $limit material.
@@ -55,6 +42,28 @@ class MaterialRepository extends EntityRepository {
         )
       ->orderBy('m.name', 'ASC');
 
+    $query = $qb->getQuery();
+    $materials = $query->getResult();
+    return $materials;
+  }
+
+  /**
+   * Method that return all Materials from one Supplier
+   * 
+   * @param int $supplier_id
+   * 
+   * @return null|Material[] $material 
+   */
+  public function getSupplierMaterials($supplier_id) {
+    // Create a QueryBilder instance
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('ms')
+      ->from('Roloffice\Entity\MaterialSupplier', 'ms')
+      ->join('ms.material', 'm', 'WITH', "ms.material = m.id")
+      ->where(
+        $qb->expr()->eq('ms.supplier', $supplier_id)
+      )
+      ->orderBy('m.name', 'ASC');
     $query = $qb->getQuery();
     $materials = $query->getResult();
     return $materials;

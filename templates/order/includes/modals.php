@@ -17,11 +17,11 @@
             <label for="selectMaterial" class="col-sm-3 col-form-label text-right">Materijal:</label>
             <div class="col-sm-9">
               <div id="first">
-                <select class="form-control" name="materijal_id" id="selectMaterial">
+                <select class="form-control" name="material_id" id="selectMaterial">
                 <option value="">izaberi materijal</option>
                 <?php
                 foreach ($materials as $material) {
-                  echo '<option value="' .$material->getId(). '" title="' .$material->getNote(). '">' .$material->getName().'</option>';
+                  echo '<option value="' .$material->getMaterial()->getId(). '" title="' .$material->getMaterial()->getNote(). '">' .$material->getMaterial()->getName().'</option>';
                 }
                 ?>
                 </select>
