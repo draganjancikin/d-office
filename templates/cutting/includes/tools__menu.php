@@ -22,7 +22,9 @@ require 'export__to__accounting_document.php';
         } else {
           $id = htmlspecialchars($_POST['id']);
         }
-        $cutting_data = $entityManager->find('\Roloffice\Entity\CuttingSheet', $id);
+        if (!$cutting_data = $entityManager->find('\Roloffice\Entity\CuttingSheet', $id)) {
+          die('<script>location.href = "/cutting/"</script>');
+        }
         $client_data = $entityManager->find('\Roloffice\Entity\Client', $cutting_data->getClient());
         $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
         $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
