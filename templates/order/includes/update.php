@@ -48,5 +48,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateOrder"]) ) {
     }
   
   }
-  die('<script>location.href = "?view&order_id='.$order_id.'" </script>');
+  die('<script>location.href = "?view&id='.$order_id.'" </script>');
 }

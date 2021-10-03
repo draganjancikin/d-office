@@ -30,7 +30,7 @@
             ?>
             <tr>
               <td class="px-1">
-                <a href="?view&order_id=<?php echo $order->getId() ?>">
+                <a href="?view&id=<?php echo $order->getId() ?>">
                   <?php echo str_pad($order->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $order->getDate()->format('m_Y') ?>
                 </a>
               </td>

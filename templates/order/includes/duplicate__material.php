@@ -39,5 +39,5 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["duplicateMaterialInOrder
 
   }
 
-  die('<script>location.href = "?edit&order_id='.$order_id.'" </script>');
+  die('<script>location.href = "?edit&id='.$order_id.'" </script>');
 }

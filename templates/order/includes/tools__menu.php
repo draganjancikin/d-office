@@ -1,10 +1,11 @@
 <?php
-require 'create_order.php';
-require 'update_order.php';
-require 'add_material_to_order.php';
-require 'edit_material_in_order.php';
-require 'remove_material_from_order.php';
-require 'duplicate_material_in_order.php';
+require 'create.php';
+require 'update.php';
+require 'delete.php';
+require 'add__material.php';
+require 'edit__material.php';
+require 'remove__material.php';
+require 'duplicate__material.php';
 ?>
 <div class="col-lg-12 px-2" id="topMeni">
   <div class="card mb-2">
@@ -16,25 +17,25 @@ require 'duplicate_material_in_order.php';
 
       <?php
       if(isset($_GET['view']) || isset($_GET['edit'])):
-        $order_id = filter_input(INPUT_GET, 'order_id');
+        $order_id = filter_input(INPUT_GET, 'id');
         $order_data = $entityManager->find('\Roloffice\Entity\Order', $order_id);
         $supplier_data = $entityManager->find('\Roloffice\Entity\Client', $order_data->getSupplier());
         $project_data = $entityManager->getRepository('Roloffice\Entity\Order')->getProject($order_id);
         $materials = $entityManager->getRepository('\Roloffice\Entity\Material')->findBy(array(), array('name' => "ASC"));
 
-        // in view case show edit button
+        // In view case show edit button.
         if(isset($_GET['view'])):
           ?>
-          <a href="?edit&order_id=<?php echo $order_id ?>" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu narudžbenice!">
+          <a href="?edit&id=<?php echo $order_id ?>" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu narudžbenice!">
             <i class="fas fa-edit"> </i>
           </a>
           <?php
         endif;
 
-        // in edit case show view button
+        // In edit case show view button.
         if(isset($_GET['edit'])):
           ?>
-          <a href="?view&order_id=<?php echo $order_id ?>" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled narudžbenice!">
+          <a href="?view&id=<?php echo $order_id ?>" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled narudžbenice!">
             <i class="fas fa-eye"> </i>
           </a>
           <?php

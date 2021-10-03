@@ -427,7 +427,6 @@ if($page == "materials"):
 endif;
 
 if($page == "orders"):
-    require '../../templates/order/includes/delete_order.php';
     $term = filter_input(INPUT_GET, 'search');
     $orders = $entityManager->getRepository('\Roloffice\Entity\Order')->search($term);
     ?>
@@ -464,7 +463,7 @@ if($page == "orders"):
                             ?>
                             <tr>
                                 <td class="px-1">
-                                    <a href="?view&order_id=<?php echo $order_data->getId() ?>">
+                                    <a href="?view&id=<?php echo $order_data->getId() ?>">
                                         <?php echo str_pad($order_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $order_data->getDate()->format('m_Y') ?>
                                     </a>
                                 </td>
