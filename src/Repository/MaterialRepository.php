@@ -47,4 +47,26 @@ class MaterialRepository extends EntityRepository {
     return $materials;
   }
 
+  /**
+   * Method that return all Materials from one Supplier
+   * 
+   * @param int $supplier_id
+   * 
+   * @return null|Material[] $material 
+   */
+  public function getSupplierMaterials($supplier_id) {
+    // Create a QueryBilder instance
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('ms')
+      ->from('Roloffice\Entity\MaterialSupplier', 'ms')
+      ->join('ms.material', 'm', 'WITH', "ms.material = m.id")
+      ->where(
+        $qb->expr()->eq('ms.supplier', $supplier_id)
+      )
+      ->orderBy('m.name', 'ASC');
+    $query = $qb->getQuery();
+    $materials = $query->getResult();
+    return $materials;
+  }
+
 }

@@ -21,8 +21,7 @@ require 'duplicate__material.php';
         $order_data = $entityManager->find('\Roloffice\Entity\Order', $order_id);
         $supplier_data = $entityManager->find('\Roloffice\Entity\Client', $order_data->getSupplier());
         $project_data = $entityManager->getRepository('Roloffice\Entity\Order')->getProject($order_id);
-        $materials = $entityManager->getRepository('\Roloffice\Entity\Material')->findBy(array(), array('name' => "ASC"));
-
+        $materials = $entityManager->getRepository('\Roloffice\Entity\Material')->getSupplierMaterials($supplier_data->getId());
         // In view case show edit button.
         if(isset($_GET['view'])):
           ?>

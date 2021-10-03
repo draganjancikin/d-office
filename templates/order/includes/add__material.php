@@ -51,5 +51,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addMaterialToOrder"]) )
 
   }
 
-  die('<script>location.href = "?edit&order_id=' .$order_id. '" </script>');
+  die('<script>location.href = "?edit&id=' .$order_id. '" </script>');
 }
