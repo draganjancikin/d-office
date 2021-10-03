@@ -355,7 +355,7 @@ if($page == "cutting"):
                               <td>
                                   <?php
                                   $last_cutting_sheet = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getLastCuttingSheet();
-                                  echo ( $cutting->getId() == $last_cutting_sheet->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?deleteCS&cs_id=' .$cutting->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>' : '');
+                                  echo ( $cutting->getId() == $last_cutting_sheet->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?delete&cs_id=' .$cutting->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>' : '');
                                   ?>
                               </td>
                           </tr>

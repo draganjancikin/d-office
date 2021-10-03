@@ -9,7 +9,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="<?php echo $_SERVER['PHP_SELF']. '?addArticleToCuttingSheet' ?>" method="post">
+      <form action="<?php echo $_SERVER['PHP_SELF']. '?addArticle' ?>" method="post">
         <div class="modal-body">
         
           <input type="hidden" name="cutting_sheet_id" value="<?php echo $cutting_sheet_id; ?>" />
