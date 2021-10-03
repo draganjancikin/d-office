@@ -2,8 +2,8 @@
 // Add Article to CuttingSheet.
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticle"]))  {
   
-  $cutting_sheet_id = htmlspecialchars($_POST['cutting_sheet_id']);
-  $cutting_sheet = $entityManager->find("\Roloffice\Entity\CuttingSheet", $cutting_sheet_id);
+  $id = htmlspecialchars($_POST['id']);
+  $cutting_sheet = $entityManager->find("\Roloffice\Entity\CuttingSheet", $id);
   
   $fence_model_id = htmlspecialchars($_POST['fence_model_id']);
   $fence_model = $entityManager->find("\Roloffice\Entity\FenceModel", $fence_model_id);
@@ -34,5 +34,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticle"]))  {
   $entityManager->persist($newCuttingShettArticle);
   $entityManager->flush();
 
-  die('<script>location.href = "?edit&cutting_sheet_id='.$cutting_sheet_id.'" </script>');
+  die('<script>location.href = "?edit&id='.$id.'" </script>');
 }

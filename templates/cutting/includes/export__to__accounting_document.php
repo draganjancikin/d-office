@@ -1,5 +1,6 @@
 <?php
-use Roloffice\Core\Database;
+// TODO Dragan: Remove unused code.
+// use Roloffice\Core\Database;
 
 // export cutting to proforma-invoice
 if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocument"]) ) {
@@ -8,8 +9,8 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocume
     $user_id = $_SESSION['user_id'];
     $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
 
-    $cutting_id = htmlspecialchars($_GET['cutting_id']);
-    $cutting = $entityManager->find("\Roloffice\Entity\CuttingSheet", $cutting_id);
+    $id = htmlspecialchars($_GET['id']);
+    $cutting = $entityManager->find("\Roloffice\Entity\CuttingSheet", $id);
 
     // Get total length of pickets in cm.
     $total_picket_lenght = htmlspecialchars($_GET['total_picket_lenght']) / 10;

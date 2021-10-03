@@ -349,7 +349,7 @@ if($page == "cutting"):
                           ?>
                           <tr>
                               <td class="centar">
-                                  <a href="?view&cutting_sheet_id=<?php echo $cutting->getId() ?>">KL_<?php echo str_pad($cutting->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?></a>
+                                  <a href="?view&id=<?php echo $cutting->getId() ?>">KL_<?php echo str_pad($cutting->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?></a>
                               </td>
                               <td><?php echo $cutting->getClient()->getName() ?></td>
                               <td>

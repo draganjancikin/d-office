@@ -17,12 +17,12 @@ require 'export__to__accounting_document.php';
       <?php
       if(isset($_GET['view']) || isset($_GET['edit'])):
         
-        if ( isset($_GET['cutting_sheet_id']) ) {
-          $cutting_sheet_id = filter_input(INPUT_GET, 'cutting_sheet_id') ;
+        if ( isset($_GET['id']) ) {
+          $id = filter_input(INPUT_GET, 'id') ;
         } else {
-          $cutting_sheet_id = htmlspecialchars($_POST['cutting_sheet_id']);
+          $id = htmlspecialchars($_POST['id']);
         }
-        $cutting_data = $entityManager->find('\Roloffice\Entity\CuttingSheet', $cutting_sheet_id);
+        $cutting_data = $entityManager->find('\Roloffice\Entity\CuttingSheet', $id);
         $client_data = $entityManager->find('\Roloffice\Entity\Client', $cutting_data->getClient());
         $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
         $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
@@ -33,7 +33,7 @@ require 'export__to__accounting_document.php';
         // in view case show edit button
         if(isset($_GET['view'])):
           ?>
-          <a href="?edit&cutting_sheet_id=<?php echo $cutting_sheet_id ?>">
+          <a href="?edit&id=<?php echo $id ?>">
             <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu krojne liste!">
               <i class="fas fa-edit"> </i> Izmena
             </button>
@@ -44,7 +44,7 @@ require 'export__to__accounting_document.php';
         // in edit case show view button
         if(isset($_GET['edit'])):
           ?>
-          <a href="?view&cutting_sheet_id=<?php echo $cutting_sheet_id ?>">
+          <a href="?view&id=<?php echo $id ?>">
             <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled krojne liste!">
               <i class="fas fa-eye"> </i> Pregled
             </button>
@@ -61,7 +61,7 @@ require 'export__to__accounting_document.php';
         </a>
 
         <!-- Button trigger modal for print -->
-        <a href="../tcpdf/examples/printCutting.php?cutting_id=<?php echo $cutting_sheet_id ?>" title="PDF [new window]" target="_blank">
+        <a href="../tcpdf/examples/printCutting.php?cutting_id=<?php echo $id ?>" title="PDF [new window]" target="_blank">
           <button type="button" class="btn btn-sm btn-outline-secondary">
             <i class="fas fa-print"></i>
           </button>

@@ -29,5 +29,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["create"]) ) {
   // Set Ordinal Number In Year.
   $entityManager->getRepository('Roloffice\Entity\CuttingSheet')->setOrdinalNumInYear($new__cutting_sheet__id);
 
-  die('<script>location.href = "?view&cutting_sheet_id='.$new__cutting_sheet__id.'" </script>');
+  die('<script>location.href = "?view&id='.$new__cutting_sheet__id.'" </script>');
 }

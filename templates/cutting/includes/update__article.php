@@ -3,7 +3,7 @@
 // Update CuttingSheetArticle.
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateArticle"]) ) {
   
-  $cutting_sheet_id = htmlspecialchars($_POST['cutting_sheet_id']);
+  $id = htmlspecialchars($_POST['id']);
   
   $cutting_sheet__article_id = htmlspecialchars($_POST['cutting_sheet__article_id']);
   $cutting_sheet__article = $entityManager->find("\Roloffice\Entity\CuttingSheetArticle", $cutting_sheet__article_id);
@@ -34,5 +34,5 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateArticle"]) ) {
   
   $entityManager->flush();
   
-  die('<script>location.href = "?view&cutting_sheet_id='.$cutting_sheet_id.'" </script>');
+  die('<script>location.href = "?view&id='.$id.'" </script>');
 }
