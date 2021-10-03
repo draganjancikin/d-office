@@ -34,7 +34,6 @@ class CuttingSheetArticleRepository extends EntityRepository {
     $space_between_pickets = $this->getSpaceBetweenPickets($article_width, $pickets_number, $picket_width);
     
     // The difference between the highest and the lowest picket.
-    $min_max_l = $this->getDiffMinMax($article_height, $article_mid_height);
     $pickets_length = 0;
 
     // Legs of triangle for angle calculation.
@@ -54,12 +53,8 @@ class CuttingSheetArticleRepository extends EntityRepository {
         // Loop through all pickets.
         for ( $i = 1; $i <= ceil($pickets_number/2); $i++ ){
           $picket_height = $article_height;
-          if( $i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0 ){
-            $pickets_length = $pickets_length + $picket_height;
-          } 
-          else {
-            $pickets_length = $pickets_length + $picket_height * 2;
-          }
+
+          $pickets_length = $this->getLengthOfPickets($i, $pickets_length, $pickets_number, $picket_height);
         }
     
         break;
@@ -71,18 +66,11 @@ class CuttingSheetArticleRepository extends EntityRepository {
         
         // Loop through all pickets.
         for ( $i=1; $i <= ceil($pickets_number/2); $i++ ) {
-
           $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1);
           $picket_height_over_post = tan(deg2rad($alpha_angle)) * $picket_x_position;
           $picket_height = $article_height + $picket_height_over_post;
         
-          if ( $i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0 ) {
-            $pickets_length = $pickets_length + $picket_height;
-          }
-          else {
-            $pickets_length = $pickets_length + ($picket_height * 2);
-          }
-
+          $pickets_length = $this->getLengthOfPickets($i, $pickets_length, $pickets_number, $picket_height);
         }
 
         break;
@@ -99,24 +87,13 @@ class CuttingSheetArticleRepository extends EntityRepository {
         $radius = $tendon / (2*cos(deg2rad($beta_angle)));;
         
         for ( $i = 1; $i <= ceil($pickets_number/2); $i++ ) {
-          $corective_factor = 0;
-          if ($i > 1 ) {
-            $corective_factor = ($space_between_pickets / 2) / ceil($pickets_number/2);
-          }
-          if ($i > 1 && $this->isEven($pickets_number)) {
-            $corective_factor = ($picket_width + $space_between_pickets / 2) / ceil($pickets_number/2);
-          }
+          $corective_factor = $this->getCorrectiveFactor($i, $space_between_pickets, $pickets_number, $picket_width);
           $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1) + $corective_factor * $i;
           $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
           $picket_height_over_post = $y - ($radius - $heigth_leg);
           $picket_height = $article_height + $picket_height_over_post;
           
-          if ( $i==ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2))>0 ) {
-            $pickets_length = $pickets_length + $picket_height;
-          }
-          else {
-            $pickets_length = $pickets_length + $picket_height * 2;
-          }
+          $pickets_length = $this->getLengthOfPickets($i, $pickets_length, $pickets_number, $picket_height);
         }
         break;
 
@@ -128,24 +105,14 @@ class CuttingSheetArticleRepository extends EntityRepository {
         $ugao_alfa = rad2deg(atan(($heigth_leg * 2)/($article_width-$space_between_pickets * 2)));
         $ugao_beta = 90 - $ugao_alfa;
         $radius = $tendon / (2*cos(deg2rad($ugao_beta)));
-        for ( $i=1; $i<=ceil($pickets_number/2); $i++ ) {
-          $corective_factor = 0;
-          if ($i > 1 ) {
-            $corective_factor = ($space_between_pickets / 2) / ceil($pickets_number/2);
-          }
-          if ($i > 1 && $this->isEven($pickets_number)) {
-            $corective_factor = ($picket_width + $space_between_pickets / 2) / ceil($pickets_number/2);
-          }
+        for ( $i = 1; $i <= ceil($pickets_number/2); $i++ ) {
+          $corective_factor = $this->getCorrectiveFactor($i, $space_between_pickets, $pickets_number, $picket_width);
           $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1) + $corective_factor * $i;
           $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
           $picket_height_over_post = $y - ($radius - $heigth_leg);
           $picket_height = $article_height - $picket_height_over_post;
-          if ( $i==ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2))>0 ){
-            $pickets_length = $pickets_length + $picket_height;
-          }
-          else {
-            $pickets_length = $pickets_length + $picket_height*2;
-          }
+
+          $pickets_length = $this->getLengthOfPickets($i, $pickets_length, $pickets_number, $picket_height);
         }
         break;
 
@@ -160,12 +127,7 @@ class CuttingSheetArticleRepository extends EntityRepository {
           $y = sin(deg2rad($omega*$picket_x_position - $teta));
           $picket_height = $article_height + ($heigth_leg / 2) + ($y * $heigth_leg )/2;
 
-          if ( $i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0 ){
-            $pickets_length = $pickets_length + $picket_height;
-          }
-          else {
-            $pickets_length = $pickets_length + $picket_height*2;
-          }
+          $pickets_length = $this->getLengthOfPickets($i, $pickets_length, $pickets_number, $picket_height);
         }
         
         break;
@@ -318,5 +280,37 @@ class CuttingSheetArticleRepository extends EntityRepository {
       $query = $qb->getQuery();
       $result = $query->getResult();
       return $result;
+  }
+
+  /**
+   * Method that return Picket length.
+   * 
+   * @return int
+   */
+  public function getLengthOfPickets(int $i, int $pickets_length, int $pickets_number, int $picket_height) {
+    if ( $i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0 ){
+      $pickets_length = $pickets_length + $picket_height;
+    } 
+    else {
+      $pickets_length = $pickets_length + $picket_height * 2;
+    }
+
+    return $pickets_length;
+  }
+
+  /**
+   * Method that return corrective factor.
+   * 
+   * @return int
+   */
+  public function getCorrectiveFactor(int $i, int $space_between_pickets, int $pickets_number, int $picket_width) {
+    $corective_factor = 0;
+    if ($i > 1 ) {
+      $corective_factor = ($space_between_pickets / 2) / ceil($pickets_number/2);
+    }
+    if ($i > 1 && $this->isEven($pickets_number)) {
+      $corective_factor = ($picket_width + $space_between_pickets / 2) / ceil($pickets_number/2);
+    }
+    return $corective_factor;
   }
 }
