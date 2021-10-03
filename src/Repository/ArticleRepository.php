@@ -5,19 +5,6 @@ namespace Roloffice\Repository;
 use Doctrine\ORM\EntityRepository;
 
 class ArticleRepository extends EntityRepository {
-  // TODO Dragan: Remove unnecessary code.
-  // /**
-  //  * Method that return number of AccountingDocuments
-  //  *
-  //  * @return int
-  //  */
-  // public function getNumberOfArticles() {
-  //   $qb = $this->_em->createQueryBuilder();
-  //   $qb->select('count(a.id)')
-  //       ->from('Roloffice\Entity\Article','a');
-  //   $count = $qb->getQuery()->getSingleScalarResult();
-  //   return $count;
-  // }
 
   /**
    * Method that return all Articles sort by name ASC
@@ -66,33 +53,6 @@ class ArticleRepository extends EntityRepository {
     $result = $query->getResult();
     return $result;
   }
-
-  // TODO Dragan: Remove unnecessary code.
-  /**
-   * Method that return Article Properties
-   * 
-   * @param int $article_id
-   * 
-   * @return array
-   */
-  // public function getArticleProperties($article_id) {
-  //   // Create a QueryBilder instance
-  //   $qb = $this->_em->createQueryBuilder();
-  //   /*
-  //   $qb->select('ap, pr')
-  //     ->from('Roloffice\Entity\ArticleProperty', 'ap')
-  //     ->join('ap.property', 'pr', 'WITH', 'ap.property = pr.id')
-  //     ->where(
-  //       $qb->expr()->eq('ap.article', $article_id),
-  //     )
-  //     ->distinct();
-  //     */
-        
-      
-  //       $query = $qb->getQuery();
-  //   $result = $query->getResult();
-  //   return $result;
-  // } 
 
   /**
    * Method that return all Article where name $term.

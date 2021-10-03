@@ -20,8 +20,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleDataInAccoun
     // Article changed.
     
     // Remove the Properties of the old Article. (from table v6__accounting_documents__articles__properties)
-    // TODO DRAGAN: Remove unnecessary code
-    // if ($accounting_document__article__properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->getAccountingDocumentArticleProperties($pidb_article_id)) {
     if ($accounting_document__article__properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $pidb_article_id), array())) {
       foreach ($accounting_document__article__properties as $accounting_document__article__property) {
         $accountingDocumentArticleProperty = $entityManager->find("\Roloffice\Entity\AccountingDocumentArticleProperty", $accounting_document__article__property->getId());

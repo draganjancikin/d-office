@@ -6,31 +6,6 @@ use Doctrine\ORM\EntityRepository;
 
 class AccountingDocumentArticleRepository extends EntityRepository {
 
-  // TODO DRAGAN: Remove unnecessary code.
-  /**
-   * Method that return AccountingDocument Article Properties
-   * 
-   * @param int $ad_article_id AccountingDocument Article ID
-   * 
-   * @return array
-   */
-  /*
-  public function getProperties($ad_article_id) {
-    // Create a QueryBilder instance
-    $qb = $this->_em->createQueryBuilder();
-    $qb->select('adap')
-      ->from('Roloffice\Entity\AccountingDocumentArticleProperty', 'adap')
-      ->join('adap.property', 'p', 'adap.property = p.id')
-      ->where(
-        $qb->expr()->eq('adap.accounting_document_article', $ad_article_id),
-        );
-      $query = $qb->getQuery();
-      $result = $query->getResult();
-    
-    return $result;
-  }
-  */
-
   /**
    * Method that return quantity of article. If article dont have property
    * quantity = 1, if article have one property quantity = property/100. If
@@ -44,8 +19,6 @@ class AccountingDocumentArticleRepository extends EntityRepository {
    */
   public function getQuantity($ad_article_id, $min_calc_measure, $pieces) {
     
-    // TODO DRAGAN: Remove unnecessary code.
-    // $properties = $this->getProperties($ad_article_id);
     $properties = $this->_em->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article_id), array());
     
     $temp_quantity = 1;
