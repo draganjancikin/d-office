@@ -130,7 +130,7 @@ else:
                 echo "<h5>Narudžbenice:</h5>";
                 foreach ($orders as $order):
                     ?>
-                    <a href="/orders/?view&order_id=<?php echo $order->getId() ?>">
+                    <a href="/orders/?view&id=<?php echo $order->getId() ?>">
                         <?php echo str_pad($order->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $order->getDate()->format('m_Y') ?>
                     </a>
                     <span style="display: inline-block; width: 50px; text-align: center;">
