@@ -1,3 +1,8 @@
+# Upgrade to 6.0.3
+
+Enhancement:
+* When perform advanced search repopulate search field
+
 # Upgrade to 6.0.2
 
 Resolved issues and bugfixes:
