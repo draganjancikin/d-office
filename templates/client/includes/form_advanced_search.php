@@ -9,21 +9,21 @@
       <div class="form-group row">
         <label for="inputName" class="col-sm-2 col-form-label text-right" >Kijent: </label>
         <div class="col-sm-10">
-          <input class="form-control" type="text" id="inputName" name="client" value="<?php echo ( $_POST["client"] ? $_POST["client"] : '') ?>" placeholder=" Unesite naziv klijenta" >
+          <input class="form-control" type="text" id="inputName" name="client" value="<?php echo ( isset($_POST["client"]) ? $_POST["client"] : '') ?>" placeholder=" Unesite naziv klijenta" >
         </div>
       </div>
   
       <div class="form-group row">
         <label for="inputStreet" class="col-sm-2 col-form-label text-right">Ulica: </label>
         <div class="col-sm-10">
-          <input id="inputStreet" class="form-control" type="text" name="street" value="<?php echo ( $_POST["street"] ? $_POST["street"] : '' )?>" placeholder=" Unesite naziv ulice" >	 
+          <input id="inputStreet" class="form-control" type="text" name="street" value="<?php echo ( isset($_POST["street"]) ? $_POST["street"] : '' )?>" placeholder=" Unesite naziv ulice" >	 
         </div>
       </div>
   
       <div class="form-group row">
         <label for="inputCity" class="col-sm-2 col-form-label text-right">Naselje: </label>
         <div class="col-sm-10">
-          <input id="inputCity" class="form-control" type="text" name="city" value="<?php echo ($_POST["city"] ? $_POST["city"] : '') ?>" placeholder=" Unesite naziv naselja" />	 
+          <input id="inputCity" class="form-control" type="text" name="city" value="<?php echo ( isset($_POST["city"]) ? $_POST["city"] : '') ?>" placeholder=" Unesite naziv naselja" />	 
         </div>
       </div>
   
