@@ -542,16 +542,14 @@ if($page == "orders"):
                     <tbody>
                       
                     <?php
-                    // zatim izlistavamo narudžbenice koje su arhivirane
+                    // List archived orders.
                     foreach ($orders as $order_data):
                         $project_data = $entityManager->getRepository('\Roloffice\Entity\Order')->getProject($order_data->getId());
-                        // $project_id = $order['project_id'];
-                        // $project_data = $project -> getProject($project_id);
                         if ($order_data->getIsArchived() == 1):
                             ?>
                             <tr class="table-secondary">
                                 <td class="px-1">
-                                    <a href="?view&order_id=<?php echo $order_data->getId() ?>">
+                                    <a href="?view&id=<?php echo $order_data->getId() ?>">
                                         <?php echo str_pad($order_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $order_data->getDate()->format('m_Y') ?>
                                     </a>
                                 </td>

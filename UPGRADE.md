@@ -1,4 +1,12 @@
+# Upgrade to 6.0.4
+
+Resolved issues and bugfixes:
+* #135: On Order search, link to archived order is broken
+
 # Upgrade to 6.0.3
+
+Resolved issues and bugfixes:
+* #133: Broken link from Project to Order
 
 Enhancement:
 * When perform advanced search repopulate search field
