@@ -15,9 +15,7 @@
     }
   ],
   "autoload": {
-    "files": [
-      "config/tcpdf_config.php",
-    ],
+    "files": [],
     "psr-4": {
       "Roloffice\\Controller\\": "src/Controller",
       "Roloffice\\Core\\": "src/Core",
