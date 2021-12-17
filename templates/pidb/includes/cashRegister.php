@@ -1,5 +1,5 @@
 <?php
-if(isset($_GET['date'])){
+if (isset($_GET['date'])) {
   $date = $_GET['date'];
 } else {
   $date = "";
@@ -25,31 +25,23 @@ $daily_cash_saldo = $entityManager->getRepository('\Roloffice\Entity\Payment')->
               </tr>
             </thead>
             <tbody>
-              <?php
-            foreach($daily_transactions as $transaction) :
-              $accounting_document = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId());
-              ?>
-              <tr>
-                <td><?php echo $transaction->getType()->getName() ?></td>
-                <td>
-                  <?php
-                  if ($accounting_document && $accounting_document->getOrdinalNumInYear() <> 0):
-                    ?>
-                    <a href="/pidb?view&pidb_id=<?php echo $accounting_document->getId()?>">
-                      <?php echo str_pad($accounting_document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?>
-                      <?php echo $accounting_document->getClient()->getName() ?>
-                      <?php echo $accounting_document->getTitle() ?>
-                    </a>
-                    <?php
-                  endif;
-                  ?>
-                </td>
-                <td><?php echo $transaction->getNote() ?></td>
-                <td class="text-right"><?php echo $transaction->getAmount() ?></td>
-              </tr>
-              <?php
-            endforeach;
-            ?>
+              <?php foreach ($daily_transactions as $transaction):
+              $accounting_document = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId()); ?>
+                <tr>
+                  <td><?php echo $transaction->getType()->getName() ?></td>
+                  <td>
+                    <?php if ($accounting_document && $accounting_document->getOrdinalNumInYear() <> 0): ?>
+                      <a href="/pidb?view&pidb_id=<?php echo $accounting_document->getId()?>">
+                        <?php echo str_pad($accounting_document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?>
+                        <?php echo $accounting_document->getClient()->getName() ?>
+                        <?php echo $accounting_document->getTitle() ?>
+                      </a>
+                    <?php endif; ?>
+                  </td>
+                  <td><?php echo $transaction->getNote() ?></td>
+                  <td class="text-right"><?php echo $transaction->getAmount() ?></td>
+                </tr>
+              <?php endforeach; ?>
             </tbody>
             <tfoot class="thead-light">
               <tr>

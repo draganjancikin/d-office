@@ -46,9 +46,7 @@ endif;
                                 <td class="text-right"></td>
                                 <td></td>
                             </tr>
-                            <?php
-                            foreach($transactions as $transaction) :
-                                ?>
+                            <?php foreach ($transactions as $transaction): ?>
                                 <tr>
                                     <td class="text-center"><?php echo $transaction->getDate()->format('d-m-Y'); ?></td>
                                     <td class="text-center"><?php echo $transaction->getType()->getName(); ?></td>
@@ -57,7 +55,7 @@ endif;
                                         <?php echo number_format($transaction->getAmount(), 4, ",", "."); ?>
                                     </td>
                                     <td>
-                                        <?php if($user_role_id==1 OR $user_role_id==2): ?>
+                                        <?php if ($user_role_id==1 OR $user_role_id==2): ?>
                                             <a href="" class="btn btn-success btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
@@ -67,9 +65,7 @@ endif;
                                         <?php endif; ?>
                                     </td>
                                 </tr>
-                                <?php
-                            endforeach;
-                            ?>
+                            <?php endforeach; ?>
                         </tbody>
                         <tfoot>
                             <tr>

@@ -1,6 +1,6 @@
 <?php
 // Edit Article in AccountingDocument.
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleInAccountingDocument"]) ) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleInAccountingDocument"]) ) {
   
   $accounting_document_id = htmlspecialchars($_GET["pidb_id"]);
   $accounting_document__article_id = htmlspecialchars($_GET["pidb_article_id"]);

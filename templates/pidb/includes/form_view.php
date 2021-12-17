@@ -192,17 +192,13 @@ switch ($pidb_data->getType()->getId()) {
             <td class="text-right"><?php echo  number_format(($avans * $kurs), 2, ",", ".") ?></td>
             <td class="text-right">(&#8364; <?php echo number_format($avans, 4, ",", ".") ?>)</td>
           </tr>
-          <?php
-          if ($pidb_data->getType()->getId() == 2) :
-            ?>
+          <?php if ($pidb_data->getType()->getId() == 2): ?>
             <tr class="table-<?php echo $style; ?>">
               <td colspan="6">Uplaćeno</td>
               <td class="text-right""><?php echo  number_format(($income * $kurs), 2, ",", ".") ?></td>
               <td class="text-right">(&#8364; <?php echo number_format($income, 4, ",", ".") ?>)</td>
             </tr>
-            <?php
-          endif;
-          ?>
+          <?php endif; ?>
           <tr class="table-<?php echo $style; ?>">
             <td colspan="6"><strong>OSTALO ZA UPLATU<strong></td>
             <td class="text-right"><strong><?php echo number_format(($total-$avans-$income) * $kurs, 2, ",", ".") ?></strong></td>

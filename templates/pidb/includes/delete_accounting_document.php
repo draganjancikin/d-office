@@ -1,6 +1,6 @@
 <?php
 // Delete Acconting Document.
-if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["deleteAccountingDocument"]) ) {
+if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["deleteAccountingDocument"]) ) {
   
   $acc_doc_id = htmlspecialchars($_GET["acc_doc_id"]);
   
@@ -50,10 +50,8 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["deleteAccountingDocument
       } else {
 
         if ( $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getPaymentsByAvans($acc_doc_id) ){
-        
           echo "Brisanje dokumenta nije moguće jer postoje avansi vezani za ovaj dokument!";
           exit();
-
         }
 
       }
@@ -80,7 +78,6 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["deleteAccountingDocument
         // Delete Article from AccountingDocument.
         $entityManager->remove($accounting_document__article);
         $entityManager->flush();
-
       }
 
     }

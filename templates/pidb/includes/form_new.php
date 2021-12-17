@@ -5,13 +5,9 @@
   </div>
   <div class="card-body p-2">
     <form class="form-horizontal" role="form" action="<?php echo $_SERVER['PHP_SELF'] . '?createAccountingDocument'; ?>" method="post">
-      <?php 
-      if(isset($_GET['project_id'])):
-        ?>
+      <?php if (isset($_GET['project_id'])): ?>
         <input type="hidden" name="project_id" value="<?php echo $_GET['project_id'] ?>">
-        <?php
-      endif;
-      ?>
+      <?php endif; ?>
 
       <div class="form-group row">
         <label for="select_pidb_type_id" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta dokumenta:</label>
@@ -31,15 +27,15 @@
         <div class="col-sm-4">
           <select id="select_client_id" class="form-control" name="client_id" required="required">
           <?php
-          if(isset($_GET['client_id'])){
+          if (isset($_GET['client_id'])){
             $client_id = htmlspecialchars($_GET["client_id"]);
             $client_data = $entityManager->find('\Roloffice\Entity\Client', $client_id);
             echo '<option value="'.$client_data->getId().'">'.$client_data->getName().'</option>';
-          }else{
+          } else {
             echo '<option value="">naziv klijenta</option>';
           }
           $clients_list = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => "ASC"));
-          foreach( $clients_list as $client_item):
+          foreach ( $clients_list as $client_item):
             ?>
             <option value="<?php echo $client_item->getId() ?>">
               <?php echo $client_item->getName() ?>

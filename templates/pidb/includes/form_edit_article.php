@@ -33,13 +33,9 @@ $article_data = $entityManager->find('\Roloffice\Entity\AccountingDocumentArticl
                 <div class="col-sm-9 col-lg-10">
                     <select name="article_id" id="article_id" class="form-control">
                         <option value="<?php echo $article_data->getArticle()->getId() ?>"><?php echo $article_data->getArticle()->getName() ?></option>
-                        <?php
-                        foreach ($all_articles as $article) :
-                            ?>
+                        <?php foreach ($all_articles as $article): ?>
                             <option value="<?php echo $article->getId() ?>"><?php echo $article->getName() ?></option>
-                            <?php
-                        endforeach;
-                        ?>
+                        <?php endforeach; ?>
                     </select>
                 </div>
             </div>
