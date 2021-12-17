@@ -79,7 +79,7 @@ else:
                   <i class="fa fa-plus"></i> <i class="fas fa-pencil-alt"> </i>
                 </button>
                 <!-- Pregled i štampanje radnog naloga sa beleškama uz projekat -->
-                <a href="/tcpdf/examples/printProjectTaskWithNotes.php?project_id=<?php echo $project_id; ?>" title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank">
+                <a href="printProjectTaskWithNotes.php?project_id=<?php echo $project_id; ?>" title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank">
                   <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
                     <i class="fa fa-print"></i> Beleške
                   </button>
