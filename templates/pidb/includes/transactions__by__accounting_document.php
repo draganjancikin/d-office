@@ -49,7 +49,7 @@ endif;
                             <?php foreach ($transactions as $transaction): ?>
                                 <tr>
                                     <td class="text-center"><?php echo $transaction->getDate()->format('d-m-Y'); ?></td>
-                                    <td class="text-center"><?php echo $transaction->getType()->getName(); ?></td>
+                                    <td class="text-center" title="<?php echo $transaction->getNote() ?>"><?php echo $transaction->getType()->getName(); ?></td>
                                     <td class="text-right"></td>
                                     <td class="text-right">
                                         <?php echo number_format($transaction->getAmount(), 4, ",", "."); ?>
