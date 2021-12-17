@@ -4,7 +4,8 @@ Updates:
 * Update "Doctrine/ORM" (2.8.5 => 2.9.5)
 
 Enhancement:
-* Add Material created date to view and edit page
+* Add Material modified date to Material on view and edit page
+* Add Material modified date to Material Supplier on view and edit
 
 # Upgrade to 6.0.4
 
