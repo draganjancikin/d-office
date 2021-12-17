@@ -1,12 +1,11 @@
 <?php
-$page = "pidb";
 
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/appConfig.php';
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.php';
 
 // Include the main TCPDF library (search for installation path).
-require_once('tcpdf_include.php');
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/tcpdf_include.php';
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -51,7 +50,31 @@ $pdf->AddPage();
 $accounting_document__id = $_GET['accounting_document__id'];
 $accounting_document__data = $entityManager->find("\Roloffice\Entity\AccountingDocument", $accounting_document__id);
 
-if( $accounting_document__data->getType()->getId()) $accounting_document__type = "Otpremnica - račun";
+if( $accounting_document__data->getType()->getId() == 2) $accounting_document__type = "Otpremnica - račun";
+
+$client_data = $accounting_document__data->getClient();
+$client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
+$client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
+$client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
+
+$client_contacts = $client_data->getContacts();
+
+$contact_item[0] = "";
+$contact_item[1] = "";
+
+if (!empty($client_contacts)) {
+    
+  $count = 0;
+  foreach ($client_contacts as $client_contact):
+    if ( NULL !== $client_contact->getBody() AND $count == 0 ){ 
+      $contact_item[0] = $client_contact->getBody();
+    } elseif ( NULL !== $client_contact->getBody() AND $count == 1) {
+      $contact_item[1] = $client_contact->getBody();
+    }
+    $count++; 
+  endforeach;
+  
+}
 
 $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
 $kurs = $preferences->getKurs();
@@ -70,12 +93,14 @@ $html = '
     PIB: 100754526, MB: 55060100<br /> 
     ž.r. 160-438797-72, Banca Intesa<br />
     ž.r. 330-11001058-98, Credit Agricole</td>
+    
+    <td width="350px">Kupac:<br />'.$client_data->getName().' '.($client_data->getLb()<>""?'<br />PIB '.$client_data->getLb():"").'<br />'.$client_street->getName().' '.$client_data->getHomeNumber().'<br />'.$client_city->getName().', '.$client_country->getName().'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>
   <tr>
-    <td colspan="3"><h2>'.$accounting_document__type.' broj: '.str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '. $accounting_document__data->getDate()->format('m') .'</h2></td>
+    <td colspan="3"><h2>'.$accounting_document__type.' broj: '.str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$accounting_document__data->getDate()->format('m').'</h2></td>
   </tr>
   <tr>
-    <td colspan="3">Datum i mesto izdavanja: ' . $accounting_document__data->getDate()->format('d M Y') . '.g. Bačka Palanka</td>
+    <td colspan="3">Datum i mesto izdavanja: '.$accounting_document__data->getDate()->format('d M Y').'.g. Bačka Palanka</td>
   </tr>
 </table>
 ';
@@ -86,7 +111,7 @@ $html = '
 <table border="1">
   <tr>
     <td width="30px" align="center">red.<br />br.</td>
-    <td width="190px" align="center">naziv proizvoda</td>
+    <td width="195px" align="center">naziv proizvoda</td>
     <td width="35px" align="center">jed.<br />mere</td>
     <td width="53px" align="center">kol.</td>
     <td width="70px" align="center">cena po<br />jed. mere</td>
@@ -109,7 +134,7 @@ $total_eur = 0;
 $ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($accounting_document__id);
 
 foreach ($ad_articles as $ad_article):
-  
+
   $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article->getId()), array());
   $property_temp = '';
   $property_counter = 0;
@@ -133,7 +158,7 @@ foreach ($ad_articles as $ad_article):
     <table border="0">
       <tr>
         <td width="30px" align="center">' .$count. '</td>
-        <td width="190px">' . $ad_article->getArticle()->getName() . '<span style="font-size: 7">' . ( $ad_article->getNote() == "" ? "" : ', ' . $ad_article->getNote() ) . '</span>'
+        <td width="195px">' .$ad_article->getArticle()->getName() . '<span style="font-size: 7">' . ( $ad_article->getNote() == "" ? "" : ', '.$ad_article->getNote() ) . '</span>'
           . '<br />' .$property_temp. ' ' . $ad_article->getPieces() . ' kom </td>
         <td align="center" width="35px">' . $ad_article->getArticle()->getUnit()->getName() . '</td>
         <td width="53px" align="right">'.number_format( $ad_a_quantity, 2, ",", "."). '</td>
@@ -201,7 +226,7 @@ $html = '
   <tr>
     <td colspan="3"></td>
     <td colspan="5"></td>
-    <td colspan="2" align="right">( &#8364; '.number_format($total-$avans-$income, 2, ",", ".").' )</td>
+    <td colspan="2" align="right" style="font-size: 11px;">( &#8364; '.number_format($total-$avans-$income, 2, ",", ".").' )</td>
   </tr>
 </table>
 ';
@@ -211,15 +236,15 @@ $pdf->writeHTML($html, true, false, true, false, '');
 $html = ''.($accounting_document__data->getType()->getId() == 2 ? "" : '
 <style type="text/css">table { padding: 0px; margin: 0px; }</style>
 <table>
-  <tr><td width="105px">Slovima: </td><td width="580px" style="background-color: #E0E0E0;"></td></tr>
+  <tr><td width="105px">Slovima: </td><td width="585px" style="background-color: #E0E0E0;"></td></tr>
   <tr><td>Način plaćanja: </td>       <td style="background-color: #E0E0E0;">Virmanom - nalogom za prenos</td></tr>
   <tr><td>Rok plaćanja: </td>         <td style="background-color: #E0E0E0;"></td></tr>
-  <tr><td>Poziv na broj: </td>        <td style="background-color: #E0E0E0;">'.str_pad($accounting_document__data->getOrdinalNumInyear(), 3, "0", STR_PAD_LEFT) . ' - ' . $accounting_document__data->getDate()->format('m') . '</td></tr>
+  <tr><td>Poziv na broj: </td>        <td style="background-color: #E0E0E0;">'.str_pad($pidb_data['y_id'], 3, "0", STR_PAD_LEFT).' - '.date('m', strtotime($pidb_data['date'])).'</td></tr>
   <tr><td></td></tr>
 </table>
 ').'
 <table border="1">
-  <tr><td width="685px">Napomena:<br />'.nl2br($accounting_document__data->getNote()).'</td></tr>
+  <tr><td width="690px">Napomena:<br />'.nl2br($accounting_document__data->getNote()).'</td></tr>
 </table>
 ';
 

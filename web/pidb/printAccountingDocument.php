@@ -6,17 +6,17 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.p
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.php';
 
 // Include the main TCPDF library (search for installation path).
-require_once('tcpdf_include.php');
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/tcpdf_include.php';
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('Rolostil');
+$pdf->SetAuthor('Roloffice');
 $pdf->SetTitle('ROLOSTIL - Dokument');
 $pdf->SetSubject('Rolostil');
-$pdf->SetKeywords('Rolostil, PDF, nalog');
+$pdf->SetKeywords('Rolostil, PDF, Proforma, Invoice');
 
 // remove default header/footer
 $pdf->setPrintHeader(false);
@@ -66,11 +66,36 @@ switch ($accounting_document__data->getType()->getId()) {
     break;
 }
 
+$client_data = $accounting_document__data->getClient();
+$client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
+$client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
+$client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
+
+$client_contacts = $client_data->getContacts();
+
+$contact_item[0] = "";
+$contact_item[1] = "";
+
+if (!empty($client_contacts)) {
+    
+  $count = 0;
+  foreach ($client_contacts as $client_contact):
+    if ( NULL !== $client_contact->getBody() AND $count == 0 ){ 
+      $contact_item[0] = $client_contact->getBody();
+    } elseif ( NULL !== $client_contact->getBody() AND $count == 1) {
+      $contact_item[1] = $client_contact->getBody();
+    }
+    $count++; 
+  endforeach;
+    
+}
 $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
 $kurs = $preferences->getKurs();
 
 $html = '
-<style type="text/css">table { padding-top: 5px; padding-bottom: 5px; }</style>
+<style type="text/css">
+  table { padding-top: 5px; padding-bottom: 5px; }
+</style>
 
 <table border="0">
   <tr>
@@ -80,15 +105,17 @@ $html = '
     <td width="340px" colspan="2">
     Vojvode Živojina Mišića 237<br />
     21400 Bačka Palanka<br />
-    PIB: 100754526, MB: 55060100<br />
+    PIB: 100754526, MB: 55060100<br /> 
     ž.r. 160-438797-72, Banca Intesa<br />
     ž.r. 330-11001058-98, Credit Agricole</td>
+    
+    <td width="350px">Kupac:<br />'.$client_data->getName().' '.($client_data->getLb()<>""?'<br />PIB '.$client_data->getLb():"").'<br />'.$client_street->getName().' '.$client_data->getHomeNumber().'<br />'.$client_city->getName().', '.$client_country->getName().'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>
   <tr>
-    <td colspan="3"><h2>'.$accounting_document__type.' br: '.str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$accounting_document__data->getDate()->format('m').'</h2></td>
+    <td colspan="3"><h2>'.$accounting_document__type.' broj: '.str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '. $accounting_document__data->getDate()->format('m') .'</h2></td>
   </tr>
   <tr>
-    <td colspan="3">Datum i mesto izdavanja: '.$accounting_document__data->getDate()->format('d M Y').'.g. Bačka Palanka</td>
+    <td colspan="3">Datum i mesto izdavanja: ' . $accounting_document__data->getDate()->format('d M Y') . '.g. Bačka Palanka</td>
   </tr>
 </table>
 ';
@@ -96,10 +123,10 @@ $html = '
 $pdf->writeHTML($html, true, false, true, false, '');
 
 $html = '
-<table border="1">
+<table border="1" >
   <tr>
     <td width="30px" align="center">red.<br />br.</td>
-    <td '.($accounting_document__data->getType()->getId() == 2 ? 'width="495px"' : 'width="185px"'). ' align="center">naziv proizvoda</td>
+    <td '.($accounting_document__data->getType()->getId() == 2 ? 'width="495px"' : 'width="190px"'). ' align="center">naziv proizvoda</td>
     <td width="35px" align="center">jed.<br />mere</td>
     <td width="53px" align="center">kol.</td>
     '.($accounting_document__data->getType()->getId() == 2 ? "" : '
@@ -114,20 +141,18 @@ $html = '
 </table>
 ';
 
-
 $pdf->writeHTML($html, true, false, true, false, '');
-
-
 
 $count = 0;
 $total_tax_base = 0;
 $total_tax_amount = 0;
 $total = 0;
 $total_eur = 0;
+
 $ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($accounting_document__id);
 
 foreach ($ad_articles as $ad_article):
-  
+
   $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article->getId()), array());
   $property_temp = '';
   $property_counter = 0;
@@ -138,29 +163,30 @@ foreach ($ad_articles as $ad_article):
     $property_temp = $property_temp . ( $property_counter==2 ? 'x' : '' ) .$property_quantity . 'cm';
   endforeach;
     
-  $count++;
-  $ad_a_quantity = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces() );
-  
-  $tax_base = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
+    $count++;
+    
+    $ad_a_quantity = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces() );
 
-  $tax_amount = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxAmount($tax_base, $ad_article->getTax() );
+    $tax_base = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
+
+    $tax_amount = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxAmount($tax_base, $ad_article->getTax() );
 
     $html = '
     <style type="text/css"> table{ padding: 0px; margin: 0px; }</style>
-    <table border="0">
+    <table border="0" style="font-size: 10px">
       <tr>
         <td width="30px" align="center">' .$count. '</td>
         <td '.($accounting_document__data->getType()->getId() == 2 ? 'width="495px"' : 'width="190px"'). '>' .$ad_article->getArticle()->getName() . '<span style="font-size: 7">' . ( $ad_article->getNote() == "" ? "" : ', '.$ad_article->getNote() ) . '</span>'
-            . '<br />' .$property_temp. ' ' .$ad_article->getPieces(). ' kom </td>
-        <td align="center" width="35px">' .$ad_article->getArticle()->getUnit()->getName(). '</td>
-        <td width="53px" align="right">'.number_format($ad_a_quantity, 2, ",", "."). '</td>' 
+            . '<br />' .$property_temp. ' ' . $ad_article->getPieces() . ' kom </td>
+        <td align="center" width="35px">' . $ad_article->getArticle()->getUnit()->getName() . '</td>
+        <td width="53px" align="right">'. number_format($ad_a_quantity, 2, ",", "."). '</td>' 
         .($accounting_document__data->getType()->getId() == 2 ? "" : '
-            <td width="70px" align="right">' .number_format($ad_article->getPrice() * $kurs, 2, ",", "."). '</td>
-            <td width="37px" align="right">' .number_format($ad_article->getDiscount(), 2, ",", "."). '</td>
-            <td width="80px" align="right">' .number_format($tax_base * $kurs, 2, ",", "."). '</td>
-            <td width="37px" align="right">' .number_format($ad_article->getTax(), 2, ",", ".").'</td>
-            <td width="70px" align="right">' .number_format($tax_amount * $kurs, 2, ",", "."). '</td>
-            <td width="80px" align="right">' .number_format($sub_total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getSubTotal($tax_base, $tax_amount ) * $kurs, 2, ",", "."). '</td>
+        <td width="70px" align="right">' .number_format( $ad_article->getPrice() * $kurs, 2, ",", "."). '</td>
+        <td width="37px" align="right">' .number_format( $ad_article->getDiscount(), 2, ",", "."). '</td>
+        <td width="80px" align="right">' .number_format( $tax_base * $kurs, 2, ",", "."). '</td>
+        <td width="37px" align="right">' .number_format( $ad_article->getTax(), 2, ",", ".").'</td>
+        <td width="70px" align="right">' .number_format( $tax_amount * $kurs, 2, ",", "."). '</td>
+        <td width="80px" align="right">' .number_format( $sub_total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getSubTotal($tax_base, $tax_amount ) * $kurs, 2, ",", "."). '</td>
         '). '
       </tr>
     </table>
@@ -170,10 +196,11 @@ foreach ($ad_articles as $ad_article):
     
     $total_tax_base = $total_tax_base + $tax_base;
     $total_tax_amount = $total_tax_amount + $tax_amount;
-    
     $total = $total_tax_base + $total_tax_amount;
     
 endforeach;
+
+$income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($accounting_document__id);
 
 $html = ''.($accounting_document__data->getType()->getId() == 2 ? "" : '
 <style type="text/css">table {	padding: 0px; margin: 0px; }</style>
@@ -193,15 +220,28 @@ $html = ''.($accounting_document__data->getType()->getId() == 2 ? "" : '
     <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total_tax_amount * $kurs, 2, ",", ".").'</td>
     <td></td>
   </tr>
-  <tr style="font-weight:bold;">
+ <tr>
     <td colspan="3"></td>
-    <td colspan="5" style="border-bottom-width: inherit;">UKUPNO ZA UPLATU</td>
+    <td colspan="5" style="border-bottom-width: inherit;">UKUPNO</td>
     <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format($total * $kurs, 2, ",", ".").'</td>
+    <td></td>
   </tr>
   <tr>
     <td colspan="3"></td>
+    <td colspan="5" style="border-bottom-width: inherit;">Avans</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format(($avans = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAvans($accounting_document__id)) * $kurs, 2, ",", ".").'</td>
+    <td></td>
+  </tr>
+  <tr style="font-weight:bold;">
+    <td colspan="3"></td>
+    <td colspan="5" style="border-bottom-width: inherit;">OSTALO ZA UPLATU</td>
+    <td colspan="2" align="right" style="border-bottom-width: inherit;">'.number_format(($total-$avans-$income) * $kurs, 2, ",", ".").'</td>
+  </tr>
+
+  <tr>
+    <td colspan="3"></td>
     <td colspan="5"></td>
-    <td colspan="2" align="right">( &#8364; '.number_format($total, 2, ",", ".").' )</td>
+    <td colspan="2" align="right" style="font-size: 11px;">( &#8364; '.number_format($total-$avans-$income, 4, ",", ".").' )</td>
   </tr>
 </table>
 ').'
@@ -209,7 +249,16 @@ $html = ''.($accounting_document__data->getType()->getId() == 2 ? "" : '
 
 $pdf->writeHTML($html, true, false, true, false, '');
 
-$html = '
+$html = ''.($accounting_document__data->getType()->getId() == 2 ? "" : '
+<style type="text/css">table { padding: 0px; margin: 0px; }</style>
+<table>
+  <tr><td width="105px">Slovima: </td><td width="580px" style="background-color: #E0E0E0;"></td></tr>
+  <tr><td>Način plaćanja: </td>       <td style="background-color: #E0E0E0;">Virmanom - nalogom za prenos</td></tr>
+  <tr><td>Rok plaćanja: </td>         <td style="background-color: #E0E0E0;"></td></tr>
+  <tr><td>Poziv na broj: </td>        <td style="background-color: #E0E0E0;">'.str_pad($accounting_document__data->getOrdinalNumInyear(), 3, "0", STR_PAD_LEFT).' - '.$accounting_document__data->getDate()->format('m').'</td></tr>
+  <tr><td></td></tr>
+</table>
+').'
 <table border="1">
   <tr><td width="685px">Napomena:<br />'.nl2br($accounting_document__data->getNote()).'</td></tr>
 </table>
@@ -218,31 +267,29 @@ $html = '
 $pdf->writeHTML($html, true, false, true, false, '');
 
 if($accounting_document__data->getType()->getId() == 2){
-    $html = '
-<table>
-  <tr><td></td><td></td><td></td></tr>
-  <tr><td></td><td></td><td></td></tr>
-  <tr><td>______________________</td><td></td><td align="right">______________________</td></tr>
-  <tr><td>robu izdao</td><td></td><td align="right">robu primio</td></tr>
-  <tr><td></td><td></td><td></td></tr>
-  <tr><td></td><td></td><td></td></tr>
-  <tr><td align="center"></td><td></td><td align="center"></td></tr>
-</table>
-';
+  $html = '
+  <table>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td>______________________</td><td></td><td align="right">______________________</td></tr>
+    <tr><td>robu izdao</td><td></td><td align="right">robu primio</td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td align="center"></td><td></td><td align="center"></td></tr>
+  </table>
+  ';
 
-$pdf->writeHTML($html, true, false, true, false, '');
+  $pdf->writeHTML($html, true, false, true, false, '');
 }else{
-    $html = '
-<table>
-  <tr><td></td><td></td></tr>
-  <tr><td></td><td></td></tr>
-  <tr><td align="right"></td><td align="center">___________________________</td></tr>
-</table>
-';
-
-$pdf->writeHTML($html, true, false, true, false, '');
+  $html = '
+  <table>
+    <tr><td></td><td></td></tr>
+    <tr><td></td><td></td></tr>
+    <tr><td align="right"></td><td align="center">___________________________<br />odgovorno lice</td></tr>
+  </table>
+  ';
+  $pdf->writeHTML($html, true, false, true, false, '');
 }
-
 
 // reset pointer to the last page
 $pdf->lastPage();

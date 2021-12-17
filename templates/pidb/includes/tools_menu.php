@@ -63,12 +63,12 @@ require 'delete_accounting_document.php';
           </button>
 
           <!-- Print Buttons -->
-          <a href="/tcpdf/examples/printAccountingDocument.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
+          <a href="printAccountingDocument.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
             <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
               <i class="fas fa-print"> </i>
             </button>
           </a>
-          <a href="/tcpdf/examples/printAccountingDocumentW.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
+          <a href="printAccountingDocumentW.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
             <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
               <i class="fas fa-print"> </i> w
             </button>
@@ -77,12 +77,12 @@ require 'delete_accounting_document.php';
           <?php
           if ($pidb_data->getType()->getId() == 2):
             ?>
-            <a href="/tcpdf/examples/printAccountingDocumentI.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
+            <a href="printAccountingDocumentI.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
               <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                 <i class="fas fa-print"> </i> I
               </button>
             </a>
-            <a href="/tcpdf/examples/printAccountingDocumentIW.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
+            <a href="printAccountingDocumentIW.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
               <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                 <i class="fas fa-print"> </i> IW
               </button>
