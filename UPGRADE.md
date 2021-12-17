@@ -8,7 +8,7 @@ Enhancement:
 * Add Material modified date to Material Supplier on view and edit
 
 New features:
-* Add edit form for AccountingDocument Transaction (payment)
+* Add edit/delete form for AccountingDocument Transaction (payment)
 
 # Upgrade to 6.0.4
 
