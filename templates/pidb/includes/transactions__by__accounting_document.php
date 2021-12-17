@@ -56,7 +56,7 @@ endif;
                                     </td>
                                     <td>
                                         <?php if ($user_role_id==1 OR $user_role_id==2): ?>
-                                            <a href="" class="btn btn-success btn-sm">
+                                            <a href="" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editTransaction" title="Izmeni transakciju!">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <a href="" class="btn btn-danger btn-sm">
