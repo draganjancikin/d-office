@@ -59,7 +59,7 @@ endif;
                                             <a href="" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editTransaction" title="Izmeni transakciju!">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="" class="btn btn-danger btn-sm">
+                                            <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete transakciju?');" href="?deleteTransaction&transaction_id=<?php echo $transaction->getId(); ?>&pidb_id=<?php echo $pidb_data->getId() ?>" title="Brisanje Transakcije" class="btn btn-danger btn-sm">
                                                 <i class="far fa-trash-alt"></i>
                                             </a>
                                         <?php endif; ?>

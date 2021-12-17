@@ -6,6 +6,7 @@ require 'add__article__to__accounting_document.php';
 require 'edit__article__in__accounting_document.php';
 require 'add__payment__to__accounting_document.php';
 require 'edit__transaction.php';
+require 'delete__transaction.php';
 require 'change__article__in__accounting_document.php';
 require 'duplicate__article__in__accounting_document.php';
 require 'remove__article__from__accounting_document.php';
