@@ -63,7 +63,7 @@ require 'export__to__accounting_document.php';
         </a>
 
         <!-- Button trigger modal for print -->
-        <a href="../tcpdf/examples/printCutting.php?cutting_id=<?php echo $id ?>" title="PDF [new window]" target="_blank">
+        <a href="printCutting.php?cutting_id=<?php echo $id ?>" title="PDF [new window]" target="_blank">
           <button type="button" class="btn btn-sm btn-outline-secondary">
             <i class="fas fa-print"></i>
           </button>

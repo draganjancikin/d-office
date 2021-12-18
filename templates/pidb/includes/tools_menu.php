@@ -179,7 +179,7 @@ require 'delete_accounting_document.php';
           </button>
         </a>
         -->
-        <form class="d-inline" target="_blank" action="/tcpdf/examples/printDailyCashReport.php">
+        <form class="d-inline" target="_blank" action="printDailyCashReport.php">
           <input type="hidden" name="date" value="<?php echo $date ?>">
           <button type="submit" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
             <i class="fas fa-print"> </i>

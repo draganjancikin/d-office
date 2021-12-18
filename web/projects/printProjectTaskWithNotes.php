@@ -4,7 +4,8 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/appConfig.
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.php';
 
-// require_once('tcpdf_include.php');
+// Include the main TCPDF library (search for installation path).
+require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/tcpdf_include.php';
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
