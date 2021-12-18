@@ -7,8 +7,11 @@ Enhancement:
 * Add Material modified date to Material on view and edit page
 * Add Material modified date to Material Supplier on view and edit
 * Add TCPDF trough composer
-* Move printProjectTaskWithNotes.php and printProjectTask.php to Project
-* Move printAccountingDocuments to pidb
+* Move printProjectTaskWithNotes.php, printProjectTask.php and printProjectTask.php to Project
+* Move printAccountingDocuments and printDailyCachReport to pidb
+* Move printCutting to cutting
+* Move printOrder to order
+* Remove TCPDF from code base
 
 New features:
 * Add edit/delete form for AccountingDocument Transaction (payment)
