@@ -37,26 +37,24 @@
             <!-- Tools Meni -->
             <?php include '../../templates/pidb/includes/tools_menu.php'; ?>
             <!-- End of Tools Meni -->
-
             
-
             <div class="col-lg-12 px-2">
               <?php 
                 if (empty($_GET)): // ako je $_GET prazan
                   include '../../templates/pidb/includes/list_last.php';
                 else:
-                  if(isset($_GET['view'])) include '../../templates/pidb/includes/form_view.php';
-                  if(isset($_GET['new'])) include '../../templates/pidb/includes/form_new.php';
-                  if(isset($_GET['edit'])) include '../../templates/pidb/includes/form_edit.php';
-                  if(isset($_GET['editArticle']) && isset($_GET['pidb_article_id'])) include '../../templates/pidb/includes/form_edit_article.php';
+                  if (isset($_GET['view'])) include '../../templates/pidb/includes/form_view.php';
+                  if (isset($_GET['new'])) include '../../templates/pidb/includes/form_new.php';
+                  if (isset($_GET['edit'])) include '../../templates/pidb/includes/form_edit.php';
+                  if (isset($_GET['editArticle']) && isset($_GET['pidb_article_id'])) include '../../templates/pidb/includes/form_edit_article.php';
 
-                  if(isset($_GET['transactions']) AND isset($_GET['pidb_id'])) include '../../templates/pidb/includes/transactions__by__accounting_document.php';
-                  if(isset($_GET['transactions']) AND !isset($_GET['pidb_id'])) include '../../templates/pidb/includes/list_last_transactions.php';
+                  if (isset($_GET['transactions']) AND isset($_GET['pidb_id'])) include '../../templates/pidb/includes/transactions__by__accounting_document.php';
+                  if (isset($_GET['transactions']) AND !isset($_GET['pidb_id'])) include '../../templates/pidb/includes/list_last_transactions.php';
 
-                  if( isset($_GET['cashRegister']) ) include '../../templates/pidb/includes/cashRegister.php';
+                  if (isset($_GET['cashRegister']) ) include '../../templates/pidb/includes/cashRegister.php';
 
-                  if(isset($_GET['search'])) include '../../app/includes/search.php';
-                  if(isset($_GET['set'])) include '../../templates/pidb/includes/form_preferences.php';
+                  if (isset($_GET['search'])) include '../../app/includes/search.php';
+                  if (isset($_GET['set'])) include '../../templates/pidb/includes/form_preferences.php';
 
                 endif;
               ?>
@@ -67,6 +65,7 @@
             <?php 
             if (isset($_GET['pidb_id'])) include '../../templates/pidb/includes/modals.php';
             if (isset($_GET['cashRegister'])) include '../../templates/pidb/includes/modals2.php';
+            if (isset($_GET['transactions'])) include '../../templates/pidb/includes/modals3.php';
             ?>
             <!-- End of Modals -->
             

@@ -1,6 +1,6 @@
 <?php 
 // Update Preferences.
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updatePreferences"]) ) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updatePreferences"]) ) {
   $kurs = str_replace(",", ".", htmlspecialchars($_POST["kurs"]));
   $tax = str_replace(",", ".", htmlspecialchars($_POST["tax"]));
   

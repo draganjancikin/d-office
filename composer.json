@@ -24,6 +24,8 @@
     }
   },
   "require": {
-    "doctrine/orm": "2.8.5"
+    "doctrine/orm": "^2.9",
+    "doctrine/cache": "^1.12",
+    "tecnickcom/tcpdf": "^6.3"
   }
 }

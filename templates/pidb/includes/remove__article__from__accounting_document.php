@@ -1,6 +1,6 @@
 <?php
 // Remove Article from AccountingDocument.
-if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["removeArticlefromAccountingDocument"])) {
+if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["removeArticlefromAccountingDocument"])) {
   $accounting_document__id = htmlspecialchars($_GET["pidb_id"]);
   
   $accounting_document__article__id = htmlspecialchars($_GET["pidb_article_id"]);

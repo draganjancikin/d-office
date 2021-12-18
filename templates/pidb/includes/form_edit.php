@@ -54,12 +54,12 @@ switch ($pidb_data->getType()->getId()) {
         $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy( array('id' =>$client_contact->getId()) );
         $client_contact_type = $client_contact_data->getType();
         $contactsCount ++;
-        if($contactsCount < 5){
+        if ($contactsCount < 5):
           ?>
           <dt class="col-sm-3 col-md-2"><?php echo $client_contact_type->getName() ?>:</dt>
           <dd class="col-sm-9 col-md-10"><?php echo $client_contact_data->getBody() . ($client_contact_data->getNote()=="" ? "" : ", " .$client_contact_data->getNote()) ?></dd>
           <?php
-        }
+        endif;
       endforeach;
       ?>
     </dl>
@@ -198,18 +198,14 @@ switch ($pidb_data->getType()->getId()) {
             <td class="text-right""><?php echo  number_format(($avans * $kurs), 2, ",", ".") ?></td>
             <td colspan="2" class="text-right">(&#8364; <?php echo number_format($avans, 4, ",", ".") ?>)</td>
           </tr>
-          <?php
-          if ($pidb_data->getType()->getId() == 2) :
-            ?>
+          <?php if ($pidb_data->getType()->getId() == 2): ?>
             <tr class="table-<?php echo $style; ?>">
               <td colspan="5">Uplaćeno</td>
               <td class="text-right"></td>
               <td class="text-right""><?php echo  number_format(($income * $kurs), 2, ",", ".") ?></td>
               <td colspan="2" class="text-right">(&#8364; <?php echo number_format($income, 4, ",", ".") ?>)</td>
             </tr>
-            <?php
-          endif;
-          ?>
+          <?php endif; ?>
           <tr class="table-<?php echo $style; ?>">
             <td colspan="5"><strong>OSTALO ZA UPLATU</strong></td>
             <td class="text-right"></td>
@@ -238,7 +234,7 @@ switch ($pidb_data->getType()->getId()) {
                 </option>
                 <?php
                 $clients_list = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => "ASC"));
-                foreach( $clients_list as $client_item):
+                foreach ($clients_list as $client_item):
                   ?>
                   <option value="<?php echo $client_item->getId() ?>">
                     <?php echo $client_item->getName() ?>

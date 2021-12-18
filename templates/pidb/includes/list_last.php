@@ -24,9 +24,7 @@ $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument
           </tr>
         </tfoot>
         <tbody>
-          <?php
-          foreach ($proformas as $proforma):
-            ?>
+          <?php foreach ($proformas as $proforma): ?>
             <tr>
               <td>
                 <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
@@ -38,9 +36,7 @@ $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument
               </td>
               <td><?php echo $proforma->getTitle() ?></td>
             </tr>
-            <?php
-          endforeach;
-          ?>
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>
@@ -73,9 +69,7 @@ $delivery_notes = $entityManager->getRepository('\Roloffice\Entity\AccountingDoc
           </tr>
         </tfoot>
         <tbody>
-          <?php
-          foreach ($delivery_notes as $delivery_note):
-            ?>
+          <?php foreach ($delivery_notes as $delivery_note): ?>
             <tr>
               <td>
                 <a href="?view&pidb_id=<?php echo $delivery_note->getId() ?>">
@@ -87,9 +81,7 @@ $delivery_notes = $entityManager->getRepository('\Roloffice\Entity\AccountingDoc
               </td>
               <td><?php echo $delivery_note->getTitle() ?></td>
             </tr>
-            <?php
-          endforeach;
-          ?>
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>
@@ -122,9 +114,7 @@ $return_receipts = $entityManager->getRepository('\Roloffice\Entity\AccountingDo
           </tr>
         </tfoot>
         <tbody>
-          <?php
-          foreach ($return_receipts as $return_receipt):
-            ?>
+          <?php foreach ($return_receipts as $return_receipt): ?>
             <tr>
               <td>
                 <a href="?view&pidb_id=<?php echo $return_receipt->getId() ?>">
@@ -136,9 +126,7 @@ $return_receipts = $entityManager->getRepository('\Roloffice\Entity\AccountingDo
               </td>
               <td><?php echo $return_receipt->getTitle() ?></td>
             </tr>
-            <?php
-          endforeach;
-          ?>
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>

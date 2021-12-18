@@ -46,7 +46,7 @@ require 'duplicate__material.php';
           <i class="fa fa-plus"> </i> Materijal
         </button>
 
-        <a href="/tcpdf/examples/printOrder.php?order_id=<?php echo $order_id ?>" title="PDF [new window]" target="_blank" class="btn btn-sm btn-outline-secondary mr-1">
+        <a href="printOrder.php?order_id=<?php echo $order_id ?>" title="PDF [new window]" target="_blank" class="btn btn-sm btn-outline-secondary mr-1">
           <i class="fa fa-print"> </i>
         </a>
 

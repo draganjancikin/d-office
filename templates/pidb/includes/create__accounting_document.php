@@ -1,6 +1,6 @@
 <?php
 // Create a new AccountingDocument.
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createAccountingDocument"]) ) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createAccountingDocument"]) ) {
   // Current loged user.
   $user_id = $_SESSION['user_id'];
   $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
@@ -42,7 +42,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createAccountingDocumen
   $entityManager->getRepository('Roloffice\Entity\AccountingDocument')->setOrdinalNumInYear($new_accounting_document_id);
 
 
-  if(isset($_POST["project_id"])) {
+  if (isset($_POST["project_id"])) {
     $project_id = htmlspecialchars($_POST["project_id"]);
     $project = $entityManager->find("\Roloffice\Entity\Project", $project_id);
 

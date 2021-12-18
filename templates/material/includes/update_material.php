@@ -35,7 +35,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateMaterial"])) {
   $material->setNote($note);
 
   $material->setModifiedByUser($user);
-  $material->setModifiedAt(new DateTime("now"));
+
+  $material->setModifiedAt(new DateTime("now", new DateTimeZone('GMT+2')));
 
   $entityManager->flush();
 

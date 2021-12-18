@@ -1,6 +1,6 @@
 <?php
 // Duplicate Article in Accounting Document.
-if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["duplicateArticleInAccountingDocument"])) {
+if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["duplicateArticleInAccountingDocument"])) {
   $accounting_document_id = htmlspecialchars($_GET["pidb_id"]);
   $pidb_tip_id = htmlspecialchars($_GET["pidb_tip_id"]);
   

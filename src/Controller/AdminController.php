@@ -4,7 +4,7 @@ namespace Roloffice\Controller;
 
 require_once __DIR__ . '/../../config/dbConfig.php';
 /**
- * Admin class
+ * AdminController class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */

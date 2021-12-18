@@ -28,7 +28,7 @@ $transactions = $entityManager->getRepository('\Roloffice\Entity\AccountingDocum
             </tfoot>
             <tbody>
               <?php
-              foreach($transactions as $transaction):
+              foreach ($transactions as $transaction):
                 $accounting_document = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId());
                 ?>
                 <tr>

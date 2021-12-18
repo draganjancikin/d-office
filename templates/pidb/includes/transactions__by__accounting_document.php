@@ -40,31 +40,32 @@ endif;
                         
                         <tbody>
                             <tr>
-                                <td class="text-center"><?php echo $pidb_data->getDate()->format('d-m-Y') ?></td>
+                                <td class="text-center"><?php echo $pidb_data->getDate()->format('d-m-Y'); ?></td>
                                 <td class="text-center"></td>
-                                <td class="text-right"><?php echo number_format($total, 4, ",", ".") ?></td>
+                                <td class="text-right"><?php echo number_format($total, 4, ",", "."); ?></td>
                                 <td class="text-right"></td>
                                 <td></td>
                             </tr>
-                            <?php
-                            foreach($transactions as $transaction) :
-                                ?>
+                            <?php foreach ($transactions as $transaction): ?>
                                 <tr>
-                                    <td class="text-center"><?php echo $transaction->getDate()->format('d-m-Y') ?></td>
-                                    <td class="text-center"><?php echo $transaction->getType()->getName() ?></td>
+                                    <td class="text-center"><?php echo $transaction->getDate()->format('d-m-Y'); ?></td>
+                                    <td class="text-center" title="<?php echo $transaction->getNote() ?>"><?php echo $transaction->getType()->getName(); ?></td>
+                                    <td class="text-right"></td>
                                     <td class="text-right">
-                                       
+                                        <?php echo number_format($transaction->getAmount(), 4, ",", "."); ?>
                                     </td>
-                                    <td class="text-right">
-                                        <?php
-                                        echo number_format($transaction->getAmount(), 4, ",", ".");
-                                        ?>
+                                    <td>
+                                        <?php if ($user_role_id==1 OR $user_role_id==2): ?>
+                                            <a href="" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editTransaction" title="Izmeni transakciju!">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete transakciju?');" href="?deleteTransaction&transaction_id=<?php echo $transaction->getId(); ?>&pidb_id=<?php echo $pidb_data->getId() ?>" title="Brisanje Transakcije" class="btn btn-danger btn-sm">
+                                                <i class="far fa-trash-alt"></i>
+                                            </a>
+                                        <?php endif; ?>
                                     </td>
-                                    <td></td>
                                 </tr>
-                                <?php
-                            endforeach;
-                            ?>
+                            <?php endforeach; ?>
                         </tbody>
                         <tfoot>
                             <tr>

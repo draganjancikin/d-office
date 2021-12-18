@@ -1,3 +1,22 @@
+# Upgrade to 6.1.0
+
+Updates:
+* Update "Doctrine/ORM" (2.8.5 => 2.9.5)
+* Update "tecnickcom/tcpdf" (6.3.5 => 6.4.2)
+
+Enhancement:
+* Add Material modified date to Material on view and edit page
+* Add Material modified date to Material Supplier on view and edit
+* Add TCPDF trough composer
+* Move printProjectTaskWithNotes.php, printProjectTask.php and printProjectTask.php to Project
+* Move printAccountingDocuments and printDailyCachReport to pidb
+* Move printCutting to cutting
+* Move printOrder to order
+* Remove TCPDF from code base
+
+New features:
+* Add edit/delete form for AccountingDocument Transaction (payment)
+
 # Upgrade to 6.0.4
 
 Resolved issues and bugfixes:

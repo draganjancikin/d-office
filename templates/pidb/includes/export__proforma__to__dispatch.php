@@ -1,6 +1,6 @@
 <?php
 // Export proforma to dispatch.
-if(isset($_GET["exportProformaToDispatch"]) ) {
+if (isset($_GET["exportProformaToDispatch"]) ) {
   
   // Current loged user.
   $user_id = $_SESSION['user_id'];
@@ -66,7 +66,7 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
 
   // Save articles to dispatch.
 
-  foreach($proforma_articles as $proforma_article) {
+  foreach ($proforma_articles as $proforma_article) {
     $newDispatchArticle = new \Roloffice\Entity\AccountingDocumentArticle();
 
     $newDispatchArticle->setAccountingDocument($newDispatch);
@@ -104,7 +104,7 @@ if(isset($_GET["exportProformaToDispatch"]) ) {
   // Check if proforma belong to any Project
   $project = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getProjectByAccountingDocument($proforma->getId());
 
-  if($project) {
+  if ($project) {
     // Set same project to dispatch.
     $project->getAccountingDocuments()->add($newDispatch);
     $entityManager->flush();

@@ -95,14 +95,14 @@ require 'delete_task_note.php';
         </a>
 
         <!-- Preview and printing project task -->
-        <a href="/tcpdf/examples/printProjectTask.php?project_id=<?php echo $project_id ?>" title="Izvoz radnog naloga u PDF [new window]" target="_blank">
+        <a href="printProjectTask.php?project_id=<?php echo $project_id ?>" title="Izvoz radnog naloga u PDF [new window]" target="_blank">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
             <i class="fa fa-print"></i> Radni nalog
           </button>
         </a>
 
         <!-- Preview and printing Instalation Record (Log) -->
-        <a href="/tcpdf/examples/printInstallationRecord.php?project_id=<?php echo $project_id ?>" title="Štampa zapisnika o ugradnji (montaži)" target="_blank">
+        <a href="printInstallationRecord.php?project_id=<?php echo $project_id ?>" title="Štampa zapisnika o ugradnji (montaži)" target="_blank">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
             <i class="fa fa-print"></i> Zapisnik o ugradnji
           </button>

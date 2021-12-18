@@ -2,10 +2,8 @@
 
 namespace Roloffice\Controller;
 
-use Roloffice\Core\Database;
-
 /**
- * Client class
+ * ClientController class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */

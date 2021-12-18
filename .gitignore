@@ -1,5 +1,7 @@
+# Ignore IDE's files and folders
 RolOffice v4.0.code-workspace
 .vscode/
+.idea/
 
 # Ignore LIVE enviroments files an folders
 /app/config/dbConfig.php
@@ -13,7 +15,6 @@ web/testing/
 
 # Ignore LOCAL enviroments files an folders
 /config/dbConfig.local.php
-
 
 # Ignore enviroments files
 /todos/

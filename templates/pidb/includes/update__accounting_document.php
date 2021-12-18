@@ -1,6 +1,6 @@
 <?php
 // Update Accounting Document.
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateAcountingDocument"]) ) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateAcountingDocument"])) {
 
   // Curent loged user.
   $user_id = $_SESSION['user_id'];
