@@ -2,6 +2,7 @@
 
 Updates:
 * Update "Doctrine/ORM" (2.8.5 => 2.9.5)
+* Update "tecnickcom/tcpdf" (6.3.5 => 6.4.2)
 
 Enhancement:
 * Add Material modified date to Material on view and edit page
