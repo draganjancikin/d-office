@@ -7,5 +7,6 @@ Web Application
 ### Communication with database: Doctrine 2 ORM
 
 Required:
-  * doctrine/orm 2.9.5
-  * doctrine/cache 1.12.1
+  * doctrine/orm:^2.9
+  * doctrine/cache:^1.12
+  * tecnickcom/tcpdf:^6.3
