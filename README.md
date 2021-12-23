@@ -1,4 +1,4 @@
-# RolOffice 6.1.0
+# RolOffice 6.2.0
 
 Web Application
 
@@ -10,3 +10,4 @@ Required:
   * doctrine/orm:^2.9
   * doctrine/cache:^1.12
   * tecnickcom/tcpdf:^6.3
+  * symfony/http-foundation:^5.4
