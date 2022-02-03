@@ -76,10 +76,10 @@ $html = '
 
 <table border="0">
   <tr>
-    <td width="685px" colspan="3"><h1>ROLOSTIL szr</h1></td>
+    <td width="685px" colspan="3"><h1>'.COMPANY_NAME.'</h1></td>
   </tr>
   <tr>
-    <td width="340px" colspan="2">Vojvode Živojina Mišića 237<br />21400 Bačka Palanka<br />PIB: 100754526<br />MB: 5060100<br />žr. 220-127736-34, Procredit bank</td>
+    <td width="340px" colspan="2">'.COMPANY_STREET.'<br />21400 Bačka Palanka<br />PIB: 100754526<br />MB: 5060100<br />žr. 220-127736-34, Procredit bank</td>
     
     <td width="350px">Dobavljač:<br />'.$supplier_data->getName().'<br />'.$supplier_street->getName().' '.$supplier_data->getHomeNumber().'<br />'.$supplier_city->getName().', '.$supplier_country->getName().'<br />'.$contact_item[0].', '.$contact_item[1].'</td>
   </tr>

@@ -1,4 +1,4 @@
-# RolOffice 6.1.0
+# RolOffice 6.2.0
 
 Web Application
 
@@ -7,5 +7,7 @@ Web Application
 ### Communication with database: Doctrine 2 ORM
 
 Required:
-  * doctrine/orm 2.9.5
-  * doctrine/cache 1.12.1
+  * doctrine/orm:^2.9
+  * doctrine/cache:^1.12
+  * tecnickcom/tcpdf:^6.3
+  * symfony/http-foundation:^5.4

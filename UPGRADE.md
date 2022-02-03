@@ -1,3 +1,8 @@
+# Upgrade to 6.2.0
+
+Updates:
+* Installed "symfony/http-foundation" (5.4.1)
+
 # Upgrade to 6.1.0
 
 Updates:
