@@ -64,7 +64,7 @@ $client_city = $entityManager->find('\Roloffice\Entity\City', $client->getCity()
 
 $html = '
   <img src="../images/logo.png" >
-  <span>Vojvode Živojina Mišića 237, 21400 Bačka Palanka, tel: +381 21 751112, mob: +381 60 7511123</span>
+  <span>'.COMPANY_STREET.', 21400 Bačka Palanka, tel: +381 21 751112, mob: +381 60 7511123</span>
 
   <h1 style="text-align: center">ZAPISNIK O MONTAŽI</h1>
   <hr>
@@ -75,11 +75,9 @@ $html = '
   <div>Ugovor broj: _________________________ Projekat broj: <u>   '.str_pad($project->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).'/'.$project->getCreatedAt()->format('Y').'   </u></div> 
   <hr>
   
-  <pre style="color: #000000">
+  <pre style="color: #000000;">
 
   Ugradjene pozicije: ________________________________________________________________
-
-  ____________________________________________________________________________________
 
   ____________________________________________________________________________________
 
@@ -117,15 +115,18 @@ $html = '
   Napomena: Potpisivanjem ovog zapisnika narucilac potvrdjuje prijem narucenih
   proizvoda i od datuma ugradnje zapocinje garantni rok.
   <hr>
-  
-  Za ROLOSTIL szr                                     za Narucioca
-
+  </pre>
+  '.COMPANY_NAME.'    
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  za Narucioca
+<pre>
   ____________________                                ____________________
   </pre>
 ';
 
 $pdf->writeHTML($html, true, false, true, false, '');
-
 
 // reset pointer to the last page
 $pdf->lastPage();

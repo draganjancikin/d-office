@@ -84,11 +84,11 @@ $html = '
 
 <table border="0">
   <tr>
-    <td width="685px" colspan="3"><h1>ROLOSTIL szr</h1></td>
+    <td width="685px" colspan="3"><h1>'.COMPANY_NAME.'</h1></td>
   </tr>
   <tr>
     <td width="340px" colspan="2">
-    Vojvode Živojina Mišića 237<br />
+    '.COMPANY_STREET.'<br />
     21400 Bačka Palanka<br />
     PIB: 100754526, MB: 55060100<br /> 
     ž.r. 160-438797-72, Banca Intesa<br />
