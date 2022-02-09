@@ -48,8 +48,6 @@ $pdf->SetFont('dejavusans', '', 10);
 // add a page
 $pdf->AddPage();
 
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
-
 $id = $_GET['cutting_id'];
 $cutting_sheet = $entityManager->find("\Roloffice\Entity\CuttingSheet", $id);
 
