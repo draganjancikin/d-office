@@ -1,3 +1,11 @@
+# Upgrade to 6.2.4
+
+Updates:
+* "doctrine/orm" (2.9.5 => 2.11.3)
+* "doctrine/cache" ( => 1.12.1)
+* "tecnickcom/tcpdf" (6.4.2 => 6.4.4)
+* "symfony/http-foundation" (5.1.4 => 5.4.8)
+
 # Upgrade to 6.2.0
 
 Updates:
