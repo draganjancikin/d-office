@@ -123,7 +123,7 @@
                 <div class="col-sm-4">
                     <select id="selectStreet" class="form-control" name="street_id">>
                         <?php
-                        if ($client_city === null) {
+                        if ($client_street === null) {
                             ?>
                             <option>Izaberite naselje</option>
                             <?php

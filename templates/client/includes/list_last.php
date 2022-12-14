@@ -18,8 +18,10 @@
                             <td>
                                 <?php echo ($client->getStreet() ? $client->getStreet()->getName() : "")
                                     . " " . $client->getHomeNumber()
-                                    . ($client->getCity() ? ", " . $client->getCity()->getName() : "")
-                                    . ($client->getCountry() ? ', ' . $client->getCountry()->getName() : "")
+                                    . ($client->getStreet() && $client->getCity() ? ", " : "")
+                                    . ($client->getCity() ? $client->getCity()->getName() : "")
+                                    . ($client->getCity() && $client->getCountry() ? ", " : "")
+                                    . ($client->getCountry() ? $client->getCountry()->getName() : "")
                                 ?>
                             </td>
                         </tr>
