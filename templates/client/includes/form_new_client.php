@@ -57,7 +57,7 @@
         <label for="selectCountry" class="col-sm-3 col-lg-2 col-form-label text-right">Država:</label>
         <div class="col-sm-4">
           <select id="selectCountry" class="form-control" name="country_id">
-            <!-- <option value="1">Srbija</option> -->
+            <option>Izaberite drzavu</option>
             <?php
             $states = $entityManager->getRepository('\Roloffice\Entity\Country')->findBy(array(), array('name' => 'ASC'));
             foreach ($states as $state) :
@@ -76,7 +76,7 @@
         <label for="selectCity" class="col-sm-3 col-lg-2 col-form-label text-right">Naselje:</label>
         <div class="col-sm-4">
           <select id="selectCity" class="form-control" name="city_id">
-            <option value="1">Izaberi naselje</option>
+            <option>Izaberite naselje</option>
             <?php
             $citys = $entityManager->getRepository('\Roloffice\Entity\City')->findBy(array(), array('name' => 'ASC'));
             foreach ($citys as $city) :
@@ -95,7 +95,7 @@
         <label for="sSelectStreet" class="col-sm-3 col-lg-2 col-form-label text-right">Ulica:</label>
         <div class="col-sm-4">
           <select id="selectStreet" class="form-control" name="street_id">
-            <option value="1">Izaberi ulicu</option>
+            <option>Izaberite ulicu</option>
             <?php
             $citys = $entityManager->getRepository('\Roloffice\Entity\Street')->findBy(array(), array('name' => 'ASC'));
             foreach ($citys as $street) :
