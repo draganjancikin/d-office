@@ -116,7 +116,6 @@ $html = '
         <td width="340px" colspan="2">'
             . COMPANY_STREET . '<br />'
             . COMPANY_CITY . '<br />
-            00000 Name of city<br />
             PIB: ' . COMPANY_PIB . ', MB: ' . COMPANY_MB . '<br /> 
             ž.r. ' . COMPANY_BANK_ACCOUNT_1 . '<br />
             ž.r. ' . COMPANY_BANK_ACCOUNT_2 . '
