@@ -57,7 +57,7 @@
           <label for="disabledSelectCountry" class="col-sm-3 col-lg-2 col-form-label text-right">Država:</label>
           <div class="col-sm-4">
             <select id="disabledSelectCountry" class="form-control">
-              <option><?php echo $client_country->getName() ?></option>
+              <option><?php echo $client_country ? $client_country->getName() : '' ?></option>
             </select>
           </div>
         </div>
@@ -66,7 +66,7 @@
           <label for="disabledSelectCity" class="col-sm-3 col-lg-2 col-form-label text-right">Naselje:</label>
           <div class="col-sm-4">
             <select id="disabledSelectCity" class="form-control">
-              <option><?php echo $client_city->getName() ?></option>
+              <option><?php echo $client_city ? $client_city->getName() : '' ?></option>
             </select>
           </div>
         </div>
@@ -75,7 +75,7 @@
           <label for="disabledSelectStreet" class="col-sm-3 col-lg-2 col-form-label text-right">Ulica:</label>
           <div class="col-sm-4">
             <select id="disabledSelectStreet" class="form-control">
-                <option><?php echo $client_street->getName() ?></option>
+                <option><?php echo $client_street ? $client_street->getName() : '' ?></option>
             </select>
           </div>
         </div>
