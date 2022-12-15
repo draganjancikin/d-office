@@ -1,7 +1,7 @@
 <?php
 require_once 'dbConfig.php';
 
-define("VERSION","6.2.2");
+define("VERSION","6.3.0");
 
 // Company data
 define("COMPANY_NAME", "PREDRAG GAJIĆ PR ROLOSTIL");
