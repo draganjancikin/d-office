@@ -3,9 +3,9 @@
   <!-- Sidebar - Brand -->
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
     <div class="sidebar-brand-icon rotate-n-15">
-      <i class="far fa-registered"></i>
+      <i class="fas fa-tasks"></i>
     </div>
-    <div class="sidebar-brand-text mx-3">RolOffice</div>
+    <div class="sidebar-brand-text mx-3">d-Office</div>
   </a>
 
   <!-- Divider -->

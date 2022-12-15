@@ -1,4 +1,23 @@
-# Upgrade to 6.2.4
+# Upgrade to 6.3.0
+
+Enhancement:
+* Create client form:
+  * Fix typo
+  * Remove value from default select option
+
+Resolved issues and bugfixes:
+* #146: Client view page bug
+* #147: Client search don't work
+* #148: Create Accounting document issue
+* #149: View Accounting Document issue
+* #150: Issue on Accounting Document edit page
+* #151: Issue on Accounting Document print page v2
+
+Updates:
+* "doctrine/orm" (2.11.3 => 2.13.4)
+* "doctrine/annotations" (1.13.2 => 1.14.1)
+
+# Upgrade to 6.2.1
 
 Updates:
 * "doctrine/orm" (2.9.5 => 2.11.3)
