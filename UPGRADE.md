@@ -1,3 +1,8 @@
+# Upgrade to 6.3.1
+
+Resolved issues and bugfixes:
+* #154: PHP issue
+
 # Upgrade to 6.3.0
 
 Enhancement:
