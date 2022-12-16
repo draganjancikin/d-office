@@ -1,3 +1,9 @@
+# Upgrade to 6.4.0
+
+Enhancement:
+* Change name of application, from "RolOffice" to "d-Office"
+* Create Admin section for Company data and remove company data from code
+
 # Upgrade to 6.3.1
 
 Resolved issues and bugfixes:

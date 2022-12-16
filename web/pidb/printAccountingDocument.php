@@ -102,6 +102,10 @@ if (!empty($client_contacts)) {
 }
 $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
 $kurs = $preferences->getKurs();
+$company_info = $entityManager->find('Roloffice\Entity\CompanyInfo', 1);
+$country = $entityManager->find("\Roloffice\Entity\Country", $company_info->getCountry());
+$city = $entityManager->find("\Roloffice\Entity\City", $company_info->getCity());
+$street = $entityManager->find("\Roloffice\Entity\Street", $company_info->getStreet());
 
 $html = '
 <style type="text/css">
@@ -110,15 +114,15 @@ $html = '
 
 <table border="0">
     <tr>
-        <td width="690px" colspan="3"><h1>' . COMPANY_NAME . '</h1></td>
+        <td width="690px" colspan="3"><h1>' . $company_info->getName() . '</h1></td>
     </tr>
     <tr>
         <td width="340px" colspan="2">'
-            . COMPANY_STREET . '<br />'
-            . COMPANY_CITY . '<br />
-            PIB: ' . COMPANY_PIB . ', MB: ' . COMPANY_MB . '<br /> 
-            ž.r. ' . COMPANY_BANK_ACCOUNT_1 . '<br />
-            ž.r. ' . COMPANY_BANK_ACCOUNT_2 . '
+            . $street->getName() . ' ' . $company_info->getHomeNumber() . '<br />'
+            . $city->getName() . '<br />
+            PIB: ' . $company_info->getPib() . ', MB: ' . $company_info->getMb() . '<br /> 
+            ž.r. ' . $company_info->getBankAccount1() . '<br />
+            ž.r. ' . $company_info->getBankAccount2() . '
         </td>
         <td width="350px">
             Kupac:<br />'

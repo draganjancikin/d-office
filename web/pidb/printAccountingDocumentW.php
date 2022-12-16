@@ -68,21 +68,26 @@ switch ($accounting_document__data->getType()->getId()) {
 
 $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
 $kurs = $preferences->getKurs();
+$company_info = $entityManager->find('Roloffice\Entity\CompanyInfo', 1);
+$country = $entityManager->find("\Roloffice\Entity\Country", $company_info->getCountry());
+$city = $entityManager->find("\Roloffice\Entity\City", $company_info->getCity());
+$street = $entityManager->find("\Roloffice\Entity\Street", $company_info->getStreet());
 
 $html = '
 <style type="text/css">table { padding-top: 5px; padding-bottom: 5px; }</style>
 
 <table border="0">
   <tr>
-    <td width="690px" colspan="3"><h1>'.COMPANY_NAME.'</h1></td>
+    <td width="690px" colspan="3"><h1>' . $company_info->getName() . '</h1></td>
   </tr>
   <tr>
-    <td width="340px" colspan="2">
-    '.COMPANY_STREET.'<br />
-    21400 Bačka Palanka<br />
-    PIB: 100754526, MB: 55060100<br />
-    ž.r. 160-438797-72, Banca Intesa<br />
-    ž.r. 330-11001058-98, Credit Agricole</td>
+        <td width="340px" colspan="2">'
+    . $street->getName() . ' ' . $company_info->getHomeNumber() . '<br />'
+    . $city->getName() . '<br />
+            PIB: ' . $company_info->getPib() . ', MB: ' . $company_info->getMb() . '<br /> 
+            ž.r. ' . $company_info->getBankAccount1() . '<br />
+            ž.r. ' . $company_info->getBankAccount2() . '
+        </td>
   </tr>
   <tr>
     <td colspan="3"><h2>'.$accounting_document__type.' br: '.str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$accounting_document__data->getDate()->format('m').'</h2></td>
