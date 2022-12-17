@@ -1,7 +1,9 @@
 <?php
 require_once 'dbConfig.php';
 
-define("VERSION","6.4.1");
+$content = file_get_contents(__DIR__ . '/../composer.json');
+$content = json_decode($content,true);
+define("APP_VERSION", $content['version']);
 
 // Company data
 //define("COMPANY_NAME", "PREDRAG GAJIĆ PR ROLOSTIL");
