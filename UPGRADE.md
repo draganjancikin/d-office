@@ -1,3 +1,8 @@
+# Upgrade to 6.4.1
+
+Resolved issues and bugfixes:
+* #159: Issue with print on Accounting Document page
+
 # Upgrade to 6.4.0
 
 Enhancement:
