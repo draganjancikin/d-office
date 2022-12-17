@@ -14,20 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createArticle"])) {
     $unit_id = htmlspecialchars($_POST['unit_id']);
     $unit = $entityManager->find("\Roloffice\Entity\Unit", $unit_id);
 
-    if ($_POST['weight']) {
-        $weight = htmlspecialchars($_POST['weight']);
-    } else {
-        $weight = 0;
-    }
-
+    $weight = $_POST['weight'] ? htmlspecialchars($_POST['weight']) : 0;
     $min_calc_measure = str_replace(",", ".", htmlspecialchars($_POST['min_calc_measure']));
-
-    if ($_POST['price']) {
-        $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
-    } else {
-        $price = 0;
-    }
-
+    $price = $_POST['price'] ? str_replace(",", ".", htmlspecialchars($_POST['price'])) : 0;
     $note = htmlspecialchars($_POST['note']);
 
     $newArticle = new \Roloffice\Entity\Article();

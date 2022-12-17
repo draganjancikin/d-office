@@ -2,6 +2,7 @@
 
 Resolved issues and bugfixes:
 * #159: Issue with print on Accounting Document page
+* #160: Create an article issue
 
 # Upgrade to 6.4.0
 
