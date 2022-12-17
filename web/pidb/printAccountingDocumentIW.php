@@ -8,33 +8,33 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.
 // Include the main TCPDF library (search for installation path).
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/tcpdf_include.php';
 
-// create new PDF document
+// Create new PDF document.
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-// set document information
+// Set document information.
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('Rolostil');
 $pdf->SetTitle('ROLOSTIL - Dokument');
 $pdf->SetSubject('Rolostil');
 $pdf->SetKeywords('Rolostil, PDF, document');
 
-// remove default header/footer
+// Remove default header/footer.
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
 
-// set default monospaced font
+// Set default monospaced font.
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
-//set margins
+// Set margins.
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
-//set auto page breaks
+// Set auto page breaks.
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
-//set image scale factor
+// Set image scale factor.
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-//set some language-dependent strings
+// Set some language-dependent strings.
 // $pdf->setLanguageArray($l);
 
 // ---------------------------------------------------------
@@ -43,9 +43,9 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 $pdf->SetFont('dejavusans', '', 10);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// Print a table
+// Print a table.
 
-// add a page
+// Add a page.
 $pdf->AddPage();
 
 $accounting_document__id = $_GET['accounting_document__id'];
@@ -55,21 +55,25 @@ if ($accounting_document__data->getType()->getId()) $accounting_document__type =
 
 $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
 $kurs = $preferences->getKurs();
+$company_info = $entityManager->find('Roloffice\Entity\CompanyInfo', 1);
+$country = $entityManager->find("\Roloffice\Entity\Country", $company_info->getCountry());
+$city = $entityManager->find("\Roloffice\Entity\City", $company_info->getCity());
+$street = $entityManager->find("\Roloffice\Entity\Street", $company_info->getStreet());
 
 $html = '
 <style type="text/css">table { padding-top: 5px; padding-bottom: 5px; }</style>
 
 <table border="0">
     <tr>
-        <td width="685px" colspan="3"><h1>'.COMPANY_NAME.'</h1></td>
+        <td width="685px" colspan="3"><h1>' . $company_info->getName() . '</h1></td>
     </tr>
     <tr>
         <td width="340px" colspan="2">'
-            . COMPANY_STREET . '<br />'
-            . COMPANY_CITY . '<br />
-            PIB: ' . COMPANY_PIB . ', MB: ' . COMPANY_MB . '<br /> 
-            ž.r. ' . COMPANY_BANK_ACCOUNT_1 . '<br />
-            ž.r. ' . COMPANY_BANK_ACCOUNT_2 . '
+            . $street->getName() . ' ' . $company_info->getHomeNumber() . '<br />'
+            . $city->getName() . '<br />
+            PIB: ' . $company_info->getPib() . ', MB: ' . $company_info->getMb() . '<br />'
+            . $company_info->getBankAccount1() . '<br />'
+            . $company_info->getBankAccount2() . '
         </td>
     </tr>
     <tr>
@@ -301,14 +305,18 @@ if ($accounting_document__data->getType()->getId() == 2) {
     $pdf->writeHTML($html, true, false, true, false, '');
 }
 
-// reset pointer to the last page
+// Reset pointer to the last page.
 $pdf->lastPage();
 
 // ---------------------------------------------------------
 
-//Close and output PDF document
-$pdf->Output( $accounting_document__type .'_'. str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) .'-'.$accounting_document__data->getDate()->format('m') .'.pdf', 'I');
+// Close and output PDF document.
+$pdf->Output(
+    $accounting_document__type . '_'
+    . str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '-'
+    . $accounting_document__data->getDate()->format('m') .'.pdf', 'I'
+);
 
 //============================================================+
-// END OF FILE                                                
+// END OF FILE.
 //============================================================+

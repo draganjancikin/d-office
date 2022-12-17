@@ -8,44 +8,44 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.
 // Include the main TCPDF library (search for installation path).
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/tcpdf_include.php';
 
-// create new PDF document
+// Create new PDF document.
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-// set document information
+// Set document information.
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('Roloffice');
 $pdf->SetTitle('ROLOSTIL - Dokument');
 $pdf->SetSubject('Rolostil');
 $pdf->SetKeywords('Rolostil, PDF, Proforma, Invoice');
 
-// remove default header/footer
+// Remove default header/footer.
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
 
-// set default monospaced font
+// Set default monospaced font.
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
-//set margins
+// Set margins.
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
-//set auto page breaks
+// Set auto page breaks.
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
-//set image scale factor
+// Set image scale factor.
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-//set some language-dependent strings
+// Set some language-dependent strings.
 // $pdf->setLanguageArray($l);
 
 // ---------------------------------------------------------
 
-// set font
+// Set font.
 $pdf->SetFont('dejavusans', '', 10);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// Print a table
+// Print a table.
 
-// add a page
+// Add a page.
 $pdf->AddPage();
 
 $accounting_document__id = $_GET['accounting_document__id'];
@@ -102,6 +102,10 @@ if (!empty($client_contacts)) {
 }
 $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
 $kurs = $preferences->getKurs();
+$company_info = $entityManager->find('Roloffice\Entity\CompanyInfo', 1);
+$country = $entityManager->find("\Roloffice\Entity\Country", $company_info->getCountry());
+$city = $entityManager->find("\Roloffice\Entity\City", $company_info->getCity());
+$street = $entityManager->find("\Roloffice\Entity\Street", $company_info->getStreet());
 
 $html = '
 <style type="text/css">
@@ -110,15 +114,15 @@ $html = '
 
 <table border="0">
     <tr>
-        <td width="690px" colspan="3"><h1>' . COMPANY_NAME . '</h1></td>
+        <td width="690px" colspan="3"><h1>' . $company_info->getName() . '</h1></td>
     </tr>
     <tr>
         <td width="340px" colspan="2">'
-            . COMPANY_STREET . '<br />'
-            . COMPANY_CITY . '<br />
-            PIB: ' . COMPANY_PIB . ', MB: ' . COMPANY_MB . '<br /> 
-            ž.r. ' . COMPANY_BANK_ACCOUNT_1 . '<br />
-            ž.r. ' . COMPANY_BANK_ACCOUNT_2 . '
+            . $street->getName() . ' ' . $company_info->getHomeNumber() . '<br />'
+            . $city->getName() . '<br />
+            PIB: ' . $company_info->getPib() . ', MB: ' . $company_info->getMb() . '<br />'
+            . $company_info->getBankAccount1() . '<br />'
+            . $company_info->getBankAccount2() . '
         </td>
         <td width="350px">
             Kupac:<br />'
@@ -143,7 +147,9 @@ $html = '
         </td>
     </tr>
     <tr>
-        <td colspan="3">Datum i mesto izdavanja: ' . $accounting_document__data->getDate()->format('d M Y') . '.g. Bačka Palanka</td>
+        <td colspan="3">
+            Datum i mesto izdavanja: ' . $accounting_document__data->getDate()->format('d M Y') . '.g. Bačka Palanka
+        </td>
     </tr>
 </table>
 ';
@@ -154,7 +160,9 @@ $html = '
 <table border="1" >
     <tr>
         <td width="30px" align="center">red.<br />br.</td>
-        <td ' . ($accounting_document__data->getType()->getId() == 2 ? 'width="495px"' : 'width="190px"') . ' align="center">naziv proizvoda</td>
+        <td ' . ($accounting_document__data->getType()->getId() == 2 ? 'width="495px"' : 'width="190px"') . ' align="center">
+            naziv proizvoda
+        </td>
         <td width="35px" align="center">jed.<br />mere</td>
         <td width="53px" align="center">kol.</td>
         ' . ($accounting_document__data->getType()->getId() == 2
@@ -323,12 +331,12 @@ $html = '' . ($accounting_document__data->getType()->getId() == 2 ? "" : '
     <tr><td width="105px">Slovima: </td><td width="580px" style="background-color: #E0E0E0;"></td></tr>
     <tr><td>Način plaćanja: </td>       <td style="background-color: #E0E0E0;">Virmanom - nalogom za prenos</td></tr>
     <tr><td>Rok plaćanja: </td>         <td style="background-color: #E0E0E0;"></td></tr>
-    <tr><td>Poziv na broj: </td>        <td style="background-color: #E0E0E0;">'.str_pad($accounting_document__data->getOrdinalNumInyear(), 3, "0", STR_PAD_LEFT).' - '.$accounting_document__data->getDate()->format('m').'</td></tr>
+    <tr><td>Poziv na broj: </td>        <td style="background-color: #E0E0E0;">' . str_pad($accounting_document__data->getOrdinalNumInyear(), 3, "0", STR_PAD_LEFT).' - '.$accounting_document__data->getDate()->format('m') . '</td></tr>
     <tr><td></td></tr>
 </table>
 ').'
 <table border="1">
-    <tr><td width="685px">Napomena:<br />'.nl2br($accounting_document__data->getNote()).'</td></tr>
+    <tr><td width="685px">Napomena:<br />' . nl2br($accounting_document__data->getNote()) . '</td></tr>
 </table>
 ';
 
@@ -363,9 +371,13 @@ $pdf->lastPage();
 
 // ---------------------------------------------------------
 
-//Close and output PDF document
-$pdf->Output( $accounting_document__type .'_'. str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) .'-'.$accounting_document__data->getDate()->format('m') .'.pdf', 'I');
+// Close and output PDF document.
+$pdf->Output(
+    $accounting_document__type . '_'
+    . str_pad($accounting_document__data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '-'
+    . $accounting_document__data->getDate()->format('m') . '.pdf', 'I'
+);
 
 //============================================================+
-// END OF FILE                                                
+// END OF FILE.
 //============================================================+
