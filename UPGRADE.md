@@ -4,6 +4,7 @@ Resolved issues and bugfixes:
 * #159: Issue with print on Accounting Document page
 * #160: Create an article issue
 * #161: Issue on edit article page
+* #163: Create a new "Narudzbenica"
 
 # Upgrade to 6.4.0
 
