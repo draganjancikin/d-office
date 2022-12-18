@@ -7,6 +7,7 @@ Resolved issues and bugfixes:
 * #163: Create a new "Narudzbenica"
 * #164: Error on page "edit Material Supplier"
 * #165: Error on page add material to order
+* #166: Error on page printOrder
 
 # Upgrade to 6.4.0
 
