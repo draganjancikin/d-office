@@ -338,7 +338,7 @@ CREATE TABLE `v6__clients` (
   `street_id` int(11) DEFAULT NULL,
   `created_by_user_id` int(11) DEFAULT NULL,
   `modified_by_user_id` int(11) DEFAULT NULL,
-  `name` varchar(48) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `name` varchar(96) COLLATE utf8mb3_unicode_ci NOT NULL,
   `name_note` varchar(128) COLLATE utf8mb3_unicode_ci NOT NULL,
   `lb` varchar(13) COLLATE utf8mb3_unicode_ci NOT NULL,
   `is_supplier` tinyint(1) NOT NULL,
@@ -360,7 +360,7 @@ CREATE TABLE `v6__clients` (
   CONSTRAINT `FK_A4B445E4C54C8C93` FOREIGN KEY (`type_id`) REFERENCES `v6__client__types` (`id`),
   CONSTRAINT `FK_A4B445E4DD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_A4B445E4F92F3E70` FOREIGN KEY (`country_id`) REFERENCES `v6__countries` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -369,7 +369,7 @@ CREATE TABLE `v6__clients` (
 
 LOCK TABLES `v6__clients` WRITE;
 /*!40000 ALTER TABLE `v6__clients` DISABLE KEYS */;
-INSERT INTO `v6__clients` VALUES (1,1,1,1,2,1,NULL,'Marko Markovic','','',0,'5','','','2022-12-17 10:02:27','1970-01-01 00:00:00'),(2,1,1,2,1,1,1,'Petar Petrović','','',0,'2a','','','2022-12-17 10:02:57','2022-12-17 10:03:56'),(3,1,1,NULL,NULL,1,1,'Janko Janković','','',0,'','','','2022-12-17 10:03:12','2022-12-17 10:03:39'),(4,1,1,4,3,1,1,'Predrag Predragović','','',0,'123A','','','2022-12-17 10:06:10','2022-12-17 10:06:38'),(5,1,3,5,4,1,1,'Miodrag Gavrankapetanović','','',0,'123C','','','2022-12-17 10:07:31','2022-12-17 10:10:19');
+INSERT INTO `v6__clients` VALUES (1,1,1,1,2,1,NULL,'Marko Markovic','','',0,'5','','','2022-12-17 10:02:27','1970-01-01 00:00:00'),(2,1,1,2,1,1,1,'Petar Petrović','','',0,'2a','','','2022-12-17 10:02:57','2022-12-17 10:03:56'),(3,1,1,NULL,NULL,1,1,'Janko Janković','','',0,'','','','2022-12-17 10:03:12','2022-12-17 10:03:39'),(4,1,1,4,3,1,1,'Predrag Predragović','','',0,'123A','','','2022-12-17 10:06:10','2022-12-17 10:06:38'),(5,1,3,5,4,1,1,'Miodrag Gavrankapetanović','','',0,'123C','','','2022-12-17 10:07:31','2022-12-17 10:10:19'),(6,2,1,1,1,1,NULL,'D-OFFICE doo','','',1,'1','','','2022-12-17 13:24:58','1970-01-01 00:00:00'),(7,2,1,4,3,1,1,'SAMOSTALNA TRGOVINSKA RADNJA MARKET MITAR MITROVIC  PR, SMEDEREVSKA PALANKA','','',1,'321','','','2022-12-17 13:44:02','2022-12-17 13:44:46');
 /*!40000 ALTER TABLE `v6__clients` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -632,7 +632,7 @@ CREATE TABLE `v6__materials` (
   CONSTRAINT `FK_303680037D182D95` FOREIGN KEY (`created_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_30368003DD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_30368003F8BD700D` FOREIGN KEY (`unit_id`) REFERENCES `v6__units` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -641,6 +641,7 @@ CREATE TABLE `v6__materials` (
 
 LOCK TABLES `v6__materials` WRITE;
 /*!40000 ALTER TABLE `v6__materials` DISABLE KEYS */;
+INSERT INTO `v6__materials` VALUES (1,1,1,NULL,'Hemijska olovka',0,0.00,0.5000,'','2022-12-18 08:48:28','0000-01-01 00:00:00'),(2,1,1,NULL,'Papir za stampac A4 (500kom)',0,0.00,4.2000,'','2022-12-18 08:49:16','0000-01-01 00:00:00'),(3,1,1,1,'Kafa zrno 200g',200,0.00,1.5000,'','2022-12-18 08:50:18','2022-12-18 10:50:46'),(4,1,1,NULL,'Domestos 750ml',0,0.00,2.8000,'','2022-12-18 08:51:37','0000-01-01 00:00:00');
 /*!40000 ALTER TABLE `v6__materials` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -700,7 +701,7 @@ CREATE TABLE `v6__materials__suppliers` (
   CONSTRAINT `FK_25FE6D1C7D182D95` FOREIGN KEY (`created_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_25FE6D1CDD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_25FE6D1CE308AC6F` FOREIGN KEY (`material_id`) REFERENCES `v6__materials` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -709,6 +710,7 @@ CREATE TABLE `v6__materials__suppliers` (
 
 LOCK TABLES `v6__materials__suppliers` WRITE;
 /*!40000 ALTER TABLE `v6__materials__suppliers` DISABLE KEYS */;
+INSERT INTO `v6__materials__suppliers` VALUES (1,1,6,1,1,'',0.5000,'2022-12-18 08:48:34','2022-12-18 08:49:35'),(2,2,6,1,NULL,'',0.0000,'2022-12-18 08:49:25','1070-01-01 00:00:00'),(3,3,7,1,1,'',1.5000,'2022-12-18 08:50:23','2022-12-18 08:50:26'),(4,4,7,1,NULL,'',0.0000,'2022-12-18 08:51:42','1070-01-01 00:00:00');
 /*!40000 ALTER TABLE `v6__materials__suppliers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -739,7 +741,7 @@ CREATE TABLE `v6__orders` (
   CONSTRAINT `FK_488000882ADD6D8C` FOREIGN KEY (`supplier_id`) REFERENCES `v6__clients` (`id`),
   CONSTRAINT `FK_488000887D182D95` FOREIGN KEY (`created_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_48800088DD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -748,6 +750,7 @@ CREATE TABLE `v6__orders` (
 
 LOCK TABLES `v6__orders` WRITE;
 /*!40000 ALTER TABLE `v6__orders` DISABLE KEYS */;
+INSERT INTO `v6__orders` VALUES (1,7,1,NULL,1,'2022-12-18 08:55:56','Hemija za odrzavanje higijene',0,0,'','2022-12-18 08:55:56','0000-01-01 00:00:00'),(2,6,1,NULL,2,'2022-12-18 08:59:12','Kancelarijski materijal',0,0,'','2022-12-18 08:59:12','0000-01-01 00:00:00'),(3,7,1,NULL,3,'2022-12-18 09:39:35','Kuhinjeske potrepstine i reprezentacija',0,0,'','2022-12-18 09:39:35','0000-01-01 00:00:00');
 /*!40000 ALTER TABLE `v6__orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -773,7 +776,7 @@ CREATE TABLE `v6__orders__materials` (
   KEY `IDX_E4CF4A1DE308AC6F` (`material_id`),
   CONSTRAINT `FK_E4CF4A1D8D9F6D38` FOREIGN KEY (`order_id`) REFERENCES `v6__orders` (`id`),
   CONSTRAINT `FK_E4CF4A1DE308AC6F` FOREIGN KEY (`material_id`) REFERENCES `v6__materials` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -782,6 +785,7 @@ CREATE TABLE `v6__orders__materials` (
 
 LOCK TABLES `v6__orders__materials` WRITE;
 /*!40000 ALTER TABLE `v6__orders__materials` DISABLE KEYS */;
+INSERT INTO `v6__orders__materials` VALUES (1,1,4,1,2.8000,0.00,20.00,0,''),(2,2,1,10,0.5000,0.00,20.00,0,''),(3,2,2,5,4.2000,0.00,20.00,0,''),(4,3,3,2,1.5000,0.00,20.00,200,'');
 /*!40000 ALTER TABLE `v6__orders__materials` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1362,4 +1366,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-17 10:11:37
+-- Dump completed on 2022-12-18  9:40:42
