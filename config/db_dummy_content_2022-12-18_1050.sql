@@ -632,7 +632,7 @@ CREATE TABLE `v6__materials` (
   CONSTRAINT `FK_303680037D182D95` FOREIGN KEY (`created_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_30368003DD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_30368003F8BD700D` FOREIGN KEY (`unit_id`) REFERENCES `v6__units` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -641,7 +641,7 @@ CREATE TABLE `v6__materials` (
 
 LOCK TABLES `v6__materials` WRITE;
 /*!40000 ALTER TABLE `v6__materials` DISABLE KEYS */;
-INSERT INTO `v6__materials` VALUES (1,1,1,NULL,'Hemijska olovka',0,0.00,0.5000,'','2022-12-18 08:48:28','0000-01-01 00:00:00'),(2,1,1,NULL,'Papir za stampac A4 (500kom)',0,0.00,4.2000,'','2022-12-18 08:49:16','0000-01-01 00:00:00'),(3,1,1,1,'Kafa zrno 200g',200,0.00,1.5000,'','2022-12-18 08:50:18','2022-12-18 10:50:46'),(4,1,1,NULL,'Domestos 750ml',0,0.00,2.8000,'','2022-12-18 08:51:37','0000-01-01 00:00:00');
+INSERT INTO `v6__materials` VALUES (1,1,1,NULL,'Hemijska olovka',0,0.00,0.5000,'','2022-12-18 08:48:28','0000-01-01 00:00:00'),(2,1,1,NULL,'Papir za stampac A4 (500kom)',0,0.00,4.2000,'','2022-12-18 08:49:16','0000-01-01 00:00:00'),(3,1,1,1,'Kafa zrno 200g',200,0.00,1.5000,'','2022-12-18 08:50:18','2022-12-18 10:50:46'),(4,1,1,NULL,'Domestos 750ml',0,0.00,2.8000,'','2022-12-18 08:51:37','0000-01-01 00:00:00'),(5,1,1,1,'Šećer 1kg',1000,0.00,0.8500,'','2022-12-18 09:43:32','2022-12-18 11:43:40'),(6,1,1,1,'Mleko Moja Kravica 1.5lit',0,0.00,1.1300,'','2022-12-18 09:46:24','2022-12-18 11:46:41');
 /*!40000 ALTER TABLE `v6__materials` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -701,7 +701,7 @@ CREATE TABLE `v6__materials__suppliers` (
   CONSTRAINT `FK_25FE6D1C7D182D95` FOREIGN KEY (`created_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_25FE6D1CDD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_25FE6D1CE308AC6F` FOREIGN KEY (`material_id`) REFERENCES `v6__materials` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -710,7 +710,7 @@ CREATE TABLE `v6__materials__suppliers` (
 
 LOCK TABLES `v6__materials__suppliers` WRITE;
 /*!40000 ALTER TABLE `v6__materials__suppliers` DISABLE KEYS */;
-INSERT INTO `v6__materials__suppliers` VALUES (1,1,6,1,1,'',0.5000,'2022-12-18 08:48:34','2022-12-18 08:49:35'),(2,2,6,1,NULL,'',0.0000,'2022-12-18 08:49:25','1070-01-01 00:00:00'),(3,3,7,1,1,'',1.5000,'2022-12-18 08:50:23','2022-12-18 08:50:26'),(4,4,7,1,NULL,'',0.0000,'2022-12-18 08:51:42','1070-01-01 00:00:00');
+INSERT INTO `v6__materials__suppliers` VALUES (1,1,6,1,1,'',0.5000,'2022-12-18 08:48:34','2022-12-18 08:49:35'),(2,2,6,1,NULL,'',0.0000,'2022-12-18 08:49:25','1070-01-01 00:00:00'),(3,3,7,1,1,'',1.5000,'2022-12-18 08:50:23','2022-12-18 08:50:26'),(4,4,7,1,NULL,'',0.0000,'2022-12-18 08:51:42','1070-01-01 00:00:00'),(5,5,7,1,1,'',0.8500,'2022-12-18 09:43:45','2022-12-18 09:43:51'),(6,6,7,1,1,'',1.1300,'2022-12-18 09:46:30','2022-12-18 09:46:34');
 /*!40000 ALTER TABLE `v6__materials__suppliers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -750,7 +750,7 @@ CREATE TABLE `v6__orders` (
 
 LOCK TABLES `v6__orders` WRITE;
 /*!40000 ALTER TABLE `v6__orders` DISABLE KEYS */;
-INSERT INTO `v6__orders` VALUES (1,7,1,NULL,1,'2022-12-18 08:55:56','Hemija za odrzavanje higijene',0,0,'','2022-12-18 08:55:56','0000-01-01 00:00:00'),(2,6,1,NULL,2,'2022-12-18 08:59:12','Kancelarijski materijal',0,0,'','2022-12-18 08:59:12','0000-01-01 00:00:00'),(3,7,1,NULL,3,'2022-12-18 09:39:35','Kuhinjeske potrepstine i reprezentacija',0,0,'','2022-12-18 09:39:35','0000-01-01 00:00:00');
+INSERT INTO `v6__orders` VALUES (1,7,1,NULL,1,'2022-12-18 08:55:56','Hemija za odrzavanje higijene',0,0,'','2022-12-18 08:55:56','0000-01-01 00:00:00'),(2,6,1,NULL,2,'2022-12-18 08:59:12','Kancelarijski materijal',0,0,'','2022-12-18 08:59:12','0000-01-01 00:00:00'),(3,7,1,NULL,3,'2022-12-18 09:39:35','Kuhinjeske potrepstine i reprezentacija',1,2,'','2022-12-18 09:39:35','0000-01-01 00:00:00');
 /*!40000 ALTER TABLE `v6__orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -776,7 +776,7 @@ CREATE TABLE `v6__orders__materials` (
   KEY `IDX_E4CF4A1DE308AC6F` (`material_id`),
   CONSTRAINT `FK_E4CF4A1D8D9F6D38` FOREIGN KEY (`order_id`) REFERENCES `v6__orders` (`id`),
   CONSTRAINT `FK_E4CF4A1DE308AC6F` FOREIGN KEY (`material_id`) REFERENCES `v6__materials` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -785,7 +785,7 @@ CREATE TABLE `v6__orders__materials` (
 
 LOCK TABLES `v6__orders__materials` WRITE;
 /*!40000 ALTER TABLE `v6__orders__materials` DISABLE KEYS */;
-INSERT INTO `v6__orders__materials` VALUES (1,1,4,1,2.8000,0.00,20.00,0,''),(2,2,1,10,0.5000,0.00,20.00,0,''),(3,2,2,5,4.2000,0.00,20.00,0,''),(4,3,3,2,1.5000,0.00,20.00,200,'');
+INSERT INTO `v6__orders__materials` VALUES (1,1,4,1,2.8000,0.00,20.00,0,''),(2,2,1,10,0.5000,0.00,20.00,0,''),(3,2,2,5,4.2000,0.00,20.00,0,''),(4,3,3,2,1.5000,0.00,20.00,200,''),(5,3,5,1,0.8500,0.00,20.00,1000,''),(6,3,6,1,1.1300,0.00,20.00,0,'');
 /*!40000 ALTER TABLE `v6__orders__materials` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1366,4 +1366,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-18  9:40:42
+-- Dump completed on 2022-12-18  9:47:42
