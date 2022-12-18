@@ -27,11 +27,20 @@ class AdminController {
             <div class="alert alert-info alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <h4><i class="icon fa fa-info"></i> Obaveštenje!</h4>
-                Backup baze je izvšen u fajl: <br />D:/Documents/BackUps/MYSQL/'.$dumpfile.'
+                Backup baze je izvšen u fajl: <br />D:/Documents/BackUps/MYSQL/' . $dumpfile . '
             </div>
             ';
 
         passthru("tail -1 $dumpfile");
     }
+
+//    public function getCompanyInfo() {
+//
+//        $client_data = $entityManager->find('\Roloffice\Entity\Client', $client_id);
+//        return [
+//            'name' => 'PREDRAG GAJIĆ PR ROLOSTIL',
+//
+//        ];
+//    }
 
 }

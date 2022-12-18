@@ -23,6 +23,7 @@ web/testing/
 
 # Ignore .sql files
 *.sql
+!config/*.sql
 
 # Ignore LOCAL enviroments files
 /.docksal

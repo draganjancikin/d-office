@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-    <title><?php echo VERSION ?></title>
+    <title><?php echo APP_VERSION ?></title>
     <?php include 'includes/pageHead.php'; ?>
 </head>
 <body class="bg-gradient-primary">
@@ -23,7 +23,7 @@
                                     <?php include 'includes/alerts.php'; ?>
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Prijava u sistem!</h1>
-                                        <p><?php echo VERSION ?> ©2020</p>
+                                        <p><?php echo APP_VERSION ?> ©2020</p>
                                     </div>
 
                                     <form action=".inc/login.php" method="post" class="user">

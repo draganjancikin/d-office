@@ -16,10 +16,10 @@
             $types = $entityManager->getRepository('\Roloffice\Entity\ClientType')->findAll();
             foreach ($types as $type) :
               ?>
-              <option value="<?php echo $type->getId() ?>">
-                <?php echo $type->getName() ?>
-              </option>
-              <?php
+            <option value="<?php echo $type->getId() ?>">
+              <?php echo $type->getName() ?>
+            </option>
+            <?php
             endforeach;
             ?>
           </select>
@@ -29,10 +29,12 @@
       <div class="form-group row">
         <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
         <div class="col-sm-6">
-          <input class="form-control" id="inputName" type="text" name="name" placeholder="Unesite naziv klijenta" required >
+          <input class="form-control" id="inputName" type="text" name="name" placeholder="Unesite naziv klijenta"
+            required>
         </div>
         <div class="col-sm-4">
-          <input class="form-control" id="inputName" type="text" name="name_note" placeholder="Unesite belešku uz naziv klijenta" >
+          <input class="form-control" id="inputName" type="text" name="name_note"
+            placeholder="Unesite belešku uz naziv klijenta">
         </div>
         <div class="col-sm-12">
           <?php if (isset($_GET['name_error'])) echo 'Ime mora biti upisano' ?>
@@ -60,10 +62,10 @@
             $states = $entityManager->getRepository('\Roloffice\Entity\Country')->findBy(array(), array('name' => 'ASC'));
             foreach ($states as $state) :
               ?>
-              <option value="<?php echo $state->getId() ?>">
-                <?php echo $state->getName() ?>
-              </option>
-              <?php
+            <option value="<?php echo $state->getId() ?>">
+              <?php echo $state->getName() ?>
+            </option>
+            <?php
             endforeach;
             ?>
           </select>
@@ -79,10 +81,10 @@
             $citys = $entityManager->getRepository('\Roloffice\Entity\City')->findBy(array(), array('name' => 'ASC'));
             foreach ($citys as $city) :
               ?>
-              <option value="<?php echo $city->getId() ?>">
-                <?php echo $city->getName() ?>
-              </option>
-              <?php
+            <option value="<?php echo $city->getId() ?>">
+              <?php echo $city->getName() ?>
+            </option>
+            <?php
             endforeach;
             ?>
           </select>
@@ -98,10 +100,10 @@
             $citys = $entityManager->getRepository('\Roloffice\Entity\Street')->findBy(array(), array('name' => 'ASC'));
             foreach ($citys as $street) :
               ?>
-              <option value="<?php echo $street->getId() ?>">
-                <?php echo $street->getName() ?>
-              </option>
-              <?php
+            <option value="<?php echo $street->getId() ?>">
+              <?php echo $street->getName() ?>
+            </option>
+            <?php
             endforeach;
             ?>
           </select>
@@ -111,22 +113,26 @@
       <div class="form-group row">
         <label for="disabledInputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj:</label>
         <div class="col-sm-2">
-          <input class="form-control" id="disabledInputNum" type="text" name="home_number" maxlength="8" placeholder="Unesite kućni broj">
+          <input class="form-control" id="disabledInputNum" type="text" name="home_number" maxlength="8"
+            placeholder="Unesite kućni broj">
         </div>
         <div class="col-sm-7">
-          <input class="form-control" id="disabledInputNum" type="text" name="address_note" placeholder="Unesite belešku uz adresu" >
+          <input class="form-control" id="disabledInputNum" type="text" name="address_note"
+            placeholder="Unesite belešku uz adresu">
         </div>
       </div>
 
       <div class="form-group row">
         <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-right">Beleška: </label>
         <div class="col-sm-6">
-          <textarea class="form-control" id="inputNote" rows="3" name="note" placeholder="Unesite belešku uz klijenta"></textarea>	
+          <textarea class="form-control" id="inputNote" rows="3" name="note"
+            placeholder="Unesite belešku uz klijenta"></textarea>
         </div>
       </div>
 
       <div class="form-group row">
-        <div class="col-sm-3 offset-sm-3 offset-lg-2"><button type="submit" class="btn btn-sm btn-success" title="Snimi podatake o klijentu!"><i class="fas fa-save"> </i> Snimi</button></div>
+        <div class="col-sm-3 offset-sm-3 offset-lg-2"><button type="submit" class="btn btn-sm btn-success"
+            title="Snimi podatake o klijentu!"><i class="fas fa-save"> </i> Snimi</button></div>
       </div>
 
     </form>

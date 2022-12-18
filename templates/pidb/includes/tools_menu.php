@@ -124,16 +124,16 @@ require 'delete_accounting_document.php';
 
                 // Next and Previous button.
                 if ($user_role_id == 1 && isset($_GET['edit'])):
-                    $previous = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getPrevious( $pidb_id, $pidb_data->getType()->getId() );
-                    $next = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getNext( $pidb_id, $pidb_data->getType()->getId() );
-                    ?>
-                    <a href="?edit&pidb_id=<?php echo $previous->getId() ?>">
-                        <button type="submit" class="btn btn-sm btn-outline-secondary mr-1">
-                            <i class="fas fa-arrow-left"> </i>
-                        </button>
-                    </a>
-                    <?php
-                    if ($next) :
+                    if ($previous = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getPrevious($pidb_id, $pidb_data->getType()->getId())) :
+                        ?>
+                        <a href="?edit&pidb_id=<?php echo $previous->getId() ?>">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary mr-1">
+                                <i class="fas fa-arrow-left"> </i>
+                            </button>
+                        </a>
+                        <?php
+                    endif;
+                    if ($next = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getNext($pidb_id, $pidb_data->getType()->getId())) :
                         ?>
                         <a href="?edit&pidb_id=<?php echo $next->getId() ?>">
                             <button type="submit" class="btn btn-sm btn-outline-secondary mr-1">

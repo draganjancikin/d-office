@@ -34,24 +34,20 @@
           <!-- Content Row -->
           <div class="row">
 
-            <div class="col-lg-12 px-2" id="topMeni">
-              <div class="card mb-2">
-                <div class="card-body py-1 px-2">
-
-                </div>
-              </div>
-            </div>
-            <!-- /#topMeni -->
+              <!-- Tools Meni -->
+              <?php include '../../templates/admin/includes/tools_menu.php' ?>
+              <!-- End of Tools Meni -->
 
             <div class="col-lg-12 px-2">
-              <?php 
-              if (empty($_GET)): // ako je $_GET prazan
-                // include '../../src/article/includes/listLast.php';
-              else:
-                if(isset($_GET['baseBackup'])) include '../../templates/admin/includes/baseBackup.php';
-                
-              endif;
-              ?>
+                <?php
+                if (empty($_GET)): // ako je $_GET prazan
+                    // include '../../src/article/includes/listLast.php';
+                else:
+                    if(isset($_GET['baseBackup'])) include '../../templates/admin/includes/baseBackup.php';
+                    if(isset($_GET['companyInfo']) && isset($_GET['view'])) include '../../templates/admin/includes/form_view_company_info.php';
+                    if(isset($_GET['companyInfo']) && isset($_GET['edit'])) include '../../templates/admin/includes/form_edit_company_info.php';
+                endif;
+                ?>
             </div>
 
 
