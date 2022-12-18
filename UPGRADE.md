@@ -5,6 +5,8 @@ Resolved issues and bugfixes:
 * #160: Create an article issue
 * #161: Issue on edit article page
 * #163: Create a new "Narudzbenica"
+* #164: Error on page "edit Material Supplier"
+* #165: Error on page add material to order
 
 # Upgrade to 6.4.0
 
