@@ -143,7 +143,7 @@ class AccountingDocumentRepository extends EntityRepository {
         $query = $qb->getQuery();
         $result = $query->getResult();
 
-        return $result[0];
+        return $result ? $result[0] : null;
     }
 
     /**
@@ -169,7 +169,7 @@ class AccountingDocumentRepository extends EntityRepository {
         $query = $qb->getQuery();
         $result = $query->getResult();
 
-        return ( isset($result[0]) ? $result[0] : NULL );
+        return $result ? $result[0] : null;
     }
 
     /**

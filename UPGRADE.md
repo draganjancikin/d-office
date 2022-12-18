@@ -8,6 +8,7 @@ Resolved issues and bugfixes:
 * #164: Error on page "edit Material Supplier"
 * #165: Error on page add material to order
 * #166: Error on page printOrder
+* #167: Error on page "Add article to Accounting Document
 
 # Upgrade to 6.4.0
 
