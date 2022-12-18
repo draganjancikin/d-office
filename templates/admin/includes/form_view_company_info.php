@@ -71,14 +71,14 @@ $company_street = $company->getStreet() ? $entityManager->find('\Roloffice\Entit
                 </div>
 
                 <div class="form-group row">
-                    <label for="disabledInputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj ziro racuna 1:</label>
+                    <label for="disabledInputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj žiro računa 1:</label>
                     <div class="col-sm-4">
                         <input class="form-control" id="disabledInputNum" type="text" value="<?php echo $company->getBankAccount1() ?>" disabled />
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="disabledInputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj ziro racuna 2:</label>
+                    <label for="disabledInputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj žiro računa 2:</label>
                     <div class="col-sm-4">
                         <input class="form-control" id="disabledInputNum" type="text" value="<?php echo $company->getBankAccount2() ?>" disabled />
                     </div>
