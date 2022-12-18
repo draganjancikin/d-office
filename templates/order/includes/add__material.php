@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addMaterialToOrder"]) 
     // Last inserted order material.
     $last_order_material_id = $newOrderMaterial->getId();
 
-    //insert material properties in table v6_orders_materials_properties
+    // Insert material properties in table v6_orders_materials_properties.
     $material_properties = $entityManager->getRepository('\Roloffice\Entity\MaterialProperty')->getMaterialProperties($material->getId());
     foreach ($material_properties as $material_property) {
         // Insert to table v6_orders_materials_properties.
