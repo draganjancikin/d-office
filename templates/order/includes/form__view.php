@@ -1,19 +1,30 @@
 <!-- View Procuring Data -->
 <div class="card mb-4 border-secondary">
-  <div class="card-header p-2">
-    <h6 class="m-0 text-dark">
-      Narudžbenica: 
-      <strong><?php echo str_pad($order_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT). ' - ' .$order_data->getDate()->format('m')  . ' <span class="font-weight-normal">(' . $order_data->getDate()->format('d-M-Y'). ')</span>'; ?> </strong>
-      - za projekat: <?php  echo ( isset($project_data) ? '<a href="/projects/?view&project_id='.$project_data->getId().'">'.$project_data->getOrdinalNumInYear().' '.$project_data->getClient()->getName().' - '.$project_data->getTitle().'</a>' : '___' ) ?>
-    </h6>
-  </div>
-  <div class="card-body p-2">
+    <div class="card-header p-2">
+        <h6 class="m-0 text-dark">
+            Narudžbenica:
+            <strong>
+                <?php
+                    echo str_pad($order_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - '
+                        . $order_data->getDate()->format('m')
+                        . ' <span class="font-weight-normal">(' . $order_data->getDate()->format('d-M-Y') . ')</span>'
+                ?>
+            </strong>
+            <?php
+            $project_data
+                ? '- za projekat: <a href="/projects/?view&project_id=' . $project_data->getId() . '">' . $project_data->getOrdinalNumInYear() . ' ' . $project_data->getClient()->getName() . ' - ' . $project_data->getTitle() .'</a>'
+                : '';
+            ?>
 
-    <dl class="row mb-0">
-      <dt class="col-sm-3 col-md-2">dobavljač:</dt>
-      <dd class="col-sm-9 col-md-10"><?php echo $supplier_data->getName() ?></dd>
-      <dt class="col-sm-3 col-md-2">adresa:</dt>
-      <dd class="col-sm-9 col-md-10"><?php echo $supplier_data->getStreet()->getName(). ' ' .$supplier_data->getHomeNumber(). ', ' .$supplier_data->getCity()->getName(). ', ' .$supplier_data->getCountry()->getName() ?></dd>
+        </h6>
+    </div>
+    <div class="card-body p-2">
+
+        <dl class="row mb-0">
+            <dt class="col-sm-3 col-md-2">dobavljač:</dt>
+            <dd class="col-sm-9 col-md-10"><?php echo $supplier_data->getName() ?></dd>
+            <dt class="col-sm-3 col-md-2">adresa:</dt>
+            <dd class="col-sm-9 col-md-10"><?php echo $supplier_data->getStreet()->getName(). ' ' .$supplier_data->getHomeNumber(). ', ' .$supplier_data->getCity()->getName(). ', ' .$supplier_data->getCountry()->getName() ?></dd>
 
       <?php
       $supplier_contacts = $supplier_data->getContacts();

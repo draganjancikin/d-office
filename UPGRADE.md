@@ -1,3 +1,8 @@
+# Upgrade to 6.4.2
+
+Resolved issues and bugfixes:
+* #169: Error on page create a new Project
+
 # Upgrade to 6.4.1
 
 Resolved issues and bugfixes:

@@ -45,12 +45,12 @@ switch ($pidb_data->getType()->getId()) {
             </dd>
             <dt class="col-sm-3 col-md-2">adresa:</dt>
             <dd class="col-sm-9 col-md-10">
-                <?php echo ($client_street ? $client_street->getName() : "")
-                    . ' ' . $client_data->getHomeNumber()
+                <?php echo ($client_street ? $client_street->getName() : "") . ' ' . $client_data->getHomeNumber()
                     . ($client_street && $client_city ? ", " : "")
                     . ($client_city ? $client_city->getName() : "")
                     . ($client_city && $client_country ? ", " : "")
-                    . ($client_country ? $client_country->getName() : "") ?>
+                    . ($client_country ? $client_country->getName() : "")
+                ?>
             </dd>
             <?php
             $client_contacts = $client_data->getContacts();
