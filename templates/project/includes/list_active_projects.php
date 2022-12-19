@@ -56,7 +56,12 @@
                                 <a href="?view&project_id=<?php echo $project_item->getId(); ?>" class="d-block card-link" title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
                                     #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
                                 </a>
-                                <?php echo $project_item->getClient()->getName(). ', <span style="font-size: 0.9em;">' .$project_item->getClient()->getCity()->getName(). '</span>' ?>
+                                <?php
+                                    echo $project_item->getClient()->getName()
+                                        . ($project_item->getClient()->getCity()
+                                            ? ', <span style="font-size: 0.9em;">' . $project_item->getClient()->getCity()->getName() . '</span>'
+                                            : '')
+                                ?>
                             </td>
                             <td>
                                 <?php
