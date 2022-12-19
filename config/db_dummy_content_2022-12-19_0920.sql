@@ -1037,7 +1037,7 @@ CREATE TABLE `v6__projects` (
   CONSTRAINT `FK_AC385C8B6BF700BD` FOREIGN KEY (`status_id`) REFERENCES `v6__project__statuses` (`id`),
   CONSTRAINT `FK_AC385C8B7D182D95` FOREIGN KEY (`created_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_AC385C8BDD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1046,6 +1046,7 @@ CREATE TABLE `v6__projects` (
 
 LOCK TABLES `v6__projects` WRITE;
 /*!40000 ALTER TABLE `v6__projects` DISABLE KEYS */;
+INSERT INTO `v6__projects` VALUES (1,3,3,1,1,NULL,1,'Projekat za testiranje','','2022-12-19 08:18:58','1970-01-01 00:00:00');
 /*!40000 ALTER TABLE `v6__projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1366,4 +1367,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-18  9:47:42
+-- Dump completed on 2022-12-19  8:20:10
