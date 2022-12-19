@@ -2,6 +2,8 @@
 
 Resolved issues and bugfixes:
 * #169: Error on page create a new Project
+* #170: Error on Project page
+* #171: Error on page printProjectTask
 
 # Upgrade to 6.4.1
 
