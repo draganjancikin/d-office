@@ -33,10 +33,10 @@
 
             <div class="form-group row">
                 <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
-                <div class="col-sm-6">
+                <div class="col-sm-6 col-lg-6">
                     <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $client['name'] ?>" >
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3 col-lg-4">
                     <input class="form-control" id="inputName" type="text" name="name_note" value="<?php echo $client['name_note'] ?>" >
                 </div>
             </div>
@@ -174,57 +174,61 @@
 
         <hr>
 
-    <!-- ========== Contacts ========== -->
-    <h5>Kontakti</h5>
-    <?php
-    $client_contacts = $client_data->getContacts();
-    foreach ($client_contacts as $client_contact):
-      $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy( array('id' =>$client_contact->getId()) );
-      $client_contact_type = $client_contact_data->getType();
-      ?>
-      <form action="<?php echo $_SERVER['PHP_SELF']. '?updateContact&client_id=' . $client_id; ?>" method="post">
-        <input type="hidden" name="contact_id" value="<?php echo $client_contact->getId() ?>">
+        <!-- ========== Contacts ========== -->
+        <h5>Kontakti</h5>
+        <?php
+        $client_contacts = $client_data->getContacts();
+        foreach ($client_contacts as $client_contact):
+            $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')
+                                                    ->findOneBy( array('id' =>$client_contact->getId()) );
+            $client_contact_type = $client_contact_data->getType();
+            ?>
+            <form action="<?php echo $_SERVER['PHP_SELF']. '?updateContact&client_id=' . $client_id; ?>" method="post">
+                <input type="hidden" name="contact_id" value="<?php echo $client_contact->getId() ?>">
 
-        <div class="form-group row">
-          <div class="col-sm-3">
-            <select class="form-control" name="contact_type_id">>
-              <option value="<?php echo $client_contact_type->getId() ?>"><?php echo $client_contact_type->getName() ?></option>
-              <?php
-              $contact_types = $entityManager->getRepository('\Roloffice\Entity\ContactType')->findAll();
-              foreach ($contact_types as $contact_type):
-                ?>
-                <option value="<?php echo $contact_type->getId() ?>"><?php echo $contact_type->getName() ?></option>
-                <?php
-              endforeach;
-              ?>
-            </select>
-          </div>
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <select class="form-control" name="contact_type_id">>
+                            <option value="<?php echo $client_contact_type->getId() ?>"><?php echo $client_contact_type->getName() ?></option>
+                            <?php
+                            $contact_types = $entityManager->getRepository('\Roloffice\Entity\ContactType')->findAll();
+                            foreach ($contact_types as $contact_type):
+                                ?>
+                                <option value="<?php echo $contact_type->getId() ?>"><?php echo $contact_type->getName() ?></option>
+                                <?php
+                            endforeach;
+                            ?>
+                        </select>
+                    </div>
 
-          <div class="col-sm-3">
-            <input type="text" class="form-control" name="body" value="<?php echo $client_contact->getBody() ?>" placeholder="Unesi kontakt" >
-          </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" name="body" value="<?php echo $client_contact->getBody() ?>" placeholder="Unesi kontakt" >
+                    </div>
 
-          <div class="col-sm-4">
-            <input type="text" class="form-control" name="note" value="<?php echo $client_contact->getNote() ?>" placeholder="Unesi belešku" >
-          </div>  
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="note" value="<?php echo $client_contact->getNote() ?>" placeholder="Unesi belešku" >
+                    </div>
 
-          <div class="col-sm-2">
-            <button type="submit" class="btn btn-mini btn-secondary" title="Snimi izmenu kontakta!">
-              <i class="fas fa-save"> </i>
-            </button>
-            <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete kontakt?');" href="<?php echo '?deleteContact&client_id=' .$client_id. '&contact_id=' .$client_contact->getId() ?>" class="btn btn-mini btn-danger " title="Obriši kontakt!">
-              <i class="fas fa-trash"> </i>
-            </a>
-          </div>
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-mini btn-secondary" title="Snimi izmenu kontakta!">
+                            <i class="fas fa-save"> </i>
+                        </button>
+                        <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete kontakt?');"
+                           href="<?php echo '?deleteContact&client_id=' . $client_id . '&contact_id=' . $client_contact->getId() ?>"
+                           class="btn btn-mini btn-danger "
+                           title="Obriši kontakt!">
+                            <i class="fas fa-trash"> </i>
+                        </a>
+                    </div>
 
-        </div>
+                </div>
 
-      </form>
-      <?php
-    endforeach;
-    ?>
+            </form>
+            <?php
+        endforeach;
+        ?>
 
-  </div>
-  <!-- End Card Body -->
+    </div>
+    <!-- End Card Body -->
 
 </div>
