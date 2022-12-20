@@ -55,7 +55,7 @@ CREATE TABLE `v6__accounting_documents` (
   `modified_by_user_id` int(11) DEFAULT NULL,
   `ordinal_num_in_year` int(11) NOT NULL,
   `date` datetime NOT NULL DEFAULT current_timestamp(),
-  `title` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `title` varchar(128) COLLATE utf8mb3_unicode_ci NOT NULL,
   `is_archived` tinyint(1) NOT NULL,
   `note` longtext COLLATE utf8mb3_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -71,7 +71,7 @@ CREATE TABLE `v6__accounting_documents` (
   CONSTRAINT `FK_E89D44C17D182D95` FOREIGN KEY (`created_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_E89D44C1C54C8C93` FOREIGN KEY (`type_id`) REFERENCES `v6__accounting_document__types` (`id`),
   CONSTRAINT `FK_E89D44C1DD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -80,7 +80,7 @@ CREATE TABLE `v6__accounting_documents` (
 
 LOCK TABLES `v6__accounting_documents` WRITE;
 /*!40000 ALTER TABLE `v6__accounting_documents` DISABLE KEYS */;
-INSERT INTO `v6__accounting_documents` VALUES (1,1,3,NULL,1,NULL,1,'2022-12-20 08:21:42','Predračun broj jedan',0,'','2022-12-20 08:21:42','1970-01-01 00:00:00');
+INSERT INTO `v6__accounting_documents` VALUES (1,1,3,NULL,1,NULL,1,'2022-12-20 08:21:42','Predračun broj jedan',0,'','2022-12-20 08:21:42','1970-01-01 00:00:00'),(2,1,5,NULL,1,NULL,2,'2022-12-20 08:23:58','Predračun sa malo duzim naslovom da bi se mogao testirati u listingu',0,'','2022-12-20 08:23:58','1970-01-01 00:00:00');
 /*!40000 ALTER TABLE `v6__accounting_documents` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1371,4 +1371,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-20  8:22:37
+-- Dump completed on 2022-12-20  8:24:40
