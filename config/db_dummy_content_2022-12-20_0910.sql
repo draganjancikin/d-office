@@ -894,6 +894,7 @@ CREATE TABLE `v6__preferences` (
   `company_home_number` varchar(8) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `company_bank_account_1` varchar(128) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `company_bank_account_2` varchar(128) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `local_backup_folder` varchar(128) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -904,7 +905,7 @@ CREATE TABLE `v6__preferences` (
 
 LOCK TABLES `v6__preferences` WRITE;
 /*!40000 ALTER TABLE `v6__preferences` DISABLE KEYS */;
-INSERT INTO `v6__preferences` VALUES (1,118.0000,20.0000,'D Office','123456789',234234,1,1,1,'xx','123-45-67, Banka Iks','');
+INSERT INTO `v6__preferences` VALUES (1,118.0000,20.0000,'D Office','123456789',234234,1,1,1,'xx','123-45-67, Banka Iks','','C:/');
 /*!40000 ALTER TABLE `v6__preferences` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1367,4 +1368,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-19 23:33:21
+-- Dump completed on 2022-12-20  8:09:11

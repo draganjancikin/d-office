@@ -21,6 +21,7 @@ class AdminController {
             // $root = "D:/Documents/BackUps/MYSQL/";
             $dump_dir = getenv('HOMEDRIVE') . getenv('HOMEPATH') . '\Downloads';
         } elseif ($os == 'Linux') {
+            // @HOLMES - Need define Download folder for Linux systems.
             $dump_dir = __DIR__ . '/../home/dragan/Downloads/';
         }
 
