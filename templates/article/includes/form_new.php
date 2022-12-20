@@ -72,7 +72,7 @@
       <div class="form-group row">
         <label for="inputPrice" class="col-sm-3 col-lg-2 col-form-label text-right">Cena:</label>
         <div class="col-sm-3">
-          <input id="inputPrice" class="form-control" name="price" maxlength="5" placeholder="u eur bez PDV-a">
+          <input id="inputPrice" class="form-control" name="price" maxlength="9" placeholder="u eur bez PDV-a">
         </div>
         <div class="col-sm-2">eur</div>
       </div>
