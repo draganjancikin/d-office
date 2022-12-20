@@ -225,7 +225,7 @@ CREATE TABLE `v6__articles` (
   CONSTRAINT `FK_4F76DE47DD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_4F76DE47F8BD700D` FOREIGN KEY (`unit_id`) REFERENCES `v6__units` (`id`),
   CONSTRAINT `FK_4F76DE47FE54D947` FOREIGN KEY (`group_id`) REFERENCES `v6__article__groups` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -234,6 +234,7 @@ CREATE TABLE `v6__articles` (
 
 LOCK TABLES `v6__articles` WRITE;
 /*!40000 ALTER TABLE `v6__articles` DISABLE KEYS */;
+INSERT INTO `v6__articles` VALUES (1,NULL,1,1,1,'Proizvod 01',0,1.00,123.4500,'','2022-12-20 08:13:51','2022-12-20 08:13:58'),(2,NULL,1,1,1,'Proizvod za testiranje 02',0,1.00,23.8800,'','2022-12-20 08:14:49','2022-12-20 08:14:58'),(3,NULL,1,1,1,'Treći proizvod za testiranje',0,1.00,1234.5600,'','2022-12-20 08:16:43','2022-12-20 08:16:48'),(4,NULL,6,1,NULL,'Testiramo četvrti proizvod sa malo dužim nazivom',0,1.00,12345.6700,'','2022-12-20 08:19:48','1970-01-01 00:00:00');
 /*!40000 ALTER TABLE `v6__articles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1368,4 +1369,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-20  8:09:11
+-- Dump completed on 2022-12-20  8:20:12
