@@ -7,6 +7,6 @@ namespace Roloffice\Controller;
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class PidbController extends Database {
+class PidbController {
 
 }

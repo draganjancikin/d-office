@@ -7,6 +7,6 @@ namespace Roloffice\Controller;
  * 
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
-class MaterialController extends Database {
+class MaterialController {
 
 }
