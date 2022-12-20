@@ -2,21 +2,21 @@
 <div class="card mb-4">
       <div class="card-header p-2">
             <h6 class="m-0 text-dark">
-                Izmena podataka o klijentu: <strong><?php echo $client_data->getName() ?></strong>
+                Izmena podataka o klijentu: <strong><?php echo $client['name'] ?></strong>
             </h6>
       </div>
 
     <div class="card-body px-2">
 
-        <form action="<?php echo $_SERVER['PHP_SELF']. '?updateClient&client_id=' .$client_id; ?>" method="post">
+        <form action="<?php echo $_SERVER['PHP_SELF']. '?updateClient&client_id=' . $client_id; ?>" method="post">
             <input type="hidden" name="client_id" value="<?php echo $client_id ?>">
-            <input type="hidden" name="type_id" value="<?php echo $client_type->getId() ?>">
+            <input type="hidden" name="type_id" value="<?php echo $client['type_id'] ?>">
 
             <div class="form-group row">
                 <label for="selectTip" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta klijenta:</label>
                 <div class="col-sm-4">
                     <select id="selectTip" class="form-control" name="type_id" >
-                        <option value="<?php echo $client_type->getId() ?>"><?php echo $client_type->getName() ?></option>
+                        <option value="<?php echo $client['type_id'] ?>"><?php echo $client['type'] ?></option>
                         <?php
                         $types = $entityManager->getRepository('\Roloffice\Entity\ClientType')->findAll();
                         foreach ($types as $type) :
@@ -34,20 +34,20 @@
             <div class="form-group row">
                 <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
                 <div class="col-sm-6">
-                    <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $client_data->getName() ?>" >
+                    <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $client['name'] ?>" >
                 </div>
                 <div class="col-sm-4">
-                    <input class="form-control" id="inputName" type="text" name="name_note" value="<?php echo $client_data->getNameNote() ?>" >
+                    <input class="form-control" id="inputName" type="text" name="name_note" value="<?php echo $client['name_note'] ?>" >
                 </div>
             </div>
 
             <?php
-            if ($client_type->getId() == 2):
+            if ($client['type_id'] == 2):
                 ?>
                 <div class="form-group row">
                     <label for="inputPIB" class="col-sm-3 col-lg-2 col-form-label text-right">PIB: </label>
                     <div class="col-sm-4">
-                        <input class="form-control" id="inputPIB" type="text" name="lb" value="<?php echo $client_data->getLb() ?>"  maxlength="9" >
+                        <input class="form-control" id="inputPIB" type="text" name="lb" value="<?php echo $client['lb'] ?>"  maxlength="9" >
                     </div>
                 </div>
                 <?php
@@ -58,7 +58,7 @@
                 <label for="is_supplier" class="col-sm-3 col-lg-2 col-form-label text-right">Dobavljač:</label>
                 <div class="col-sm-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier" value="1" <?php echo ($client_data->getIsSupplier() == 0 ? '' : 'checked') ?> >
+                        <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier" value="1" <?php echo ($client['is_supplier'] ? 'checked' : '') ?> >
                         <label class="form-check-label" for="is_supplier">Jeste</label>
                     </div>
                 </div>
@@ -69,20 +69,20 @@
                 <div class="col-sm-4">
                     <select id="selectCountry" class="form-control" name="country_id">
                         <?php
-                        if ($client_country === null) {
+                        if ($client['country'] === null) {
                             ?>
                             <option>Izaberite drzavu</option>
                             <?php
                         } else {
                             ?>
-                            <option value="<?php echo $client_country->getId() ?>"><?php echo $client_country->getName() ?></option>
+                            <option value="<?php echo $client['country_id'] ?>"><?php echo $client['country'] ?></option>
                             <?php
                         }
-                        $states = $entityManager->getRepository('\Roloffice\Entity\Country')->findBy(array(), array('name' => 'ASC'));
-                        foreach ($states as $state) :
+                        $countries = $entityManager->getRepository('\Roloffice\Entity\Country')->findBy(array(), array('name' => 'ASC'));
+                        foreach ($countries as $country) :
                             ?>
-                            <option value="<?php echo $state->getId() ?>">
-                                <?php echo $state->getName() ?>
+                            <option value="<?php echo $country->getId() ?>">
+                                <?php echo $country->getName() ?>
                             </option>
                             <?php
                         endforeach;
@@ -96,13 +96,13 @@
                 <div class="col-sm-4">
                     <select id="selectCity" class="form-control" name="city_id">
                         <?php
-                        if ($client_city === null) {
+                        if ($client['city'] === null) {
                             ?>
                             <option>Izaberite naselje</option>
                             <?php
                         } else {
                             ?>
-                            <option value="<?php echo $client_city->getId() ?>"><?php echo $client_city->getName() ?></option>
+                            <option value="<?php echo $client['city_id'] ?>"><?php echo $client['city'] ?></option>
                             <?php
                         }
                         $citys = $entityManager->getRepository('\Roloffice\Entity\City')->findBy(array(), array('name' => 'ASC'));
@@ -123,13 +123,13 @@
                 <div class="col-sm-4">
                     <select id="selectStreet" class="form-control" name="street_id">>
                         <?php
-                        if ($client_street === null) {
+                        if ($client['street'] === null) {
                             ?>
                             <option>Izaberite naselje</option>
                             <?php
                         } else {
                             ?>
-                            <option value="<?php echo $client_street->getId() ?>"><?php echo $client_street->getName() ?></option>
+                            <option value="<?php echo $client['street_id'] ?>"><?php echo $client['street'] ?></option>
                             <?php
                         }
                         $streets = $entityManager->getRepository('\Roloffice\Entity\Street')->findBy(array(), array('name' => 'ASC'));
@@ -148,17 +148,17 @@
             <div class="form-group row">
                 <label for="inputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj:</label>
                 <div class="col-sm-2">
-                    <input class="form-control" id="inputNum" type="text" name="home_number" value="<?php echo $client_data->getHomeNumber() ?>" >
+                    <input class="form-control" id="inputNum" type="text" name="home_number" value="<?php echo $client['home_number'] ?>" >
                 </div>
                 <div class="col-sm-7">
-                    <input class="form-control" id="inputNum" type="text" name="address_note" value="<?php echo $client_data->getAddressNote() ?>" >
+                    <input class="form-control" id="inputNum" type="text" name="address_note" value="<?php echo $client['address_note'] ?>" >
                 </div>
             </div>
 
             <div class="form-group row">
                 <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-right">Beleška: </label>
                 <div class="col-sm-6">
-                    <textarea class="form-control" id="inputNote" rows="3" name="note"><?php echo $client_data->getNote() ?></textarea>
+                    <textarea class="form-control" id="inputNote" rows="3" name="note"><?php echo $client['note'] ?></textarea>
                 </div>
             </div>
 
@@ -182,7 +182,7 @@
       $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy( array('id' =>$client_contact->getId()) );
       $client_contact_type = $client_contact_data->getType();
       ?>
-      <form action="<?php echo $_SERVER['PHP_SELF']. '?updateContact&client_id=' .$client_id; ?>" method="post">
+      <form action="<?php echo $_SERVER['PHP_SELF']. '?updateContact&client_id=' . $client_id; ?>" method="post">
         <input type="hidden" name="contact_id" value="<?php echo $client_contact->getId() ?>">
 
         <div class="form-group row">

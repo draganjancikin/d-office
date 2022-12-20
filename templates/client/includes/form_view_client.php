@@ -2,7 +2,7 @@
 <div class="card mb-4">
   <div class="card-header p-2">
     <h6 class="m-0 text-dark">
-      Pregled podataka o klijentu: <strong><?php echo $client_data->getName() ?></strong>
+      Pregled podataka o klijentu: <strong><?php echo $client['name'] ?></strong>
     </h6>
   </div>
 
@@ -15,7 +15,7 @@
           <label for="disabledSelectTip" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta klijenta:</label>
           <div class="col-sm-4">
             <select id="disabledSelectTip" class="form-control">
-              <option><?php echo $client_type->getName() ?></option>
+              <option><?php echo $client['type'] ?></option>
             </select>
           </div>
         </div>
@@ -23,20 +23,20 @@
         <div class="form-group row">
           <label for="disabledInputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
           <div class="col-sm-6">
-            <input class="form-control" id="disabledInputName" type="text" value="<?php echo $client_data->getName() ?>" disabled />
+            <input class="form-control" id="disabledInputName" type="text" value="<?php echo $client['name'] ?>" disabled />
           </div>
           <div class="col-sm-4">
-            <input class="form-control" id="disabledInputName" type="text" value="<?php echo $client_data->getNameNote() ?>" disabled />
+            <input class="form-control" id="disabledInputName" type="text" value="<?php echo $client['name_note'] ?>" disabled />
           </div>
         </div>
 
         <?php
-        if ($client_type->getId() == 2):
+        if ($client['type_id'] == 2):
           ?>
           <div class="form-group row">
             <label for="disabledInputPIB" class="col-sm-3 col-lg-2 col-form-label text-right">PIB: </label>
             <div class="col-sm-4">
-              <input class="form-control" id="disabledInputPIB" type="text" value="<?php echo $client_data->getLb() ?>"  maxlength="9" disabled >	
+              <input class="form-control" id="disabledInputPIB" type="text" value="<?php echo $client['lb'] ?>"  maxlength="9" disabled >
             </div>
           </div>
           <?php
@@ -47,7 +47,7 @@
           <label for="is_supplier" class="col-sm-3 col-lg-2 col-form-label text-right">Dobavljač:</label>
           <div class="col-sm-3">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier" <?php echo ($client_data->getIsSupplier() == 0 ? '' : 'checked') ?> >
+              <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier" <?php echo ($client['is_supplier'] ? 'checked' : '') ?> >
               <label class="form-check-label" for="is_supplier">Jeste</label>
             </div>
           </div>
@@ -57,7 +57,7 @@
           <label for="disabledSelectCountry" class="col-sm-3 col-lg-2 col-form-label text-right">Država:</label>
           <div class="col-sm-4">
             <select id="disabledSelectCountry" class="form-control">
-              <option><?php echo $client_country ? $client_country->getName() : '' ?></option>
+              <option><?php echo $client['country'] ?? '' ?></option>
             </select>
           </div>
         </div>
@@ -66,7 +66,7 @@
           <label for="disabledSelectCity" class="col-sm-3 col-lg-2 col-form-label text-right">Naselje:</label>
           <div class="col-sm-4">
             <select id="disabledSelectCity" class="form-control">
-              <option><?php echo $client_city ? $client_city->getName() : '' ?></option>
+              <option><?php echo $client['city'] ?? '' ?></option>
             </select>
           </div>
         </div>
@@ -75,7 +75,7 @@
           <label for="disabledSelectStreet" class="col-sm-3 col-lg-2 col-form-label text-right">Ulica:</label>
           <div class="col-sm-4">
             <select id="disabledSelectStreet" class="form-control">
-                <option><?php echo $client_street ? $client_street->getName() : '' ?></option>
+                <option><?php echo $client['street'] ?? '' ?></option>
             </select>
           </div>
         </div>
@@ -83,17 +83,17 @@
         <div class="form-group row">
           <label for="disabledInputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj:</label>
           <div class="col-sm-2">
-            <input class="form-control" id="disabledInputNum" type="text" value="<?php echo $client_data->getHomeNumber() ?>" disabled />
+            <input class="form-control" id="disabledInputNum" type="text" value="<?php echo $client['home_number'] ?>" disabled />
           </div>
           <div class="col-sm-7">
-            <input class="form-control" id="disabledInputNum" type="text" value="<?php echo $client_data->getAddressNote() ?>" disabled />
+            <input class="form-control" id="disabledInputNum" type="text" value="<?php echo $client['address_note'] ?>" disabled />
           </div>
         </div>
 
         <div class="form-group row">
           <label for="disabledInputNote" class="col-sm-3 col-lg-2 col-form-label text-right">Beleška: </label>
           <div class="col-sm-6">
-            <textarea class="form-control" id="disabledInputNote" rows="3" disabled><?php echo $client_data->getNote() ?></textarea>	
+            <textarea class="form-control" id="disabledInputNote" rows="3" disabled><?php echo $client['note'] ?></textarea>
           </div>
         </div>
 

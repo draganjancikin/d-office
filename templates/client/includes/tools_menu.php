@@ -28,23 +28,8 @@ require 'delete_contact.php';
                 } else {
                     die('<script>location.href = "/clients/" </script>');
                 }
+                $client = $entityManager->getRepository('\Roloffice\Entity\Client')->client($client_id);
                 $client_data = $entityManager->find('\Roloffice\Entity\Client', $client_id);
-                $client_type = $entityManager->find('\Roloffice\Entity\ClientType', $client_data->getType());
-                if ($client_data->getCountry() === null) {
-                    $client_country = null;
-                } else {
-                    $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
-                }
-                if ($client_data->getCity() === null) {
-                    $client_city = null;
-                } else {
-                    $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
-                }
-                if ($client_data->getStreet() === null) {
-                    $client_street = null;
-                } else {
-                    $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
-                }
 
                 // In view case show edit button. 
                 if(isset($_GET['view'])):
