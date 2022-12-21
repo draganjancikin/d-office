@@ -2,22 +2,7 @@
 if (!$project_data):
     die('<script>location.href = "/projects/" </script>');
 else:
-    $client_data = $entityManager->find('\Roloffice\Entity\Client', $project_data->getClient());
-    if ($client_data->getCountry() === null) {
-        $client_country = null;
-    } else {
-        $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
-    }
-    if ($client_data->getCity() === null) {
-        $client_city = null;
-    } else {
-        $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
-    }
-    if ($client_data->getStreet() === null) {
-        $client_street = null;
-    } else {
-        $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
-    }
+    $client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($project_data->getClient()->getId());
     ?>
     <!-- ************** START OLD CODE ***************** -->
     <!-- dugme, okidač za modal addNote -->
@@ -41,21 +26,20 @@ else:
                         <dd class="col-sm-8 col-md-9"><?php echo $project_data->getCreatedAt()->format('d-M-Y') ?></dd>
                         <dt class="col-sm-4 col-md-3">klijent</dt>
                         <dd class="col-sm-8 col-md-9">
-                            <a href="/clients/index.php?view&client_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a>
+                            <a href="/clients/index.php?view&client_id=<?php echo $client['id'] ?>"><?php echo $client['name'] ?></a>
                         </dd>
                         <dt class="col-sm-4 col-md-3">adresa</dt>
                         <dd class="col-sm-8 col-md-9">
-                            <?php echo ($client_street ? $client_street->getName() : "") . ' ' . $client_data->getHomeNumber()
-                                . ($client_street && $client_city ? ", " : "")
-                                . ($client_city ? $client_city->getName() : "")
-                                . ($client_city && $client_country ? ", " : "")
-                                . ($client_country ? $client_country->getName() : "")
+                            <?php echo ($client['street'] ?? "") . ' ' . $client['home_number']
+                                . ($client['street'] && $client['city'] ? ", " : "")
+                                . ($client['city'] ?? "")
+                                . ($client['city'] && $client['country'] ? ", " : "")
+                                . ($client['country'] ?? "")
                             ?>
                         </dd>
                         <?php
-                        $client_contacts = $client_data->getContacts();
                         $count = 0;
-                        foreach ($client_contacts as $client_contact):
+                        foreach ($client['contacts'] as $client_contact):
                             if ($count < 8):
                                 $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')
                                                                         ->findOneBy( array('id' =>$client_contact->getId()) );

@@ -52,40 +52,22 @@ $pdf->AddPage();
 $project_id = $_GET['project_id'];
 $project = $entityManager->find('Roloffice\Entity\Project', $project_id);
 
-$client = $entityManager->find('Roloffice\Entity\Client', $project->getClient()->getId());
-if ($client->getCountry() === null) {
-    $client_country = null;
-} else {
-    $client_country = $entityManager->find('\Roloffice\Entity\Country', $client->getCountry());
-}
-if ($client->getCity() === null) {
-    $client_city = null;
-} else {
-    $client_city = $entityManager->find('\Roloffice\Entity\City', $client->getCity());
-}
-if ($client->getStreet() === null) {
-    $client_street = null;
-} else {
-    $client_street = $entityManager->find('\Roloffice\Entity\Street', $client->getStreet());
-}
-
-$client_contacts = $client->getContacts();
+$client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($project->getClient()->getId());
+$client_contacts = $client['contacts'];
 
 $contact_item[0] = "";
 $contact_item[1] = "";
 
 if (!empty($client_contacts)) {
-    
   $count = 0;
-  foreach ($client_contacts as $client_contact):
-    if ( NULL !== $client_contact->getBody() AND $count == 0 ){ 
-      $contact_item[0] = $client_contact->getBody();
-    } elseif ( NULL !== $client_contact->getBody() AND $count == 1) {
-      $contact_item[1] = $client_contact->getBody();
-    }
-    $count++; 
-  endforeach;
-    
+  foreach ($client_contacts as $client_contact) {
+      if (NULL !== $client_contact->getBody() and $count == 0) {
+          $contact_item[0] = $client_contact->getBody();
+      } elseif (NULL !== $client_contact->getBody() and $count == 1) {
+          $contact_item[1] = $client_contact->getBody();
+      }
+      $count++;
+  }
 }
 
 $html = '
@@ -106,18 +88,18 @@ $html = '
 <table border="0">
     <tr>
         <td width="80px">klijent:</td>
-        <td width="auto">'.$client->getName() . ($client->getNameNote()<>""?', '.$client->getNameNote():"").'</td>
+        <td width="auto">' . $client['name'] . ($client['name_note'] <> "" ? ', ' . $client['name_note'] : "") . '</td>
     </tr>
     <tr>
         <td>adresa:</td>
         <td>'
-            . ($client_street ? $client_street->getName() . ' ' . $client->getHomeNumber() : '')
-            . ($client_street && $client_city ? ", " : "")
-            . ($client_city ? $client_city->getName() : '')
-            . ($client_city && $client_country ? ", " : "")
-            . ($client_country ? $client_country->getName() : '')
-            . ($client_country && $client->getAddressNote() ? ", " : "")
-            . $client->getAddressNote() . '
+            . ($client['street'] ? $client['street'] . ' ' . $client['home_number'] : '')
+            . ($client['street'] && $client['city'] ? ", " : "")
+            . ($client['city'] ?? '')
+            . ($client['city'] && $client['country'] ? ", " : "")
+            . ($client['country'] ?? '')
+            . ($client['country'] && $client['address_note'] ? ", " : "")
+            . $client['address_note'] . '
         </td>
     </tr>
     <tr>
@@ -140,7 +122,7 @@ $pdf->lastPage();
 // ---------------------------------------------------------
 
 // Close and output PDF document.
-$pdf->Output('nalog_' . $client->getName() . '.pdf', 'I');
+$pdf->Output('nalog_' . $client['name'] . '.pdf', 'I');
 
 //============================================================+
 // END OF FILE
