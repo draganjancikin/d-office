@@ -28,8 +28,8 @@ require 'delete_contact.php';
                 } else {
                     die('<script>location.href = "/clients/" </script>');
                 }
-                $client = $entityManager->getRepository('\Roloffice\Entity\Client')->client($client_id);
-                $client_data = $entityManager->find('\Roloffice\Entity\Client', $client_id);
+                $client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($client_id);
+                // $client_data = $entityManager->find('\Roloffice\Entity\Client', $client_id);
 
                 // In view case show edit button. 
                 if(isset($_GET['view'])):

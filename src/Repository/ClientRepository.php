@@ -102,7 +102,7 @@ class ClientRepository extends EntityRepository {
      * @param $client_id
      * @return array
      */
-    public function client($client_id): array {
+    public function getClientData($client_id): array {
         $client_data = $this->_em->find('\Roloffice\Entity\Client', $client_id);
         $client_type = $this->_em->find('\Roloffice\Entity\ClientType', $client_data->getType());
         if ($client_data->getCountry() === null) {
@@ -120,6 +120,7 @@ class ClientRepository extends EntityRepository {
         } else {
             $client_street = $this->_em->find('\Roloffice\Entity\Street', $client_data->getStreet());
         }
+        $client_contacts = $client_data->getContacts();
         return [
             'type_id' => $client_type->getId(),
             'type' => $client_type->getName(),
@@ -136,6 +137,7 @@ class ClientRepository extends EntityRepository {
             'lb' => $client_data->getLb(),
             'is_supplier' => $client_data->getIsSupplier(),
             'note' => $client_data->getNote(),
+            'contacts' => $client_contacts,
         ];
     }
 

@@ -13,7 +13,7 @@
             <input type="hidden" name="type_id" value="<?php echo $client['type_id'] ?>">
 
             <div class="form-group row">
-                <label for="selectTip" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta klijenta:</label>
+                <label for="selectTip" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Vrsta klijenta:</label>
                 <div class="col-sm-4">
                     <select id="selectTip" class="form-control" name="type_id" >
                         <option value="<?php echo $client['type_id'] ?>"><?php echo $client['type'] ?></option>
@@ -32,7 +32,7 @@
             </div>
 
             <div class="form-group row">
-                <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
+                <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Naziv:</label>
                 <div class="col-sm-6 col-lg-6">
                     <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $client['name'] ?>" >
                 </div>
@@ -45,7 +45,7 @@
             if ($client['type_id'] == 2):
                 ?>
                 <div class="form-group row">
-                    <label for="inputPIB" class="col-sm-3 col-lg-2 col-form-label text-right">PIB: </label>
+                    <label for="inputPIB" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">PIB: </label>
                     <div class="col-sm-4">
                         <input class="form-control" id="inputPIB" type="text" name="lb" value="<?php echo $client['lb'] ?>"  maxlength="9" >
                     </div>
@@ -55,7 +55,7 @@
             ?>
 
             <div class="form-group row">
-                <label for="is_supplier" class="col-sm-3 col-lg-2 col-form-label text-right">Dobavljač:</label>
+                <label for="is_supplier" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Dobavljač:</label>
                 <div class="col-sm-3">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier" value="1" <?php echo ($client['is_supplier'] ? 'checked' : '') ?> >
@@ -65,8 +65,8 @@
             </div>
 
             <div class="form-group row">
-                <label for="selectCountry" class="col-sm-3 col-lg-2 col-form-label text-right">Država:</label>
-                <div class="col-sm-4">
+                <label for="selectCountry" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Država:</label>
+                <div class="col-sm-7 col-md-6 col-lg-5 col-xl-4">
                     <select id="selectCountry" class="form-control" name="country_id">
                         <?php
                         if ($client['country'] === null) {
@@ -92,8 +92,8 @@
             </div>
 
             <div class="form-group row">
-                <label for="selectCity" class="col-sm-3 col-lg-2 col-form-label text-right">Naselje:</label>
-                <div class="col-sm-4">
+                <label for="selectCity" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Naselje:</label>
+                <div class="col-sm-7 col-md-6 col-lg-5 col-xl-4">
                     <select id="selectCity" class="form-control" name="city_id">
                         <?php
                         if ($client['city'] === null) {
@@ -119,8 +119,8 @@
             </div>
 
             <div class="form-group row">
-                <label for="selectStreet" class="col-sm-3 col-lg-2 col-form-label text-right">Ulica:</label>
-                <div class="col-sm-4">
+                <label for="selectStreet" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Ulica:</label>
+                <div class="col-sm-7 col-md-6 col-lg-5 col-xl-4">
                     <select id="selectStreet" class="form-control" name="street_id">>
                         <?php
                         if ($client['street'] === null) {
@@ -146,17 +146,17 @@
             </div>
 
             <div class="form-group row">
-                <label for="inputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj:</label>
+                <label for="inputNum" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Broj:</label>
                 <div class="col-sm-2">
                     <input class="form-control" id="inputNum" type="text" name="home_number" value="<?php echo $client['home_number'] ?>" >
                 </div>
-                <div class="col-sm-7">
+                <div class="col-sm-7 col-lg-8">
                     <input class="form-control" id="inputNum" type="text" name="address_note" value="<?php echo $client['address_note'] ?>" >
                 </div>
             </div>
 
             <div class="form-group row">
-                <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-right">Beleška: </label>
+                <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Beleška: </label>
                 <div class="col-sm-6">
                     <textarea class="form-control" id="inputNote" rows="3" name="note"><?php echo $client['note'] ?></textarea>
                 </div>
@@ -177,14 +177,13 @@
         <!-- ========== Contacts ========== -->
         <h5>Kontakti</h5>
         <?php
-        $client_contacts = $client_data->getContacts();
-        foreach ($client_contacts as $client_contact):
+        foreach ($client['contacts'] as $contact):
             $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')
-                                                    ->findOneBy( array('id' =>$client_contact->getId()) );
+                                                    ->findOneBy( array('id' =>$contact->getId()) );
             $client_contact_type = $client_contact_data->getType();
             ?>
             <form action="<?php echo $_SERVER['PHP_SELF']. '?updateContact&client_id=' . $client_id; ?>" method="post">
-                <input type="hidden" name="contact_id" value="<?php echo $client_contact->getId() ?>">
+                <input type="hidden" name="contact_id" value="<?php echo $contact->getId() ?>">
 
                 <div class="form-group row">
                     <div class="col-sm-3">
@@ -202,11 +201,11 @@
                     </div>
 
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" name="body" value="<?php echo $client_contact->getBody() ?>" placeholder="Unesi kontakt" >
+                        <input type="text" class="form-control" name="body" value="<?php echo $contact->getBody() ?>" placeholder="Unesi kontakt" >
                     </div>
 
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" name="note" value="<?php echo $client_contact->getNote() ?>" placeholder="Unesi belešku" >
+                        <input type="text" class="form-control" name="note" value="<?php echo $contact->getNote() ?>" placeholder="Unesi belešku" >
                     </div>
 
                     <div class="col-sm-2">
@@ -214,21 +213,17 @@
                             <i class="fas fa-save"> </i>
                         </button>
                         <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete kontakt?');"
-                           href="<?php echo '?deleteContact&client_id=' . $client_id . '&contact_id=' . $client_contact->getId() ?>"
+                           href="<?php echo '?deleteContact&client_id=' . $client_id . '&contact_id=' . $contact->getId() ?>"
                            class="btn btn-mini btn-danger "
                            title="Obriši kontakt!">
                             <i class="fas fa-trash"> </i>
                         </a>
                     </div>
-
                 </div>
-
             </form>
             <?php
         endforeach;
         ?>
+    </div><!-- End of Card Body -->
 
-    </div>
-    <!-- End Card Body -->
-
-</div>
+</div><!-- End of Card -->
