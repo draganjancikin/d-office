@@ -8,54 +8,64 @@ require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.
 // Include the main TCPDF library (search for installation path).
 require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/tcpdf_include.php';
 
-// create new PDF document
+// Create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-// set document information
+// Set document information.
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('Rolostil');
 $pdf->SetTitle('ROLOSTIL - Krojna lista');
 $pdf->SetSubject('Rolostil');
 $pdf->SetKeywords('Rolostil, PDF, Krojna lista');
 
-// remove default header/footer
+// Remove default header/footer.
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
 
-// set default monospaced font
+// Set default monospaced font.
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
-//set margins
+// Set margins.
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
-//set auto page breaks
+// Set auto page breaks.
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
-//set image scale factor
+// Set image scale factor.
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
-//set some language-dependent strings
+// Set some language-dependent strings.
 // $pdf->setLanguageArray($l);
 
 // ---------------------------------------------------------
 
-// set font
+// Set font.
 $pdf->SetFont('dejavusans', '', 10);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// Print a table
+// Print a table.
 
-// add a page
+// Add a page.
 $pdf->AddPage();
 
 $id = $_GET['cutting_id'];
 $cutting_sheet = $entityManager->find("\Roloffice\Entity\CuttingSheet", $id);
 
-$html = '<style type="text/css">table { padding-top: 0px; padding-bottom: 0px; }</style>
-         <table border="0">
-           <tr><td><h1>KROJNA LISTA: KL '.str_pad($cutting_sheet->getOrdinalNumInYear(), 3, "0", STR_PAD_LEFT).' - '.$cutting_sheet->getCreatedAt()->format('m').' </h1></td><td>'.$cutting_sheet->getCreatedAt()->format('d M Y').'</td></tr>
-           <tr><td>U vezi sa: '/*.( $cutting_sheet['task_t_id']=="" ? "" : 'N ' .str_pad($cutting_sheet['task_t_id'], 4, "0", STR_PAD_LEFT) ). ' - ' */.$cutting_sheet->getClient()->getName(). '</td></tr>
-         </table>';
+$html =
+'<style type="text/css">table { padding-top: 0px; padding-bottom: 0px; }</style>
+    <table border="0">
+        <tr>
+            <td>
+                <h1>KROJNA LISTA: KL ' . str_pad($cutting_sheet->getOrdinalNumInYear(), 3, "0", STR_PAD_LEFT) . ' - '
+                    . $cutting_sheet->getCreatedAt()->format('m') . '</h1>
+            </td>
+            <td>' . $cutting_sheet->getCreatedAt()->format('d M Y') . '</td>
+        </tr>
+        <tr>
+            <td>U vezi sa: '/*.( $cutting_sheet['task_t_id']=="" ? "" : 'N ' .str_pad($cutting_sheet['task_t_id'], 4, "0", STR_PAD_LEFT) ). ' - ' */
+                . $cutting_sheet->getClient()->getName() . '</td>
+        </tr>
+    </table>';
 
 $pdf->writeHTML($html, true, false, true, false, '');
 

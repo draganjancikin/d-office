@@ -4,6 +4,10 @@ Resolved issues and bugfixes:
 * #169: Error on page create a new Project
 * #170: Error on Project page
 * #171: Error on page printProjectTask
+* #173: Error on page create a new Cutting
+
+Enhancement:
+* Getting Client data move from template to ClientRepository
 
 # Upgrade to 6.4.1
 
