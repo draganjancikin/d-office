@@ -1,11 +1,7 @@
 <?php
-// TODO Dragan: Remove unused code.
-// use Roloffice\Core\Database;
-
-// export cutting to proforma-invoice
-if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocument"]) ) {
-
-    // Current loged user.
+// Export cutting to proforma-invoice.
+if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocument"]) ) {
+    // Current logged user.
     $user_id = $_SESSION['user_id'];
     $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
 
@@ -24,7 +20,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocume
     $ordinal_num_in_year = 0;
     $title = "PVC letvice";
     $note = "ROLOSTIL szr je PDV obveznik.";
-    
+
     $accounting_document__type_id = 1;
     $accounting_document__type = $entityManager->find("\Roloffice\Entity\AccountingDocumentType", $accounting_document__type_id);
 
@@ -38,17 +34,16 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocume
     $newProforma->setClient($cutting->getClient());
     $newProforma->setTitle($title);
     $newProforma->setNote($note);
-    
     $newProforma->setCreatedAt(new DateTime("now"));
     $newProforma->setCreatedByUser($user);
     $newProforma->setModifiedAt(new DateTime("1970-01-01 00:00:00"));
-    
+
     $entityManager->persist($newProforma);
     $entityManager->flush();
-    
+
     // Get id of last AccountingDocument.
     $newProforma_id = $newProforma->getId();
-    
+
     // Set Ordinal Number In Year.
     $entityManager->getRepository('Roloffice\Entity\AccountingDocument')->setOrdinalNumInYear($newProforma_id);
 

@@ -73,7 +73,7 @@
             <div class="form-group row">
                 <label class="col-sm-3 col-lg-2 col-form-label text-right" for="inputPrice">Cena: </label>
                 <div class="col-sm-2">
-                    <input class="form-control" id="inputPrice" type="text" name="price" value="<?php echo $article_data->getPrice() ?>">
+                    <input class="form-control" id="inputPrice" type="text" name="price" maxlength="9" value="<?php echo $article_data->getPrice() ?>">
                 </div>
                 <div class="col-sm-2">&#8364; bez PDV-a</div>
             </div>

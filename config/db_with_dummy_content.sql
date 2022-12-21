@@ -225,7 +225,7 @@ CREATE TABLE `v6__articles` (
   CONSTRAINT `FK_4F76DE47DD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_4F76DE47F8BD700D` FOREIGN KEY (`unit_id`) REFERENCES `v6__units` (`id`),
   CONSTRAINT `FK_4F76DE47FE54D947` FOREIGN KEY (`group_id`) REFERENCES `v6__article__groups` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -234,6 +234,7 @@ CREATE TABLE `v6__articles` (
 
 LOCK TABLES `v6__articles` WRITE;
 /*!40000 ALTER TABLE `v6__articles` DISABLE KEYS */;
+INSERT INTO `v6__articles` VALUES (1,NULL,1,1,1,'Proizvod 01',0,1.00,123.4500,'','2022-12-20 08:13:51','2022-12-20 08:13:58'),(2,NULL,1,1,1,'Proizvod za testiranje 02',0,1.00,23.8800,'','2022-12-20 08:14:49','2022-12-20 08:14:58'),(3,NULL,1,1,1,'Treći proizvod za testiranje',0,1.00,1234.5600,'','2022-12-20 08:16:43','2022-12-20 08:16:48'),(4,NULL,6,1,NULL,'Testiramo četvrti proizvod sa malo dužim nazivom',0,1.00,12345.6700,'','2022-12-20 08:19:48','1970-01-01 00:00:00');
 /*!40000 ALTER TABLE `v6__articles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -894,6 +895,7 @@ CREATE TABLE `v6__preferences` (
   `company_home_number` varchar(8) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `company_bank_account_1` varchar(128) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `company_bank_account_2` varchar(128) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `local_backup_folder` varchar(128) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -904,7 +906,7 @@ CREATE TABLE `v6__preferences` (
 
 LOCK TABLES `v6__preferences` WRITE;
 /*!40000 ALTER TABLE `v6__preferences` DISABLE KEYS */;
-INSERT INTO `v6__preferences` VALUES (1,118.0000,20.0000,'D Office','123456789',234234,1,1,1,'xx','123-45-67, Banka Iks','');
+INSERT INTO `v6__preferences` VALUES (1,118.0000,20.0000,'D Office','123456789',234234,1,1,1,'xx','123-45-67, Banka Iks','','C:/');
 /*!40000 ALTER TABLE `v6__preferences` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1037,7 +1039,7 @@ CREATE TABLE `v6__projects` (
   CONSTRAINT `FK_AC385C8B6BF700BD` FOREIGN KEY (`status_id`) REFERENCES `v6__project__statuses` (`id`),
   CONSTRAINT `FK_AC385C8B7D182D95` FOREIGN KEY (`created_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_AC385C8BDD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1046,6 +1048,7 @@ CREATE TABLE `v6__projects` (
 
 LOCK TABLES `v6__projects` WRITE;
 /*!40000 ALTER TABLE `v6__projects` DISABLE KEYS */;
+INSERT INTO `v6__projects` VALUES (1,3,3,1,1,NULL,1,'Projekat za testiranje','','2022-12-19 08:18:58','1970-01-01 00:00:00'),(2,5,3,1,1,NULL,2,'Projekat za testiranje No2','','2022-12-19 23:32:21','1970-01-01 00:00:00');
 /*!40000 ALTER TABLE `v6__projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1366,4 +1369,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-18  9:47:42
+-- Dump completed on 2022-12-20  8:20:12

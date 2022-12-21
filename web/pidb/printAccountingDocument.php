@@ -66,25 +66,7 @@ switch ($accounting_document__data->getType()->getId()) {
         break;
 }
 
-$client_data = $accounting_document__data->getClient();
-
-if ($client_data->getCountry() === null) {
-    $client_country = null;
-} else {
-    $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
-}
-if ($client_data->getCity() === null) {
-    $client_city = null;
-} else {
-    $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
-}
-if ($client_data->getStreet() === null) {
-    $client_street = null;
-} else {
-    $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
-}
-
-$client_contacts = $client_data->getContacts();
+$client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($accounting_document__data->getClient()->getId());
 
 $contact_item[0] = "";
 $contact_item[1] = "";
@@ -124,15 +106,14 @@ $html = '
             . $company_info->getBankAccount1() . '<br />'
             . $company_info->getBankAccount2() . '
         </td>
-        <td width="350px">
-            Kupac:<br />'
-            . $client_data->getName() . ' '
-            . ($client_data->getLb()<>""?'<br />
-            PIB '.$client_data->getLb():"") . '<br />'
-            . ($client_street ? $client_street->getName() : "") . ' '
-            . $client_data->getHomeNumber() . '<br />'
-            . ($client_city ? $client_city->getName() : "")
-            . ($client_country ? $client_country->getName() : "") . '<br />'
+        <td width="350px">Kupac:<br />'
+            . $client['name'] . ' '
+            . ($client['lb'] <> ""
+                ? '<br />PIB '. $client['lb']
+                : "") . '<br />'
+            . ($client['street'] ?? "") . ' ' . $client['home_number'] . '<br />'
+            . ($client['city'] ?? "")
+            . ($client['country'] ?? "") . '<br />'
             . $contact_item[0] . ', ' . $contact_item[1] . '
         </td>
     </tr>

@@ -31,6 +31,5 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <!-- End of Card body -->
+    </div><!-- End of Card body -->
 </div>
