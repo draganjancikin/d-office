@@ -597,7 +597,7 @@ CREATE TABLE `v6__fence__models` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(48) COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -606,6 +606,7 @@ CREATE TABLE `v6__fence__models` (
 
 LOCK TABLES `v6__fence__models` WRITE;
 /*!40000 ALTER TABLE `v6__fence__models` DISABLE KEYS */;
+INSERT INTO `v6__fence__models` VALUES (1,'Classic'),(2,'Alpina'),(3,'Arizona'),(4,'Pacific'),(5,'Panonka');
 /*!40000 ALTER TABLE `v6__fence__models` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1371,4 +1372,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-20  8:24:40
+-- Dump completed on 2022-12-21  7:03:12
