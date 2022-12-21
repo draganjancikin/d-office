@@ -122,6 +122,7 @@ class ClientRepository extends EntityRepository {
         }
         $client_contacts = $client_data->getContacts();
         return [
+            'id' => $client_data->getId(),
             'type_id' => $client_type->getId(),
             'type' => $client_type->getName(),
             'name' => $client_data->getName(),

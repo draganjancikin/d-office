@@ -41,24 +41,22 @@ switch ($pidb_data->getType()->getId()) {
         <dl class="row mb-0">
             <dt class="col-sm-3 col-md-2">klijent:</dt>
             <dd class="col-sm-9 col-md-10">
-                <a href="/clients/?view&client_id=<?php echo $client_data->getId() ?>" title="Pregled svih podataka o: <?php echo $client_data->getName() ?>">
-                    <?php echo $client_data->getName() ?>
+                <a href="/clients/?view&client_id=<?php echo $client['id'] ?>" title="Pregled svih podataka o: <?php echo $client['name'] ?>">
+                    <?php echo $client['name'] ?>
                 </a>
             </dd>
 
             <dt class="col-sm-3 col-md-2">adresa:</dt>
             <dd class="col-sm-9 col-md-10">
-                <?php echo ($client_street ? $client_street->getName() : "")
-                    . ' ' . $client_data->getHomeNumber()
-                    . ($client_street && $client_city ? ", " : "")
-                    . ($client_city ? $client_city->getName() : "")
-                    . ($client_city && $client_country ? ", " : "")
-                    . ($client_country ? $client_country->getName() : "") ?>
+                <?php echo ($client['street'] ?? "") . ' ' . $client['home_number']
+                    . ($client['street'] && $client['city'] ? ", " : "")
+                    . ($client['city'] ?? "")
+                    . ($client['city'] && $client['country'] ? ", " : "")
+                    . ($client['country'] ?? "") ?>
             </dd>
             <?php
-            $client_contacts = $client_data->getContacts();
             $contactsCount = 0;
-            foreach ($client_contacts as $client_contact):
+            foreach ($client['contacts'] as $client_contact):
                 $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')
                                                         ->findOneBy(array('id' =>$client_contact->getId()));
                 $client_contact_type = $client_contact_data->getType();
@@ -252,8 +250,8 @@ switch ($pidb_data->getType()->getId()) {
                         <td>Klijent: </td>
                         <td colspan="2">
                             <select class="form-control" name="client_id">
-                                <option value="<?php echo $client_data->getId() ?>" selected>
-                                    <?php echo $client_data->getName() ?>
+                                <option value="<?php echo $client['id'] ?>" selected>
+                                    <?php echo $client['name'] ?>
                                 </option>
                                 <?php
                                 $clients_list = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => "ASC"));

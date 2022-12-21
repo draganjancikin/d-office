@@ -27,22 +27,23 @@ require 'delete_accounting_document.php';
                 if (!$pidb_data) {
                     die('<script>location.href = "/pidb/"</script>');
                 }
-                $client_data = $entityManager->find('\Roloffice\Entity\Client', $pidb_data->getClient());
-                if ($client_data->getCountry() === null) {
-                    $client_country = null;
-                } else {
-                    $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
-                }
-                if ($client_data->getCity() === null) {
-                    $client_city = null;
-                } else {
-                    $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
-                }
-                if ($client_data->getStreet() === null) {
-                    $client_street = null;
-                } else {
-                    $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
-                }
+                $client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($pidb_data->getClient()->getId());
+//                $client_data = $entityManager->find('\Roloffice\Entity\Client', $pidb_data->getClient());
+//                if ($client_data->getCountry() === null) {
+//                    $client_country = null;
+//                } else {
+//                    $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
+//                }
+//                if ($client_data->getCity() === null) {
+//                    $client_city = null;
+//                } else {
+//                    $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
+//                }
+//                if ($client_data->getStreet() === null) {
+//                    $client_street = null;
+//                } else {
+//                    $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
+//                }
 
                 $all_articles = $entityManager->getRepository('\Roloffice\Entity\Article')->findAll();
 
