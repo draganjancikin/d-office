@@ -1,42 +1,39 @@
 <!-- View Cutting Data -->
 <div class="card mb-4">
   
-  <div class="card-header p-2">
-    <h6 class="m-0 font-weight-bold text-dark">
-      Krojna lista: KL <?php echo str_pad($cutting_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$cutting_data->getCreatedAt()->format('m') . ' <span class="font-weight-normal">(' . $cutting_data->getCreatedAt()->format('d-M-Y') . ')</span>';?>
-    </h6>
-  </div>
-  <div class="card-body p-2">
-    
-    <dl class="row mb-0">
+    <div class="card-header p-2">
+        <h6 class="m-0 font-weight-bold text-dark">
+            Krojna lista: KL <?php echo str_pad($cutting_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$cutting_data->getCreatedAt()->format('m') . ' <span class="font-weight-normal">(' . $cutting_data->getCreatedAt()->format('d-M-Y') . ')</span>';?>
+        </h6>
+    </div>
+    <div class="card-body p-2">
 
-      <dt class="col-sm-3 col-md-2">klijent:</dt>
-      <dd class="col-sm-9 col-md-10"><?php echo $client_data->getName() ?></dd>
+        <dl class="row mb-0">
+            <dt class="col-sm-3 col-md-2">klijent:</dt>
+            <dd class="col-sm-9 col-md-10"><?php echo $client['name'] ?></dd>
+            <dt class="col-sm-3 col-md-2">adresa:</dt>
+            <dd class="col-sm-9 col-md-10">
+                <?php echo $client['street'] . ' ' . $client['home_number']. ', ' . $client['city'] . ', ' . $client['country'] ?>
+            </dd>
+        </dl>
 
-      <dt class="col-sm-3 col-md-2">adresa:</dt>
-      <dd class="col-sm-9 col-md-10">
-        <?php echo $client_street->getName(). ' ' .$client_data->getHomeNumber(). ', ' .$client_city->getName(). ', ' .$client_country->getName() ?>
-      </dd>
-    
-    </dl>
-
-    <div class="table-responsive">
-      <table class="table">
-      <thead>
-          <tr>
-            <th>red.<br />broj</th>
-            <th class="px-1">vrsta polja</th>
-            <th class="px-1">širina<br /> letvice</th>
-            <th class="px-1">širina<br />polja</th>
-            <th class="px-1">visina<br />polja</th>
-            <th class="px-1">srednja<br />visina<br />polja</th>
-            <th class="px-1">razmak<br />letvica</th>
-            <th class="px-1">broj<br />polja</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>red.<br />broj</th>
+                        <th class="px-1">vrsta polja</th>
+                        <th class="px-1">širina<br /> letvice</th>
+                        <th class="px-1">širina<br />polja</th>
+                        <th class="px-1">visina<br />polja</th>
+                        <th class="px-1">srednja<br />visina<br />polja</th>
+                        <th class="px-1">razmak<br />letvica</th>
+                        <th class="px-1">broj<br />polja</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
           <?php 
           $count = 0;
           $total_picket_lenght = 0;
