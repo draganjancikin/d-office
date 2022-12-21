@@ -517,7 +517,7 @@ CREATE TABLE `v6__cutting_sheets` (
   CONSTRAINT `FK_CE14197C19EB6921` FOREIGN KEY (`client_id`) REFERENCES `v6__clients` (`id`),
   CONSTRAINT `FK_CE14197C7D182D95` FOREIGN KEY (`created_by_user_id`) REFERENCES `v6__users` (`id`),
   CONSTRAINT `FK_CE14197CDD5BE62E` FOREIGN KEY (`modified_by_user_id`) REFERENCES `v6__users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -526,6 +526,7 @@ CREATE TABLE `v6__cutting_sheets` (
 
 LOCK TABLES `v6__cutting_sheets` WRITE;
 /*!40000 ALTER TABLE `v6__cutting_sheets` DISABLE KEYS */;
+INSERT INTO `v6__cutting_sheets` VALUES (1,3,1,NULL,1,'2022-12-21 07:03:59','1970-01-01 00:00:00');
 /*!40000 ALTER TABLE `v6__cutting_sheets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1372,4 +1373,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-21  7:03:12
+-- Dump completed on 2022-12-21  7:04:14
