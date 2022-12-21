@@ -552,7 +552,7 @@ CREATE TABLE `v6__cutting_sheets__article` (
   KEY `IDX_95A277A3385FB227` (`fence_model_id`),
   CONSTRAINT `FK_95A277A3385FB227` FOREIGN KEY (`fence_model_id`) REFERENCES `v6__fence__models` (`id`),
   CONSTRAINT `FK_95A277A387DE9F8E` FOREIGN KEY (`cutting_sheet_id`) REFERENCES `v6__cutting_sheets` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -561,6 +561,7 @@ CREATE TABLE `v6__cutting_sheets__article` (
 
 LOCK TABLES `v6__cutting_sheets__article` WRITE;
 /*!40000 ALTER TABLE `v6__cutting_sheets__article` DISABLE KEYS */;
+INSERT INTO `v6__cutting_sheets__article` VALUES (1,1,2,80,1800,1000,1200,20,3);
 /*!40000 ALTER TABLE `v6__cutting_sheets__article` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1373,4 +1374,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-21  7:04:14
+-- Dump completed on 2022-12-21  7:07:44
