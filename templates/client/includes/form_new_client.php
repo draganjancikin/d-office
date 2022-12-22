@@ -28,13 +28,16 @@
 
       <div class="form-group row">
         <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
-        <div class="col-sm-6">
-          <input class="form-control" id="inputName" type="text" name="name" placeholder="Unesite naziv klijenta"
-            required>
-        </div>
-        <div class="col-sm-4">
-          <input class="form-control" id="inputName" type="text" name="name_note"
-            placeholder="Unesite belešku uz naziv klijenta">
+        <div>
+          <div class="col">
+            <input class="form-control" id="inputName" type="text" name="name" placeholder="Unesite naziv klijenta"
+              required>
+          </div>
+
+          <div class="col">
+            <input class="form-control" id="inputName" type="text" name="name_note"
+              placeholder="Unesite belešku uz naziv klijenta">
+          </div>
         </div>
         <div class="col-sm-12">
           <?php if (isset($_GET['name_error'])) echo 'Ime mora biti upisano' ?>
@@ -112,13 +115,15 @@
 
       <div class="form-group row">
         <label for="disabledInputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj:</label>
-        <div class="col-sm-2">
-          <input class="form-control" id="disabledInputNum" type="text" name="home_number" maxlength="8"
-            placeholder="Unesite kućni broj">
-        </div>
-        <div class="col-sm-7">
-          <input class="form-control" id="disabledInputNum" type="text" name="address_note"
-            placeholder="Unesite belešku uz adresu">
+        <div>
+          <div class="col">
+            <input class="form-control" id="disabledInputNum" type="text" name="home_number" maxlength="8"
+              placeholder="Unesite kućni broj">
+          </div>
+          <div class="col">
+            <input class="form-control" id="disabledInputNum" type="text" name="address_note"
+              placeholder="Unesite belešku uz adresu">
+          </div>
         </div>
       </div>
 
