@@ -29,7 +29,7 @@
       <div class="form-group row">
         <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
         <div>
-          <div class="col">
+          <div class="col mb-2">
             <input class="form-control" id="inputName" type="text" name="name" placeholder="Unesite naziv klijenta"
               required>
           </div>
@@ -116,7 +116,7 @@
       <div class="form-group row">
         <label for="disabledInputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj:</label>
         <div>
-          <div class="col">
+          <div class="col mb-2">
             <input class="form-control" id="disabledInputNum" type="text" name="home_number" maxlength="8"
               placeholder="Unesite kućni broj">
           </div>
