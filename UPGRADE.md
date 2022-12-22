@@ -2,6 +2,8 @@
 
 Enhancement:
 * Move app/includes to templates/includes and code refactoring.
+* Replaced "Doctrine\ORM\Tools\Setup" class with "Doctrine\ORM\ORMSetup". Updated bootstrap.php.
+* Installed "symfony/cache" (5.4.15)
 
 # Upgrade to 6.4.2
 
