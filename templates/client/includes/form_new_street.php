@@ -8,9 +8,10 @@
     <form action="<?php echo $_SERVER['PHP_SELF'] . '?createStreet'; ?>" method="post">
       <input type="hidden" name="action" value="street">
       <div class="form-group row">
-        <label for="inputName" class="col-sm-3 col-form-label text-right">Unesi naziv ulice: </label>
+        <label for="inputName" class="col-sm-3 col-form-label text-right">Ulica:</label>
         <div class="col-sm-5">
-          <input id="inputName" class="form-control" type="text" name="name" required />
+          <input id="inputName" class="form-control" type="text" name="name" placeholder="Unesite naziv ulice"
+            required />
         </div>
       </div>
       <div class="form-group row">
