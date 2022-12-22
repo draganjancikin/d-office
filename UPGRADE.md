@@ -1,3 +1,8 @@
+# Upgrade to 6.5.0
+
+Enhancement:
+* Move app/includes to templates/includes and code refactoring.
+
 # Upgrade to 6.4.2
 
 Resolved issues and bugfixes:
