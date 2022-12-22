@@ -4,13 +4,14 @@
     <h6 class="m-0 font-weight-bold text-primary">Unos nove države </h6>
   </div>
   <div class="card-body">
-    
+
     <form action="<?php echo $_SERVER['PHP_SELF'] . '?createCountry'; ?>" method="post">
       <input type="hidden" name="action" value="state">
       <div class="form-group row">
-        <label for="inputName" class="col-sm-3 col-form-label text-right">Unesi naziv države: </label>
+        <label for="inputName" class="col-sm-3 col-form-label text-right">Država: </label>
         <div class="col-sm-5">
-          <input id="inputName" class="form-control" type="text" name="name" required />
+          <input id="inputName" class="form-control" type="text" name="name" placeholder="Unesite naziv drzave"
+            required />
         </div>
       </div>
       <div class="form-group row">
@@ -19,7 +20,7 @@
         </div>
       </div>
     </form>
-    
+
   </div>
-    
+
 </div>
