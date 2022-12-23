@@ -47,7 +47,7 @@
                             if(isset($_GET['new'])) include '../../templates/client/includes/form_new_client.php';
                             if(isset($_GET['edit'])) include '../../templates/client/includes/form_edit_client.php';
                             
-                            if(isset($_GET['search'])) include '../../app/includes/search.php';
+                            if(isset($_GET['search'])) include '../../templates/includes/search.php';
                             if(isset($_GET['advancedSearch'])) include '../../templates/client/includes/form_advanced_search.php';
 
                             if(isset($_GET['newCountry'])) include '../../templates/client/includes/form_new_country.php';
