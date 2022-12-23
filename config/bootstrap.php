@@ -19,6 +19,7 @@ $connectionParams = array(
   'password' => DB_PASSWORD,
   'host' => DB_SERVER,
   'driver' => 'mysqli',
+  'charset' => 'UTF8',
 );
 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams);
 
