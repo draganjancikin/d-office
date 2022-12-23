@@ -2,6 +2,7 @@
 
 Resolved issues and bugfixes:
 * #178: php 7.3 compatibility issue
+* #179: Issue on search on Client page
 
 # Upgrade to 6.5.0
 
