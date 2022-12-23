@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="sr">
 <head>
-  <title><?php echo APP_VERSION ?></title>
+  <title>D-Office <?php echo APP_VERSION ?></title>
   <?php include ('includes/pageHead.php') ?>
 </head>
 <body id="page-top">

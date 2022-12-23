@@ -1,4 +1,4 @@
-# d-Office 6.4.2
+# d-Office 6.5.0
 
 Web Application
 
@@ -12,6 +12,7 @@ Required:
 * tecnickcom/tcpdf:^6.3
 * symfony/http-foundation:^5.4
 * doctrine/annotations:^1.14
+* symfony/cache:^5.4
 
 ## Settings
 

@@ -6,7 +6,7 @@ session_start();
 if(isset($_SESSION['username'])):
     $username = $_SESSION['username'];
     $user_role_id = $_SESSION['user_role_id'];
-    include '../app/index.php';
+    include '../templates/index.php';
 else:
-    include '../app/formLogin.php';
+    include '../templates/formLogin.php';
 endif;

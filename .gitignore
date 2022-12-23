@@ -18,7 +18,6 @@ web/testing/
 
 # Ignore enviroments files
 /todos/
-/config/bootstrap.php
 /vendor/
 
 # Ignore .sql files
