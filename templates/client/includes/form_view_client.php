@@ -127,7 +127,9 @@
                         </div>
 
                         <div class="col-sm-3">
+                            <?php echo $client_contact_type->getId() == 2 ? '<a href="tel: ' . $contact->getBody() . '">' : '' ?>
                             <input class="form-control" type="text" value="<?php echo $contact->getBody() ?>"  placeholder="unesi kontakt" disabled >
+                            <?php echo $client_contact_type->getId() == 2 ? '</a>' : '' ?>
                         </div>
 
                         <div class="col-sm-4">
