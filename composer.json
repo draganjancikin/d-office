@@ -1,6 +1,6 @@
 {
   "name": "rolostil/roloffice",
-  "version": "6.5.0",
+  "version": "6.5.1",
   "type": "project",
   "description": "Office Web Application.",
   "keywords": [
@@ -28,8 +28,6 @@
     "tecnickcom/tcpdf": "^6.3",
     "symfony/http-foundation": "^5.4",
     "doctrine/annotations": "^1.14",
-    "symfony/cache": "^5.4",
-    "psr/container": "1.1.1",
-    "doctrine/dbal": "3.3.8"
+    "symfony/cache": "^5.4"
   }
 }

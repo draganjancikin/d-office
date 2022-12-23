@@ -1,3 +1,8 @@
+# Upgrade to 6.5.1
+
+Resolved issues and bugfixes:
+* #178: php 7.3 compatibility issue
+
 # Upgrade to 6.5.0
 
 Enhancement:
