@@ -44,5 +44,5 @@ $dbParams = array(
     'dbname'   => DB_NAME,
 );
 
-$config = ORMSetup::createAnnotationMetadataConfiguration($paths, $isDevMode, $proxyDir, $cache,);
+$config = ORMSetup::createAnnotationMetadataConfiguration($paths, $isDevMode, $proxyDir, $cache);
 $entityManager = EntityManager::create($dbParams, $config);
