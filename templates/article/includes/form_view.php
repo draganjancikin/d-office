@@ -8,14 +8,16 @@
       <fieldset disabled>
 
         <div class="form-group row">
-          <label for="disabledSelectGroup" class="col-sm-3 col-lg-2 col-form-label text-right">Grupa proizvoda:</label>
+          <label for="disabledSelectGroup" class="col-sm-3 col-lg-2 col-form-label text-right text-nowrap">Grupa
+            proizvoda:</label>
           <div class="col-sm-3">
             <select id="disabledSelectGroup" name="group_id" class="form-control">
               <?php
                 if($article_data->getGroup() ) :
                   ?>
-                  <option value="<?php echo $article_data->getGroup()->getId() ?>"><?php echo $article_data->getGroup()->getName() ?></option>
-                  <?php
+              <option value="<?php echo $article_data->getGroup()->getId() ?>">
+                <?php echo $article_data->getGroup()->getName() ?></option>
+              <?php
                 endif;
               ?>
             </select>
@@ -25,7 +27,8 @@
         <div class="form-group row">
           <label for="disabledInputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
           <div class="col-sm-8">
-            <input class="form-control" id="disabledInputName" type="text" name="name" value="<?php echo $article_data->getName() ?>" maxlength="96">
+            <input class="form-control" id="disabledInputName" type="text" name="name"
+              value="<?php echo $article_data->getName() ?>" maxlength="96">
           </div>
         </div>
 
@@ -33,7 +36,8 @@
           <label for="disabledSelectUnit" class="col-sm-3 col-lg-2 col-form-label text-right">Jedinica mere:</label>
           <div class="col-sm-3">
             <select id="disabledSelectUnit" name="unit_id" class="form-control">
-              <option value="<?php echo $article_data->getUnit()->getId() ?>"><?php echo $article_data->getUnit()->getName() ?></option>
+              <option value="<?php echo $article_data->getUnit()->getId() ?>">
+                <?php echo $article_data->getUnit()->getName() ?></option>
             </select>
           </div>
         </div>
@@ -41,30 +45,35 @@
         <div class="form-group row">
           <label for="disabledInputWeight" class="col-sm-3 col-lg-2 col-form-label text-right">Težina:</label>
           <div class="col-sm-2">
-            <input class="form-control" id="disabledInputWeight" type="text" name="weight" value="<?php echo $article_data->getWeight() ?>" >
+            <input class="form-control" id="disabledInputWeight" type="text" name="weight"
+              value="<?php echo $article_data->getWeight() ?>">
           </div>
           <div class="col-sm-2">g</div>
         </div>
 
         <div class="form-group row">
-          <label class="col-sm-3 col-lg-2 col-form-label text-right" for="disabledInputMinMera">Min obrač. mera: </label>
+          <label class="col-sm-3 col-lg-2 col-form-label text-right" for="disabledInputMinMera">Min obrač. mera:
+          </label>
           <div class="col-sm-2">
-            <input class="form-control" id="disabledInputMinMera" type="text" name="min_obrac_mera" value="<?php echo $article_data->getMinCalcMeasure() ?>" >
+            <input class="form-control" id="disabledInputMinMera" type="text" name="min_obrac_mera"
+              value="<?php echo $article_data->getMinCalcMeasure() ?>">
           </div>
         </div>
 
         <div class="form-group row">
           <label class="col-sm-3 col-lg-2 col-form-label text-right" for="disabledInputPrice">Cena: </label>
           <div class="col-sm-2">
-            <input class="form-control" id="disabledInputPrice" type="text" name="price" value="<?php echo $article_data->getPrice() ?>">
+            <input class="form-control" id="disabledInputPrice" type="text" name="price"
+              value="<?php echo $article_data->getPrice() ?>">
           </div>
-          <div class="col-sm-2">&#8364; bez PDV-a</div>
+          <div class="col-sm-2 text-nowrap">&#8364; bez PDV-a</div>
         </div>
 
         <div class="form-group row">
           <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-right">Beleška:</label>
           <div class="col-md-8">
-            <textarea id="inputNote" class="form-control" rows="2" name="note"><?php echo $article_data->getNote() ?></textarea>
+            <textarea id="inputNote" class="form-control" rows="2"
+              name="note"><?php echo $article_data->getNote() ?></textarea>
           </div>
         </div>
 
@@ -89,25 +98,26 @@
     <?php
     foreach ($article_properties as $article_property):
       ?>
-      <form method="post">
-        <fieldset disabled>
+    <form method="post">
+      <fieldset disabled>
 
-          <div class="form-group row">
-            <div class="col-sm-4">
-              <select class="form-control">
-                <option value="<?php echo $article_property->getProperty()->getId() ?>"><?php echo $article_property->getProperty()->getName() ?></option>
-              </select>
-            </div>
-            <div class="col-sm-2">
-              <a href="#" class="btn btn-sm btn-secondary disabled">
-                <i class="fas fa-trash-alt"> </i>
-              </a>
-            </div>
+        <div class="form-group row">
+          <div class="col-sm-4">
+            <select class="form-control">
+              <option value="<?php echo $article_property->getProperty()->getId() ?>">
+                <?php echo $article_property->getProperty()->getName() ?></option>
+            </select>
           </div>
+          <div class="col-sm-2">
+            <a href="#" class="btn btn-sm btn-secondary disabled">
+              <i class="fas fa-trash-alt"> </i>
+            </a>
+          </div>
+        </div>
 
-        </fieldset>
-      </form>
-      <?php
+      </fieldset>
+    </form>
+    <?php
     endforeach;
     ?>
 
