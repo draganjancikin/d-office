@@ -11,8 +11,8 @@ class CompanyInfoRepository extends EntityRepository
      *
      * @return array
      */
-    public function getCompanyInfoData(): array {
-        $company_info_data = $this->_em->find('\Roloffice\Entity\CompanyInfo', 1);
+    public function getCompanyInfoData($id): array {
+        $company_info_data = $this->_em->find('\Roloffice\Entity\CompanyInfo', $id);
         if ($company_info_data->getCountry() === null) {
             $company_info_country = null;
         } else {
