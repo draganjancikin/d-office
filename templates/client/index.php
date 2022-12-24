@@ -38,7 +38,7 @@
                         <?php include '../../templates/client/includes/tools_menu.php' ?>
                         <!-- End of Tools Meni -->
           
-                        <div class="col-lg-12 col-xl-10 px-2">
+                        <div class="col-sm-12 col-md-10 col-lg-8 col-xl-6 px-2">
                         <?php
                         if (empty($_GET)): // ako je $_GET prazan
                             include '../../templates/client/includes/list_last.php';

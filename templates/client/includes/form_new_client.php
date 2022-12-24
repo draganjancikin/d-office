@@ -9,7 +9,7 @@
     <form action="<?php echo $_SERVER['PHP_SELF'] . '?createClient' ?>" method="post">
 
       <div class="form-group row">
-        <label for="selectTip" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta klijenta:</label>
+        <label for="selectTip" class="col-sm-3 col-form-label text-left text-sm-right">Vrsta klijenta:</label>
         <div class="col-sm-4">
           <select id="selectTip" class="form-control" name="type_id">
             <?php
@@ -27,12 +27,12 @@
       </div>
 
       <div class="form-group row">
-        <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
-        <div class="col-sm-6">
+        <label for="inputName" class="col-sm-3 col-form-label text-left text-sm-right">Naziv:</label>
+        <div class="col-sm-9">
           <input class="form-control" id="inputName" type="text" name="name" placeholder="Unesite naziv klijenta"
             required>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-9 offset-sm-3">
           <input class="form-control" id="inputName" type="text" name="name_note"
             placeholder="Unesite belešku uz naziv klijenta">
         </div>
@@ -44,7 +44,7 @@
       <div id="pib"></div>
 
       <div class="form-group row">
-        <label for="is_supplier" class="col-sm-3 col-lg-2 col-form-label text-right">Dobavljač:</label>
+        <label for="is_supplier" class="col-sm-3 col-form-label text-left text-sm-right">Dobavljač:</label>
         <div class="col-sm-3">
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier" value="1">
@@ -54,8 +54,8 @@
       </div>
 
       <div class="form-group row">
-        <label for="selectCountry" class="col-sm-3 col-lg-2 col-form-label text-right">Država:</label>
-        <div class="col-sm-4">
+        <label for="selectCountry" class="col-sm-3 col-form-label text-left text-sm-right">Država:</label>
+        <div class="col-sm-5">
           <select id="selectCountry" class="form-control" name="country_id">
             <option>Izaberite drzavu</option>
             <?php
@@ -73,8 +73,8 @@
       </div>
 
       <div class="form-group row">
-        <label for="selectCity" class="col-sm-3 col-lg-2 col-form-label text-right">Naselje:</label>
-        <div class="col-sm-4">
+        <label for="selectCity" class="col-sm-3 col-form-label text-left text-sm-right">Naselje:</label>
+        <div class="col-sm-5">
           <select id="selectCity" class="form-control" name="city_id">
             <option>Izaberite naselje</option>
             <?php
@@ -92,8 +92,8 @@
       </div>
 
       <div class="form-group row">
-        <label for="sSelectStreet" class="col-sm-3 col-lg-2 col-form-label text-right">Ulica:</label>
-        <div class="col-sm-4">
+        <label for="sSelectStreet" class="col-sm-3 col-form-label text-left text-sm-right">Ulica:</label>
+        <div class="col-sm-5">
           <select id="selectStreet" class="form-control" name="street_id">
             <option>Izaberite ulicu</option>
             <?php
@@ -111,10 +111,9 @@
       </div>
 
       <div class="form-group row">
-        <label for="disabledInputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj:</label>
+        <label for="disabledInputNum" class="col-sm-3 col-form-label text-left text-sm-right">Broj:</label>
         <div class="col-sm-2">
-          <input class="form-control" id="disabledInputNum" type="text" name="home_number" maxlength="8"
-            placeholder="Unesite kućni broj">
+          <input class="form-control" id="disabledInputNum" type="text" name="home_number" maxlength="8">
         </div>
         <div class="col-sm-7">
           <input class="form-control" id="disabledInputNum" type="text" name="address_note"
@@ -123,15 +122,15 @@
       </div>
 
       <div class="form-group row">
-        <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-right">Beleška: </label>
-        <div class="col-sm-6">
+        <label for="inputNote" class="col-sm-3 col-form-label text-left text-sm-right">Beleška: </label>
+        <div class="col-sm-9">
           <textarea class="form-control" id="inputNote" rows="3" name="note"
             placeholder="Unesite belešku uz klijenta"></textarea>
         </div>
       </div>
 
       <div class="form-group row">
-        <div class="col-sm-3 offset-sm-3 offset-lg-2"><button type="submit" class="btn btn-sm btn-success"
+        <div class="col-sm-3 offset-sm-3"><button type="submit" class="btn btn-sm btn-success"
             title="Snimi podatake o klijentu!"><i class="fas fa-save"> </i> Snimi</button></div>
       </div>
 

@@ -13,7 +13,7 @@
             <input type="hidden" name="type_id" value="<?php echo $client['type_id'] ?>">
 
             <div class="form-group row">
-                <label for="selectTip" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Vrsta klijenta:</label>
+                <label for="selectTip" class="col-sm-3 col-form-label text-left text-sm-right">Vrsta klijenta:</label>
                 <div class="col-sm-4">
                     <select id="selectTip" class="form-control" name="type_id" >
                         <option value="<?php echo $client['type_id'] ?>"><?php echo $client['type'] ?></option>
@@ -32,11 +32,11 @@
             </div>
 
             <div class="form-group row">
-                <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Naziv:</label>
-                <div class="col-sm-6 col-lg-6">
+                <label for="inputName" class="col-sm-3 col-form-label text-left text-sm-right">Naziv:</label>
+                <div class="col-sm-9">
                     <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $client['name'] ?>" >
                 </div>
-                <div class="col-sm-3 col-lg-4">
+                <div class="col-sm-9 offset-sm-3">
                     <input class="form-control" id="inputName" type="text" name="name_note" value="<?php echo $client['name_note'] ?>" >
                 </div>
             </div>
@@ -45,7 +45,7 @@
             if ($client['type_id'] == 2):
                 ?>
                 <div class="form-group row">
-                    <label for="inputPIB" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">PIB: </label>
+                    <label for="inputPIB" class="col-sm-3 col-form-label text-left text-sm-right">PIB: </label>
                     <div class="col-sm-4">
                         <input class="form-control" id="inputPIB" type="text" name="lb" value="<?php echo $client['lb'] ?>"  maxlength="9" >
                     </div>
@@ -55,7 +55,7 @@
             ?>
 
             <div class="form-group row">
-                <label for="is_supplier" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Dobavljač:</label>
+                <label for="is_supplier" class="col-sm-3 col-form-label text-left text-sm-right">Dobavljač:</label>
                 <div class="col-sm-3">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier" value="1" <?php echo ($client['is_supplier'] ? 'checked' : '') ?> >
@@ -65,8 +65,8 @@
             </div>
 
             <div class="form-group row">
-                <label for="selectCountry" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Država:</label>
-                <div class="col-sm-7 col-md-6 col-lg-5 col-xl-4">
+                <label for="selectCountry" class="col-sm-3 col-form-label text-left text-sm-right">Država:</label>
+                <div class="col-sm-5">
                     <select id="selectCountry" class="form-control" name="country_id">
                         <?php
                         if ($client['country'] === null) {
@@ -92,8 +92,8 @@
             </div>
 
             <div class="form-group row">
-                <label for="selectCity" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Naselje:</label>
-                <div class="col-sm-7 col-md-6 col-lg-5 col-xl-4">
+                <label for="selectCity" class="col-sm-3 col-form-label text-left text-sm-right">Naselje:</label>
+                <div class="col-sm-5">
                     <select id="selectCity" class="form-control" name="city_id">
                         <?php
                         if ($client['city'] === null) {
@@ -119,8 +119,8 @@
             </div>
 
             <div class="form-group row">
-                <label for="selectStreet" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Ulica:</label>
-                <div class="col-sm-7 col-md-6 col-lg-5 col-xl-4">
+                <label for="selectStreet" class="col-sm-3 col-form-label text-left text-sm-right">Ulica:</label>
+                <div class="col-sm-5">
                     <select id="selectStreet" class="form-control" name="street_id">>
                         <?php
                         if ($client['street'] === null) {
@@ -146,24 +146,24 @@
             </div>
 
             <div class="form-group row">
-                <label for="inputNum" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Broj:</label>
+                <label for="inputNum" class="col-sm-3 col-form-label text-left text-sm-right">Broj:</label>
                 <div class="col-sm-2">
                     <input class="form-control" id="inputNum" type="text" name="home_number" value="<?php echo $client['home_number'] ?>" >
                 </div>
-                <div class="col-sm-7 col-lg-8">
+                <div class="col-sm-7">
                     <input class="form-control" id="inputNum" type="text" name="address_note" value="<?php echo $client['address_note'] ?>" >
                 </div>
             </div>
 
             <div class="form-group row">
-                <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Beleška: </label>
-                <div class="col-sm-6">
+                <label for="inputNote" class="col-sm-3 col-form-label text-left text-sm-right">Beleška: </label>
+                <div class="col-sm-9">
                     <textarea class="form-control" id="inputNote" rows="3" name="note"><?php echo $client['note'] ?></textarea>
                 </div>
             </div>
 
             <div class="form-group row">
-                <div class="col-sm-3 offset-sm-3 offset-lg-2">
+                <div class="col-sm-3 offset-sm-3">
                     <button type="submit" class="btn btn-sm btn-success" title="Snimi izmene podataka o klijentu!">
                         <i class="fas fa-save"></i> Snimi
                     </button>

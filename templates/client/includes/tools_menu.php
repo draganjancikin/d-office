@@ -11,7 +11,7 @@ require 'update_client.php';
 require 'update_contact.php';
 require 'delete_contact.php';
 ?>
-<div class="col-lg-12 col-xl-10 px-2" id="topMeni">
+<div class="col-sm-12 px-2" id="topMeni">
 
     <div class="card mb-2">
         <div class="card-body p-1">
