@@ -11,12 +11,14 @@ require_once '../../config/tcpdf_include.php';
 // Create new PDF document.
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
+$company_info = $entityManager->getRepository('\Roloffice\Entity\CompanyInfo')->getCompanyInfoData();
+
 // Set document information.
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('Rolostil');
+$pdf->SetAuthor($company_info['name']);
 $pdf->SetTitle('Zapisnik o ugradnji (montaži)');
-$pdf->SetSubject('Rolostil');
-$pdf->SetKeywords('Rolostil, PDF, zapisnik');
+$pdf->SetSubject($company_info['name']);
+$pdf->SetKeywords($company_info['name'] . ', PDF, zapisnik');
 
 // Remove default header/footer.
 $pdf->setPrintHeader(false);
