@@ -22,11 +22,12 @@
 
                 <div class="form-group row">
                     <label for="disabledInputName" class="col-sm-3 col-form-label text-left text-sm-right">Naziv:</label>
-                    <div class="col-sm-9">
+                    <div class="col-sm-9 mb-2">
                         <input class="form-control" id="disabledInputName" type="text" value="<?php echo $client['name'] ?>" disabled />
                     </div>
                     <div class="col-sm-9 offset-sm-3">
-                        <input class="form-control" id="disabledInputName" type="text" value="<?php echo $client['name_note'] ?>" disabled />
+                        <input class="form-control" id="disabledInputName" type="text" value="<?php echo $client['name_note'] ?>"
+                               title="Beleška uz naziv klijenta" disabled />
                     </div>
                 </div>
 
@@ -82,11 +83,12 @@
 
                 <div class="form-group row">
                     <label for="disabledInputNum" class="col-sm-3 col-form-label text-left text-sm-right">Broj:</label>
-                     <div class="col-sm-2">
+                     <div class="col-sm-2 mb-2">
                         <input class="form-control" id="disabledInputNum" type="text" value="<?php echo $client['home_number'] ?>" disabled />
                     </div>
                     <div class="col-sm-7">
-                        <input class="form-control" id="disabledInputNum" type="text" value="<?php echo $client['address_note'] ?>" disabled />
+                        <input class="form-control" id="disabledInputNum" type="text" value="<?php echo $client['address_note'] ?>"
+                               title="Beleška uz adresu klijenta" disabled />
                     </div>
                 </div>
 

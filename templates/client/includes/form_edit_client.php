@@ -33,11 +33,12 @@
 
             <div class="form-group row">
                 <label for="inputName" class="col-sm-3 col-form-label text-left text-sm-right">Naziv:</label>
-                <div class="col-sm-9">
+                <div class="col-sm-9 mb-2">
                     <input class="form-control" id="inputName" type="text" name="name" value="<?php echo $client['name'] ?>" >
                 </div>
                 <div class="col-sm-9 offset-sm-3">
-                    <input class="form-control" id="inputName" type="text" name="name_note" value="<?php echo $client['name_note'] ?>" >
+                    <input class="form-control" id="inputName" type="text" name="name_note" value="<?php echo $client['name_note'] ?>"
+                           title="Beleška uz naziv klijenta">
                 </div>
             </div>
 
@@ -147,11 +148,12 @@
 
             <div class="form-group row">
                 <label for="inputNum" class="col-sm-3 col-form-label text-left text-sm-right">Broj:</label>
-                <div class="col-sm-2">
+                <div class="col-sm-2 mb-2">
                     <input class="form-control" id="inputNum" type="text" name="home_number" value="<?php echo $client['home_number'] ?>" >
                 </div>
                 <div class="col-sm-7">
-                    <input class="form-control" id="inputNum" type="text" name="address_note" value="<?php echo $client['address_note'] ?>" >
+                    <input class="form-control" id="inputNum" type="text" name="address_note" value="<?php echo $client['address_note'] ?>"
+                           title="Beleška uz adresu klijenta">
                 </div>
             </div>
 
