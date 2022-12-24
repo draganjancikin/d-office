@@ -349,7 +349,7 @@ else:
               </h6>
             </div>
             <div class="card-body p-2">
-              <div class="row row-cols-4">
+              <div class="row">
                 <?php
                 $dir = $_SERVER["DOCUMENT_ROOT"] . '/projects/upload/project_id_'.$project_id;
                 if(is_dir($dir)) :
@@ -359,7 +359,7 @@ else:
                         ?>
 <!--                        <div class="col mb-4">-->
 
-                            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-2">
+                            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-4">
                             <div class="card">
                                 <a href="/projects/upload/project_id_<?php echo $project_id.'/'.$entry; ?>" target="_blank" class="p-1">
                                 <img class="card-img-top" src="/projects/upload/project_id_<?php echo $project_id. '/'.$entry; ?>" alt="Attachment">
