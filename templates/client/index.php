@@ -43,7 +43,7 @@
                         if (empty($_GET)): // ako je $_GET prazan
                             include '../../templates/client/includes/list_last.php';
                         else:
-                            echo '<div class="col-sm-12 col-md-10 col-lg-8 col-xl-6 px-2">';
+                            echo '<div class="col-sm-12 col-md-11 col-lg-9 col-xl-7 px-2">';
                             if(isset($_GET['view'])) include '../../templates/client/includes/form_view_client.php';
                             if(isset($_GET['new'])) include '../../templates/client/includes/form_new_client.php';
                             if(isset($_GET['edit'])) include '../../templates/client/includes/form_edit_client.php';

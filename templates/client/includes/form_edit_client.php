@@ -173,11 +173,9 @@
             </div>
 
         </form>
-
-        <hr>
-
-        <!-- ========== Contacts ========== -->
-        <h5>Kontakti</h5>
+    </div> <!-- End of Card Body -->
+    <div class="card-footer px-2">
+        <p class="h5">Kontakti</p>
         <?php
         foreach ($client['contacts'] as $contact):
             $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')
@@ -187,8 +185,8 @@
             <form action="<?php echo $_SERVER['PHP_SELF']. '?updateContact&client_id=' . $client_id; ?>" method="post">
                 <input type="hidden" name="contact_id" value="<?php echo $contact->getId() ?>">
 
-                <div class="form-group row">
-                    <div class="col-sm-3">
+                <div class="form-row">
+                    <div class="form-group col-sm-3">
                         <select class="form-control" name="contact_type_id">>
                             <option value="<?php echo $client_contact_type->getId() ?>"><?php echo $client_contact_type->getName() ?></option>
                             <?php
@@ -202,15 +200,15 @@
                         </select>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="form-group col-sm-3">
                         <input type="text" class="form-control" name="body" value="<?php echo $contact->getBody() ?>" placeholder="Unesi kontakt" >
                     </div>
 
-                    <div class="col-sm-4">
+                    <div class="form-group col-sm-4">
                         <input type="text" class="form-control" name="note" value="<?php echo $contact->getNote() ?>" placeholder="Unesi belešku" >
                     </div>
 
-                    <div class="col-sm-2">
+                    <div class="form-group col-sm-2">
                         <button type="submit" class="btn btn-mini btn-secondary" title="Snimi izmenu kontakta!">
                             <i class="fas fa-save"> </i>
                         </button>
