@@ -6,6 +6,7 @@ Resolved issues and bugfixes:
 * #180: Make a phone number call-able on client page
 * #183: Error on page Dokuments-Transactions
 * #184: Error on page: Order view
+* #185: Update structure of tools menu on Clients page
 
 # Upgrade to 6.5.0
 
