@@ -53,12 +53,8 @@ $pdf->AddPage();
 $order_id = $_GET['order_id'];
 $order_data = $entityManager->find("\Roloffice\Entity\Order", $order_id);
 
-$supplier_data = $entityManager->find('Roloffice\Entity\Client', $order_data->getSupplier());
-$supplier_country = $entityManager->find('\Roloffice\Entity\Country', $supplier_data->getCountry());
-$supplier_city = $entityManager->find('\Roloffice\Entity\City', $supplier_data->getCity());
-$supplier_street = $entityManager->find('\Roloffice\Entity\Street', $supplier_data->getStreet());
-
-$supplier_contacts = $supplier_data->getContacts();
+$supplier_data = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($order_data->getSupplier());
+$supplier_contacts = $supplier_data['contacts'];
 
 $contact_item[0] = "";
 $contact_item[1] = "";
@@ -89,9 +85,12 @@ $html = '
             . $company_info['bank_account_2'] . '
         </td>
         <td width="350px">Dobavljač:<br />'
-            . $supplier_data->getName() . '<br />'
-            . $supplier_street->getName() . ' ' . $supplier_data->getHomeNumber() . '<br />'
-            . $supplier_city->getName() . ', ' . $supplier_country->getName() . '<br />'
+            . $supplier_data['name'] . '<br />'
+            . ($supplier_data['street'] ?? "") . ' ' . $supplier_data['home_number']
+            . ($supplier_data['street'] && $supplier_data['city'] ? "<br />" : "")
+            . ($supplier_data['city'] ?? "")
+            . ($supplier_data['city'] && $supplier_data['country'] ? "<br />" : "")
+            . ($supplier_data['country'] ?? "") . '<br />'
             . $contact_item[0] . ', ' . $contact_item[1] . '
         </td>
     </tr>
@@ -303,7 +302,7 @@ switch ($order_data->getSupplier()->getId()) {
         $folder = "/WURTH";
         break;
     default:
-        $file_name_prefix = $supplier_data->getName() . ' - ';
+        $file_name_prefix = $supplier_data['name'] . ' - ';
 }
 
 // Check if folder exist on local machine.

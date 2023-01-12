@@ -16,7 +16,7 @@ $(document).ready(function(){
       // definisemo sadrzaj promenljive pib
       var pib = `
                 <div class="form-group row">
-                  <label for="pib" class="col-sm-3 col-lg-2 col-form-label text-right">PIB: </label>
+                  <label for="pib" class="col-sm-3 col-form-label text-left text-sm-right">PIB: </label>
                   <div class="col-sm-3">
                     <input class="form-control" type="text" id="pib" name="lb" value=""  maxlength="9" />
                   </div>

@@ -109,10 +109,9 @@
 
             </fieldset>
         </form>
-
-        <hr>
-
-        <h5>Kontakti</h5>
+    </div> <!-- End of Card Body -->
+    <div class="card-footer px-2">
+        <p class="h5">Kontakti</p>
         <?php
         foreach ($client['contacts'] as $contact):
             $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy( array('id' =>$contact->getId()) );
@@ -120,25 +119,25 @@
             ?>
             <form>
                 <fieldset disabled>
-                    <div class="form-group row">
+                    <div class="form-row">
 
-                        <div class="col-sm-3">
+                        <div class="form-group col-sm-3">
                             <select class="form-control">
                                 <option><?php echo $client_contact_type->getName() ?></option>
                             </select>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="form-group col-sm-3">
                             <?php echo $client_contact_type->getId() == 2 ? '<a href="tel: ' . $contact->getBody() . '">' : '' ?>
-                            <input class="form-control" type="text" value="<?php echo $contact->getBody() ?>"  placeholder="unesi kontakt" disabled >
+                                <input class="form-control" type="text" id="contact" value="<?php echo $contact->getBody() ?>"  placeholder="unesi kontakt" disabled >
                             <?php echo $client_contact_type->getId() == 2 ? '</a>' : '' ?>
                         </div>
 
-                        <div class="col-sm-4">
-                            <input class="form-control" type="text" value="<?php echo $contact->getNote() ?>" placeholder="unesi belešku" >
+                        <div class="form-group col-sm-4">
+                            <input class="form-control" type="text" id="contactNote" value="<?php echo $contact->getNote() ?>" placeholder="unesi belešku" disabled >
                         </div>
 
-                        <div class="col-sm-2">
+                        <div class="form-group col-sm-2">
                             <button type="submit" class="btn btn-mini btn-secondary disabled" title="Snimi izmenu kontakta!">
                                 <i class="fas fa-save"> </i>
                             </button>
@@ -156,5 +155,5 @@
             <?php
         endforeach;
         ?>
-    </div><!-- End of Card body -->
+    </div><!-- End of Card Footer -->
 </div><!-- End of Card -->

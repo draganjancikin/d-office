@@ -106,12 +106,14 @@ $html = '
             . $company_info['bank_account_2'] . '
         </td>
         <td width="350px">Kupac:<br />'
-            . $client['name'] . ' '
+            . $client['name']
             . ($client['lb'] <> ""
                 ? '<br />PIB '. $client['lb']
                 : "") . '<br />'
-            . ($client['street'] ?? "") . ' ' . $client['home_number'] . '<br />'
+            . ($client['street'] ?? "") . ' ' . $client['home_number']
+            . ($client['street'] && $client['city'] ? "<br />" : "")
             . ($client['city'] ?? "")
+            . ($client['city'] && $client['country'] ? "<br />" : "")
             . ($client['country'] ?? "") . '<br />'
             . $contact_item[0] . ', ' . $contact_item[1] . '
         </td>
