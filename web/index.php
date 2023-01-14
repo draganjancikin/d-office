@@ -27,6 +27,8 @@ $map = [
 
     '/orders/' => __DIR__.'/../templates/order/index.php',
     '/orders/printOrder' => __DIR__.'/../templates/order/printOrder.php',
+
+    '/articles/' => __DIR__.'/../templates/article/index.php',
 ];
 
 $path = $request->getPathInfo();

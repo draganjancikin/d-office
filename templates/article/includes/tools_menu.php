@@ -8,7 +8,7 @@ require 'remove_property_from_article.php';
   <div class="card mb-2">
     <div class="card-body py-1 px-2">
       
-      <a href="/articles/index.php?new" class="btn btn-sm btn-outline-secondary" title="Dodavanje novog proizvoda!">
+      <a href="/articles/?new" class="btn btn-sm btn-outline-secondary" title="Dodavanje novog proizvoda!">
         <i class="fas fa-plus"> <i class="fas fa-tag"></i> </i>
       </a>
       <?php

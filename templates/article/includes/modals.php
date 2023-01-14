@@ -8,7 +8,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?addPropertyToArticle&article_id=' . $article_id; ?>" method="post" >
+      <form action="<?php echo '?addPropertyToArticle&article_id=' . $article_id; ?>" method="post" >
         <input type="hidden" name="article_id" value="<?php echo $article_id ?>">
         <div class="modal-body">
 
