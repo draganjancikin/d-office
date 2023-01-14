@@ -91,7 +91,7 @@ else:
                                     <i class="fa fa-plus"></i> <i class="fas fa-pencil-alt"> </i>
                                 </button>
                                 <!-- Pregled i štampanje radnog naloga sa beleškama uz projekat -->
-                                <a href="printProjectTaskWithNotes.php?project_id=<?php echo $project_id; ?>" title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank">
+                                <a href="printProjectTaskWithNotes?project_id=<?php echo $project_id; ?>" title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank">
                                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
                                         <i class="fa fa-print"></i> Beleške
                                     </button>
@@ -207,7 +207,7 @@ else:
                     </h6>
                     <div class="card-header-menu">
                         <!-- dugme, okidač za modal addTask -->
-                        <button type="button" class="btn btn-sm btn-outline-secondary mx-1" data-toggle="modal" data-target="#addTask" title="Dodavanje novog zadatka!">
+                        <button type="button" class="btn btn-sm btn-outline-secondary mx-1" data-toggle="modal" data-target="#createTask" title="Dodavanje novog zadatka!">
                           <i class="fa fa-plus"></i> <i class="fa fa-tasks"> </i>
                         </button>
 

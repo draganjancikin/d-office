@@ -22,7 +22,7 @@ require 'delete_task_note.php';
         </button>
       </a>
       
-      <a href="/projects/index.php?new">
+      <a href="/projects/?new">
         <button type="submit" class="btn btn-sm btn-outline-secondary" title="Otvaranje novog projekta!">
           <!-- <i class="fas fa-plus"> </i> <i class="fas fa-folder"> </i> -->
           <i class="fas fa-project-diagram"></i>
@@ -74,35 +74,35 @@ require 'delete_task_note.php';
         </a>
 
         <!-- Open the proforma-invoice from project -->
-        <a href="/pidb/index.php?new&client_id=<?php echo $project_data->getClient()->getId() ?>&project_id=<?php echo $project_data->getId() ?>">
+        <a href="/pidb/?new&client_id=<?php echo $project_data->getClient()->getId() ?>&project_id=<?php echo $project_data->getId() ?>">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog predračuna!">
             <i class="fas fa-arrow-right"> </i> Predračun
           </button>
         </a>
 
         <!-- Open the material-order from project -->
-        <a href="/orders/index.php?new&project_id=<?php echo $project_data->getId() ?>">
+        <a href="/orders/?new&project_id=<?php echo $project_data->getId() ?>">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje nove narudžbenice za materijal!">
             <i class="fas fa-arrow-right"> </i> Narudžbenica
           </button>
         </a>
 
         <!-- Open the cutting from project -->
-        <a href="/cutting/index.php?new&client_id=<?php echo $project_data->getClient()->getId() ?>&project_id=<?php echo $project_data->getId() ?>">
+        <a href="/cutting/?new&client_id=<?php echo $project_data->getClient()->getId() ?>&project_id=<?php echo $project_data->getId() ?>">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje nove krojne liste!">
             <i class="fas fa-arrow-right"> </i> <i class="fa fa-cut"> </i> 
           </button>
         </a>
 
         <!-- Preview and printing project task -->
-        <a href="printProjectTask.php?project_id=<?php echo $project_id ?>" title="Izvoz radnog naloga u PDF [new window]" target="_blank">
+        <a href="printProjectTask?project_id=<?php echo $project_id ?>" title="Izvoz radnog naloga u PDF [new window]" target="_blank">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
             <i class="fa fa-print"></i> Radni nalog
           </button>
         </a>
 
         <!-- Preview and printing Instalation Record (Log) -->
-        <a href="printInstallationRecord.php?project_id=<?php echo $project_id ?>" title="Štampa zapisnika o ugradnji (montaži)" target="_blank">
+        <a href="printInstallationRecord?project_id=<?php echo $project_id ?>" title="Štampa zapisnika o ugradnji (montaži)" target="_blank">
           <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
             <i class="fa fa-print"></i> Zapisnik o ugradnji
           </button>

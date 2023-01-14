@@ -12,7 +12,7 @@ else:
             </h6>
         </div>
         <div class="card-body p-2">
-            <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateProject&project_id=' . $project_id ?>" method="post">
+            <form action="<?php echo '?updateProject&project_id=' . $project_id ?>" method="post">
 
                 <div class="form-group row">
                     <label for="inputDate" class="col-sm-3 col-lg-2 col-form-label text-right">Datum: </label>

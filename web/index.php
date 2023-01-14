@@ -29,6 +29,11 @@ $map = [
     '/orders/printOrder' => __DIR__.'/../templates/order/printOrder.php',
 
     '/articles/' => __DIR__.'/../templates/article/index.php',
+
+    '/projects/' => __DIR__.'/../templates/project/index.php',
+    '/projects/printProjectTask' => __DIR__.'/../templates/project/printProjectTask.php',
+    '/projects/printInstallationRecord' => __DIR__.'/../templates/project/printInstallationRecord.php',
+    '/projects/printProjectTaskWithNotes' => __DIR__.'/../templates/project/printProjectTaskWithNotes.php',
 ];
 
 $path = $request->getPathInfo();
