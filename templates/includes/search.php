@@ -355,22 +355,22 @@ if($page == "cutting"):
                     <tbody>
                         <?php
                         foreach ($cuttings as $cutting):
-                          ?>
-                          <tr>
-                              <td class="centar">
-                                  <a href="?view&id=<?php echo $cutting->getId() ?>">KL_<?php echo str_pad($cutting->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?></a>
-                              </td>
-                              <td><?php echo $cutting->getClient()->getName() ?></td>
-                              <td>
-                                  <?php
-                                  $last_cutting_sheet = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getLastCuttingSheet();
-                                  echo ( $cutting->getId() == $last_cutting_sheet->getId() ? '<a href="' .$_SERVER['PHP_SELF']. '?delete&cs_id=' .$cutting->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>' : '');
-                                  ?>
-                              </td>
-                          </tr>
-                          <?php
-                      endforeach;
-                      ?>
+                            ?>
+                            <tr>
+                                <td class="centar">
+                                    <a href="?view&id=<?php echo $cutting->getId() ?>">KL_<?php echo str_pad($cutting->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?></a>
+                                </td>
+                                <td><?php echo $cutting->getClient()->getName() ?></td>
+                                <td>
+                                    <?php
+                                    $last_cutting_sheet = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getLastCuttingSheet();
+                                    echo ( $cutting->getId() == $last_cutting_sheet->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete krojnu listu?\');" href="?delete&cs_id=' .$cutting->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>' : '');
+                                    ?>
+                                </td>
+                            </tr>
+                            <?php
+                        endforeach;
+                        ?>
                     </tbody>
                 </table>
             </div>

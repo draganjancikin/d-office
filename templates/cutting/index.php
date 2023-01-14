@@ -1,86 +1,100 @@
-<!DOCTYPE html>
-<html lang="sr">
-<head>
-  <title>Krojne liste</title>
-  <?php include '../../templates/includes/pageHead.php'; ?>
-</head>
-<body id="page-top">
+<?php
+$page = "cutting";
+require_once __DIR__.'/../../config/bootstrap.php';
+session_start();
+if(isset($_SESSION['username'])):
+    $username = $_SESSION['username'];
+    $user_role_id = $_SESSION['user_role_id'];
+    ?>
+    <!DOCTYPE html>
+    <html lang="sr">
+    <head>
+        <title>Krojne liste</title>
+        <?php include __DIR__.'/../includes/pageHead.php'; ?>
+    </head>
+    <body id="page-top">
 
-  <!-- Page Wrapper -->
-  <div id="wrapper">
-    
-    <!-- Sidebar -->
-    <?php include '../../templates/includes/leftSidebarMeni.php'; ?>
-    <!-- End of Sidebar -->
+      <!-- Page Wrapper -->
+      <div id="wrapper">
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Sidebar -->
+        <?php include __DIR__.'/../includes/leftSidebarMeni.php'; ?>
+        <!-- End of Sidebar -->
 
-      <!-- Main Content -->
-      <div id="content">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Topbar -->
-        <?php include '../../templates/includes/topBar.php'; ?>
-        <!-- End of Topbar -->
+          <!-- Main Content -->
+          <div id="content">
 
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
+            <!-- Topbar -->
+            <?php include __DIR__.'/../includes/topBar.php'; ?>
+            <!-- End of Topbar -->
 
-          <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-2">
-            <h1 class="h3 mb-0 text-gray-800">Krojne liste</h1>
-          </div>
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
 
-          <!-- Content Row -->
-          <div class="row">
+              <!-- Page Heading -->
+              <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                <h1 class="h3 mb-0 text-gray-800">Krojne liste</h1>
+              </div>
 
-            <!-- Tools Meni -->
-            <?php include '../../templates/cutting/includes/tools__menu.php'; ?>
-            <!-- End of Tools Meni -->   
-            
-            <div class="col-lg-12 col-xl-10 px-2">
-              <?php 
-                if (empty($_GET)): // ako je $_GET prazan
-                  include '../../templates/cutting/includes/list__last.php';
-                else:
-                  if(isset($_GET['view'])) include '../../templates/cutting/includes/form__view.php';
-                  if(isset($_GET['edit'])) include '../../templates/cutting/includes/form__edit.php';
-                  if(isset($_GET['new'])) include '../../templates/cutting/includes/form__new.php';
+              <!-- Content Row -->
+              <div class="row">
 
-                  if(isset($_GET['search'])) include '../../templates/includes/search.php';
-                endif;
-              ?>
+                <!-- Tools Meni -->
+                <?php include __DIR__.'/../cutting/includes/tools__menu.php'; ?>
+                <!-- End of Tools Meni -->
+
+                <div class="col-lg-12 col-xl-10 px-2">
+                  <?php
+                    if (empty($_GET)): // ako je $_GET prazan
+                      include __DIR__.'/../cutting/includes/list__last.php';
+                    else:
+                      if(isset($_GET['view'])) include __DIR__.'/../cutting/includes/form__view.php';
+                      if(isset($_GET['edit'])) include __DIR__.'/../cutting/includes/form__edit.php';
+                      if(isset($_GET['new'])) include __DIR__.'/../cutting/includes/form__new.php';
+
+                      if(isset($_GET['search'])) include __DIR__.'/../includes/search.php';
+                    endif;
+                  ?>
+                </div>
+
+                <!-- Modals -->
+                <?php include __DIR__.'/../cutting/includes/modals.php'; ?>
+                <!-- End of Modals -->
+
+              </div>
+
             </div>
-
-            <!-- Modals -->
-            <?php include '../../templates/cutting/includes/modals.php'; ?>
-            <!-- End of Modals -->
+            <!-- /.container-fluid -->
 
           </div>
+          <!-- End of Main Content -->
+
+          <!-- Footer -->
+          <?php include __DIR__.'/../includes/mainFooter.php'; ?>
+          <!-- End of Footer -->
+
 
         </div>
-        <!-- /.container-fluid -->
+        <!-- End of Content Wrapper -->
 
       </div>
-      <!-- End of Main Content -->
-      
-      <!-- Footer -->
-      <?php include '../../templates/includes/mainFooter.php'; ?>
-      <!-- End of Footer -->
+      <!-- End of Page Wrapper -->
 
+      <!-- Scroll to Top Button-->
+      <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+      </a>
 
-    </div>
-    <!-- End of Content Wrapper -->
+      <!-- page body footer -->
+      <?php include __DIR__.'/../includes/pageBodyFooter.php'; ?>
+    </body>
+    </html>
+<?php
+else:
+    header('Location: /');
+endif;
+?>
 
-  </div>
-  <!-- End of Page Wrapper -->
-
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
-
-  <!-- page body footer -->
-  <?php include '../../templates/includes/pageBodyFooter.php'; ?>
-</body>
-</html>

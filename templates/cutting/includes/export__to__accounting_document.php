@@ -1,9 +1,8 @@
 <?php
 // Export cutting to proforma-invoice.
 if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocument"]) ) {
-    // Current logged user.
-    $user_id = $_SESSION['user_id'];
-    $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+    $current_user_id = $_SESSION['user_id'];
+    $current_user = $entityManager->find("\Roloffice\Entity\User", $current_user_id);
 
     $id = htmlspecialchars($_GET['id']);
     $cutting = $entityManager->find("\Roloffice\Entity\CuttingSheet", $id);
@@ -35,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocum
     $newProforma->setTitle($title);
     $newProforma->setNote($note);
     $newProforma->setCreatedAt(new DateTime("now"));
-    $newProforma->setCreatedByUser($user);
+    $newProforma->setCreatedByUser($current_user);
     $newProforma->setModifiedAt(new DateTime("1970-01-01 00:00:00"));
 
     $entityManager->persist($newProforma);

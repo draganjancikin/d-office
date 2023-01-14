@@ -56,7 +56,7 @@
         <div id="krojne-liste" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="/cutting/">Krojne liste</a>
-                <a class="collapse-item" href="/cutting/index.php?new"><i class="fas fa-plus"></i> Nova krojna lista</a>
+                <a class="collapse-item" href="/cutting/?new"><i class="fas fa-plus"></i> Nova krojna lista</a>
             </div>
         </div>
     </li>
@@ -70,7 +70,7 @@
         <div id="materijal" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="/materials/">Materijal</a>
-                <a class="collapse-item" href="/materials/index.php?new"><i class="fas fa-plus"></i> Novi materijal</a>
+                <a class="collapse-item" href="/materials/?new"><i class="fas fa-plus"></i> Novi materijal</a>
             </div>
         </div>
     </li>
@@ -84,7 +84,7 @@
         <div id="nabavka" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="/orders/">Nabavka</a>
-                <a class="collapse-item" href="/orders/index.php?new"><i class="fas fa-plus"></i> Nova porudžbenica</a>
+                <a class="collapse-item" href="/orders/?new"><i class="fas fa-plus"></i> Nova porudžbenica</a>
             </div>
         </div>
     </li>
@@ -98,7 +98,7 @@
         <div id="proizvodi" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="/articles/">Proizvodi</a>
-                <a class="collapse-item" href="/articles/index.php?new"><i class="fas fa-plus"></i> Novi proizvod</a>
+                <a class="collapse-item" href="/articles/?new"><i class="fas fa-plus"></i> Novi proizvod</a>
             </div>
         </div>
     </li>
@@ -115,8 +115,8 @@
             <div id="admin" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <a class="collapse-item" href="/admin/">Admin</a>
-                    <a class="collapse-item" href="/admin/index.php?baseBackup"><i class="fas fa-download"></i> Bekap baze</a>
-                    <a class="collapse-item" href="/admin/index.php?companyInfo&view"><i class="fas fa-info"></i> Company info</a>
+                    <a class="collapse-item" href="/admin/?baseBackup"><i class="fas fa-download"></i> Bekap baze</a>
+                    <a class="collapse-item" href="/admin/?companyInfo&view"><i class="fas fa-info"></i> Company info</a>
                 </div>
             </div>
         </li>
@@ -134,12 +134,12 @@
         <div id="projekti" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="/projects/">Projekti</a>
-                <a class="collapse-item" href="/projects/index.php?new"><i class="fas fa-plus"></i> Novi Projekat</a>
-                <a class="collapse-item" href="/projects/index.php?advancedSearch"><i class="fa fa-search"></i> Detajna pretraga</a>
+                <a class="collapse-item" href="/projects/?new"><i class="fas fa-plus"></i> Novi Projekat</a>
+                <a class="collapse-item" href="/projects/?advancedSearch"><i class="fa fa-search"></i> Detajna pretraga</a>
                 <?php
                 if ($user_role_id == 1):
                     ?>
-                    <a class="collapse-item" href="/projects/index.php?projectTasks"><i class="fa fa-tasks"></i> Projektni zadaci</a>
+                    <a class="collapse-item" href="/projects/?projectTasks"><i class="fa fa-tasks"></i> Projektni zadaci</a>
                     <?php
                 endif;
                 ?>

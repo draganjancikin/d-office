@@ -40,7 +40,7 @@
                     foreach ($cutting_sheet_articles as $cutting_sheet_article):
                         $count ++;
                         ?>
-                        <form action="<?php echo $_SERVER['PHP_SELF']. '?updateArticle'?>" method="post">
+                        <form action="<?php echo '?updateArticle'?>" method="post">
 
                             <input type="hidden" name="cutting_sheet__article_id" value="<?php echo $cutting_sheet_article->getId() ?>" />
                             <input type="hidden" name="id" value="<?php echo $id ?>" />

@@ -11,7 +11,7 @@ require 'export__to__accounting_document.php';
     <div class="card mb-2">
         <div class="card-body py-1 px-2">
 
-            <a href="/cutting/index.php?new" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove krojne liste!">
+            <a href="/cutting/?new" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove krojne liste!">
                 <i class="fas fa-plus"> <i class="fas fa-cut"></i> </i>
             </a>
             <?php
@@ -59,7 +59,7 @@ require 'export__to__accounting_document.php';
                 </a>
 
                 <!-- Button trigger modal for print -->
-                <a href="printCutting.php?cutting_id=<?php echo $id ?>" title="PDF [new window]" target="_blank">
+                <a href="printCutting?cutting_id=<?php echo $id ?>" title="PDF [new window]" target="_blank">
                     <button type="button" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-print"></i>
                     </button>
