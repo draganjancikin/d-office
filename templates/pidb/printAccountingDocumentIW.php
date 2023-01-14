@@ -120,7 +120,7 @@ $ad_articles = $entityManager->getRepository('\App\Entity\AccountingDocument')->
 
 foreach ($ad_articles as $ad_article):
 
-    $ad_a_properties = $entityManager->getRepository('\RolofAppfice\Entity\AccountingDocumentArticleProperty')
+    $ad_a_properties = $entityManager->getRepository('\App\Entity\AccountingDocumentArticleProperty')
                                       ->findBy(array('accounting_document_article' => $ad_article->getId()), array());
     $property_temp = '';
     $property_counter = 0;
