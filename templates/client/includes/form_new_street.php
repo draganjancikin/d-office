@@ -4,7 +4,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Unos nove ulica </h6>
     </div>
     <div class="card-body">
-        <form action="<?php echo $_SERVER['PHP_SELF'] . '?createStreet'; ?>" method="post">
+        <form action="<?php '?createStreet'; ?>" method="post">
             <input type="hidden" name="action" value="street">
             <div class="form-group row">
                 <label for="inputName" class="col-sm-3 col-md-4 col-lg-3 col-xl-2 col-form-label text-left text-sm-right">Ulica:</label>

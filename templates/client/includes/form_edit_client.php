@@ -8,7 +8,7 @@
 
     <div class="card-body px-2">
 
-        <form action="<?php echo $_SERVER['PHP_SELF']. '?updateClient&client_id=' . $client_id; ?>" method="post">
+        <form action="<?php echo '?updateClient&client_id=' . $client_id; ?>" method="post">
             <input type="hidden" name="client_id" value="<?php echo $client_id ?>">
             <input type="hidden" name="type_id" value="<?php echo $client['type_id'] ?>">
 
@@ -182,7 +182,7 @@
                                                     ->findOneBy( array('id' =>$contact->getId()) );
             $client_contact_type = $client_contact_data->getType();
             ?>
-            <form action="<?php echo $_SERVER['PHP_SELF']. '?updateContact&client_id=' . $client_id; ?>" method="post">
+            <form action="<?php echo '?updateContact&client_id=' . $client_id; ?>" method="post">
                 <input type="hidden" name="contact_id" value="<?php echo $contact->getId() ?>">
 
                 <div class="form-row">

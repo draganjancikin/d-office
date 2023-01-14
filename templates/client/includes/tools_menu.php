@@ -19,7 +19,7 @@ require 'delete_contact.php';
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
 
                 <div class="btn-group mb-1 mb-sm-0" role="group" aria-label="First group">
-                    <a href="/clients/index.php?new" class="btn btn-sm btn-outline-secondary mr-1" title="Upis novog klijenta!">
+                    <a href="/clients/?new" class="btn btn-sm btn-outline-secondary mr-1" title="Upis novog klijenta!">
                         <i class="fas fa-plus"> </i>
                         <i class="fas fa-user"> </i>
                     </a>

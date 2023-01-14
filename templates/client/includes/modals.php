@@ -9,8 +9,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-
-            <form action="<?php echo $_SERVER['PHP_SELF'] . '?createContact'; ?>" method="post" role="form">
+            <form action="<?php echo '?createContact'; ?>" method="post" role="form">
                 <input type="hidden" name="client_id" value="<?php echo $client_id ?>">
 
                 <div class="modal-body">

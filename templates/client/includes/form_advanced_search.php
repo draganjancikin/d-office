@@ -4,7 +4,7 @@
   </div>
 
   <div class="card-body">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?advancedSearch&result'; ?>" method="post">
+    <form action="<?php echo '?advancedSearch&result'; ?>" method="post">
   
       <div class="form-group row">
         <label for="inputName" class="col-sm-3 col-form-label text-left text-sm-right" >Kijent: </label>

@@ -4,7 +4,7 @@
         <h6 class="m-0 text-dark">Upis podataka o novom klijentu:</h6>
     </div>
     <div class="card-body px-2">
-        <form action="<?php echo $_SERVER['PHP_SELF'] . '?createClient' ?>" method="post">
+        <form action="<?php echo '?createClient' ?>" method="post">
             <div class="form-group row">
                 <label for="selectTip" class="col-sm-3 col-form-label text-left text-sm-right">Vrsta klijenta:</label>
                 <div class="col-sm-4">

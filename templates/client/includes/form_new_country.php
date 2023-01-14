@@ -4,7 +4,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Unos nove države </h6>
     </div>
     <div class="card-body">
-        <form action="<?php echo $_SERVER['PHP_SELF'] . '?createCountry'; ?>" method="post">
+        <form action="<?php echo '?createCountry'; ?>" method="post">
             <input type="hidden" name="action" value="state">
             <div class="form-group row">
                 <label for="inputName" class="col-sm-3 col-md-4 col-lg-3 col-xl-2 col-form-label text-left text-sm-right">Država: </label>
