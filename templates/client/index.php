@@ -1,10 +1,5 @@
 <?php
 $page = "clients";
-require_once __DIR__.'/../../config/bootstrap.php';
-session_start();
-if(isset($_SESSION['username'])):
-$username = $_SESSION['username'];
-$user_role_id = $_SESSION['user_role_id'];
 ?>
 <!DOCTYPE html>
 <html lang="sr">
@@ -103,7 +98,3 @@ $user_role_id = $_SESSION['user_role_id'];
     <?php include __DIR__.'/../includes/pageBodyFooter.php' ?>
 </body>
 </html>
-<?php
-else:
-    header('Location: /');
-endif;

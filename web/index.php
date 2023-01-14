@@ -40,9 +40,19 @@ $map = [
 
 $path = $request->getPathInfo();
 if (isset($map[$path])) {
-    ob_start();
-    include $map[$path];
-    $response->setContent(ob_get_clean());
+
+    require_once __DIR__ . '/../config/bootstrap.php';
+    session_start();
+    if (isset($_SESSION['username'])){
+        $username = $_SESSION['username'];
+        $user_role_id = $_SESSION['user_role_id'];
+        ob_start();
+        include $map[$path];
+        $response->setContent(ob_get_clean());
+    } else {
+        include '../templates/formLogin.php';
+    }
+
 } else {
     $response->setStatusCode(404);
     $response->setContent('Not Found');
