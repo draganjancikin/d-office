@@ -13,7 +13,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\Roloffice\Entit
     </div>
 
     <div class="card-body px-2">
-        <form action="<?php echo $_SERVER['PHP_SELF']. '?updateCompanyInfo'?>" method="post">
+        <form action="<?php echo '?updateCompanyInfo'?>" method="post">
 
             <div class="form-group row">
                 <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>

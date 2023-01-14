@@ -1,82 +1,96 @@
-<!DOCTYPE html>
-<html lang="sr">
-<head>
-  <title>Admin</title>
-  <?php include '../../templates/includes/pageHead.php'; ?>
-</head>
-<body id="page-top">
+<?php
+$page = "admin";
+require_once __DIR__.'/../../config/bootstrap.php';
+session_start();
+if(isset($_SESSION['username'])):
+    $username = $_SESSION['username'];
+    $user_role_id = $_SESSION['user_role_id'];
+    $admin = new \Roloffice\Controller\AdminController();
+    ?>
+    <!DOCTYPE html>
+    <html lang="sr">
+    <head>
+      <title>Admin</title>
+      <?php include __DIR__.'/../includes/pageHead.php'; ?>
+    </head>
+    <body id="page-top">
 
-  <!-- Page Wrapper -->
-  <div id="wrapper">
-    
-    <!-- Sidebar -->
-    <?php include '../../templates/includes/leftSidebarMeni.php'; ?>
-    <!-- End of Sidebar -->
+      <!-- Page Wrapper -->
+      <div id="wrapper">
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Sidebar -->
+        <?php include __DIR__.'/../includes/leftSidebarMeni.php'; ?>
+        <!-- End of Sidebar -->
 
-      <!-- Main Content -->
-      <div id="content">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Topbar -->
-        <?php include '../../templates/includes/topBar.php'; ?>
-        <!-- End of Topbar -->
+          <!-- Main Content -->
+          <div id="content">
 
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
+            <!-- Topbar -->
+            <?php include __DIR__.'/../includes/topBar.php'; ?>
+            <!-- End of Topbar -->
 
-          <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-2">
-            <h1 class="h3 mb-0 text-gray-800">Admin</h1>
-          </div>
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
 
-          <!-- Content Row -->
-          <div class="row">
+              <!-- Page Heading -->
+              <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                <h1 class="h3 mb-0 text-gray-800">Admin</h1>
+              </div>
 
-              <!-- Tools Meni -->
-              <?php include '../../templates/admin/includes/tools_menu.php' ?>
-              <!-- End of Tools Meni -->
+              <!-- Content Row -->
+              <div class="row">
 
-            <div class="col-lg-12 px-2">
-                <?php
-                if (empty($_GET)): // ako je $_GET prazan
-                    // include '../../src/article/includes/listLast.php';
-                else:
-                    if(isset($_GET['baseBackup'])) include '../../templates/admin/includes/baseBackup.php';
-                    if(isset($_GET['companyInfo']) && isset($_GET['view'])) include '../../templates/admin/includes/form_view_company_info.php';
-                    if(isset($_GET['companyInfo']) && isset($_GET['edit'])) include '../../templates/admin/includes/form_edit_company_info.php';
-                endif;
-                ?>
+                  <!-- Tools Meni -->
+                  <?php include __DIR__.'/../admin/includes/tools_menu.php' ?>
+                  <!-- End of Tools Meni -->
+
+                <div class="col-lg-12 px-2">
+                    <?php
+                    if (empty($_GET)): // ako je $_GET prazan
+                        // include '../../src/article/includes/listLast.php';
+                    else:
+                        if(isset($_GET['baseBackup'])) include __DIR__.'/../admin/includes/baseBackup.php';
+                        if(isset($_GET['companyInfo']) && isset($_GET['view'])) include __DIR__.'/../admin/includes/form_view_company_info.php';
+                        if(isset($_GET['companyInfo']) && isset($_GET['edit'])) include __DIR__.'/../admin/includes/form_edit_company_info.php';
+                    endif;
+                    ?>
+                </div>
+
+
+
+              </div>
+
             </div>
-
-
+            <!-- /.container-fluid -->
 
           </div>
+          <!-- End of Main Content -->
+
+          <!-- Footer -->
+          <?php include __DIR__.'/../includes/mainFooter.php'; ?>
+          <!-- End of Footer -->
+
 
         </div>
-        <!-- /.container-fluid -->
+        <!-- End of Content Wrapper -->
 
       </div>
-      <!-- End of Main Content -->
-      
-      <!-- Footer -->
-      <?php include '../../templates/includes/mainFooter.php'; ?>
-      <!-- End of Footer -->
+      <!-- End of Page Wrapper -->
 
+      <!-- Scroll to Top Button-->
+      <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+      </a>
 
-    </div>
-    <!-- End of Content Wrapper -->
-
-  </div>
-  <!-- End of Page Wrapper -->
-
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
-
-  <!-- page body footer -->
-  <?php include '../../templates/includes/pageBodyFooter.php'; ?>
-</body>
-</html>
+      <!-- page body footer -->
+      <?php include __DIR__.'/../includes/pageBodyFooter.php'; ?>
+    </body>
+    </html>
+<?php
+else:
+header('Location: /');
+endif;
+?>

@@ -34,6 +34,8 @@ $map = [
     '/projects/printProjectTask' => __DIR__.'/../templates/project/printProjectTask.php',
     '/projects/printInstallationRecord' => __DIR__.'/../templates/project/printInstallationRecord.php',
     '/projects/printProjectTaskWithNotes' => __DIR__.'/../templates/project/printProjectTaskWithNotes.php',
+
+    '/admin/' => __DIR__.'/../templates/admin/index.php',
 ];
 
 $path = $request->getPathInfo();
