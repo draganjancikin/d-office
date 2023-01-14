@@ -1,6 +1,5 @@
 <?php
 $page = "clients";
-//require_once '../../config/bootstrap.php';
 require_once __DIR__.'/../../config/bootstrap.php';
 session_start();
 if(isset($_SESSION['username'])):

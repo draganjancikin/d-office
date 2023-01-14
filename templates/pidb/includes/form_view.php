@@ -153,13 +153,13 @@ switch ($pidb_data->getType()->getId()) {
                                     <button type="submit" class="btn btn-mini btn-outline-secondary px-1 disabled" disabled>
                                         <i class="fas fa-save" title="Snimi izmenu"> </i>
                                     </button>
-                                    <a class="btn btn-mini btn-outline-secondary px-1 disable">
+                                    <a class="btn btn-mini btn-outline-secondary px-1 disabled">
                                         <i class="fas fa-edit" title="Izmeni artikal"> </i>
                                     </a>
-                                    <a class="btn btn-mini btn-outline-secondary px-1 disable">
+                                    <a class="btn btn-mini btn-outline-secondary px-1 disabled">
                                         <i class="fas fa-plus" title="Dupliciraj artikal"> </i>
                                     </a>
-                                    <a class="btn btn-mini btn-outline-secondary px-1 disable">
+                                    <a class="btn btn-mini btn-outline-secondary px-1 disabled">
                                         <i class="fas fa-trash" title="Obriši artikal"> </i>
                                     </a>
                                 </td>

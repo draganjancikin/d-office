@@ -17,7 +17,7 @@ require 'delete_accounting_document.php';
 
     <div class="card mb-2">
         <div class="card-body py-1 px-2">
-            <a href="/pidb/index.php?new" class="btn btn-sm btn-outline-secondary" title="Otvaranje novog dokumenta!">
+            <a href="/pidb/?new" class="btn btn-sm btn-outline-secondary" title="Otvaranje novog dokumenta!">
                 <i class="fas fa-plus"> </i> Dokument
             </a>
             <?php
@@ -61,12 +61,12 @@ require 'delete_accounting_document.php';
                     </button>
 
                     <!-- Print Buttons -->
-                    <a href="printAccountingDocument.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
+                    <a href="printAccountingDocument?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
                         <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                             <i class="fas fa-print"> </i>
                         </button>
                     </a>
-                    <a href="printAccountingDocumentW.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
+                    <a href="printAccountingDocumentW?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
                         <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                             <i class="fas fa-print"> </i> w
                         </button>
@@ -75,12 +75,12 @@ require 'delete_accounting_document.php';
                     <?php
                     if ($pidb_data->getType()->getId() == 2):
                         ?>
-                        <a href="printAccountingDocumentI.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
+                        <a href="printAccountingDocumentI?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
                             <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                                 <i class="fas fa-print"> </i> I
                             </button>
                         </a>
-                        <a href="printAccountingDocumentIW.php?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
+                        <a href="printAccountingDocumentIW?accounting_document__id=<?php echo $pidb_id ?>" title="PDF [new window]" target="_blank">
                             <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                                 <i class="fas fa-print"> </i> IW
                             </button>
@@ -137,7 +137,7 @@ require 'delete_accounting_document.php';
                 <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addPayment" <?php echo ($pidb_data->getIsArchived() == 1 ? 'title="Predračun je arhiviran i nije moguće videntiranje transakcija" disabled' : 'title="Evidentiranje transakcija" ' ) ?>>
                     <i class="fas fa-hand-holding-usd"></i>
                 </button>
-                <a href="/pidb/index.php?transactions&pidb_id=<?php echo $pidb_id ?>">
+                <a href="/pidb/?transactions&pidb_id=<?php echo $pidb_id ?>">
                     <button type="submit" class="btn btn-sm btn-outline-secondary mr-1" title="Pregled transakcija">
                         <i class="fas fa-eye"></i> <i class="fas fa-dollar-sign"></i>
                     </button>
@@ -162,12 +162,7 @@ require 'delete_accounting_document.php';
 
                 <!-- Print Buttons -->
                 <?php
-                if (isset($_GET['date'])) {
-                    $date = $_GET['date'];
-                } else {
-                    // $date = $pidb->getDate();
-                    $date = date('Y-m-d');
-                }
+                $date = $_GET['date'] ?? date('Y-m-d');
                 ?>
                 <!--
                 <a href="/tcpdf/examples/printDailyCashReport.php&" title="PDF [new window]" target="_blank">
@@ -177,7 +172,7 @@ require 'delete_accounting_document.php';
                   </button>
                 </a>
                 -->
-                <form class="d-inline" target="_blank" action="printDailyCashReport.php">
+                <form class="d-inline" target="_blank" action="printDailyCashReport">
                     <input type="hidden" name="date" value="<?php echo $date ?>">
                     <button type="submit" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                         <i class="fas fa-print"> </i>

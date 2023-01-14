@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">Otvaranje novog dokumenta:</h6>
   </div>
   <div class="card-body p-2">
-    <form class="form-horizontal" role="form" action="<?php echo $_SERVER['PHP_SELF'] . '?createAccountingDocument'; ?>"
+    <form class="form-horizontal" role="form" action="<?php echo '?createAccountingDocument'; ?>"
       method="post">
       <?php if (isset($_GET['project_id'])): ?>
       <input type="hidden" name="project_id" value="<?php echo $_GET['project_id'] ?>">

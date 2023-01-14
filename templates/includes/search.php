@@ -55,8 +55,8 @@ if($page == "clients"):
     <?php
 endif;
 
-if($page == "pidb"):
-  require '../../templates/pidb/includes/delete_accounting_document.php';
+if ($page == "pidb"):
+  require __DIR__.'/../pidb/includes/delete_accounting_document.php';
   $term = filter_input(INPUT_GET, 'search');
   $last_pidb = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getLastAccountingDocument();
   ?>
@@ -100,7 +100,7 @@ if($page == "pidb"):
                 <td><?php echo $proforma->getTitle() ?></td>
                 <td>
                   <?php 
-                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                   ?>
                 </td>
               </tr>
@@ -143,7 +143,7 @@ if($page == "pidb"):
                 <td><?php echo $proforma->getTitle() ?></td>
                 <td>
                   <?php 
-                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                   ?>
                 </td>
               </tr>
@@ -196,7 +196,7 @@ if($page == "pidb"):
                         <td><?php echo $proforma->getTitle() ?></td>
                         <td>
                           <?php 
-                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                           ?>
                         </td>
                       </tr>
@@ -238,7 +238,7 @@ if($page == "pidb"):
                       <td><?php echo $proforma->getTitle() ?></td>
                       <td>
                         <?php 
-                        echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                        echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="?search&deleteAccountingDocument&acc_doc_id=' .$proforma['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                         ?>
                       </td>
                     </tr>
@@ -291,7 +291,7 @@ if($page == "pidb"):
                         <td><?php echo $proforma['title']; ?></td>
                         <td>
                           <?php 
-                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="' . $_SERVER['PHP_SELF'] . '?search&deleteAccountingDocument&acc_doc_id=' . $proforma['id'] . '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="?search&deleteAccountingDocument&acc_doc_id=' . $proforma['id'] . '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                           ?>
                         </td>
                       </tr>
@@ -312,7 +312,7 @@ if($page == "pidb"):
                         <td><?php echo $proforma->getTitle() ?></td>
                         <td>
                           <?php 
-                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete zadatak?\');" href="' . $_SERVER['PHP_SELF'] . '?search&deleteAccountingDocument&acc_doc_id=' . $proforma['id'] . '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                          echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete zadatak?\');" href="?search&deleteAccountingDocument&acc_doc_id=' . $proforma['id'] . '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                           ?>
                         </td>
                       </tr>

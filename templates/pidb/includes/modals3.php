@@ -10,7 +10,7 @@
         </button>
       </div>
 
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?editTransaction' ?>" method="post" role="form">
+      <form action="<?php echo '?editTransaction' ?>" method="post" role="form">
         <input type="hidden" name="transaction_id" value="<?php echo $transaction->getId() ?>">
         <input type="hidden" name="pidb_id" value="<?php echo $pidb_data->getId() ?>">
 

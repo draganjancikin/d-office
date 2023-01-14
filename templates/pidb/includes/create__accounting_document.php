@@ -1,58 +1,55 @@
 <?php
 // Create a new AccountingDocument.
 if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createAccountingDocument"]) ) {
-  // Current loged user.
-  $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
-  
-  $ordinal_num_in_year = 0;
+    $current_user_id = $_SESSION['user_id'];
+    $current_user = $entityManager->find("\Roloffice\Entity\User", $current_user_id);
 
-  $client_id = htmlspecialchars($_POST["client_id"]);
-  $client = $entityManager->find("\Roloffice\Entity\Client", $client_id);
+    $ordinal_num_in_year = 0;
 
-  $accd_type_id = htmlspecialchars($_POST["pidb_type_id"]);
-  $accd_type = $entityManager->find("\Roloffice\Entity\AccountingDocumentType", $accd_type_id);
-  
-  $title = htmlspecialchars($_POST["title"]);
-  $note = htmlspecialchars($_POST["note"]);
+    $client_id = htmlspecialchars($_POST["client_id"]);
+    $client = $entityManager->find("\Roloffice\Entity\Client", $client_id);
 
-  // Create a new AccountingDocument.
-  $newAccountingDocument = new \Roloffice\Entity\AccountingDocument();
+    $accd_type_id = htmlspecialchars($_POST["pidb_type_id"]);
+    $accd_type = $entityManager->find("\Roloffice\Entity\AccountingDocumentType", $accd_type_id);
 
-  $newAccountingDocument->setOrdinalNumInYear($ordinal_num_in_year);
-  $newAccountingDocument->setDate(new DateTime("now"));
-  $newAccountingDocument->setIsArchived(0);
+    $title = htmlspecialchars($_POST["title"]);
+    $note = htmlspecialchars($_POST["note"]);
 
-  $newAccountingDocument->setType($accd_type);
-  $newAccountingDocument->setClient($client);
-  $newAccountingDocument->setTitle($title);
-  $newAccountingDocument->setNote($note);
-  
-  $newAccountingDocument->setCreatedAt(new DateTime("now"));
-  $newAccountingDocument->setCreatedByUser($user);
-  $newAccountingDocument->setModifiedAt(new DateTime("1970-01-01 00:00:00"));
+    // Create a new AccountingDocument.
+    $newAccountingDocument = new \Roloffice\Entity\AccountingDocument();
 
-  $entityManager->persist($newAccountingDocument);
-  $entityManager->flush();
+    $newAccountingDocument->setOrdinalNumInYear($ordinal_num_in_year);
+    $newAccountingDocument->setDate(new DateTime("now"));
+    $newAccountingDocument->setIsArchived(0);
 
-  // Get id of last AccountingDocument.
-  $new_accounting_document_id = $newAccountingDocument->getId();
+    $newAccountingDocument->setType($accd_type);
+    $newAccountingDocument->setClient($client);
+    $newAccountingDocument->setTitle($title);
+    $newAccountingDocument->setNote($note);
 
-  // Set Ordinal Number In Year.
-  $entityManager->getRepository('Roloffice\Entity\AccountingDocument')->setOrdinalNumInYear($new_accounting_document_id);
+    $newAccountingDocument->setCreatedAt(new DateTime("now"));
+    $newAccountingDocument->setCreatedByUser($current_user);
+    $newAccountingDocument->setModifiedAt(new DateTime("1970-01-01 00:00:00"));
 
-
-  if (isset($_POST["project_id"])) {
-    $project_id = htmlspecialchars($_POST["project_id"]);
-    $project = $entityManager->find("\Roloffice\Entity\Project", $project_id);
-
-    $project->getAccountingDocuments()->add($newAccountingDocument);
-  
+    $entityManager->persist($newAccountingDocument);
     $entityManager->flush();
-    
-  } else {
-    $project_id = NULL;
-  }
 
-  die('<script>location.href = "?view&pidb_id=' . $new_accounting_document_id . '" </script>');
+    // Get id of last AccountingDocument.
+    $new_accounting_document_id = $newAccountingDocument->getId();
+
+    // Set Ordinal Number In Year.
+    $entityManager->getRepository('Roloffice\Entity\AccountingDocument')->setOrdinalNumInYear($new_accounting_document_id);
+
+    if (isset($_POST["project_id"])) {
+        $project_id = htmlspecialchars($_POST["project_id"]);
+        $project = $entityManager->find("\Roloffice\Entity\Project", $project_id);
+
+        $project->getAccountingDocuments()->add($newAccountingDocument);
+
+        $entityManager->flush();
+    } else {
+        $project_id = NULL;
+    }
+
+    die('<script>location.href = "?view&pidb_id=' . $new_accounting_document_id . '" </script>');
 }

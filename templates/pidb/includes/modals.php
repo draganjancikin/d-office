@@ -9,7 +9,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?addArticleToAccountingDocument&pidb_id='. $pidb_id ?>" method="post" role="form">
+      <form action="<?php echo '?addArticleToAccountingDocument&pidb_id='. $pidb_id ?>" method="post" role="form">
         <input type="hidden" name="pidb_id" value="<?php echo $pidb_id ?>">
 
         <div class="modal-body">
@@ -68,7 +68,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?addPayment&pidb_id='. $pidb_id ?>" method="post" role="form">
+      <form action="<?php echo '?addPayment&pidb_id='. $pidb_id ?>" method="post" role="form">
         <input type="hidden" name="pidb_id" value="<?php echo $pidb_id ?>">
         <input type="hidden" name="client_id" value="<?php echo $pidb_data->getClient()->getId() ?>">
         <div class="modal-body">

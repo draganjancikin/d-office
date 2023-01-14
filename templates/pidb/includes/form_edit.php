@@ -105,7 +105,7 @@ switch ($pidb_data->getType()->getId()) {
                     foreach ($ad_articles as $ad_article):
                         $count++;
                         ?>
-                        <form action="<?php echo $_SERVER['PHP_SELF'] . '?editArticleInAccountingDocument&pidb_id=' . $pidb_id . '&pidb_article_id=' . $ad_article->getId(); ?>" class="form-horizontal" role="form" method="post">
+                        <form action="<?php echo '?editArticleInAccountingDocument&pidb_id=' . $pidb_id . '&pidb_article_id=' . $ad_article->getId(); ?>" class="form-horizontal" role="form" method="post">
                             <input type="hidden" name="article_id" value="<?php echo $ad_article->getId() ?>" />
                             <input type="hidden" name="pidb_tip_id" value="<?php echo $pidb_data->getType()->getId() ?>" />
                             <tr>
@@ -173,15 +173,15 @@ switch ($pidb_data->getType()->getId()) {
                                         <i class="fas fa-save" title="Snimi izmenu"> </i>
                                     </button>
 
-                                    <a href="<?php echo $_SERVER['PHP_SELF']. '?editArticle&pidb_article_id=' . $ad_article->getId() . '&pidb_id='.$pidb_id.'&pidb_tip_id=' . $pidb_data->getType()->getId() ?>" class="btn btn-mini btn-outline-info px-1">
+                                    <a href="<?php echo '?editArticle&pidb_article_id=' . $ad_article->getId() . '&pidb_id='.$pidb_id.'&pidb_tip_id=' . $pidb_data->getType()->getId() ?>" class="btn btn-mini btn-outline-info px-1">
                                         <i class="fas fa-edit" title="Promeni artikal"> </i>
                                     </a>
 
-                                    <a href="<?php echo $_SERVER['PHP_SELF'] . '?duplicateArticleInAccountingDocument&pidb_id=' . $pidb_id . '&pidb_tip_id=' .$pidb_data->getType()->getId() . '&pidb_article_id=' .$ad_article->getId() ?>" class="btn btn-mini btn-outline-info px-1">
+                                    <a href="<?php echo '?duplicateArticleInAccountingDocument&pidb_id=' . $pidb_id . '&pidb_tip_id=' .$pidb_data->getType()->getId() . '&pidb_article_id=' .$ad_article->getId() ?>" class="btn btn-mini btn-outline-info px-1">
                                         <i class="fas fa-plus" title="Dupliciraj artikal"> </i>
                                     </a>
 
-                                    <a onClick="javascript: return confirm('Da li ste sigurni da želite da uklonite artikal iz dokumenta?')"  href="<?php echo $_SERVER['PHP_SELF']. '?removeArticlefromAccountingDocument&pidb_id='.$pidb_id.'&pidb_article_id=' .$ad_article->getId() ?>" class="btn btn-mini btn-outline-danger px-1">
+                                    <a onClick="javascript: return confirm('Da li ste sigurni da želite da uklonite artikal iz dokumenta?')"  href="<?php echo '?removeArticlefromAccountingDocument&pidb_id='.$pidb_id.'&pidb_article_id=' .$ad_article->getId() ?>" class="btn btn-mini btn-outline-danger px-1">
                                         <i class="fas fa-trash" title="Obriši artikal"> </i>
                                     </a>
                                 </td>
@@ -236,7 +236,7 @@ switch ($pidb_data->getType()->getId()) {
                 </tbody>
             </table>
 
-            <form  action="<?php echo $_SERVER['PHP_SELF']. '?updateAcountingDocument&pidb_id='.$pidb_id; ?>" method="post">
+            <form  action="<?php echo '?updateAcountingDocument&pidb_id='.$pidb_id; ?>" method="post">
 
                 <input type="hidden" name="pidb_id" value="<?php echo $pidb_id; ?>" />
                 <table class="table">

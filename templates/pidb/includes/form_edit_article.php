@@ -24,7 +24,7 @@ $article_data = $entityManager->find('\Roloffice\Entity\AccountingDocumentArticl
     </div>
     <div class="card-body p-2">
 
-        <form action="<?php echo $_SERVER['PHP_SELF']. '?editArticleDataInAccountingDocument&pidb_id='.$article_data->getAccountingDocument()->getId().'&pidb_article_id=' .$pidb_article_id ?>" class="form-horizontal" role="form" method="post">
+        <form action="<?php echo '?editArticleDataInAccountingDocument&pidb_id='.$article_data->getAccountingDocument()->getId().'&pidb_article_id=' .$pidb_article_id ?>" class="form-horizontal" role="form" method="post">
             <input type="hidden" name="article_id" value="<?php echo $article_data->getArticle()->getId() ?>" />
             
             <div class="form-group row">

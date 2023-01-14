@@ -11,6 +11,12 @@ $response = new Response();
 $map = [
     '/' => __DIR__.'/../templates/index.php',
     '/clients/' => __DIR__.'/../templates/client/index.php',
+    '/pidb/' => __DIR__.'/../templates/pidb/index.php',
+    '/pidb/printAccountingDocument' => __DIR__.'/../templates/pidb/printAccountingDocument.php',
+    '/pidb/printAccountingDocumentW' => __DIR__.'/../templates/pidb/printAccountingDocumentW.php',
+    '/pidb/printAccountingDocumentI' => __DIR__.'/../templates/pidb/printAccountingDocumentI.php',
+    '/pidb/printAccountingDocumentIW' => __DIR__.'/../templates/pidb/printAccountingDocumentIW.php',
+    '/pidb/printDailyCashReport' => __DIR__.'/../templates/pidb/printDailyCashReport.php',
 ];
 
 $path = $request->getPathInfo();
@@ -25,4 +31,4 @@ if (isset($map[$path])) {
 
 $response->send();
 
-// https://symfony.com/doc/5.4/create_framework/front_controller.html
+// https://symfony.com/doc/5.4/create_framework/routing.html
