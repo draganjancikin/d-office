@@ -1,3 +1,9 @@
+# Upgrade to 7.0.0
+
+Enhancement:
+* Create front controller index.php
+* Change namespace "RolOffice" to "App"
+
 # Upgrade to 6.5.1
 
 Resolved issues and bugfixes:

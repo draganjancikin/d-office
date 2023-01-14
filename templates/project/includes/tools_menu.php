@@ -34,7 +34,7 @@ require 'delete_task_note.php';
       
         $project_id = filter_input(INPUT_GET, 'project_id');
         
-        $project_data = $entityManager->find('\Roloffice\Entity\Project', $project_id);
+        $project_data = $entityManager->find('\App\Entity\Project', $project_id);
         
         // in view case show edit button 
         if(isset($_GET['view'])):

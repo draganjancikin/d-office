@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Controller;
+namespace App\Controller;
 
 require_once __DIR__ . '/../../config/dbConfig.php';
 /**
@@ -13,7 +13,7 @@ class AdminController {
     public function baseBackup (){
 
         $dump_dir = '';
-        $dumpfile = "roloffice_" . date("Y-m-d_H-i-s") . "_" . ENV . "_" . APP_VERSION . ".sql";
+        $dumpfile = "d-office_" . date("Y-m-d_H-i-s") . "_" . ENV . "_" . APP_VERSION . ".sql";
 
         // Check OS version.
         $os = PHP_OS;

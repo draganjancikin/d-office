@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -14,7 +14,7 @@ class ProjectRepository extends EntityRepository {
     public function getNumberOfProjects() {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('count(p.id)')
-            ->from('Roloffice\Entity\Project','p');
+            ->from('App\Entity\Project','p');
         return $qb->getQuery()->getSingleScalarResult();
     }
 
@@ -26,7 +26,7 @@ class ProjectRepository extends EntityRepository {
     public function getAllActiveProjects() {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('p')
-            ->from('Roloffice\Entity\Project','p')
+            ->from('App\Entity\Project','p')
             ->where(
                 $qb->expr()->eq('p.status', 1),
             );
@@ -71,7 +71,7 @@ class ProjectRepository extends EntityRepository {
         }
 
         // update ordinal_number_in_year
-        $project = $this->_em->find('\Roloffice\Entity\Project', $project_id);
+        $project = $this->_em->find('\App\Entity\Project', $project_id);
 
         if ($project === null) {
             echo "Project with ID $project_id does not exist.\n";
@@ -90,7 +90,7 @@ class ProjectRepository extends EntityRepository {
     public function getLastProject() {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('p')
-            ->from('Roloffice\Entity\Project', 'p')
+            ->from('App\Entity\Project', 'p')
             ->orderBy('p.id', 'DESC')
             ->setMaxResults(1);
         $query = $qb->getQuery();
@@ -105,7 +105,7 @@ class ProjectRepository extends EntityRepository {
     public function getProjectBeforeLast() {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('p')
-            ->from('Roloffice\Entity\Project', 'p')
+            ->from('App\Entity\Project', 'p')
             ->orderBy('p.id', 'DESC')
             ->setMaxResults(2);
         $query = $qb->getQuery();
@@ -125,7 +125,7 @@ class ProjectRepository extends EntityRepository {
 
         /*
         $qb->select('p')
-            ->from('Roloffice\Entity\Project','p')
+            ->from('App\Entity\Project','p')
             ->join('p.client', 'cl', 'WITH', 'p.client = cl.id')
             ->join('cl.city', 'ci', 'WITH', 'cl.city = ci.id')
             ->where(
@@ -135,7 +135,7 @@ class ProjectRepository extends EntityRepository {
         */
 
         $qb->select('ci.id, ci.name')
-            ->from('Roloffice\Entity\Project','p')
+            ->from('App\Entity\Project','p')
             ->join('p.client', 'cl', 'WITH', 'p.client = cl.id')
             ->join('cl.city', 'ci', 'WITH', 'cl.city = ci.id')
             ->where(
@@ -158,7 +158,7 @@ class ProjectRepository extends EntityRepository {
     public function projectTracking ($status){
         $qb = $this->_em->createQueryBuilder();
         $qb->select('p')
-            ->from('Roloffice\Entity\Project','p')
+            ->from('App\Entity\Project','p')
             ->where(
                 $qb->expr()->eq('p.status', "$status")
             )
@@ -173,7 +173,7 @@ class ProjectRepository extends EntityRepository {
     public function projectTasks($project_id){
         $qb = $this->_em->createQueryBuilder();
         $qb->select('pt')
-            ->from('Roloffice\Entity\ProjectTask','pt')
+            ->from('App\Entity\ProjectTask','pt')
             ->where(
                 $qb->expr()->eq("pt.project", "$project_id")
             )
@@ -188,7 +188,7 @@ class ProjectRepository extends EntityRepository {
     public function projectTrackingByCity($status, $city_id) {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('p')
-            ->from('Roloffice\Entity\Project','p')
+            ->from('App\Entity\Project','p')
             ->join('p.client', 'cl', 'WITH', 'p.client = cl.id')
             ->where(
                 $qb->expr()->andX(
@@ -210,7 +210,7 @@ class ProjectRepository extends EntityRepository {
     public function search($term) {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('p')
-            ->from('Roloffice\Entity\Project','p')
+            ->from('App\Entity\Project','p')
             ->join('p.client', 'cl', 'WITH', 'p.client = cl.id')
             ->where(
                 $qb->expr()->orX(
@@ -239,7 +239,7 @@ class ProjectRepository extends EntityRepository {
     public function advancedSearch($client, $title, $city) {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('p')
-            ->from('Roloffice\Entity\Project','p')
+            ->from('App\Entity\Project','p')
             ->join('p.client', 'cl', 'WITH', 'p.client = cl.id')
             ->join('cl.city', 'ci', 'WITH', 'cl.city = ci.id')
             ->where(
@@ -267,7 +267,7 @@ class ProjectRepository extends EntityRepository {
     public function getNotesByProject($project_id) {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('pn')
-            ->from('Roloffice\Entity\ProjectNote','pn')
+            ->from('App\Entity\ProjectNote','pn')
             ->where(
                 $qb->expr()->eq("pn.project", "$project_id")
             )

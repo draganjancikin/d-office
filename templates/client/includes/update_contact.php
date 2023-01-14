@@ -4,17 +4,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateContact"])) {
 
   // Curent loged user.
   $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+  $user = $entityManager->find("\App\Entity\User", $user_id);
 
   $contact_id = $_POST["contact_id"];
   $client_id = basicValidation($_GET["client_id"]);
 
   $contact_type_id = $_POST["contact_type_id"];
-  $contact_type = $entityManager->find("\Roloffice\Entity\ContactType", $contact_type_id);
+  $contact_type = $entityManager->find("\App\Entity\ContactType", $contact_type_id);
   $body = basicValidation($_POST["body"]);
   $note = basicValidation($_POST["note"]);
 
-  $contact = $entityManager->find('\Roloffice\Entity\Contact', $contact_id);
+  $contact = $entityManager->find('\App\Entity\Contact', $contact_id);
 
   if ($contact === null) {
     echo "Contact with ID $contact_id does not exist.\n";

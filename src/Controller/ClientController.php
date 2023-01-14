@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Controller;
+namespace App\Controller;
 
 /**
  * ClientController class

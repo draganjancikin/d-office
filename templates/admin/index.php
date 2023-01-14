@@ -1,6 +1,6 @@
 <?php
 $page = "admin";
-$admin = new \Roloffice\Controller\AdminController();
+$admin = new \App\Controller\AdminController();
 ?>
 <!DOCTYPE html>
 <html lang="sr">

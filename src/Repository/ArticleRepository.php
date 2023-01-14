@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -25,7 +25,7 @@ class ArticleRepository extends EntityRepository {
   public function getLastArticles($limit = 5) {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('a')
-        ->from('Roloffice\Entity\Article', 'a')
+        ->from('App\Entity\Article', 'a')
         ->orderBy('a.id', 'DESC')
         ->setMaxResults( $limit );
     $query = $qb->getQuery();
@@ -44,7 +44,7 @@ class ArticleRepository extends EntityRepository {
     // Create a QueryBilder instance
     $qb = $this->_em->createQueryBuilder();
     $qb->select('a')
-      ->from('Roloffice\Entity\Article', 'a')
+      ->from('App\Entity\Article', 'a')
       ->where(
         $qb->expr()->eq('a.group', $group_id),
       )
@@ -65,7 +65,7 @@ class ArticleRepository extends EntityRepository {
 
     $qb = $this->_em->createQueryBuilder();
     $qb->select('a')
-      ->from('Roloffice\Entity\Article', 'a')
+      ->from('App\Entity\Article', 'a')
       ->where(
         $qb->expr()->like('a.name', $qb->expr()->literal("%$term%")),
       )

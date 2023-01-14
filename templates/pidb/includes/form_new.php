@@ -30,12 +30,12 @@
             <?php
           if (isset($_GET['client_id'])){
             $client_id = htmlspecialchars($_GET["client_id"]);
-            $client_data = $entityManager->find('\Roloffice\Entity\Client', $client_id);
+            $client_data = $entityManager->find('\App\Entity\Client', $client_id);
             echo '<option value="'.$client_data->getId().'">'.$client_data->getName().'</option>';
           } else {
             echo '<option value="">naziv klijenta</option>';
           }
-          $clients_list = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => "ASC"));
+          $clients_list = $entityManager->getRepository('\App\Entity\Client')->findBy(array(), array('name' => "ASC"));
           foreach ( $clients_list as $client_item):
             ?>
             <option value="<?php echo $client_item->getId() ?>">

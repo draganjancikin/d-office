@@ -1,7 +1,7 @@
 <?php
 if($page == "clients"):
     $term = filter_input(INPUT_GET, 'search');
-    $clients= $entityManager->getRepository('\Roloffice\Entity\Client')->search($term);
+    $clients= $entityManager->getRepository('\App\Entity\Client')->search($term);
     ?>
     <div class="card mb-4">
         <div class="card-header p-2">
@@ -58,7 +58,7 @@ endif;
 if ($page == "pidb"):
   require __DIR__.'/../pidb/includes/delete_accounting_document.php';
   $term = filter_input(INPUT_GET, 'search');
-  $last_pidb = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getLastAccountingDocument();
+  $last_pidb = $entityManager->getRepository('\App\Entity\AccountingDocument')->getLastAccountingDocument();
   ?>
   <div class="card border-info mb-4">
 
@@ -87,7 +87,7 @@ if ($page == "pidb"):
           </tfoot>
           <tbody>
             <?php
-            $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 1, $term, 0 ));
+            $proformas = $entityManager->getRepository('\App\Entity\AccountingDocument')->search( array( 1, $term, 0 ));
             foreach ($proformas as $proforma):
               ?>
               <tr>
@@ -130,7 +130,7 @@ if ($page == "pidb"):
           <tbody>
             <?php      
             // Archived proforma.
-            $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 1, $term, 1 ));
+            $proformas = $entityManager->getRepository('\App\Entity\AccountingDocument')->search( array( 1, $term, 1 ));
             foreach ($proformas as $proforma):
               ?>
               <tr class="table-secondary">
@@ -183,7 +183,7 @@ if ($page == "pidb"):
                   </tfoot>
                   <tbody>
                     <?php
-                    $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 2, $term, 0 ));
+                    $proformas = $entityManager->getRepository('\App\Entity\AccountingDocument')->search( array( 2, $term, 0 ));
                     foreach ($proformas as $proforma):
                       ?>
                       <tr>
@@ -225,7 +225,7 @@ if ($page == "pidb"):
                   </tfoot>
                   <?php
                   // Archived dispatch.
-                  $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 2, $term, 1 ));
+                  $proformas = $entityManager->getRepository('\App\Entity\AccountingDocument')->search( array( 2, $term, 1 ));
                   foreach ($proformas as $proforma):
                     ?>
                     <tr class="table-secondary">
@@ -278,7 +278,7 @@ if ($page == "pidb"):
                   </tfoot>
                   <tbody>
                     <?php
-                    $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 4, $term, 0 ));
+                    $proformas = $entityManager->getRepository('\App\Entity\AccountingDocument')->search( array( 4, $term, 0 ));
                     foreach ($proformas as $proforma):
                       ?>
                       <tr>
@@ -299,7 +299,7 @@ if ($page == "pidb"):
                     endforeach;
                         
                     // Archived.
-                    $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->search( array( 4, $term, 1 ));
+                    $proformas = $entityManager->getRepository('\App\Entity\AccountingDocument')->search( array( 4, $term, 1 ));
                     foreach ($proformas as $proforma):
                       ?>
                       <tr class="table-secondary">
@@ -329,7 +329,7 @@ endif;
 
 if($page == "cutting"):
     $term = filter_input(INPUT_GET, 'search');
-    $cuttings = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->search($term);
+    $cuttings = $entityManager->getRepository('\App\Entity\CuttingSheet')->search($term);
     ?>
     <div class="card mb-4">
         <div class="card-header p-2">
@@ -363,7 +363,7 @@ if($page == "cutting"):
                                 <td><?php echo $cutting->getClient()->getName() ?></td>
                                 <td>
                                     <?php
-                                    $last_cutting_sheet = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getLastCuttingSheet();
+                                    $last_cutting_sheet = $entityManager->getRepository('\App\Entity\CuttingSheet')->getLastCuttingSheet();
                                     echo ( $cutting->getId() == $last_cutting_sheet->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete krojnu listu?\');" href="?delete&cs_id=' .$cutting->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>' : '');
                                     ?>
                                 </td>
@@ -382,8 +382,8 @@ endif;
 
 if ($page == "materials"):
     $term = filter_input(INPUT_GET, 'search');
-    $materials= $entityManager->getRepository('\Roloffice\Entity\Material')->search($term);
-    $preferences = $entityManager->find('\Roloffice\Entity\Preferences', 1);
+    $materials= $entityManager->getRepository('\App\Entity\Material')->search($term);
+    $preferences = $entityManager->find('\App\Entity\Preferences', 1);
     ?>
     <div class="card mb-4">
         <div class="card-header p-2">
@@ -437,7 +437,7 @@ endif;
 
 if ($page == "orders"):
     $term = filter_input(INPUT_GET, 'search');
-    $orders = $entityManager->getRepository('\Roloffice\Entity\Order')->search($term);
+    $orders = $entityManager->getRepository('\App\Entity\Order')->search($term);
     ?>
     <div class="card mb-4">
         <div class="card-header p-2">
@@ -467,7 +467,7 @@ if ($page == "orders"):
                     <tbody>
                     <?php
                     foreach ($orders as $order_data):
-                        $project_data = $entityManager->getRepository('\Roloffice\Entity\Order')->getProject($order_data->getId());
+                        $project_data = $entityManager->getRepository('\App\Entity\Order')->getProject($order_data->getId());
                         if ($order_data->getIsArchived() == 0):
                             ?>
                             <tr>
@@ -517,7 +517,7 @@ if ($page == "orders"):
                                     endif;
                                     ?>
                                     <?php 
-                                    $last_order = $entityManager->getRepository('\Roloffice\Entity\Order')->getLastOrder();
+                                    $last_order = $entityManager->getRepository('\App\Entity\Order')->getLastOrder();
                                     echo ( $order_data == $last_order ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="?name=&search&deleteOrder&order_id=' .$order_data->getId(). '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : '');
                                     ?>
                                 </td>
@@ -553,7 +553,7 @@ if ($page == "orders"):
                     <?php
                     // List archived orders.
                     foreach ($orders as $order_data):
-                        $project_data = $entityManager->getRepository('\Roloffice\Entity\Order')->getProject($order_data->getId());
+                        $project_data = $entityManager->getRepository('\App\Entity\Order')->getProject($order_data->getId());
                         if ($order_data->getIsArchived() == 1):
                             ?>
                             <tr class="table-secondary">
@@ -629,7 +629,7 @@ if($page == "articles"):
             <select class="form-control" name="group_id">
               <option value="0">Izaberi cenovnik</option>
               <?php
-              $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->findAll();
+              $article_groups = $entityManager->getRepository('\App\Entity\ArticleGroup')->findAll();
               foreach ($article_groups as $article_group) {
                   echo '<option value="' .$article_group->getId(). '">' .$article_group->getName(). '</option>';
               }
@@ -669,8 +669,8 @@ if($page == "articles"):
                   </tfoot>
                   <tbody>
                     <?php
-                    $articles = $entityManager->getRepository('\Roloffice\Entity\Article')->search($term);
-                    $preferences = $entityManager->find('\Roloffice\Entity\Preferences', 1);
+                    $articles = $entityManager->getRepository('\App\Entity\Article')->search($term);
+                    $preferences = $entityManager->find('\App\Entity\Preferences', 1);
                     foreach ($articles as $articl):
                       ?>
                       <tr>
@@ -694,7 +694,7 @@ endif;
 
 if($page == "projects"):
     $term = filter_input(INPUT_GET, 'search');
-    $project_list = $entityManager->getRepository('\Roloffice\Entity\Project')->search($term);
+    $project_list = $entityManager->getRepository('\App\Entity\Project')->search($term);
     ?>
     <h3>Rezultati pretrage projekata</h3>
     <div class="card mb-4">
@@ -727,7 +727,7 @@ if($page == "projects"):
                     foreach( $project_list as $project_item):
                         if ($project_item->getStatus()->getId() == 1 || $project_item->getStatus()->getId() == 2):
                             $project_id = $project_item->getId();
-                            $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
+                            $project_tasks = $entityManager->getRepository('\App\Entity\Project')->projectTasks($project_id);
                             ?>
                             <tr>
                                 <td>
@@ -882,7 +882,7 @@ if($page == "projects"):
                     foreach( $project_list as $project_item):
                         if ($project_item->getStatus()->getId() == 2):
                             $project_id = $project_item->getId();
-                            $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
+                            $project_tasks = $entityManager->getRepository('\App\Entity\Project')->projectTasks($project_id);
                             ?>
                             <tr>
                                 <td>
@@ -1018,7 +1018,7 @@ if($page == "projects"):
                     foreach( $project_list as $project_item):
                         if ($project_item->getStatus()->getId() == 3):
                             $project_id = $project_item->getId();
-                            $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
+                            $project_tasks = $entityManager->getRepository('\App\Entity\Project')->projectTasks($project_id);
                             ?>
                             <tr>
                                 <td>

@@ -1,8 +1,8 @@
 <?php
-$company = $entityManager->find('\Roloffice\Entity\CompanyInfo', '1');
-$company_country = $company->getCountry() ? $entityManager->find('\Roloffice\Entity\Country', $company->getCountry()) : null;
-$company_city = $company->getCity() ? $entityManager->find('\Roloffice\Entity\City', $company->getCity()) : null;
-$company_street = $company->getStreet() ? $entityManager->find('\Roloffice\Entity\Street', $company->getStreet()) : null;
+$company = $entityManager->find('\App\Entity\CompanyInfo', '1');
+$company_country = $company->getCountry() ? $entityManager->find('\App\Entity\Country', $company->getCountry()) : null;
+$company_city = $company->getCity() ? $entityManager->find('\App\Entity\City', $company->getCity()) : null;
+$company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Street', $company->getStreet()) : null;
 ?>
 <!-- View Company Data -->
 <div class="card mb-4">

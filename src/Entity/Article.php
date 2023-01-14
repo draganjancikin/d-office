@@ -1,11 +1,11 @@
 <?php
 
-namespace Roloffice\Entity;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity (repositoryClass="Roloffice\Repository\ArticleRepository")
+ * @ORM\Entity (repositoryClass="App\Repository\ArticleRepository")
  * @ORM\Table(name="v6__articles")
  */
 class Article {

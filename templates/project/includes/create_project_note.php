@@ -6,15 +6,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['addNote']) ) {
   
   // Curent loged user.
   $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+  $user = $entityManager->find("\App\Entity\User", $user_id);
 
   $project_id = $_GET["project_id"];
-  $project = $entityManager->find("\Roloffice\Entity\Project", $project_id);
+  $project = $entityManager->find("\App\Entity\Project", $project_id);
   
   $note = htmlspecialchars($_POST['note']);
   
   // Save a new Task note.
-  $newProjectNote = new \Roloffice\Entity\ProjectNote();
+  $newProjectNote = new \App\Entity\ProjectNote();
   
   $newProjectNote->setNote($note);
   

@@ -11,7 +11,7 @@
                 <div class="col-sm-3">
                     <select id="selectGroup" name="group_id" class="form-control">
                         <?php
-                        if ($article_data->getGroup() && $article_group = $entityManager->find("\Roloffice\Entity\ArticleGroup", $article_data->getGroup()->getId()) ) :
+                        if ($article_data->getGroup() && $article_group = $entityManager->find("\App\Entity\ArticleGroup", $article_data->getGroup()->getId()) ) :
                             ?>
                             <option value="<?php echo $article_group->getId() ?>"><?php echo $article_group->getName() ?></option>
                             <?php
@@ -20,7 +20,7 @@
                             <option >Izaberite grupu</option>
                             <?php
                         endif;
-                        $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->getArticleGroups();
+                        $article_groups = $entityManager->getRepository('\App\Entity\ArticleGroup')->getArticleGroups();
                         foreach ($article_groups as $article_group) :
                             ?>
                             <option value="<?php echo $article_group->getId() ?>"><?php echo $article_group->getName() ?></option>
@@ -44,7 +44,7 @@
                     <select id="selectUnit" name="unit_id" class="form-control">
                         <option value="<?php echo $article_data->getUnit()->getId() ?>"><?php echo $article_data->getUnit()->getName() ?></option>
                         <?php
-                        $units = $entityManager->getRepository('\Roloffice\Entity\Unit')->findBy(array(), array('name' => 'ASC'));
+                        $units = $entityManager->getRepository('\App\Entity\Unit')->findBy(array(), array('name' => 'ASC'));
                         foreach ($units as $unit) :
                             ?>
                             <option value="<?php echo $unit->getId() ?>"><?php echo $unit->getName() ?></option>

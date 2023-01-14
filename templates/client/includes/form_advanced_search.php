@@ -44,7 +44,7 @@ if (isset($_GET["result"]) ) {
   $street = $_POST["street"];
   $city = $_POST["city"];
 
-  $clients_data = $entityManager->getRepository('\Roloffice\Entity\Client')->advancedSearch($term, $street, $city);
+  $clients_data = $entityManager->getRepository('\App\Entity\Client')->advancedSearch($term, $street, $city);
   ?>
   
   <div class="card mb-4">
@@ -77,9 +77,9 @@ if (isset($_GET["result"]) ) {
             $count = 0;
             foreach ($clients_data as $client_data){
               $count++;
-              $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
-              $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
-              $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
+              $client_street = $entityManager->find('\App\Entity\Street', $client_data->getStreet());
+              $client_city = $entityManager->find('\App\Entity\City', $client_data->getCity());
+              $client_country = $entityManager->find('\App\Entity\Country', $client_data->getCountry());
               ?>
               <tr>
                 <td><?php echo $count ?></td>  

@@ -22,11 +22,11 @@ require 'export__to__accounting_document.php';
                 } else {
                     $id = htmlspecialchars($_POST['id']);
                 }
-                if (!$cutting_data = $entityManager->find('\Roloffice\Entity\CuttingSheet', $id)) {
+                if (!$cutting_data = $entityManager->find('\App\Entity\CuttingSheet', $id)) {
                     die('<script>location.href = "/cutting/"</script>');
                 }
-                $client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($cutting_data->getClient()->getId());
-                $fence_models = $entityManager->getRepository('\Roloffice\Entity\FenceModel')->findBy(array(), array('name' => 'ASC'));
+                $client = $entityManager->getRepository('\App\Entity\Client')->getClientData($cutting_data->getClient()->getId());
+                $fence_models = $entityManager->getRepository('\App\Entity\FenceModel')->findBy(array(), array('name' => 'ASC'));
 
                 // In view case show edit button.
                 if(isset($_GET['view'])):

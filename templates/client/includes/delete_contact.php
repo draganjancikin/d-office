@@ -3,10 +3,10 @@
 if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["deleteContact"])) {
   
   $client_id = htmlspecialchars($_GET["client_id"]);
-  $client = $entityManager->find("\Roloffice\Entity\Client", $client_id);
+  $client = $entityManager->find("\App\Entity\Client", $client_id);
 
   $contact_id = htmlspecialchars($_GET["contact_id"]);
-  $contact = $entityManager->find("\Roloffice\Entity\Contact", $contact_id);
+  $contact = $entityManager->find("\App\Entity\Contact", $contact_id);
 
   // Remove $contact from table v6_client_contacts.
   $client->getContacts()->removeElement($contact);

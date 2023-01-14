@@ -4,10 +4,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateOrder"]) ) {
   
   // curent loged user
   $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+  $user = $entityManager->find("\App\Entity\User", $user_id);
 
   $order_id = htmlspecialchars($_GET["order_id"]);
-  $order = $entityManager->find("\Roloffice\Entity\Order", $order_id);
+  $order = $entityManager->find("\App\Entity\Order", $order_id);
 
   $title = htmlspecialchars($_POST["title"]);
   $status = htmlspecialchars($_POST["status"]);
@@ -32,8 +32,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateOrder"]) ) {
     $old_project_id = $_POST["old_project_id"];
     $new_project_id = htmlspecialchars($_POST["project_id"]);
     
-    $new_project = $entityManager->find("\Roloffice\Entity\Project", $new_project_id);
-    $old_project = $entityManager->find("\Roloffice\Entity\Project", $old_project_id);
+    $new_project = $entityManager->find("\App\Entity\Project", $new_project_id);
+    $old_project = $entityManager->find("\App\Entity\Project", $old_project_id);
     
     if ( $old_project_id != $new_project_id) {
 

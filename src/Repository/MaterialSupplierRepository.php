@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -13,7 +13,7 @@ class MaterialSupplierRepository extends EntityRepository {
   public function getMaterialSuppliers($material) {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('ms')
-        ->from('Roloffice\Entity\MaterialSupplier', 'ms')
+        ->from('App\Entity\MaterialSupplier', 'ms')
         ->join('ms.supplier', 'c', 'WITH', 'ms.supplier = c.id')
         ->where(
           $qb->expr()->eq('ms.material', $material)

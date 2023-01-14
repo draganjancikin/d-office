@@ -37,7 +37,7 @@
                             <?php echo $material->getUnit()->getName(); ?>
                         </option>
                         <?php
-                        $units = $entityManager->getRepository('\Roloffice\Entity\Unit')->FindAll();
+                        $units = $entityManager->getRepository('\App\Entity\Unit')->FindAll();
                         foreach ($units as $unit) {
                             echo '<option value="' .$unit->getId(). '">' .$unit->getName(). '</option>';
                         }

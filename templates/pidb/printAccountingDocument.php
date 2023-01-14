@@ -11,7 +11,7 @@ require_once __DIR__.'/../../config/tcpdf_include.php';
 // Create new PDF document.
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-$company_info = $entityManager->getRepository('\Roloffice\Entity\CompanyInfo')->getCompanyInfoData(1);
+$company_info = $entityManager->getRepository('\App\Entity\CompanyInfo')->getCompanyInfoData(1);
 
 // Set document information.
 $pdf->SetCreator(PDF_CREATOR);
@@ -51,8 +51,8 @@ $pdf->SetFont('dejavusans', '', 10);
 $pdf->AddPage();
 
 $accounting_document__id = $_GET['accounting_document__id'];
-$accounting_document__data = $entityManager->find("\Roloffice\Entity\AccountingDocument", $accounting_document__id);
-$client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($accounting_document__data->getClient()->getId());
+$accounting_document__data = $entityManager->find("\App\Entity\AccountingDocument", $accounting_document__id);
+$client = $entityManager->getRepository('\App\Entity\Client')->getClientData($accounting_document__data->getClient()->getId());
 
 switch ($accounting_document__data->getType()->getId()) {
     case 1:
@@ -69,7 +69,7 @@ switch ($accounting_document__data->getType()->getId()) {
         break;
 }
 
-$client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($accounting_document__data->getClient()->getId());
+$client = $entityManager->getRepository('\App\Entity\Client')->getClientData($accounting_document__data->getClient()->getId());
 
 $contact_item[0] = "";
 $contact_item[1] = "";
@@ -85,7 +85,7 @@ if (!empty($client_contacts)) {
         $count++;
     endforeach;
 }
-$preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+$preferences = $entityManager->find('App\Entity\Preferences', 1);
 $kurs = $preferences->getKurs();
 
 $html = '
@@ -169,11 +169,11 @@ $total_tax_amount = 0;
 $total = 0;
 $total_eur = 0;
 
-$ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($accounting_document__id);
+$ad_articles = $entityManager->getRepository('\App\Entity\AccountingDocument')->getArticles($accounting_document__id);
 
 foreach ($ad_articles as $ad_article):
 
-    $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')
+    $ad_a_properties = $entityManager->getRepository('\App\Entity\AccountingDocumentArticleProperty')
                                      ->findBy(array('accounting_document_article' => $ad_article->getId()), array());
     $property_temp = '';
     $property_counter = 0;
@@ -186,13 +186,13 @@ foreach ($ad_articles as $ad_article):
     
     $count++;
     
-    $ad_a_quantity = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+    $ad_a_quantity = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
                                     ->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces());
 
-    $tax_base = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+    $tax_base = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
                                 ->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
 
-    $tax_amount = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+    $tax_amount = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
                                 ->getTaxAmount($tax_base, $ad_article->getTax());
 
     $html = '
@@ -228,7 +228,7 @@ foreach ($ad_articles as $ad_article):
                     </td>
                     <td width="80px" align="right">'
                         . number_format(
-                            $sub_total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+                            $sub_total = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
                                                        ->getSubTotal($tax_base, $tax_amount ) * $kurs, 2, ",", "."
                         ) . '
                     </td>'
@@ -245,7 +245,7 @@ foreach ($ad_articles as $ad_article):
 
 endforeach;
 
-$income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($accounting_document__id);
+$income = $entityManager->getRepository('\App\Entity\AccountingDocument')->getIncome($accounting_document__id);
 
 $html = ''.($accounting_document__data->getType()->getId() == 2 ? "" : '
 <style type="text/css">table {	padding: 0px; margin: 0px; }</style>
@@ -282,7 +282,7 @@ $html = ''.($accounting_document__data->getType()->getId() == 2 ? "" : '
         <td colspan="5" style="border-bottom-width: inherit;">Avans</td>
         <td colspan="2" align="right" style="border-bottom-width: inherit;">'
             . number_format(
-                ($avans = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAvans($accounting_document__id)) * $kurs, 2, ",", "."
+                ($avans = $entityManager->getRepository('\App\Entity\AccountingDocument')->getAvans($accounting_document__id)) * $kurs, 2, ",", "."
             ).'
         </td>
         <td></td>

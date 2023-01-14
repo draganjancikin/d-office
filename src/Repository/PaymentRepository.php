@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -38,7 +38,7 @@ class PaymentRepository extends EntityRepository {
     $qb = $this->_em->createQueryBuilder();
     $qb
       ->select('p')
-      ->from('Roloffice\Entity\Payment', 'p')
+      ->from('App\Entity\Payment', 'p')
       ->where(
         $qb->expr()->andX(
           $qb->expr()->between('p.created_at', ':from', ':to'),
@@ -143,7 +143,7 @@ class PaymentRepository extends EntityRepository {
     $qb = $this->_em->createQueryBuilder();
     $qb
       ->select('SUM(p.amount)')
-      ->from('Roloffice\Entity\Payment', 'p')
+      ->from('App\Entity\Payment', 'p')
       ->where(
         $qb->expr()->andX(
           $qb->expr()->between('p.created_at', ':from', ':to'),
@@ -186,7 +186,7 @@ class PaymentRepository extends EntityRepository {
     $qb = $this->_em->createQueryBuilder();
     $qb
       ->select('p')
-      ->from('Roloffice\Entity\Payment', 'p')
+      ->from('App\Entity\Payment', 'p')
       ->where(
         $qb->expr()->andX(
           $qb->expr()->eq('p.type', '5'),

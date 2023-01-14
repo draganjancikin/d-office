@@ -20,7 +20,7 @@
                             <select id="selectContactType" class="form-control" name="contact_type_id" required>
                                 <option value="">izaberi tip kontakta</option>
                                 <?php
-                                $contact_types = $entityManager->getRepository('\Roloffice\Entity\ContactType')->findAll();
+                                $contact_types = $entityManager->getRepository('\App\Entity\ContactType')->findAll();
                                 foreach ($contact_types as $contact_type) :
                                     ?>
                                     <option value="<?php echo  $contact_type->getId() ?>"><?php echo $contact_type->getName() ?></option>

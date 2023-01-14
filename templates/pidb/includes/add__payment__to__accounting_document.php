@@ -3,12 +3,12 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
 
     $current_user_id = $_SESSION['user_id'];
-    $current_user = $entityManager->find("\Roloffice\Entity\User", $current_user_id);
+    $current_user = $entityManager->find("\App\Entity\User", $current_user_id);
 
     $payment_type_id = htmlspecialchars($_POST["type_id"]);
-    $payment_type = $entityManager->find("\Roloffice\Entity\PaymentType", $payment_type_id);
+    $payment_type = $entityManager->find("\App\Entity\PaymentType", $payment_type_id);
 
-    if ($payment_type_id == 5 && $entityManager->getRepository('Roloffice\Entity\Payment')->ifExistFirstCashInput()) {
+    if ($payment_type_id == 5 && $entityManager->getRepository('App\Entity\Payment')->ifExistFirstCashInput()) {
         // TODO Dragan: Create error message
         ?>
         <p>Već ste uneli početno stanje!</p>
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
     $note = htmlspecialchars($_POST["note"]);
 
     // Create a new Payment.
-    $newPayment = new \Roloffice\Entity\Payment();
+    $newPayment = new \App\Entity\Payment();
 
     $newPayment->setType($payment_type);
 
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPayment"]) ) {
 
     if (isset($_POST["pidb_id"])) {
         $accounting_document_id = htmlspecialchars($_POST["pidb_id"]);
-        $accounting_document = $entityManager->find("\Roloffice\Entity\AccountingDocument", $accounting_document_id);
+        $accounting_document = $entityManager->find("\App\Entity\AccountingDocument", $accounting_document_id);
         // Add Payment to AccountingDocument.
         $accounting_document->getPayments()->add($newPayment);
         $entityManager->flush();

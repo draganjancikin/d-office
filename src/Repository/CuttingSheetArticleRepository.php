@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -16,7 +16,7 @@ class CuttingSheetArticleRepository extends EntityRepository {
   public function getPicketsLength($article_id) {
     
     // Get fence_model.
-    $article = $this->_em->find('\Roloffice\Entity\CuttingSheetArticle', $article_id);
+    $article = $this->_em->find('\App\Entity\CuttingSheetArticle', $article_id);
     $fence_model_id = $article->getFenceModel()->getId();
     
     // Get Article (fence field) width, height and middle height.
@@ -151,7 +151,7 @@ class CuttingSheetArticleRepository extends EntityRepository {
   public function getPicketsNumber($article_id) {
     
     // Get CuttingSheetArticle (fence field) by $article_id.
-    $article = $this->_em->find('\Roloffice\Entity\CuttingSheetArticle', $article_id);
+    $article = $this->_em->find('\App\Entity\CuttingSheetArticle', $article_id);
 
     // Picket width.
     $picket_width = $article->getPicketWidth();
@@ -273,7 +273,7 @@ class CuttingSheetArticleRepository extends EntityRepository {
   public function getCuttingSheetArticles($cs) {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('csa')
-      ->from('Roloffice\Entity\CuttingSheetArticle', 'csa')
+      ->from('App\Entity\CuttingSheetArticle', 'csa')
       ->where(
         $qb->expr()->eq('csa.cutting_sheet', $cs)
       );

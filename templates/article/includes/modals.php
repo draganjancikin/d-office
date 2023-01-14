@@ -18,7 +18,7 @@
                 <select id="selectProperty" class="form-control" name="property_id" required>
                 <option value="">izaberi osobinu</option>
                   <?php
-                  $property_list = $entityManager->getRepository('\Roloffice\Entity\Property')->findAll();
+                  $property_list = $entityManager->getRepository('\App\Entity\Property')->findAll();
                   foreach ($property_list as $property_item) :
                     ?>
                     <option value="<?php echo $property_item->getId() ?>"><?php echo $property_item->getName() ?></option>

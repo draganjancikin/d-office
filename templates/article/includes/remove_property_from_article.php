@@ -5,7 +5,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["removePropertyFromArticl
   $article_id = htmlspecialchars($_GET["article_id"]);
   
   $article_property_id = htmlspecialchars($_GET["property_id"]);
-  $article_property = $entityManager->find("\Roloffice\Entity\ArticleProperty", $article_property_id);
+  $article_property = $entityManager->find("\App\Entity\ArticleProperty", $article_property_id);
   
   $entityManager->remove($article_property);
   $entityManager->flush();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -15,7 +15,7 @@ class OrderMaterialRepository extends EntityRepository {
     // Create a QueryBilder instance
     $qb = $this->_em->createQueryBuilder();
     $qb->select('omp')
-      ->from('Roloffice\Entity\OrderMaterialProperty', 'omp')
+      ->from('App\Entity\OrderMaterialProperty', 'omp')
       ->join('omp.property', 'p', 'omp.property = p.id')
       ->where(
         $qb->expr()->eq('omp.order_material', $material_on_order_id),
@@ -97,7 +97,7 @@ class OrderMaterialRepository extends EntityRepository {
   public function getOrderMaterials($order) {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('om')
-      ->from('Roloffice\Entity\OrderMaterial', 'om')
+      ->from('App\Entity\OrderMaterial', 'om')
       ->join('om.material', 'm', 'WITH', 'om.material = m.id')
       ->where(
         $qb->expr()->eq('om.order', $order)

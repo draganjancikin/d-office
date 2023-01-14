@@ -18,7 +18,7 @@
                     <select id="selectTip" class="form-control" name="type_id" >
                         <option value="<?php echo $client['type_id'] ?>"><?php echo $client['type'] ?></option>
                         <?php
-                        $types = $entityManager->getRepository('\Roloffice\Entity\ClientType')->findAll();
+                        $types = $entityManager->getRepository('\App\Entity\ClientType')->findAll();
                         foreach ($types as $type) :
                             ?>
                             <option value="<?php echo $type->getId() ?>">
@@ -79,7 +79,7 @@
                             <option value="<?php echo $client['country_id'] ?>"><?php echo $client['country'] ?></option>
                             <?php
                         }
-                        $countries = $entityManager->getRepository('\Roloffice\Entity\Country')->findBy(array(), array('name' => 'ASC'));
+                        $countries = $entityManager->getRepository('\App\Entity\Country')->findBy(array(), array('name' => 'ASC'));
                         foreach ($countries as $country) :
                             ?>
                             <option value="<?php echo $country->getId() ?>">
@@ -106,7 +106,7 @@
                             <option value="<?php echo $client['city_id'] ?>"><?php echo $client['city'] ?></option>
                             <?php
                         }
-                        $citys = $entityManager->getRepository('\Roloffice\Entity\City')->findBy(array(), array('name' => 'ASC'));
+                        $citys = $entityManager->getRepository('\App\Entity\City')->findBy(array(), array('name' => 'ASC'));
                         foreach ($citys as $city) :
                             ?>
                             <option value="<?php echo $city->getId() ?>">
@@ -133,7 +133,7 @@
                             <option value="<?php echo $client['street_id'] ?>"><?php echo $client['street'] ?></option>
                             <?php
                         }
-                        $streets = $entityManager->getRepository('\Roloffice\Entity\Street')->findBy(array(), array('name' => 'ASC'));
+                        $streets = $entityManager->getRepository('\App\Entity\Street')->findBy(array(), array('name' => 'ASC'));
                         foreach ($streets as $street) :
                             ?>
                             <option value="<?php echo $street->getId() ?>">
@@ -178,7 +178,7 @@
         <p class="h5">Kontakti</p>
         <?php
         foreach ($client['contacts'] as $contact):
-            $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')
+            $client_contact_data = $entityManager->getRepository('\App\Entity\Contact')
                                                     ->findOneBy( array('id' =>$contact->getId()) );
             $client_contact_type = $client_contact_data->getType();
             ?>
@@ -190,7 +190,7 @@
                         <select class="form-control" name="contact_type_id">>
                             <option value="<?php echo $client_contact_type->getId() ?>"><?php echo $client_contact_type->getName() ?></option>
                             <?php
-                            $contact_types = $entityManager->getRepository('\Roloffice\Entity\ContactType')->findAll();
+                            $contact_types = $entityManager->getRepository('\App\Entity\ContactType')->findAll();
                             foreach ($contact_types as $contact_type):
                                 ?>
                                 <option value="<?php echo $contact_type->getId() ?>"><?php echo $contact_type->getName() ?></option>

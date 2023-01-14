@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -19,7 +19,7 @@ class AccountingDocumentArticleRepository extends EntityRepository {
    */
   public function getQuantity($ad_article_id, $min_calc_measure, $pieces) {
     
-    $properties = $this->_em->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article_id), array());
+    $properties = $this->_em->getRepository('\App\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article_id), array());
     
     $temp_quantity = 1;
     
@@ -77,11 +77,11 @@ class AccountingDocumentArticleRepository extends EntityRepository {
    * @param integer $accounting_document___article__id
    */
   public function duplicateArticleInAccountingDocument($accounting_document___article__id){
-    $accounting_document__article = $this->_em->find("\Roloffice\Entity\AccountingDocumentArticle", $accounting_document___article__id);
+    $accounting_document__article = $this->_em->find("\App\Entity\AccountingDocumentArticle", $accounting_document___article__id);
 
-    $article = $this->_em->find("\Roloffice\Entity\Article", $accounting_document__article->getArticle()->getId());
+    $article = $this->_em->find("\App\Entity\Article", $accounting_document__article->getArticle()->getId());
         
-    $newAccountingDocumentArticle = new \Roloffice\Entity\AccountingDocumentArticle();
+    $newAccountingDocumentArticle = new \App\Entity\AccountingDocumentArticle();
 
     $newAccountingDocumentArticle->setAccountingDocument($accounting_document__article->getAccountingDocument());
     $newAccountingDocumentArticle->setArticle($accounting_document__article->getArticle());
@@ -97,11 +97,11 @@ class AccountingDocumentArticleRepository extends EntityRepository {
 
 
     //insert Article properties in table v6__accounting_documents__articles__properties
-    $article_properties = $this->_em->getRepository('\Roloffice\Entity\ArticleProperty')->getArticleProperties($article->getId());
+    $article_properties = $this->_em->getRepository('\App\Entity\ArticleProperty')->getArticleProperties($article->getId());
     
     foreach ($article_properties as $article_property) {
       // insert to table v6__accounting_documents__articles__properties
-      $newAccountingDocumentArticleProperty = new \Roloffice\Entity\AccountingDocumentArticleProperty();
+      $newAccountingDocumentArticleProperty = new \App\Entity\AccountingDocumentArticleProperty();
     
       $newAccountingDocumentArticleProperty->setAccountingDocumentArticle($newAccountingDocumentArticle);
       $newAccountingDocumentArticleProperty->setProperty($article_property->getProperty());

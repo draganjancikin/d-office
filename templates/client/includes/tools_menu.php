@@ -28,11 +28,11 @@ require 'delete_contact.php';
                 <?php
                 if (isset($_GET['view']) || isset($_GET['edit'])):
                     if (isset($_GET['client_id'])) {
-                        $client_id = $entityManager->getRepository('\Roloffice\Entity\Client')->checkGetClient($_GET['client_id']);
+                        $client_id = $entityManager->getRepository('\App\Entity\Client')->checkGetClient($_GET['client_id']);
                     } else {
                         die('<script>location.href = "/clients/" </script>');
                     }
-                    $client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($client_id);
+                    $client = $entityManager->getRepository('\App\Entity\Client')->getClientData($client_id);
                     ?>
                     <div class="btn-group mb-1 mb-sm-0" role="group" aria-label="Second group">
                         <?php

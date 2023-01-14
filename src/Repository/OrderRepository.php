@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\DBAL\Types\ObjectType;
 use Doctrine\ORM\EntityRepository;
@@ -16,7 +16,7 @@ class OrderRepository extends EntityRepository {
     public function getNumberOfOrders() {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('count(o.id)')
-            ->from('Roloffice\Entity\Order','o');
+            ->from('App\Entity\Order','o');
         return $qb->getQuery()->getSingleScalarResult();
     }
 
@@ -28,7 +28,7 @@ class OrderRepository extends EntityRepository {
     public function getLastOrders($limit = 5) {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('o')
-            ->from('Roloffice\Entity\Order', 'o')
+            ->from('App\Entity\Order', 'o')
             ->orderBy('o.id', 'DESC')
             ->setMaxResults( $limit );
         $query = $qb->getQuery();
@@ -46,7 +46,7 @@ class OrderRepository extends EntityRepository {
         // Create a QueryBuilder instance.
         $qb = $this->_em->createQueryBuilder();
         $qb->select('om')
-            ->from('Roloffice\Entity\OrderMaterial', 'om')
+            ->from('App\Entity\OrderMaterial', 'om')
             ->join('om.material', 'm', 'om.material = m.id')
             ->where(
                 $qb->expr()->eq('om.order', $order_id),
@@ -61,7 +61,7 @@ class OrderRepository extends EntityRepository {
      */
     public function getProject($order_id) {
         $query = $this->_em->createQuery('SELECT p, o '
-                                            . 'FROM Roloffice\Entity\Project p '
+                                            . 'FROM App\Entity\Project p '
                                             . 'JOIN p.orders o '
                                             . 'WITH o.id = :order_id');
         $query->setParameter('order_id', $order_id);
@@ -105,7 +105,7 @@ class OrderRepository extends EntityRepository {
         }
 
         // Update ordinal_number_in_year.
-        $order = $this->_em->find('\Roloffice\Entity\Order', $order_id);
+        $order = $this->_em->find('\App\Entity\Order', $order_id);
         if ($order === null) {
             echo "Order with ID $order_id does not exist.\n";
             exit(1);
@@ -124,7 +124,7 @@ class OrderRepository extends EntityRepository {
     public function getLastOrder() {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('o')
-            ->from('Roloffice\Entity\Order', 'o')
+            ->from('App\Entity\Order', 'o')
             ->orderBy('o.id', 'DESC')
             ->setMaxResults(1);
         $query = $qb->getQuery();
@@ -139,7 +139,7 @@ class OrderRepository extends EntityRepository {
     public function getOrderBeforeLast() {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('o')
-            ->from('Roloffice\Entity\Order', 'o')
+            ->from('App\Entity\Order', 'o')
             ->orderBy('o.id', 'DESC')
             ->setMaxResults(2);
         $query = $qb->getQuery();
@@ -158,7 +158,7 @@ class OrderRepository extends EntityRepository {
         // Create a QueryBuilder instance.
         $qb = $this->_em->createQueryBuilder();
         $qb->select('o')
-            ->from('Roloffice\Entity\Order', 'o')
+            ->from('App\Entity\Order', 'o')
             ->join('o.supplier', 'supl', 'WITH', 'o.supplier = supl.id')
             ->where(
                 $qb->expr()->like('supl.name', $qb->expr()->literal("%$term%")),
@@ -177,7 +177,7 @@ class OrderRepository extends EntityRepository {
         // Create a QueryBuilder instance.
         $qb = $this->_em->createQueryBuilder();
         $qb->select('om')
-            ->from('Roloffice\Entity\OrderMaterial', 'om')
+            ->from('App\Entity\OrderMaterial', 'om')
             ->orderBy('om.id', 'ASC');
         $query = $qb->getQuery();
         return $query->getResult();

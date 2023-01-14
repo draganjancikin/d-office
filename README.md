@@ -1,4 +1,4 @@
-# d-Office 6.5.1
+# d-Office 7.0.0
 
 Web Application
 
@@ -13,6 +13,10 @@ Required:
 * symfony/http-foundation:^5.4
 * doctrine/annotations:^1.14
 * symfony/cache:^5.4
+* symfony/routing:^5.4
+* symfony/http-kernel:^5.4
+* symfony/flex:^1.19
+* symfony/apache-pack:^1.0
 
 ## Settings
 

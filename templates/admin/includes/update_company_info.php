@@ -7,17 +7,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateCompanyInfo"])) 
     $mb = $_POST["mb"] ?? "";
 
     $country_id = $_POST["country_id"] ?? null;
-    $country = $entityManager->find("\Roloffice\Entity\Country", $country_id);
+    $country = $entityManager->find("\App\Entity\Country", $country_id);
     $city_id = $_POST["city_id"] ?? null;
-    $city = $entityManager->find("\Roloffice\Entity\City", $city_id);
+    $city = $entityManager->find("\App\Entity\City", $city_id);
     $street_id = $_POST["street_id"] ?? null;
-    $street = $entityManager->find("\Roloffice\Entity\Street", $street_id);
+    $street = $entityManager->find("\App\Entity\Street", $street_id);
 
     $home_number = $_POST["home_number"] ?? "";
     $bank_account_1 = $_POST["bank_account_1"] ?? "";
     $bank_account_2 = $_POST["bank_account_2"] ?? "";
 
-    $company_info = $entityManager->find('\Roloffice\Entity\CompanyInfo', 1);
+    $company_info = $entityManager->find('\App\Entity\CompanyInfo', 1);
 
     $company_info->setName($name);
     $company_info->setPib($pib);
