@@ -11,7 +11,7 @@ require 'duplicate__material.php';
   <div class="card mb-2">
     <div class="card-body py-1 px-2">
 
-      <a href="/orders/index.php?new" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove narudžbenice!">
+      <a href="/orders/?new" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove narudžbenice!">
         <i class="fas fa-plus"> </i> <i class="fas fa-th"> </i>
       </a>
 
@@ -46,7 +46,7 @@ require 'duplicate__material.php';
           <i class="fa fa-plus"> </i> Materijal
         </button>
 
-        <a href="printOrder.php?order_id=<?php echo $order_id ?>" title="PDF [new window]" target="_blank" class="btn btn-sm btn-outline-secondary mr-1">
+        <a href="printOrder?order_id=<?php echo $order_id ?>" title="PDF [new window]" target="_blank" class="btn btn-sm btn-outline-secondary mr-1">
           <i class="fa fa-print"> </i>
         </a>
 

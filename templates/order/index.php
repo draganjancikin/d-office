@@ -1,8 +1,16 @@
+<?php
+$page = "orders";
+require_once __DIR__.'/../../config/bootstrap.php';
+session_start();
+if(isset($_SESSION['username'])):
+    $username = $_SESSION['username'];
+    $user_role_id = $_SESSION['user_role_id'];
+    ?>
 <!DOCTYPE html>
 <html lang="sr">
 <head>
   <title>Nabavka</title>
-  <?php include '../../templates/includes/pageHead.php'; ?>
+  <?php include __DIR__.'/../includes/pageHead.php'; ?>
 </head>
 <body id="page-top">
 
@@ -10,7 +18,7 @@
   <div id="wrapper">
     
     <!-- Sidebar -->
-    <?php include '../../templates/includes/leftSidebarMeni.php'; ?>
+    <?php include __DIR__.'/../includes/leftSidebarMeni.php'; ?>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -20,7 +28,7 @@
       <div id="content">
 
         <!-- Topbar -->
-        <?php include '../../templates/includes/topBar.php'; ?>
+        <?php include __DIR__.'/../includes/topBar.php'; ?>
         <!-- End of Topbar -->
 
         <!-- Begin Page Content -->
@@ -35,25 +43,25 @@
           <div class="row">
 
             <!-- Tools Meni -->
-            <?php include '../../templates/order/includes/tools__menu.php'; ?>
+            <?php include __DIR__.'/../order/includes/tools__menu.php'; ?>
             <!-- End of Tools Meni -->
 
             <div class="col-lg-12 px-2">
               <?php 
                 if (empty($_GET)): // ako je $_GET prazan
-                  include '../../templates/order/includes/list__last.php';
+                  include __DIR__.'/../order/includes/list__last.php';
                 else:
-                  if(isset($_GET['view'])) include '../../templates/order/includes/form__view.php';
-                  if(isset($_GET['edit'])) include '../../templates/order/includes/form__edit.php';
-                  if(isset($_GET['new'])) include '../../templates/order/includes/form__new.php';
+                  if(isset($_GET['view'])) include __DIR__.'/../order/includes/form__view.php';
+                  if(isset($_GET['edit'])) include __DIR__.'/../order/includes/form__edit.php';
+                  if(isset($_GET['new'])) include __DIR__.'/../order/includes/form__new.php';
                   
-                  if(isset($_GET['search'])) include '../../templates/includes/search.php';
+                  if(isset($_GET['search'])) include __DIR__.'/../includes/search.php';
                 endif;
               ?>
             </div>
 
             <!-- Modals -->
-            <?php include '../../templates/order/includes/modals.php'; ?>
+            <?php include __DIR__.'/../order/includes/modals.php'; ?>
             <!-- End of Modals -->
 
           </div>
@@ -66,7 +74,7 @@
       <!-- End of Main Content -->
       
       <!-- Footer -->
-      <?php include '../../templates/includes/mainFooter.php'; ?>
+      <?php include __DIR__.'/../includes/mainFooter.php'; ?>
       <!-- End of Footer -->
 
 
@@ -82,6 +90,11 @@
   </a>
 
   <!-- page body footer -->
-  <?php include '../../templates/includes/pageBodyFooter.php'; ?>
+  <?php include __DIR__.'/../includes/pageBodyFooter.php'; ?>
 </body>
 </html>
+<?php
+else:
+    header('Location: /');
+endif;
+?>

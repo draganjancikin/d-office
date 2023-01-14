@@ -69,7 +69,7 @@
                     foreach ($materials_on_order as $material_on_order):
                         $count++;
                         ?>
-                        <form action="<?php echo $_SERVER['PHP_SELF']. '?editMaterialInOrder&order_id='.$order_id.'&orderm_material_id=' .$material_on_order->getId() ?>" method="POST">
+                        <form action="<?php echo '?editMaterialInOrder&order_id='.$order_id.'&orderm_material_id=' .$material_on_order->getId() ?>" method="POST">
                             <input type="hidden" name="material_id" value="<?php echo $material_on_order->getMaterial()->getId() ?>" />
 
                             <tr>
@@ -124,10 +124,10 @@
                                     <button type="submit" class="btn btn-mini btn-outline-success px-1">
                                         <i class="fas fa-save" title="Snimi izmenu"> </i>
                                     </button>
-                                    <a href="<?php echo $_SERVER['PHP_SELF']. '?duplicateMaterialInOrder&order_id='.$order_id.'&order_material_id=' .$material_on_order->getId() ?>" class="btn btn-mini btn-outline-info px-1">
+                                    <a href="<?php echo '?duplicateMaterialInOrder&order_id='.$order_id.'&order_material_id=' .$material_on_order->getId() ?>" class="btn btn-mini btn-outline-info px-1">
                                         <i class="fas fa-plus" title="Dupliciraj materijal"> </i>
                                     </a>
-                                    <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete materijal?');"  href="<?php echo $_SERVER['PHP_SELF']. '?removeMaterialFromOrder&order_id='.$order_id.'&order_material_id=' .$material_on_order->getId() ?>" class="btn btn-mini btn-outline-danger px-1">
+                                    <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete materijal?');"  href="<?php echo '?removeMaterialFromOrder&order_id='.$order_id.'&order_material_id=' .$material_on_order->getId() ?>" class="btn btn-mini btn-outline-danger px-1">
                                         <i class="fas fa-trash-alt"> </i>
                                     </a>
                                 </td>
@@ -165,7 +165,7 @@
                 </tbody>
             </table>
 
-            <form action="<?php echo $_SERVER['PHP_SELF']. '?updateOrder&order_id='.$order_id; ?>" method="post">
+            <form action="<?php echo '?updateOrder&order_id='.$order_id; ?>" method="post">
                 <input type="hidden" name="order_id" value="<?php echo $order_id; ?>" />
                 <table class="table">
                     <tbody>

@@ -262,9 +262,7 @@
                         <tr class="table-secondary">
                             <td>Napomena:</td>
                             <td colspan="2">
-                                <textarea class="form-control" rows="3" name="note" disabled>
-                                    <?php echo $order_data->getNote() ?>
-                                </textarea>
+                                <textarea class="form-control" rows="3" name="note" disabled><?php echo $order_data->getNote() ?></textarea>
                             </td>
                         </tr>
 
