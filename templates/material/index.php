@@ -1,86 +1,95 @@
-<!DOCTYPE html>
-<html lang="sr">
-<head>
-  <title>Materijali</title>
-  <?php include '../../templates/includes/pageHead.php'; ?>
-</head>
-<body id="page-top">
+<?php
+$page = "materials";
+require_once __DIR__.'/../../config/bootstrap.php';
+session_start();
+if(isset($_SESSION['username'])):
+    $username = $_SESSION['username'];
+    $user_role_id = $_SESSION['user_role_id'];
+    ?>
+    <!DOCTYPE html>
+    <html lang="sr">
+    <head>
+        <title>Materijali</title>
+        <?php include __DIR__.'/../includes/pageHead.php'; ?>
+    </head>
+    <body id="page-top">
 
-  <!-- Page Wrapper -->
-  <div id="wrapper">
-    
-    <!-- Sidebar -->
-    <?php include '../../templates/includes/leftSidebarMeni.php'; ?>
-    <!-- End of Sidebar -->
+        <!-- Page Wrapper -->
+        <div id="wrapper">
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Sidebar -->
+            <?php include __DIR__.'/../includes/leftSidebarMeni.php'; ?>
+            <!-- End of Sidebar -->
 
-      <!-- Main Content -->
-      <div id="content">
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Topbar -->
-        <?php include '../../templates/includes/topBar.php'; ?>
-        <!-- End of Topbar -->
+                <!-- Main Content -->
+                <div id="content">
 
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
+                    <!-- Topbar -->
+                    <?php include __DIR__.'/../includes/topBar.php'; ?>
+                    <!-- End of Topbar -->
 
-          <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-2">
-            <h1 class="h3 mb-0 text-gray-800">Materijali</h1>
-          </div>
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
 
-          <!-- Content Row -->
-          <div class="row">
+                        <!-- Page Heading -->
+                        <div class="d-sm-flex align-items-center justify-content-between mb-2">
+                            <h1 class="h3 mb-0 text-gray-800">Materijali</h1>
+                        </div>
 
-            <!-- Tools Meni -->
-            <?php include '../../templates/material/includes/tools_menu.php'; ?>
-            <!-- End of Tools Meni -->
+                        <!-- Content Row -->
+                        <div class="row">
 
-            <div class="col-lg-12 px-2">
-              <?php 
-                if (empty($_GET)): // ako je $_GET prazan
-                  include '../../templates/material/includes/list_last.php';
-                else:
-                  if(isset($_GET['view'])) include '../../templates/material/includes/form_view.php';
-                  if(isset($_GET['edit'])) include '../../templates/material/includes/form_edit.php';
-                  if(isset($_GET['new'])) include '../../templates/material/includes/form_new.php';
-                  
-                  if(isset($_GET['search'])) include '../../templates/includes/search.php';
-                endif;
-              ?>
-            </div>
+                            <!-- Tools Meni -->
+                            <?php include __DIR__.'/../material/includes/tools_menu.php'; ?>
+                            <!-- End of Tools Meni -->
 
-            <!-- Modals -->
-            <?php include '../../templates/material/includes/modals.php'; ?>
-            <!-- End of Modals -->
+                            <div class="col-lg-12 px-2">
+                                <?php
+                                if (empty($_GET)): // ako je $_GET prazan
+                                    include __DIR__.'/../material/includes/list_last.php';
+                                else:
+                                    if (isset($_GET['view'])) include __DIR__.'/../material/includes/form_view.php';
+                                    if (isset($_GET['edit'])) include __DIR__.'/../material/includes/form_edit.php';
+                                    if (isset($_GET['new'])) include __DIR__.'/../material/includes/form_new.php';
+                                    if (isset($_GET['search'])) include __DIR__.'/../includes/search.php';
+                                endif;
+                                ?>
+                            </div>
 
-          </div>
+                            <!-- Modals -->
+                            <?php include __DIR__.'/../material/includes/modals.php'; ?>
+                            <!-- End of Modals -->
 
-        </div>
-        <!-- /.container-fluid -->
+                        </div>
 
-      </div>
-      <!-- End of Main Content -->
-      
-      <!-- Footer -->
-      <?php include '../../templates/includes/mainFooter.php'; ?>
-      <!-- End of Footer -->
+                    </div>
+                    <!-- /.container-fluid -->
 
+                </div>
+                <!-- End of Main Content -->
 
-    </div>
-    <!-- End of Content Wrapper -->
+                <!-- Footer -->
+                <?php include __DIR__.'/../includes/mainFooter.php'; ?>
+                <!-- End of Footer -->
 
-  </div>
-  <!-- End of Page Wrapper -->
+            </div><!-- End of Content Wrapper -->
 
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
+        </div><!-- End of Page Wrapper -->
 
-  <!-- page body footer -->
-  <?php include '../../templates/includes/pageBodyFooter.php'; ?>
-</body>
-</html>
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+
+        <!-- page body footer -->
+        <?php include __DIR__.'/../includes/pageBodyFooter.php'; ?>
+    </body>
+    </html>
+<?php
+else:
+    header('Location: /');
+endif;
+?>
