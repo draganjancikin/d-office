@@ -1,7 +1,7 @@
 <!-- Form: new Client -->
 <div class="card mb-4">
     <div class="card-header p-2">
-        <h6 class="m-0 text-dark">Upis podataka o novom klijentu:</h6>
+        <p class="card-text m-0">Upis podataka o novom klijentu:</p>
     </div>
     <div class="card-body px-2">
         <form action="<?php echo '?createClient' ?>" method="post">
@@ -11,7 +11,7 @@
                     <select id="selectTip" class="form-control" name="type_id">
                         <?php
                         $types = $entityManager->getRepository('\App\Entity\ClientType')->findAll();
-                        foreach ($types as $type) :
+                        foreach ($types as $type):
                             ?>
                             <option value="<?php echo $type->getId() ?>">
                                 <?php echo $type->getName() ?>
@@ -55,7 +55,7 @@
                         <option>Izaberite drzavu</option>
                         <?php
                         $states = $entityManager->getRepository('\App\Entity\Country')->findBy(array(), array('name' => 'ASC'));
-                        foreach ($states as $state) :
+                        foreach ($states as $state):
                             ?>
                             <option value="<?php echo $state->getId() ?>">
                                 <?php echo $state->getName() ?>
@@ -74,7 +74,7 @@
                         <option>Izaberite naselje</option>
                         <?php
                         $citys = $entityManager->getRepository('\App\Entity\City')->findBy(array(), array('name' => 'ASC'));
-                        foreach ($citys as $city) :
+                        foreach ($citys as $city):
                             ?>
                             <option value="<?php echo $city->getId() ?>">
                                 <?php echo $city->getName() ?>
@@ -93,7 +93,7 @@
                         <option>Izaberite ulicu</option>
                         <?php
                         $citys = $entityManager->getRepository('\App\Entity\Street')->findBy(array(), array('name' => 'ASC'));
-                        foreach ($citys as $street) :
+                        foreach ($citys as $street):
                             ?>
                             <option value="<?php echo $street->getId() ?>">
                                 <?php echo $street->getName() ?>

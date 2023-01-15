@@ -1,10 +1,8 @@
 <?php
 // Create Client.
 if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createClient"])) {
-  
-    // Current logged User.
-    $user_id = $_SESSION['user_id'];
-    $user = $entityManager->find("\App\Entity\User", $user_id);
+    $current_user_id = $_SESSION['user_id'];
+    $current_user = $entityManager->find("\App\Entity\User", $current_user_id);
 
     $type_id = $_POST["type_id"];
     $type = $entityManager->find("\App\Entity\ClientType", $type_id);
@@ -53,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createClient"])) {
     $newClient->setAddressNote($address_note);
     $newClient->setNote($note);
     $newClient->setCreatedAt(new DateTime("now"));
-    $newClient->setCreatedByUser($user);
+    $newClient->setCreatedByUser($current_user);
     $newClient->setModifiedAt(new DateTime("1970-01-01 00:00:00"));
 
     $entityManager->persist($newClient);

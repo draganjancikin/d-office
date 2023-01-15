@@ -9,7 +9,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="<?php echo '?createContact'; ?>" method="post" role="form">
+            <form action="<?php echo '?createContact' ?>" method="post" role="form">
                 <input type="hidden" name="client_id" value="<?php echo $client_id ?>">
 
                 <div class="modal-body">
@@ -21,7 +21,7 @@
                                 <option value="">izaberi tip kontakta</option>
                                 <?php
                                 $contact_types = $entityManager->getRepository('\App\Entity\ContactType')->findAll();
-                                foreach ($contact_types as $contact_type) :
+                                foreach ($contact_types as $contact_type):
                                     ?>
                                     <option value="<?php echo  $contact_type->getId() ?>"><?php echo $contact_type->getName() ?></option>
                                     <?php

@@ -1,14 +1,12 @@
 <!-- Edit Client Data -->
 <div class="card mb-4">
-      <div class="card-header p-2">
-            <h6 class="m-0 text-dark">
-                Izmena podataka o klijentu: <strong><?php echo $client['name'] ?></strong>
-            </h6>
-      </div>
+    <div class="card-header p-2">
+        <p class="card-text m-0">Izmena podataka o klijentu:</p>
+        <h6 class="card-title m-0 font-weight-bold"><?php echo $client['name'] ?></h6>
+    </div>
 
     <div class="card-body px-2">
-
-        <form action="<?php echo '?updateClient&client_id=' . $client_id; ?>" method="post">
+        <form action="<?php echo '?updateClient&client_id='.$client_id ?>" method="post">
             <input type="hidden" name="client_id" value="<?php echo $client_id ?>">
             <input type="hidden" name="type_id" value="<?php echo $client['type_id'] ?>">
 
@@ -19,7 +17,7 @@
                         <option value="<?php echo $client['type_id'] ?>"><?php echo $client['type'] ?></option>
                         <?php
                         $types = $entityManager->getRepository('\App\Entity\ClientType')->findAll();
-                        foreach ($types as $type) :
+                        foreach ($types as $type):
                             ?>
                             <option value="<?php echo $type->getId() ?>">
                                 <?php echo $type->getName() ?>
@@ -59,7 +57,8 @@
                 <label for="is_supplier" class="col-sm-3 col-form-label text-left text-sm-right">Dobavljač:</label>
                 <div class="col-sm-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier" value="1" <?php echo ($client['is_supplier'] ? 'checked' : '') ?> >
+                        <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier"
+                               value="1" <?php echo ($client['is_supplier'] ? 'checked' : '') ?> >
                         <label class="form-check-label" for="is_supplier">Jeste</label>
                     </div>
                 </div>
@@ -79,8 +78,8 @@
                             <option value="<?php echo $client['country_id'] ?>"><?php echo $client['country'] ?></option>
                             <?php
                         }
-                        $countries = $entityManager->getRepository('\App\Entity\Country')->findBy(array(), array('name' => 'ASC'));
-                        foreach ($countries as $country) :
+                        $countries = $entityManager->getRepository('\App\Entity\Country')->findBy([], ['name' => 'ASC']);
+                        foreach ($countries as $country):
                             ?>
                             <option value="<?php echo $country->getId() ?>">
                                 <?php echo $country->getName() ?>
@@ -106,8 +105,8 @@
                             <option value="<?php echo $client['city_id'] ?>"><?php echo $client['city'] ?></option>
                             <?php
                         }
-                        $citys = $entityManager->getRepository('\App\Entity\City')->findBy(array(), array('name' => 'ASC'));
-                        foreach ($citys as $city) :
+                        $citys = $entityManager->getRepository('\App\Entity\City')->findBy([], ['name' => 'ASC']);
+                        foreach ($citys as $city):
                             ?>
                             <option value="<?php echo $city->getId() ?>">
                                 <?php echo $city->getName() ?>
@@ -133,8 +132,8 @@
                             <option value="<?php echo $client['street_id'] ?>"><?php echo $client['street'] ?></option>
                             <?php
                         }
-                        $streets = $entityManager->getRepository('\App\Entity\Street')->findBy(array(), array('name' => 'ASC'));
-                        foreach ($streets as $street) :
+                        $streets = $entityManager->getRepository('\App\Entity\Street')->findBy([], ['name' => 'ASC']);
+                        foreach ($streets as $street):
                             ?>
                             <option value="<?php echo $street->getId() ?>">
                                 <?php echo $street->getName() ?>
@@ -179,10 +178,10 @@
         <?php
         foreach ($client['contacts'] as $contact):
             $client_contact_data = $entityManager->getRepository('\App\Entity\Contact')
-                                                    ->findOneBy( array('id' =>$contact->getId()) );
+                                                    ->findOneBy(['id' =>$contact->getId()]);
             $client_contact_type = $client_contact_data->getType();
             ?>
-            <form action="<?php echo '?updateContact&client_id=' . $client_id; ?>" method="post">
+            <form action="<?php echo '?updateContact&client_id='.$client_id ?>" method="post">
                 <input type="hidden" name="contact_id" value="<?php echo $contact->getId() ?>">
 
                 <div class="form-row">
@@ -201,11 +200,13 @@
                     </div>
 
                     <div class="form-group col-sm-3">
-                        <input type="text" class="form-control" name="body" value="<?php echo $contact->getBody() ?>" placeholder="Unesi kontakt" >
+                        <input type="text" class="form-control" name="body" value="<?php echo $contact->getBody() ?>"
+                               placeholder="Unesi kontakt" >
                     </div>
 
                     <div class="form-group col-sm-4">
-                        <input type="text" class="form-control" name="note" value="<?php echo $contact->getNote() ?>" placeholder="Unesi belešku" >
+                        <input type="text" class="form-control" name="note" value="<?php echo $contact->getNote() ?>"
+                               placeholder="Unesi belešku" >
                     </div>
 
                     <div class="form-group col-sm-2">
@@ -213,7 +214,7 @@
                             <i class="fas fa-save"> </i>
                         </button>
                         <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete kontakt?');"
-                           href="<?php echo '?deleteContact&client_id=' . $client_id . '&contact_id=' . $contact->getId() ?>"
+                           href="<?php echo '?deleteContact&client_id='.$client_id.'&contact_id='.$contact->getId() ?>"
                            class="btn btn-mini btn-danger "
                            title="Obriši kontakt!">
                             <i class="fas fa-trash"> </i>

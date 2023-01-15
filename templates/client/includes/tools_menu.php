@@ -1,6 +1,6 @@
 <?php
 function basicValidation($str){
-  return trim(htmlspecialchars($str));
+    return trim(htmlspecialchars($str));
 }
 require 'create_client.php';
 require 'create_contact.php';
@@ -80,7 +80,6 @@ require 'delete_contact.php';
                     <?php
                 endif;
                 ?>
-
             </div>
 
         </div>

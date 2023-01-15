@@ -1,10 +1,8 @@
 <?php
 // Create country.
 if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createCountry"])) {
-  
-    // Current logged user.
-    $user_id = $_SESSION['user_id'];
-    $user = $entityManager->find("\App\Entity\User", $user_id);
+    $current_user_id = $_SESSION['user_id'];
+    $current_user = $entityManager->find("\App\Entity\User", $current_user_id);
 
     if (empty($_POST['name'])) {
         $nameError = 'Ime mora biti upisano';
@@ -16,7 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createCountry"])) {
     // Check if name already exist in database.
     $control_country = $entityManager->getRepository('\App\Entity\Country')->findBy( array('name' => $name) );
     if ($control_country) {
-        echo 'Country with name: "<strong>'.$name.'</strong>" already exist in database. Please choose new name!';
+        echo 'Drzava sa nazivom: "<strong>'.$name.'</strong>" vec postoji u bazi podataka. Molimo upisite novo ime!';
+        echo '<a href="/">Povratak na pocetnu stranicu</a>';
         exit(1);
         // die('<script>location.href = "?alert&ob=2" </script>');
     }
@@ -32,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createCountry"])) {
     $newCountry->setName($name);
     $newCountry->setAbbr($abbr);
     $newCountry->setCreatedAt(new DateTime("now"));
-    $newCountry->setCreatedByUser($user);
+    $newCountry->setCreatedByUser($current_user);
     $newCountry->setModifiedAt(new DateTime("0000-01-01 00:00:00"));
 
     $entityManager->persist($newCountry);

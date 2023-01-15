@@ -1,13 +1,11 @@
 <!-- View Client Data -->
 <div class="card mb-4">
     <div class="card-header p-2">
-        <h6 class="m-0 text-dark">
-            Pregled podataka o klijentu: <strong><?php echo $client['name'] ?></strong>
-        </h6>
+        <p class="card-text m-0">Pregled podataka o klijentu:</p>
+        <h6 class="card-title m-0 font-weight-bold"><?php echo $client['name'] ?></h6>
     </div>
 
     <div class="card-body px-2">
-
         <form>
             <fieldset disabled>
 
@@ -37,7 +35,8 @@
                     <div class="form-group row">
                         <label for="disabledInputPIB" class="col-sm-3 col-form-label text-left text-sm-right">PIB: </label>
                         <div class="col-sm-4">
-                            <input class="form-control" id="disabledInputPIB" type="text" value="<?php echo $client['lb'] ?>"  maxlength="9" disabled >
+                            <input class="form-control" id="disabledInputPIB" type="text" value="<?php echo $client['lb'] ?>"
+                                   maxlength="9" disabled >
                         </div>
                     </div>
                     <?php
@@ -48,7 +47,8 @@
                     <label for="is_supplier" class="col-sm-3 col-form-label text-left text-sm-right">Dobavljač:</label>
                     <div class="col-sm-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier" <?php echo ($client['is_supplier'] ? 'checked' : '') ?> >
+                            <input class="form-check-input" type="checkbox" id="is_supplier"
+                                   name="is_supplier" <?php echo ($client['is_supplier'] ? 'checked' : '') ?> >
                             <label class="form-check-label" for="is_supplier">Jeste</label>
                         </div>
                     </div>
@@ -109,12 +109,13 @@
 
             </fieldset>
         </form>
-    </div> <!-- End of Card Body -->
+    </div><!-- End of Card Body -->
+
     <div class="card-footer px-2">
         <p class="h5">Kontakti</p>
         <?php
         foreach ($client['contacts'] as $contact):
-            $client_contact_data = $entityManager->getRepository('\App\Entity\Contact')->findOneBy( array('id' =>$contact->getId()) );
+            $client_contact_data = $entityManager->getRepository('\App\Entity\Contact')->findOneBy(['id' =>$contact->getId()]);
             $client_contact_type = $client_contact_data->getType();
             ?>
             <form>
@@ -128,20 +129,22 @@
                         </div>
 
                         <div class="form-group col-sm-3">
-                            <?php echo $client_contact_type->getId() == 2 ? '<a href="tel: ' . $contact->getBody() . '">' : '' ?>
-                                <input class="form-control" type="text" id="contact" value="<?php echo $contact->getBody() ?>"  placeholder="unesi kontakt" disabled >
+                            <?php echo $client_contact_type->getId() == 2 ? '<a href="tel: '.$contact->getBody().'">' : '' ?>
+                                <input class="form-control" type="text" id="contact" value="<?php echo $contact->getBody() ?>"
+                                       placeholder="unesi kontakt" disabled >
                             <?php echo $client_contact_type->getId() == 2 ? '</a>' : '' ?>
                         </div>
 
                         <div class="form-group col-sm-4">
-                            <input class="form-control" type="text" id="contactNote" value="<?php echo $contact->getNote() ?>" placeholder="unesi belešku" disabled >
+                            <input class="form-control" type="text" id="contactNote" value="<?php echo $contact->getNote() ?>"
+                                   placeholder="unesi belešku" disabled >
                         </div>
 
                         <div class="form-group col-sm-2">
                             <button type="submit" class="btn btn-mini btn-secondary disabled" title="Snimi izmenu kontakta!">
                                 <i class="fas fa-save"> </i>
                             </button>
-                            <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&client_id=' . $client_id . '&contact_id=' . $contact->getId() . '&deleteContact'; ?>"
+                            <a href="<?php echo '?edit&client_id='.$client_id.'&contact_id='.$contact->getId().'&deleteContact' ?>"
                                class="btn btn-mini btn-secondary disabled" title="Obriši kontakt!">
                                 <i class="fas fa-trash"> </i>
                             </a>
