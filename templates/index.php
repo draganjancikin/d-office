@@ -39,7 +39,7 @@ $page = "home";
 
                     <!-- Klijenti Card -->
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <a href="clients" class="card-link">
+                        <a href="clients/" class="card-link">
                             <div class="card border-left-info shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -62,7 +62,7 @@ $page = "home";
 
                     <!-- Dokumenti Card -->
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <a href="pidb" class="card-link">
+                        <a href="pidb/" class="card-link">
                             <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -85,7 +85,7 @@ $page = "home";
 
                     <!-- Krojne liste Card -->
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <a href="cutting" class="card-link">
+                        <a href="cutting/" class="card-link">
                             <div class="card border-left-danger shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -108,7 +108,7 @@ $page = "home";
 
                     <!-- Materijal Card -->
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <a href="materials" class="card-link">
+                        <a href="materials/" class="card-link">
                             <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -131,7 +131,7 @@ $page = "home";
 
                     <!-- Nabavka Card -->
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <a href="orders" class="card-link">
+                        <a href="orders/" class="card-link">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -154,7 +154,7 @@ $page = "home";
 
                     <!-- Proizvodi Card -->
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <a href="articles" class="card-link">
+                        <a href="articles/" class="card-link">
                             <div class="card border-left-warning shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -179,7 +179,7 @@ $page = "home";
                         ?>
                         <!-- Card Admin -->
                         <div class="col-xl-3 col-md-6 mb-4">
-                            <a href="admin" class="card-link">
+                            <a href="admin/" class="card-link">
                                 <div class="card border-left-secondary shadow h-100 py-2">
                                     <div class="card-body">
                                         <div class="row no-gutters align-items-center">
@@ -202,7 +202,7 @@ $page = "home";
 
                     <!-- Card Projects -->
                     <div class="col-xl-3 col-md-6 mb-4">
-                        <a href="projects" class="card-link">
+                        <a href="projects/" class="card-link">
                             <div class="card border-left-warning shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
