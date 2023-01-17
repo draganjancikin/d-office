@@ -4,7 +4,7 @@ $page = "pidb";
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-  <title>Dokumenti</title>
+  <title>Knjigovodstvo</title>
   <?php include __DIR__.'/../includes/pageHead.php'; ?>
 </head>
 <body id="page-top">
