@@ -16,17 +16,13 @@ require 'delete_task_note.php';
   <div class="card mb-2">
     <div class="card-body py-1 px-2">
 
-      <a href="/projects/">
-        <button type="button" class="btn btn-sm btn-outline-secondary" title="Pregled Kanban table">
-          <i class="fas fa-bars"></i> Kanban
-        </button>
+      <a href="/projects/" class="btn btn-sm btn-outline-secondary" title="Pregled Kanban table">
+        <i class="fas fa-bars"></i> Kanban
       </a>
       
-      <a href="/projects/?new">
-        <button type="submit" class="btn btn-sm btn-outline-secondary" title="Otvaranje novog projekta!">
-          <!-- <i class="fas fa-plus"> </i> <i class="fas fa-folder"> </i> -->
-          <i class="fas fa-project-diagram"></i>
-        </button>
+      <a href="/projects/?new" class="btn btn-sm btn-outline-secondary" title="Otvaranje novog projekta!">
+        <!-- <i class="fas fa-plus"> </i> <i class="fas fa-folder"> </i> -->
+        <i class="fas fa-project-diagram"></i>
       </a>
 
       <?php
@@ -39,10 +35,8 @@ require 'delete_task_note.php';
         // in view case show edit button 
         if(isset($_GET['view'])):
           ?>
-          <a href="?edit&project_id=<?php echo $project_id ?>">
-            <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Link ka stranici za izmenu podataka o projektu!">
-              <i class="fas fa-edit"> </i> <!-- Izmena -->
-            </button>
+          <a href="?edit&project_id=<?php echo $project_id ?>" class="btn btn-sm btn-outline-secondary mr-1" title="Link ka stranici za izmenu podataka o projektu!">
+            <i class="fas fa-edit"></i> <!-- Izmena -->
           </a>
           <?php
         endif;
@@ -50,62 +44,49 @@ require 'delete_task_note.php';
         // in edit case show view button
         if(isset($_GET['edit'])):
           ?>
-          <a href="?view&project_id=<?php echo $project_id ?>">
-            <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Link ka stranici za pregled podataka o projektu">
-              <i class="fas fa-eye"> </i> <!-- Pregled -->
-            </button>
+          <a href="?view&project_id=<?php echo $project_id ?>" class="btn btn-sm btn-outline-secondary mr-1" title="Link ka stranici za pregled podataka o projektu">
+            <i class="fas fa-eye"></i> <!-- Pregled -->
           </a>
           <?php
         endif;
         ?>
 
         <!-- Button, okidač za modal addTask -->
-        <a href="#">
-          <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#createTask" title="Dodavanje novog zadatka!">
-            <i class="fas fa-plus"></i> <i class="fa fa-tasks"> </i>
-          </button>
-        </a>
+        <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#createTask" title="Dodavanje novog zadatka!">
+          <i class="fas fa-plus"></i> 
+          <i class="fa fa-tasks"></i>
+        </button>
 
         <!-- Button, okidač za modal addFile -->
-        <a href="#">
-          <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addFile" title="Dodavanje fajla!">
-            <i class="fas fa-plus"></i> <i class="fa fa-file"> </i>
-          </button>
-        </a>
+        <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addFile" title="Dodavanje fajla!">
+          <i class="fas fa-plus"></i> 
+          <i class="fa fa-file"></i>
+        </button>
 
         <!-- Open the proforma-invoice from project -->
-        <a href="/pidb/?new&client_id=<?php echo $project_data->getClient()->getId() ?>&project_id=<?php echo $project_data->getId() ?>">
-          <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog predračuna!">
-            <i class="fas fa-arrow-right"> </i> Predračun
-          </button>
+        <a href="/pidb/?new&client_id=<?php echo $project_data->getClient()->getId() ?>&project_id=<?php echo $project_data->getId() ?>" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog predračuna!">
+          <i class="fas fa-arrow-right"></i> Predračun
         </a>
 
         <!-- Open the material-order from project -->
-        <a href="/orders/?new&project_id=<?php echo $project_data->getId() ?>">
-          <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje nove narudžbenice za materijal!">
-            <i class="fas fa-arrow-right"> </i> Narudžbenica
-          </button>
+        <a href="/orders/?new&project_id=<?php echo $project_data->getId() ?>" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje nove narudžbenice za materijal!">
+          <i class="fas fa-arrow-right"></i> Narudžbenica
         </a>
 
         <!-- Open the cutting from project -->
-        <a href="/cutting/?new&client_id=<?php echo $project_data->getClient()->getId() ?>&project_id=<?php echo $project_data->getId() ?>">
-          <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje nove krojne liste!">
-            <i class="fas fa-arrow-right"> </i> <i class="fa fa-cut"> </i> 
-          </button>
+        <a href="/cutting/?new&client_id=<?php echo $project_data->getClient()->getId() ?>&project_id=<?php echo $project_data->getId() ?>" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje nove krojne liste!">
+          <i class="fas fa-arrow-right"></i> 
+          <i class="fa fa-cut"></i> 
         </a>
 
         <!-- Preview and printing project task -->
-        <a href="printProjectTask?project_id=<?php echo $project_id ?>" title="Izvoz radnog naloga u PDF [new window]" target="_blank">
-          <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
-            <i class="fa fa-print"></i> Radni nalog
-          </button>
+        <a href="printProjectTask?project_id=<?php echo $project_id ?>" class="btn btn-sm btn-outline-secondary mr-1" title="Izvoz radnog naloga u PDF [new window]" target="_blank">
+          <i class="fa fa-print"></i> Radni nalog
         </a>
 
         <!-- Preview and printing Instalation Record (Log) -->
-        <a href="printInstallationRecord?project_id=<?php echo $project_id ?>" title="Štampa zapisnika o ugradnji (montaži)" target="_blank">
-          <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
-            <i class="fa fa-print"></i> Zapisnik o ugradnji
-          </button>
+        <a href="printInstallationRecord?project_id=<?php echo $project_id ?>" class="btn btn-sm btn-outline-secondary mr-1" title="Štampa zapisnika o ugradnji (montaži)" target="_blank">
+          <i class="fa fa-print"></i> Zapisnik o ugradnji
         </a>
       
       <?php

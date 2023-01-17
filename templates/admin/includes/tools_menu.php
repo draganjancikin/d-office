@@ -10,10 +10,8 @@ require 'update_company_info.php';
                 // In view case show edit button.
                 if(isset($_GET['view'])):
                     ?>
-                    <a href="?companyInfo&edit">
-                        <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o klijentu!">
-                            <i class="fas fa-edit"> </i> Izmena
-                        </button>
+                    <a href="?companyInfo&edit" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o klijentu!">
+                      <i class="fas fa-edit"></i> Izmena
                     </a>
                 <?php
                 endif;
@@ -21,10 +19,8 @@ require 'update_company_info.php';
                 // In edit case show view button.
                 if(isset($_GET['edit'])):
                     ?>
-                    <a href="?companyInfo&view">
-                        <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o klijentu">
-                            <i class="fas fa-eye"> </i> Pregled
-                        </button>
+                    <a href="?companyInfo&view" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o klijentu">
+                      <i class="fas fa-eye"></i> Pregled
                     </a>
                 <?php
                 endif;

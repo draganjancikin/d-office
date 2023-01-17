@@ -12,7 +12,8 @@ require 'duplicate__material.php';
     <div class="card-body py-1 px-2">
 
       <a href="/orders/?new" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove narudžbenice!">
-        <i class="fas fa-plus"> </i> <i class="fas fa-th"> </i>
+        <i class="fas fa-plus"></i> 
+        <i class="fas fa-th"></i>
       </a>
 
       <?php
@@ -26,7 +27,7 @@ require 'duplicate__material.php';
         if(isset($_GET['view'])):
           ?>
           <a href="?edit&id=<?php echo $order_id ?>" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu narudžbenice!">
-            <i class="fas fa-edit"> </i>
+            <i class="fas fa-edit"></i>
           </a>
           <?php
         endif;
@@ -35,7 +36,7 @@ require 'duplicate__material.php';
         if(isset($_GET['edit'])):
           ?>
           <a href="?view&id=<?php echo $order_id ?>" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled narudžbenice!">
-            <i class="fas fa-eye"> </i>
+            <i class="fas fa-eye"></i>
           </a>
           <?php
         endif;
@@ -43,11 +44,11 @@ require 'duplicate__material.php';
         
         <!-- Button trigger modal za dodavanje proizvoda u dokument -->
         <button class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#addMaterial" title="Dodaj materijal!">
-          <i class="fa fa-plus"> </i> Materijal
+          <i class="fa fa-plus"></i> Materijal
         </button>
 
-        <a href="printOrder?order_id=<?php echo $order_id ?>" title="PDF [new window]" target="_blank" class="btn btn-sm btn-outline-secondary mr-1">
-          <i class="fa fa-print"> </i>
+        <a href="printOrder?order_id=<?php echo $order_id ?>" title="Štampaj!" target="_blank" class="btn btn-sm btn-outline-secondary mr-1">
+          <i class="fa fa-print"></i>
         </a>
 
         <?php
