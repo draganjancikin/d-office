@@ -106,7 +106,7 @@
                             <?php
                             if ($cutting_sheet_articles):
                                 ?>
-                                <a href="<?php echo $_SERVER['PHP_SELF']. '?exportToAccountingDocument&id=' .$id. '&total_picket_lenght=' .$total_picket_lenght. '&total_kap=' .$total_kap. '&picket_width=' . $cutting_sheet_article->getPicketWidth() ?>">
+                                <a href="<?php echo '?exportToAccountingDocument&id='.$id.'&total_picket_lenght='.$total_picket_lenght.'&total_kap='.$total_kap.'&picket_width='.$cutting_sheet_article->getPicketWidth() ?>">
                                     <button type="submit" class="btn btn-outline-secondary btn-sm">Otvori novi predracun</button>
                                 </a>
                                 <?php

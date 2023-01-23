@@ -77,10 +77,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocum
     $newProformaArticle->setAccountingDocument($newProforma);
     $newProformaArticle->setArticle($article_picket);
     $newProformaArticle->setPieces($pieces);
-    $newProformaArticle->setPrice($article_picket->getPrice());
+    $newProformaArticle->setPrice($article_picket ? $article_picket->getPrice() : 0);
     $newProformaArticle->setDiscount(0);
     $newProformaArticle->setTax($tax);
-    $newProformaArticle->setWeight($article_picket->getWeight());
+    $newProformaArticle->setWeight($article_picket ? $article_picket->getWeight() : 0);
     $newProformaArticle->setNote($note);
     $entityManager->persist($newProformaArticle);
     $entityManager->flush();
@@ -89,7 +89,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocum
     $last__accounting_document__article_id = $newProformaArticle->getId();
 
     // Add article properties to AccountingDocumentArticle.
-    $article_properties = $entityManager->getRepository('\App\Entity\ArticleProperty')->getArticleProperties($article_picket->getId());
+    if ($article_picket) {
+        $article_properties = $entityManager->getRepository('\App\Entity\ArticleProperty')->getArticleProperties($article_picket->getId());
+    } else {
+        $article_properties = [];
+    }
+
     foreach ($article_properties as $article_property) {
         $newProformaArticleProperty = new \App\Entity\AccountingDocumentArticleProperty();
         
@@ -130,14 +135,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocum
     $newProformaArticle->setAccountingDocument($newProforma);
     $newProformaArticle->setArticle($article_cap);
     $newProformaArticle->setPieces($cap_pieces);
-    $newProformaArticle->setPrice($article_cap->getPrice());
+    $newProformaArticle->setPrice($article_cap ? $article_cap->getPrice() : 0);
     $newProformaArticle->setDiscount(0);
     $newProformaArticle->setTax($tax);
-    $newProformaArticle->setWeight($article_cap->getWeight());
+    $newProformaArticle->setWeight($article_cap ? $article_cap->getWeight() : 0);
     $newProformaArticle->setNote($note);
     $entityManager->persist($newProformaArticle);
     $entityManager->flush();
 
-    die('<script>location.href = "/pidb/index.php?edit&pidb_id='.$newProforma_id.'" </script>');
+    die('<script>location.href = "/pidb/?edit&pidb_id='.$newProforma_id.'" </script>');
     
 }

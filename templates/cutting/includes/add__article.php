@@ -1,6 +1,6 @@
 <?php
 // Add Article to CuttingSheet.
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticle"]))  {
+if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticle"]))  {
     $id = htmlspecialchars($_POST['id']);
     $cutting_sheet = $entityManager->find("\App\Entity\CuttingSheet", $id);
 

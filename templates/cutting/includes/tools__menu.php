@@ -33,7 +33,7 @@ require 'export__to__accounting_document.php';
                 if(isset($_GET['view'])):
                     ?>
                     <a href="?edit&id=<?php echo $id ?>" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu krojne liste!">
-                      <i class="fas fa-edit"></i> Izmena
+                        <i class="fas fa-edit"></i> Izmena
                     </a>
                     <?php
                 endif;
@@ -42,7 +42,7 @@ require 'export__to__accounting_document.php';
                 if(isset($_GET['edit'])):
                     ?>
                     <a href="?view&id=<?php echo $id ?> "class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled krojne liste!">
-                      <i class="fas fa-eye"></i> Pregled
+                        <i class="fas fa-eye"></i> Pregled
                     </a>
                     <?php
                 endif;
@@ -50,12 +50,12 @@ require 'export__to__accounting_document.php';
 
                 <!-- Button trigger modal for addFence -->
                 <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addFence" title="Dodaj novo polje!">
-                  <i class="fas fa-plus"></i> Novo polje
+                    <i class="fas fa-plus"></i> Novo polje
                 </button>
 
                 <!-- Button trigger modal for print -->
                 <a href="printCutting?cutting_id=<?php echo $id ?>" class="btn btn-sm btn-outline-secondary" title="Štampaj!" target="_blank">
-                  <i class="fas fa-print"></i>
+                    <i class="fas fa-print"></i>
                 </a>
 
                 <?php

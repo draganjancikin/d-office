@@ -6,6 +6,7 @@ Enhancement:
 * Update FE
 
 Resolved issues and bugfixes:
+* #175: Error on page create Accouonting Document from Cutting Sheeet
 * #187: Broken links on client page
 
 # Upgrade to 6.5.1
