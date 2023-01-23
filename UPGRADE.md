@@ -7,6 +7,7 @@ Enhancement:
 
 Resolved issues and bugfixes:
 * #175: Error on page create Accounting Document from Cutting Sheet
+* #181: Tools menu on Documents page
 * #187: Broken links on client page
 
 # Upgrade to 6.5.1
