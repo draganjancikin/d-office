@@ -3,6 +3,10 @@
 Enhancement:
 * Create front controller index.php
 * Change namespace "RolOffice" to "App"
+* Update FE
+
+Resolved issues and bugfixes:
+* #187: Broken links on client page
 
 # Upgrade to 6.5.1
 
