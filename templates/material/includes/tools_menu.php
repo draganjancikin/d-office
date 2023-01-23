@@ -12,7 +12,8 @@ require 'delete_property.php';
         <div class="card-body py-1 px-2">
 
             <a href="?new" class="btn btn-sm btn-outline-secondary" title="Dodavanje novog materijala!">
-                <i class="fas fa-plus"> <i class="fas fa-inbox"></i> </i>
+              <i class="fas fa-plus"></i>
+              <i class="fas fa-inbox"></i> 
             </a>
             <?php
             if (isset($_GET['view']) || isset($_GET['edit'])):
@@ -30,10 +31,8 @@ require 'delete_property.php';
                 // In view case show edit button.
                 if(isset($_GET['view'])):
                     ?>
-                    <a href="?edit&id=<?php echo $material_id ?>">
-                        <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o materijalu!">
-                            <i class="fas fa-edit"> </i> Izmena
-                        </button>
+                    <a href="?edit&id=<?php echo $material_id ?>" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o materijalu!">
+                      <i class="fas fa-edit"></i> Izmena
                     </a>
                     <?php
                 endif;
@@ -41,22 +40,20 @@ require 'delete_property.php';
                 // in edit case show view button
                 if(isset($_GET['edit'])):
                     ?>
-                    <a href="?view&id=<?php echo $material_id ?>">
-                        <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o materijalu!">
-                            <i class="fas fa-eye"> </i> Pregled
-                        </button>
+                    <a href="?view&id=<?php echo $material_id ?>" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o materijalu!">
+                      <i class="fas fa-eye"></i> Pregled
                     </a>
                     <?php
                 endif;
                 ?>
                 <!-- Button trigger modal za dodavanje dobavljača -->
                 <button class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#addSupplier" title="Dodaj novog dobavljača!">
-                    <i class="fas fa-plus"> </i> Dobavljač
+                  <i class="fas fa-plus"></i> Dobavljač
                 </button>
 
                 <!-- Button trigger modal za dodavanje nove osobine proizvoda -->
                 <button class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#addProperty" title="Dodaj novu osobinu!">
-                    <i class="fa fa-plus"> </i> Osobina
+                  <i class="fa fa-plus"></i> Osobina
                 </button>
 
                 <?php

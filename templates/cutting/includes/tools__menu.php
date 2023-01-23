@@ -12,7 +12,8 @@ require 'export__to__accounting_document.php';
         <div class="card-body py-1 px-2">
 
             <a href="/cutting/?new" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove krojne liste!">
-                <i class="fas fa-plus"> <i class="fas fa-cut"></i> </i>
+              <i class="fas fa-plus"></i> 
+              <i class="fas fa-cut"></i> 
             </a>
             <?php
             if (isset($_GET['view']) || isset($_GET['edit'])):
@@ -31,10 +32,8 @@ require 'export__to__accounting_document.php';
                 // In view case show edit button.
                 if(isset($_GET['view'])):
                     ?>
-                    <a href="?edit&id=<?php echo $id ?>">
-                        <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu krojne liste!">
-                            <i class="fas fa-edit"> </i> Izmena
-                        </button>
+                    <a href="?edit&id=<?php echo $id ?>" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu krojne liste!">
+                      <i class="fas fa-edit"></i> Izmena
                     </a>
                     <?php
                 endif;
@@ -42,27 +41,21 @@ require 'export__to__accounting_document.php';
                 // in edit case show view button
                 if(isset($_GET['edit'])):
                     ?>
-                    <a href="?view&id=<?php echo $id ?>">
-                        <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled krojne liste!">
-                            <i class="fas fa-eye"> </i> Pregled
-                        </button>
+                    <a href="?view&id=<?php echo $id ?> "class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled krojne liste!">
+                      <i class="fas fa-eye"></i> Pregled
                     </a>
                     <?php
                 endif;
                 ?>
 
                 <!-- Button trigger modal for addFence -->
-                <a href="#">
-                    <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addFence" title="Dodaj novo polje!">
-                        <i class="fas fa-plus"> </i> Novo polje
-                    </button>
-                </a>
+                <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addFence" title="Dodaj novo polje!">
+                  <i class="fas fa-plus"></i> Novo polje
+                </button>
 
                 <!-- Button trigger modal for print -->
-                <a href="printCutting?cutting_id=<?php echo $id ?>" title="PDF [new window]" target="_blank">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-print"></i>
-                    </button>
+                <a href="printCutting?cutting_id=<?php echo $id ?>" class="btn btn-sm btn-outline-secondary" title="Štampaj!" target="_blank">
+                  <i class="fas fa-print"></i>
                 </a>
 
                 <?php
