@@ -1,21 +1,23 @@
 <?php
 
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/appConfig.php';
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.php';
+require_once '../../config/appConfig.php';
+require_once '../../vendor/autoload.php';
+require_once '../../config/bootstrap.php';
 
 // Include the main TCPDF library (search for installation path).
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/tcpdf_include.php';
+require_once '../../config/tcpdf_include.php';
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
+$company_info = $entityManager->getRepository('\Roloffice\Entity\CompanyInfo')->getCompanyInfoData(1);
+
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('Rolostil');
-$pdf->SetTitle('ROLOSTIL - Dnevni izveštaj');
-$pdf->SetSubject('Rolostil');
-$pdf->SetKeywords('Rolostil, PDF, dnevni izveštaj');
+$pdf->SetAuthor($company_info['name']);
+$pdf->SetTitle($company_info['name'] . ' - Dnevni izveštaj');
+$pdf->SetSubject($company_info['name']);
+$pdf->SetKeywords($company_info['name'] . ', PDF, dnevni izveštaj');
 
 // remove default header/footer
 $pdf->setPrintHeader(false);
@@ -42,20 +44,12 @@ $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 $pdf->SetFont('dejavusans', '', 10);
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// Print a table
+// Print a table.
 
-// add a page
+// Add a page.
 $pdf->AddPage();
 
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/autoload.php';
-
-// generisanje potrebnih objekata
-// $pidb = new \Roloffice\Controller\PidbController();
-
 $date = $_GET['date'];
-
-// $daily_transactions = $pidb->getDailyCashTransactions($date);
-// $daily_cash_saldo = $pidb->getDailyCashSaldo($date);
 
 $daily_transactions = $entityManager->getRepository('\Roloffice\Entity\Payment')->getDailyCashTransactions($date);
 $daily_cash_saldo = $entityManager->getRepository('\Roloffice\Entity\Payment')->getDailyCashSaldo($date);
@@ -121,7 +115,7 @@ $pdf->lastPage();
 //Close and output PDF document
 // $pdf->Output('narudzbenica.pdf', 'FI');
 
-$pdf->Output( '__TEST__.pdf', 'I');
+$pdf->Output( 'dnevni izvestaj.pdf', 'I');
 
 //============================================================+
 // END OF FILE                                                

@@ -1,22 +1,24 @@
 <?php
 $page = "nabavka";
 
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/appConfig.php';
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../vendor/autoload.php';
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/bootstrap.php';
+require_once '../../config/appConfig.php';
+require_once '../../vendor/autoload.php';
+require_once '../../config/bootstrap.php';
 
 // Include the main TCPDF library (search for installation path).
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') .'/../config/tcpdf_include.php';
+require_once '../../config/tcpdf_include.php';
 
 // Create new PDF document.
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
+$company_info = $entityManager->getRepository('\Roloffice\Entity\CompanyInfo')->getCompanyInfoData(1);
+
 // Set document information.
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('Rolostil');
-$pdf->SetTitle('ROLOSTIL - Narudzbenica');
-$pdf->SetSubject('Rolostil');
-$pdf->SetKeywords('Rolostil, PDF, narudzbenica');
+$pdf->SetAuthor($company_info['name']);
+$pdf->SetTitle($company_info['name'] . ' - Narudzbenica');
+$pdf->SetSubject($company_info['name']);
+$pdf->SetKeywords($company_info['name'] . ', PDF, narudzbenica');
 
 // Remove default header/footer.
 $pdf->setPrintHeader(false);
@@ -51,12 +53,8 @@ $pdf->AddPage();
 $order_id = $_GET['order_id'];
 $order_data = $entityManager->find("\Roloffice\Entity\Order", $order_id);
 
-$supplier_data = $entityManager->find('Roloffice\Entity\Client', $order_data->getSupplier());
-$supplier_country = $entityManager->find('\Roloffice\Entity\Country', $supplier_data->getCountry());
-$supplier_city = $entityManager->find('\Roloffice\Entity\City', $supplier_data->getCity());
-$supplier_street = $entityManager->find('\Roloffice\Entity\Street', $supplier_data->getStreet());
-
-$supplier_contacts = $supplier_data->getContacts();
+$supplier_data = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($order_data->getSupplier());
+$supplier_contacts = $supplier_data['contacts'];
 
 $contact_item[0] = "";
 $contact_item[1] = "";
@@ -70,30 +68,29 @@ foreach ($supplier_contacts as $supplier_contact) {
     }
     $i++;
 }
-$company_info = $entityManager->find('Roloffice\Entity\CompanyInfo', 1);
-$country = $entityManager->find("\Roloffice\Entity\Country", $company_info->getCountry());
-$city = $entityManager->find("\Roloffice\Entity\City", $company_info->getCity());
-$street = $entityManager->find("\Roloffice\Entity\Street", $company_info->getStreet());
 
 $html = '
 <style type="text/css">table { padding-top: 5px; padding-bottom: 5px; }</style>
 
 <table border="0">
     <tr>
-        <td width="685px" colspan="3"><h1>' . $company_info->getName() . '</h1></td>
+        <td width="685px" colspan="3"><h1>' . $company_info['name'] . '</h1></td>
     </tr>
     <tr>
         <td width="340px" colspan="2">'
-            . $street->getName() . ' ' . $company_info->getHomeNumber() . '<br />'
-            . $city->getName() . '<br />
-            PIB: ' . $company_info->getPib() . ', MB: ' . $company_info->getMb() . '<br />'
-            . $company_info->getBankAccount1() . '<br />'
-            . $company_info->getBankAccount2() . '
+            . $company_info['street'] . ' ' . $company_info['home_number'] . '<br />'
+            . $company_info['city'] . ', ' . $company_info['country'] . '<br />
+            PIB: ' . $company_info['pib'] . ', MB: ' . $company_info['mb'] . '<br />'
+            . $company_info['bank_account_1'] . '<br />'
+            . $company_info['bank_account_2'] . '
         </td>
         <td width="350px">Dobavljač:<br />'
-            . $supplier_data->getName() . '<br />'
-            . $supplier_street->getName() . ' ' . $supplier_data->getHomeNumber() . '<br />'
-            . $supplier_city->getName() . ', ' . $supplier_country->getName() . '<br />'
+            . $supplier_data['name'] . '<br />'
+            . ($supplier_data['street'] ?? "") . ' ' . $supplier_data['home_number']
+            . ($supplier_data['street'] && $supplier_data['city'] ? "<br />" : "")
+            . ($supplier_data['city'] ?? "")
+            . ($supplier_data['city'] && $supplier_data['country'] ? "<br />" : "")
+            . ($supplier_data['country'] ?? "") . '<br />'
             . $contact_item[0] . ', ' . $contact_item[1] . '
         </td>
     </tr>
@@ -305,7 +302,7 @@ switch ($order_data->getSupplier()->getId()) {
         $folder = "/WURTH";
         break;
     default:
-        $file_name_prefix = $supplier_data->getName() . ' - ';
+        $file_name_prefix = $supplier_data['name'] . ' - ';
 }
 
 // Check if folder exist on local machine.

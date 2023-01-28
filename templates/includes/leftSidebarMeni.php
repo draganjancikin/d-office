@@ -104,7 +104,7 @@
     </li>
 
     <?php
-    if ($user_role_id==1 OR $user_role_id==2):
+    if ($user_role_id == 1 OR $user_role_id == 2):
         ?>
         <!-- Nav Item - Admin Menu -->
         <li class="nav-item">
@@ -136,6 +136,13 @@
                 <a class="collapse-item" href="/projects/">Projekti</a>
                 <a class="collapse-item" href="/projects/index.php?new"><i class="fas fa-plus"></i> Novi Projekat</a>
                 <a class="collapse-item" href="/projects/index.php?advancedSearch"><i class="fa fa-search"></i> Detajna pretraga</a>
+                <?php
+                if ($user_role_id == 1):
+                    ?>
+                    <a class="collapse-item" href="/projects/index.php?projectTasks"><i class="fa fa-tasks"></i> Projektni zadaci</a>
+                    <?php
+                endif;
+                ?>
             </div>
         </div>
     </li>
