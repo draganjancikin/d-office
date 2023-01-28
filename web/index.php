@@ -36,4 +36,4 @@ try {
 
 $response->send();
 
-// https://symfony.com/doc/5.4/create_framework/routing.html
+// https://symfony.com/doc/5.4/create_framework/templating.html
