@@ -11,7 +11,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleToAccountingD
     $price = $article->getPrice();
     $discount = 0;
     $weight = $article->getWeight();
-    $pieces = htmlspecialchars($_POST["pieces"]);
+    $pieces = $_POST["pieces"];
 
     $preferences = $entityManager->find('App\Entity\Preferences', 1);
     $tax = $preferences->getTax();

@@ -18,7 +18,7 @@
             <label for="article" class="col-sm-3 col-form-label">Proizvod:</label>
             <div class="col-sm-9">
               <div id="first">
-                <select class="form-control" name="article_id" id="article">
+                <select class="form-control" name="article_id" id="article" required>
                   <option value="">izaberi proizvod</option>
                   <?php foreach ($all_articles as $article): ?>
                     <option value="<?php echo $article->getId() ?>"><?php echo $article->getName() ?></option>
@@ -38,7 +38,7 @@
           <div class="form-group row">
             <label for="pieces" class="col-sm-3 col-form-label">Komada</label>
             <div class="col-sm-4">
-              <input type="text" class="form-control" name="pieces" id="pieces" value="" placeholder="Unesite količinu" />
+              <input type="number" class="form-control" name="pieces" id="pieces" placeholder="Unesite količinu" min="1" required/>
             </div>
           </div>
 
