@@ -55,10 +55,10 @@ endif;
                                         <?php echo number_format($transaction->getAmount(), 4, ",", "."); ?>
                                     </td>
                                     <td>
-                                        <?php if ($user_role_id==1 OR $user_role_id==2): ?>
-                                            <a href="" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editTransaction" title="Izmeni transakciju!">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
+                                        <?php if ($user_role_id == 1 OR $user_role_id == 2): ?>
+<!--                                            <a href="" class="btn btn-success btn-sm" data-toggle="modal" data-target="#editTransaction" title="Izmeni transakciju!">-->
+<!--                                                <i class="fas fa-edit"></i>-->
+<!--                                            </a>-->
                                             <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete transakciju?');" href="?deleteTransaction&transaction_id=<?php echo $transaction->getId(); ?>&pidb_id=<?php echo $pidb_data->getId() ?>" title="Brisanje Transakcije" class="btn btn-danger btn-sm">
                                                 <i class="far fa-trash-alt"></i>
                                             </a>
