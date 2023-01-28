@@ -109,7 +109,7 @@
           <div class="form-group row">
             <label for="amount" class="col-sm-3 col-form-label">Iznos:</label>
             <div class="col-sm-5">
-              <input type="text" class="form-control" name="amount" id="amount" value="" placeholder="Unesite iznos" />
+              <input type="number" step=0.0001 class="form-control" name="amount" id="amount" value="" placeholder="Unesite iznos" required/>
             </div>
           </div>
 
