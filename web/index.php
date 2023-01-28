@@ -51,11 +51,11 @@ if (isset($map[$path])) {
         $response = new Response(ob_get_clean());
     } else {
         include '../templates/formLogin.php';
+        $response = new Response(ob_get_clean());
     }
 
 } else {
-    $response->setStatusCode(404);
-    $response->setContent('Not Found');
+    $response = new Response('Not Found', 404);
 }
 
 $response->send();

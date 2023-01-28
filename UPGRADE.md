@@ -1,3 +1,8 @@
+# Upgrade to 7.0.1
+
+Enhancement:
+* Refactoring front controller (web/index.php)
+
 # Upgrade to 7.0.0
 
 Enhancement:
