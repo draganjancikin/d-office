@@ -9,6 +9,8 @@ Resolved issues and bugfixes:
 * #175: Error on page create Accounting Document from Cutting Sheet
 * #181: Tools menu on Documents page
 * #187: Broken links on client page
+* #188: Add Article to Accounting Document error
+* #191: Error on listing archived projects
 
 # Upgrade to 6.5.1
 
