@@ -129,7 +129,7 @@
 
                     <div class="col-sm-2">
                         <button type="submit" class="btn btn-mini btn-success"><i class="fas fa-save"> </i> </button>
-                        <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&id=' .$material_id. '&material_supplier_id=' .$material_supplier->getId(). '&deleteMaterialSupplier'; ?>"
+                        <a href="<?php echo '?edit&id=' .$material_id. '&material_supplier_id=' .$material_supplier->getId(). '&deleteMaterialSupplier'; ?>"
                            class="btn btn-mini btn-danger">
                             <i class="fas fa-trash-alt"> </i>
                         </a>
@@ -162,7 +162,7 @@
                     </div>
 
                     <div class="col-sm-2">
-                        <a href="<?php echo $_SERVER['PHP_SELF'] . '?deleteMaterialProperty&id=' .$material_id. '&material_property_id=' .$material_property->getId() ?>"
+                        <a href="<?php echo '?deleteMaterialProperty&id=' .$material_id. '&material_property_id=' .$material_property->getId() ?>"
                            class="btn btn-sm btn-danger">
                             <i class="fas fa-trash-alt"> </i>
                         </a>
