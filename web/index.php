@@ -4,57 +4,34 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing;
 
 $request = Request::createFromGlobals();
+$routes = include __DIR__.'/../src/app.php';
 
-$map = [
-    '/' => 'index',
+$context = new Routing\RequestContext();
+$context->fromRequest($request);
+$matcher = new Routing\Matcher\UrlMatcher($routes, $context);
 
-    '/clients/' =>'client/index',
-
-    '/pidb/' => 'pidb/index',
-    '/pidb/printAccountingDocument' => 'pidb/printAccountingDocument',
-    '/pidb/printAccountingDocumentW' => 'pidb/printAccountingDocumentW',
-    '/pidb/printAccountingDocumentI' => 'pidb/printAccountingDocumentI',
-    '/pidb/printAccountingDocumentIW' => 'pidb/printAccountingDocumentIW',
-    '/pidb/printDailyCashReport' => 'pidb/printDailyCashReport',
-
-    '/cutting/' => 'cutting/index',
-    '/cutting/printCutting' => 'cutting/printCutting',
-
-    '/materials/' => 'material/index',
-
-    '/orders/' => 'order/index',
-    '/orders/printOrder' => 'order/printOrder',
-
-    '/articles/' => 'article/index',
-
-    '/projects/' => 'project/index',
-    '/projects/printProjectTask' => 'project/printProjectTask',
-    '/projects/printInstallationRecord' => 'project/printInstallationRecord',
-    '/projects/printProjectTaskWithNotes' => 'project/printProjectTaskWithNotes',
-
-    '/admin/' => 'admin/index',
-];
-
-$path = $request->getPathInfo();
-if (isset($map[$path])) {
+try {
 
     require_once __DIR__ . '/../config/bootstrap.php';
     session_start();
     if (isset($_SESSION['username'])){
         $username = $_SESSION['username'];
         $user_role_id = $_SESSION['user_role_id'];
+        extract($matcher->match($request->getPathInfo()), EXTR_SKIP);
         ob_start();
-        extract($request->query->all(), EXTR_SKIP);
-        include sprintf(__DIR__.'/../templates/%s.php', $map[$path]);
+        include sprintf(__DIR__.'/../templates/%s.php', $_route);
     } else {
         include '../templates/formLogin.php';
     }
     $response = new Response(ob_get_clean());
 
-} else {
+} catch (Routing\Exception\ResourceNotFoundException $exception) {
     $response = new Response('Not Found', 404);
+} catch (Exception $exception) {
+    $response = new Response('An error occurred', 500);
 }
 
 $response->send();

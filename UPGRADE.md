@@ -2,6 +2,7 @@
 
 Enhancement:
 * Refactoring front controller (web/index.php)
+* Refactoring routing: Move routes to src/app.php
 
 # Upgrade to 7.0.0
 
