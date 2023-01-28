@@ -6,36 +6,35 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 $request = Request::createFromGlobals();
-$response = new Response();
 
 $map = [
-    '/' => __DIR__.'/../templates/index.php',
+    '/' => 'index',
 
-    '/clients/' => __DIR__.'/../templates/client/index.php',
+    '/clients/' =>'client/index',
 
-    '/pidb/' => __DIR__.'/../templates/pidb/index.php',
-    '/pidb/printAccountingDocument' => __DIR__.'/../templates/pidb/printAccountingDocument.php',
-    '/pidb/printAccountingDocumentW' => __DIR__.'/../templates/pidb/printAccountingDocumentW.php',
-    '/pidb/printAccountingDocumentI' => __DIR__.'/../templates/pidb/printAccountingDocumentI.php',
-    '/pidb/printAccountingDocumentIW' => __DIR__.'/../templates/pidb/printAccountingDocumentIW.php',
-    '/pidb/printDailyCashReport' => __DIR__.'/../templates/pidb/printDailyCashReport.php',
+    '/pidb/' => 'pidb/index',
+    '/pidb/printAccountingDocument' => 'pidb/printAccountingDocument',
+    '/pidb/printAccountingDocumentW' => 'pidb/printAccountingDocumentW',
+    '/pidb/printAccountingDocumentI' => 'pidb/printAccountingDocumentI',
+    '/pidb/printAccountingDocumentIW' => 'pidb/printAccountingDocumentIW',
+    '/pidb/printDailyCashReport' => 'pidb/printDailyCashReport',
 
-    '/cutting/' => __DIR__.'/../templates/cutting/index.php',
-    '/cutting/printCutting' => __DIR__.'/../templates/cutting/printCutting.php',
+    '/cutting/' => 'cutting/index',
+    '/cutting/printCutting' => 'cutting/printCutting',
 
-    '/materials/' => __DIR__.'/../templates/material/index.php',
+    '/materials/' => 'material/index',
 
-    '/orders/' => __DIR__.'/../templates/order/index.php',
-    '/orders/printOrder' => __DIR__.'/../templates/order/printOrder.php',
+    '/orders/' => 'order/index',
+    '/orders/printOrder' => 'order/printOrder',
 
-    '/articles/' => __DIR__.'/../templates/article/index.php',
+    '/articles/' => 'article/index',
 
-    '/projects/' => __DIR__.'/../templates/project/index.php',
-    '/projects/printProjectTask' => __DIR__.'/../templates/project/printProjectTask.php',
-    '/projects/printInstallationRecord' => __DIR__.'/../templates/project/printInstallationRecord.php',
-    '/projects/printProjectTaskWithNotes' => __DIR__.'/../templates/project/printProjectTaskWithNotes.php',
+    '/projects/' => 'project/index',
+    '/projects/printProjectTask' => 'project/printProjectTask',
+    '/projects/printInstallationRecord' => 'project/printInstallationRecord',
+    '/projects/printProjectTaskWithNotes' => 'project/printProjectTaskWithNotes',
 
-    '/admin/' => __DIR__.'/../templates/admin/index.php',
+    '/admin/' => 'admin/index',
 ];
 
 $path = $request->getPathInfo();
@@ -47,8 +46,9 @@ if (isset($map[$path])) {
         $username = $_SESSION['username'];
         $user_role_id = $_SESSION['user_role_id'];
         ob_start();
-        include $map[$path];
-        $response->setContent(ob_get_clean());
+        extract($request->query->all(), EXTR_SKIP);
+        include sprintf(__DIR__.'/../templates/%s.php', $map[$path]);
+        $response = new Response(ob_get_clean());
     } else {
         include '../templates/formLogin.php';
     }
