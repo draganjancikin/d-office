@@ -118,18 +118,18 @@
             $client_contact_type = $client_contact_data->getType();
             ?>
             <form>
-                <fieldset disabled>
+                <fieldset >
                     <div class="form-row">
 
                         <div class="form-group col-sm-3">
-                            <select class="form-control">
+                            <select class="form-control" disabled>
                                 <option><?php echo $client_contact_type->getName() ?></option>
                             </select>
                         </div>
 
                         <div class="form-group col-sm-3">
                             <?php echo $client_contact_type->getId() == 2 ? '<a href="tel: ' . $contact->getBody() . '">' : '' ?>
-                                <input class="form-control" type="text" id="contact" value="<?php echo $contact->getBody() ?>"  placeholder="unesi kontakt" disabled >
+                                <input class="form-control" type="text" id="contact" value="<?php echo $contact->getBody() ?>"  placeholder="unesi kontakt" >
                             <?php echo $client_contact_type->getId() == 2 ? '</a>' : '' ?>
                         </div>
 

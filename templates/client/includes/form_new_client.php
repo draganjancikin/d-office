@@ -52,7 +52,7 @@
                 <label for="selectCountry" class="col-sm-3 col-form-label text-left text-sm-right">Država:</label>
                 <div class="col-sm-5">
                     <select id="selectCountry" class="form-control" name="country_id">
-                        <option>Izaberite drzavu</option>
+                        <option value="1">Srbija</option>
                         <?php
                         $states = $entityManager->getRepository('\Roloffice\Entity\Country')->findBy(array(), array('name' => 'ASC'));
                         foreach ($states as $state) :
