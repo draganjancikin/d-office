@@ -185,108 +185,108 @@
         </tfoot>
         <tbody>
           <?php
-                    $status = 2;
-                    $project_list = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTracking($status);
-                    foreach( $project_list as $project_item):
-                        $project_id = $project_item->getId();
-                        $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
-                        ?>
-          <tr>
-            <td>
-              <a href="?view&project_id=<?php echo $project_item->getId(); ?>" class="d-block card-link"
-                title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
-                #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
-              </a>
-              <?php echo $project_item->getClient()->getName(). ', <span style="font-size: 0.9em;">' .$project_item->getClient()->getCity()->getName(). '</span>' ?>
-            </td>
-            <td>
-              <?php
-                                $count1 = 0;
-                                foreach($project_tasks as $project_task):
-                                    if($project_task->getStatus()->getId() == 1):
-                                        ?>
-              <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
-                <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
-                  <?php echo $project_task->getType()->getName() ?>
-                </span>
-                <?php echo $project_task->getTitle() ?>
-              </a><br />
-              <?php
-                                        $count1 ++;
-                                        if ($count1 == 4):
-                                        ?>
-              <a class="" data-toggle="collapse" href="#collapse1<?php echo $project_id?>" role="button"
-                aria-expanded="false" aria-controls="collapse1">
-                <i class="fas fa-caret-down"></i>
-              </a>
-              <div class="collapse" id="collapse1<?php echo $project_id?>">
+          $status = 2;
+          $project_list = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTracking($status);
+          foreach( $project_list as $project_item):
+            $project_id = $project_item->getId();
+            $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
+            ?>
+            <tr>
+              <td>
+                <a href="?view&project_id=<?php echo $project_item->getId(); ?>" class="d-block card-link"
+                  title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
+                  #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
+                </a>
+                <?php echo $project_item->getClient()->getName() . ', <span style="font-size: 0.9em;">' . ( $project_item->getClient()->getCity() ? $project_item->getClient()->getCity()->getName() : '' ) . '</span>' ?>
+              </td>
+              <td>
                 <?php
-                                        endif;
-                                    endif;
-                                endforeach;
-                                if($count1 > 3) echo '</div>';
-                                ?>
-            </td>
-            <td>
-              <?php
-                                $count2 = 0;
-                                foreach($project_tasks as $project_task):
-                                    if($project_task->getStatus()->getId() == 2):
-                                        ?>
-              <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
-                <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
-                  <?php echo $project_task->getType()->getName() ?>
-                </span>
-                <?php echo $project_task->getTitle() ?>
-              </a><br />
-              <?php
-                                        $count2 ++;
-                                        if ($count2 == 4):
-                                        ?>
-              <a class="" data-toggle="collapse" href="#collapse2<?php echo $project_id?>" role="button"
-                aria-expanded="false" aria-controls="collapse2">
-                <i class="fas fa-caret-down"></i>
-              </a>
-              <div class="collapse" id="collapse2<?php echo $project_id?>">
-                <?php
-                                        endif;
-                                    endif;
-                                endforeach;
-                                if($count2 > 3) echo '</div>';
-                                ?>
-            </td>
-            <td>
-              <?php
-                                $count3 = 0;
-                                foreach($project_tasks as $project_task):
-                                    if($project_task->getStatus()->getId() == 3):
-                                        ?>
-              <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
-                <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
-                  <?php echo $project_task->getType()->getName() ?>
-                </span>
-                <?php echo $project_task->getTitle() ?>
-              </a><br />
-              <?php
-                                        $count3 ++;
-                                        if ($count3 == 4):
-                                        ?>
-              <a class="" data-toggle="collapse" href="#collapse3<?php echo $project_id?>" role="button"
-                aria-expanded="false" aria-controls="collapse3">
-                <i class="fas fa-caret-down"></i>
-              </a>
-              <div class="collapse" id="collapse3<?php echo $project_id?>">
-                <?php
-                                        endif;
-                                    endif;
-                                endforeach;
-                                if($count3 > 3) echo '</div>';
-                                ?>
-            </td>
-          </tr>
-          <?php
-                        endforeach;
+                $count1 = 0;
+                foreach($project_tasks as $project_task):
+                  if($project_task->getStatus()->getId() == 1):
                     ?>
+                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                      <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
+                        <?php echo $project_task->getType()->getName() ?>
+                      </span>
+                      <?php echo $project_task->getTitle() ?>
+                    </a><br />
+                    <?php
+                    $count1 ++;
+                    if ($count1 == 4):
+                      ?>
+                      <a class="" data-toggle="collapse" href="#collapse1<?php echo $project_id?>" role="button"
+                        aria-expanded="false" aria-controls="collapse1">
+                        <i class="fas fa-caret-down"></i>
+                      </a>
+                      <div class="collapse" id="collapse1<?php echo $project_id?>">
+                      <?php
+                    endif;
+                  endif;
+                endforeach;
+                if($count1 > 3) echo '</div>';
+                ?>
+              </td>
+              <td>
+                <?php
+                $count2 = 0;
+                foreach($project_tasks as $project_task):
+                  if($project_task->getStatus()->getId() == 2):
+                    ?>
+                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                      <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
+                        <?php echo $project_task->getType()->getName() ?>
+                      </span>
+                      <?php echo $project_task->getTitle() ?>
+                    </a><br />
+                    <?php
+                    $count2 ++;
+                    if ($count2 == 4):
+                      ?>
+                      <a class="" data-toggle="collapse" href="#collapse2<?php echo $project_id?>" role="button"
+                        aria-expanded="false" aria-controls="collapse2">
+                        <i class="fas fa-caret-down"></i>
+                      </a>
+                      <div class="collapse" id="collapse2<?php echo $project_id?>">
+                      <?php
+                    endif;
+                  endif;
+                endforeach;
+                if($count2 > 3) echo '</div>';
+                ?>
+              </td>
+              <td>
+                <?php
+                $count3 = 0;
+                foreach($project_tasks as $project_task):
+                  if($project_task->getStatus()->getId() == 3):
+                    ?>
+                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                      <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
+                        <?php echo $project_task->getType()->getName() ?>
+                      </span>
+                      <?php echo $project_task->getTitle() ?>
+                    </a><br />
+                    <?php
+                    $count3 ++;
+                    if ($count3 == 4):
+                      ?>
+                      <a class="" data-toggle="collapse" href="#collapse3<?php echo $project_id?>" role="button"
+                        aria-expanded="false" aria-controls="collapse3">
+                        <i class="fas fa-caret-down"></i>
+                      </a>
+                      <div class="collapse" id="collapse3<?php echo $project_id?>">
+                      <?php
+                    endif;
+                  endif;
+                endforeach;
+                if($count3 > 3) echo '</div>';
+                ?>
+              </td>
+            </tr>
+            <?php
+          endforeach;
+          ?>
         </tbody>
       </table>
     </div>

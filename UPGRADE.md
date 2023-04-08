@@ -1,3 +1,8 @@
+# Upgrade to 6.5.2
+
+Resolved issues and bugfixes:
+* #194: Error on Projects page'
+
 # Upgrade to 6.5.1
 
 Resolved issues and bugfixes:
