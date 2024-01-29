@@ -2,6 +2,7 @@
 
 Resolved issues and bugfixes:
 * #194: Error on Projects page'
+* #197: Update Deprecated Doctrine\ORM\Tools\Setup
 
 Enhancement:
 * On client preview page remove disabled attribute from client contacts
