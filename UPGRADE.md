@@ -7,6 +7,7 @@ Resolved issues and bugfixes:
 Enhancement:
 * On client preview page remove disabled attribute from client contacts
 * On new client page set default country to "Srbija"
+* Update "doctrine/orm" (2.12.4 => 2.13.5)
 
 # Upgrade to 6.5.1
 
