@@ -1,11 +1,16 @@
+# Upgrade to 6.6.0
+* #198: Add edit feature to Material on Order page
+
 # Upgrade to 6.5.2
 
 Resolved issues and bugfixes:
 * #194: Error on Projects page'
+* #197: Update Deprecated Doctrine\ORM\Tools\Setup
 
 Enhancement:
 * On client preview page remove disabled attribute from client contacts
 * On new client page set default country to "Srbija"
+* Update "doctrine/orm" (2.12.4 => 2.13.5)
 
 # Upgrade to 6.5.1
 
