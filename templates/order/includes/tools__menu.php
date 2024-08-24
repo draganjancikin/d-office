@@ -6,6 +6,7 @@ require 'add__material.php';
 require 'edit__material.php';
 require 'remove__material.php';
 require 'duplicate__material.php';
+require 'change__material__in__order.php';
 ?>
 <div class="col-lg-12 px-2" id="topMeni">
   <div class="card mb-2">

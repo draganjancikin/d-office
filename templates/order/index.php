@@ -43,11 +43,12 @@
                 if (empty($_GET)): // ako je $_GET prazan
                   include '../../templates/order/includes/list__last.php';
                 else:
-                  if(isset($_GET['view'])) include '../../templates/order/includes/form__view.php';
-                  if(isset($_GET['edit'])) include '../../templates/order/includes/form__edit.php';
-                  if(isset($_GET['new'])) include '../../templates/order/includes/form__new.php';
+                  if (isset($_GET['view'])) include '../../templates/order/includes/form__view.php';
+                  if (isset($_GET['edit'])) include '../../templates/order/includes/form__edit.php';
+                  if (isset($_GET['editMaterial']) && isset($_GET['material_on_order_id'])) include '../../templates/order/includes/form_edit_material.php';
+                  if (isset($_GET['new'])) include '../../templates/order/includes/form__new.php';
                   
-                  if(isset($_GET['search'])) include '../../templates/includes/search.php';
+                  if (isset($_GET['search'])) include '../../templates/includes/search.php';
                 endif;
               ?>
             </div>

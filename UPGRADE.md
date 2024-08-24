@@ -1,3 +1,6 @@
+# Upgrade to 6.6.0
+* #198: Add edit feature to Material on Order page
+
 # Upgrade to 6.5.2
 
 Resolved issues and bugfixes:

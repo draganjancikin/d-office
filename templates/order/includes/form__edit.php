@@ -124,6 +124,11 @@
                                     <button type="submit" class="btn btn-mini btn-outline-success px-1">
                                         <i class="fas fa-save" title="Snimi izmenu"> </i>
                                     </button>
+
+                                    <a href="<?php echo $_SERVER['PHP_SELF']. '?editMaterial&material_on_order_id=' . $material_on_order->getId() . '&order_id=' . $order_id . '&supplier_id=' . $supplier_data['id'] ?>" class="btn btn-mini btn-outline-info px-1">
+                                        <i class="fas fa-edit" title="Promeni materijal"> </i>
+                                    </a>
+
                                     <a href="<?php echo $_SERVER['PHP_SELF']. '?duplicateMaterialInOrder&order_id='.$order_id.'&order_material_id=' .$material_on_order->getId() ?>" class="btn btn-mini btn-outline-info px-1">
                                         <i class="fas fa-plus" title="Dupliciraj materijal"> </i>
                                     </a>
