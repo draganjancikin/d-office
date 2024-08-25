@@ -1,5 +1,6 @@
 # Upgrade to 6.6.1
-* #190: Transaction note don't display in transactions listing
+* #186 - Advanced search on Client section issue
+* #190 - Transaction note don't display in transactions listing
 
 # Upgrade to 6.6.0
 * #198: Add edit feature to Material on Order page
