@@ -83,6 +83,7 @@ if (isset($_GET["result"]) ) {
             foreach ($clients_data as $client_data){
               $count++;
               $client_street = $client_city = $client_country = NULL;
+              $client_street_name = $cient_city_name = $client_country_name = "";
               if ($client_data->getStreet()) {
                 $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
                 $client_street_name = $client_street ? $client_street->getName() . " " . $client_data->getHomeNumber() . ", " : "";
