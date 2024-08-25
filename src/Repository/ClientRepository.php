@@ -55,33 +55,40 @@ class ClientRepository extends EntityRepository {
      *
      * @param string $term
      * @param string $street
-     * @param string $cyty
+     * @param string $city
      *
      * @return array
      */
-    public function advancedSearch($term, $street, $city) {
-        // Create a QueryBuilder instance.
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('cl')
-            ->from('Roloffice\Entity\Client', 'cl')
-            ->join('cl.street', 's', 'WITH', 'cl.street = s.id')
-            ->join('cl.city', 'c', 'WITH', 'cl.city = c.id')
-            ->where(
-                $qb->expr()->orX(
-                    $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
-                    $qb->expr()->like('cl.name_note', $qb->expr()->literal("%$term%"))
-                )
-            )
-            ->andWhere(
-                $qb->expr()->like('s.name', $qb->expr()->literal("%$street%"))
-            )
-            ->andWhere(
-                $qb->expr()->like('c.name', $qb->expr()->literal("%$city%"))
-            )
-            ->orderBy('cl.name', 'ASC');
+    public function advancedSearch(string $term, string $street, string $city): array {
+      // Create a QueryBuilder instance.
+      $qb = $this->_em->createQueryBuilder();
+      $qb->select('cl')
+        ->from('Roloffice\Entity\Client', 'cl')
+        ->where(
+          $qb->expr()->orX(
+            $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
+            $qb->expr()->like('cl.name_note', $qb->expr()->literal("%$term%"))
+          )
+        );
 
-        $query = $qb->getQuery();
-        return $query->getResult();
+      if ($street <> '') {
+        $qb->join('cl.street', 's', 'WITH', 'cl.street = s.id')
+          ->andWhere(
+            $qb->expr()->like('s.name', $qb->expr()->literal("%$street%"))
+          );
+      }
+
+      if ($city <> '') {
+        $qb->join('cl.city', 'c', 'WITH', 'cl.city = c.id')
+          ->andWhere(
+            $qb->expr()->like('c.name', $qb->expr()->literal("%$city%"))
+          );
+      }
+
+      $qb->orderBy('cl.name', 'ASC');
+      $query = $qb->getQuery();
+
+      return $query->getResult();
     }
 
     /**
