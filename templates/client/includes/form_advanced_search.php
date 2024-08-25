@@ -44,11 +44,6 @@ if (isset($_GET["result"]) ) {
   $street = $_POST["street"];
   $city = $_POST["city"];
 
-//  var_dump($term);
-//    var_dump($street);
-//    var_dump($city);
-//    die;
-
   $clients_data = $entityManager->getRepository('\Roloffice\Entity\Client')->advancedSearch($term, $street, $city);
   ?>
   
