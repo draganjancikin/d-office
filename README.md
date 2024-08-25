@@ -1,4 +1,4 @@
-# d-Office 6.6.0
+# d-Office 6.6.1
 
 Web Application
 
@@ -13,6 +13,7 @@ Required:
 * symfony/http-foundation:^5.4
 * doctrine/annotations:^1.14
 * symfony/cache:^5.4
+* bootstrap 4.4.1
 
 ## Settings
 
