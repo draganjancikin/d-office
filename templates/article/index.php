@@ -43,13 +43,18 @@
                 if (empty($_GET)): // ako je $_GET prazan
                   include '../../templates/article/includes/list_last.php';
                 else:
-                  if(isset($_GET['view'])) include '../../templates/article/includes/form_view.php';
-                  if(isset($_GET['edit'])) include '../../templates/article/includes/form_edit.php';
-                  if(isset($_GET['new'])) include '../../templates/article/includes/form_new.php';
+                  if (isset($_GET['view'])) include '../../templates/article/includes/form_view.php';
+                  if (isset($_GET['edit'])) include '../../templates/article/includes/form_edit.php';
+                  if (isset($_GET['new'])) include '../../templates/article/includes/form_new.php';
 
-                  if(isset($_GET['priceList'])) include '../../templates/article/includes/price_list.php';
+                  if (isset($_GET['articleGroups'])) include '../../templates/article/includes/article_groups.php';
+                  if (isset($_GET['newArticleGroup'])) include '../../templates/article/includes/form_new_article_group.php';
+                  if (isset($_GET['viewArticleGroup'])) include '../../templates/article/includes/form_view_article_group.php';
+                  if (isset($_GET['editArticleGroup'])) include '../../templates/article/includes/form_edit_article_group.php';
+
+                  if (isset($_GET['priceList'])) include '../../templates/article/includes/price_list.php';
                   
-                  if(isset($_GET['search'])) include '../../templates/includes/search.php';
+                  if (isset($_GET['search'])) include '../../templates/includes/search.php';
                 endif;
               ?>
             </div>
