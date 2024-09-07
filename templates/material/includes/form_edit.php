@@ -85,51 +85,63 @@
   </div>
 
   <div class="card-body p-2">
-    <?php
-    foreach ($material_suppliers as $material_supplier):
-      ?>
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterialSupplier&id=' .$material_id ?>" method="post">
-      <input class="form-control" type="hidden" name="material_supplier_id"
-        value="<?php echo $material_supplier->getId() ?>" />
-
-      <div class="form-group row">
-
-        <div class="col-sm-4 col-lg-3 col-xl-2">
-          <select class="form-control" name="supplier_id" required>
-            <option value="<?php echo $material_supplier->getSupplier()->getId(); ?>">
-              <?php echo $material_supplier->getSupplier()->getName(); ?></option>
+    <div class="table-responsive">
+      <table class="table table-hover" >
+        <thead>
+          <tr class="table-secondary">
+            <th class="px-1">#</th>
+            <th class="px-1 text-center">naziv</th>
+            <th class="px-1 text-center">datum izmene</th>
+            <th class="px-1 text-center">šifra po dobavljaču</th>
+            <th class="px-1 text-center">cena</th>
+            <th class="px-1"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $count = 0;
+          foreach ($material_suppliers as $material_supplier):
+            $count++;
+            ?>
+            <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterialSupplier&id=' .$material_id ?>" method="post">
+              <input class="form-control" type="hidden" name="material_supplier_id"
+                     value="<?php echo $material_supplier->getId() ?>" />
+              <tr>
+                <td class="px-1"><?php echo $count ;?></td>
+                <td class="px-1">
+                  <select class="form-control" name="supplier_id" required>
+                    <option value="<?php echo $material_supplier->getSupplier()->getId(); ?>">
+                      <?php echo $material_supplier->getSupplier()->getName(); ?>
+                    </option>
+                    <?php
+                    foreach ($suppliers as $supplier) {
+                      echo '<option value="' .$supplier->getId(). '">' .$supplier->getName(). '</option>';
+                    }
+                    ?>
+                  </select>
+                </td>
+                <td class="px-1">
+                  <input class="form-control" type="text" value="<?php echo $material_supplier->getModifiedAt()->format('d M Y'); ?>" disabled>
+                </td>
+                <td class="px-1">
+                  <input class="form-control" type="text" name="note" value="<?php echo $material_supplier->getNote(); ?>">
+                </td>
+                <td class="px-1">
+                  <input class="form-control" type="text" name="price" value="<?php echo $material_supplier->getPrice(); ?>">
+                </td>
+                <td class="px-1">
+                  <button type="submit" class="btn btn-mini btn-success"><i class="fas fa-save"> </i> </button>
+                  <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&id=' .$material_id. '&material_supplier_id=' .$material_supplier->getId(). '&deleteMaterialSupplier'; ?>"
+                      class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"> </i> </a>
+                </td>
+              </tr>
+            </form>
             <?php
-              foreach ($suppliers as $supplier) {
-                echo '<option value="' .$supplier->getId(). '">' .$supplier->getName(). '</option>';
-              }
-              ?>
-          </select>
-        </div>
-
-        <div class="col-sm-2">
-          <input class="form-control" type="text"
-            value="<?php echo $material_supplier->getModifiedAt()->format('d M Y'); ?>" disabled>
-        </div>
-
-        <div class="col-sm-2 col-lg-3">
-          <input class="form-control" type="text" name="note" value="<?php echo $material_supplier->getNote(); ?>">
-        </div>
-
-        <div class="col-sm-2">
-          <input class="form-control" type="text" name="price" value="<?php echo $material_supplier->getPrice(); ?>">
-        </div>
-
-        <div class="col-sm-2">
-          <button type="submit" class="btn btn-mini btn-success"><i class="fas fa-save"> </i> </button>
-          <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&id=' .$material_id. '&material_supplier_id=' .$material_supplier->getId(). '&deleteMaterialSupplier'; ?>"
-            class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"> </i> </a>
-        </div>
-
-      </div>
-    </form>
-    <?php
-    endforeach;
-    ?>
+          endforeach;
+          ?>
+        </tbody>
+      </table>
+    </div>
   </div>
   <!-- End Card Body -->
 

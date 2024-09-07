@@ -1,8 +1,8 @@
 <?php
 // Add Supplier to Material.
-if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addSupplier"]) ) {  
-  // echo "Evo nas"; exit();
-  // Curent loged user.
+if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addSupplier"]) ) {
+
+  // Current logged user.
   $user_id = $_SESSION['user_id'];
   $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
 
@@ -10,15 +10,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addSupplier"]) ) {
   $material = $entityManager->find("\Roloffice\Entity\Material", $id);
   
   $supplier_id = htmlspecialchars($_POST['supplier_id']);
-  if($supplier_id == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
+  if ($supplier_id == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
   $supplier = $entityManager->find("\Roloffice\Entity\Client", $supplier_id);
   
   $note = htmlspecialchars($_POST['note']);
 
-  if($_POST['price']) {
+	$price = 0;
+  if ($_POST['price']) {
     $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
-  } else {
-    $price = 0;
   }
 
   $newMaterialSupplier = new \Roloffice\Entity\MaterialSupplier();
@@ -29,7 +28,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addSupplier"]) ) {
   $newMaterialSupplier->setPrice($price);
   $newMaterialSupplier->setCreatedAt(new DateTime("now"));
   $newMaterialSupplier->setCreatedByUser($user);
-  $newMaterialSupplier->setModifiedAt(new DateTime("1070-01-01 00:00:00"));
+  $newMaterialSupplier->setModifiedAt(new DateTime("now"));
 
   $entityManager->persist($newMaterialSupplier);
   $entityManager->flush();
