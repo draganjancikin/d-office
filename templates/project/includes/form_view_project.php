@@ -1,126 +1,137 @@
 <?php
-if(!$project_data):
-  die('<script>location.href = "/projects/" </script>');
+if (!$project_data):
+    die('<script>location.href = "/projects/" </script>');
 else:
-  $client_data = $entityManager->find('\Roloffice\Entity\Client', $project_data->getClient());
-  $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
-  $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
-  $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
-  ?>
-  <!-- ************** START OLD CODE ***************** -->
-  <!-- dugme, okidač za modal addNote -->
-  <!-- <a href="#"><button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#addNote" title="Dodavanje beleške uz projekat!"><i class="fa fa-plus"></i> <i class="fa fa-pencil"> </i></button></a> -->
-  <!-- Pregled i štampanje radnog naloga sa beleškama uz projekat -->
-  <!-- <a href="../tcpdf/examples/printProjectTaskWithNotes.php?project_id=<?php echo $project_id; ?>" title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank"><button type="submit" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Beleške</button></a> -->
-  <!-- ************** END OLD CODE ***************** -->
-  <div class="row">
+    $client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($project_data->getClient()->getId());
+    ?>
+    <!-- ************** START OLD CODE ***************** -->
+    <!-- dugme, okidač za modal addNote -->
+    <!-- <a href="#"><button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#addNote" title="Dodavanje beleške uz projekat!"><i class="fa fa-plus"></i> <i class="fa fa-pencil"> </i></button></a> -->
+    <!-- Pregled i štampanje radnog naloga sa beleškama uz projekat -->
+    <!-- <a href="../tcpdf/examples/printProjectTaskWithNotes.php?project_id=<?php echo $project_id; ?>" title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank"><button type="submit" class="btn btn-default btn-sm"><i class="fa fa-print"></i> Beleške</button></a> -->
+    <!-- ************** END OLD CODE ***************** -->
+    <div class="row">
 
-    <div class="col-sm-5 pr-0">
-      <div class="card mb-4">
-        <div class="card-header p-2">
-          <h6 class="m-0 text-dark">
-            <i class="fa fa-folder"> </i>
-            # <?php echo str_pad($project_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_data->getTitle() ?>
-          </h6>
+        <div class="col-sm-5 pr-0">
+            <div class="card mb-4">
+                <div class="card-header p-2">
+                    <h6 class="m-0 text-dark">
+                        <i class="fa fa-folder"> </i>
+                        # <?php echo str_pad($project_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $project_data->getTitle() ?>
+                    </h6>
+                </div>
+                <div class="card-body p-2 client-data">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 col-md-3">datum</dt>
+                        <dd class="col-sm-8 col-md-9"><?php echo $project_data->getCreatedAt()->format('d-M-Y') ?></dd>
+                        <dt class="col-sm-4 col-md-3">klijent</dt>
+                        <dd class="col-sm-8 col-md-9">
+                            <a href="/clients/index.php?view&client_id=<?php echo $client['id'] ?>"><?php echo $client['name'] ?></a>
+                        </dd>
+                        <dt class="col-sm-4 col-md-3">adresa</dt>
+                        <dd class="col-sm-8 col-md-9">
+                            <?php echo ($client['street'] ?? "") . ' ' . $client['home_number']
+                                . ($client['street'] && $client['city'] ? ", " : "")
+                                . ($client['city'] ?? "")
+                                . ($client['city'] && $client['country'] ? ", " : "")
+                                . ($client['country'] ?? "")
+                            ?>
+                        </dd>
+                        <?php
+                        $count = 0;
+                        foreach ($client['contacts'] as $client_contact):
+                            if ($count < 8):
+                                $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')
+                                                                        ->findOneBy( array('id' =>$client_contact->getId()) );
+                                $client_contact_type = $client_contact_data->getType();
+                                ?>
+                                <dt class="col-sm-4 col-md-3"><?php echo $client_contact_type->getName() ?></dt>
+                                <dd class="col-sm-8 col-md-9">
+                                    <?php
+                                    echo $client_contact_data->getBody() . ($client_contact_data->getNote() ==""
+                                            ? ""
+                                            : ", " . $client_contact_data->getNote());
+                                    ?>
+                                </dd>
+                                <?php
+                                $count++;
+                            endif;
+                        endforeach;
+                        ?>
+                    </dl>
+                </div>
+                <!-- End Card Body -->
+            </div>
+            <!-- End Card -->
         </div>
-        <div class="card-body p-2 client-data">
-          <dl class="row mb-0">
-            <dt class="col-sm-4 col-md-3">datum</dt>
-            <dd class="col-sm-8 col-md-9"><?php echo $project_data->getCreatedAt()->format('d-M-Y') ?></dd>
-            <dt class="col-sm-4 col-md-3">klijent</dt>
-            <dd class="col-sm-8 col-md-9"><a href="/clients/index.php?view&client_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a></dd>
-            <dt class="col-sm-4 col-md-3">adresa</dt>
-            <dd class="col-sm-8 col-md-9"><?php echo $client_street->getName(). ' ' . $client_data->getHomeNumber() . ($client_city->getName()<>""?", ".$client_city->getName() : "") . ', ' . $client_country->getName() . '<br/>' . $client_data->getAddressNote() ?></dd>
-            <?php
-            $client_contacts = $client_data->getContacts();
-            $count = 0;
-            foreach ($client_contacts as $client_contact):
-              if ($count < 8):
-              $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy( array('id' =>$client_contact->getId()) );
-              $client_contact_type = $client_contact_data->getType();
-              ?>
-              <dt class="col-sm-4 col-md-3"><?php echo $client_contact_type->getName() ?></dt>
-              <dd class="col-sm-8 col-md-9"><?php echo $client_contact_data->getBody() . ($client_contact_data->getNote() =="" ? "" : ", " .$client_contact_data->getNote()); ?></dd>
-              <?php
-              $count++;
-              endif;
-            endforeach;
-            ?>
-          </dl>
-        </div>
-        <!-- End Card Body -->
-      </div>
-      <!-- End Card -->
-    </div>
 
-    <div class="col-sm-7">
+        <div class="col-sm-7">
 
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="note-tab" data-toggle="tab" href="#note" role="tab" aria-controls="note" aria-selected="true">
-            <i class="fas fa-pencil-alt"> </i> Beleške
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="document-tab" data-toggle="tab" href="#document" role="tab" aria-controls="document" aria-selected="false">
-            Dokumenti
-          </a>
-        </li>
-      </ul>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="note-tab" data-toggle="tab" href="#note" role="tab" aria-controls="note" aria-selected="true">
+                        <i class="fas fa-pencil-alt"> </i> Beleške
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="document-tab" data-toggle="tab" href="#document" role="tab" aria-controls="document" aria-selected="false">
+                        Dokumenti
+                    </a>
+                </li>
+            </ul>
         
-      <div class="tab-content" id="myTabContent">
+            <div class="tab-content" id="myTabContent">
 
-        <div class="tab-pane fade show active" id="note" role="tabpanel" aria-labelledby="note-tab">
-          <div class="card mb-4">
-            <div class="card-header p-2">
-              <div class="card-header-menu">
-                <!-- dugme, okidač za modal addNote -->
-                <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addNote" title="Dodavanje beleške uz projekat!">
-                  <i class="fa fa-plus"></i> <i class="fas fa-pencil-alt"> </i>
-                </button>
-                <!-- Pregled i štampanje radnog naloga sa beleškama uz projekat -->
-                <a href="printProjectTaskWithNotes.php?project_id=<?php echo $project_id; ?>" title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank">
-                  <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
-                    <i class="fa fa-print"></i> Beleške
-                  </button>
-                </a>
-              </div>
-
-            </div>
-            <div class="card-body p-2 tasks-note-scroll">
-              <table class="table table-hover">
-                <?php
-                $date_temp = "";
-                $notes = $entityManager->getRepository('\Roloffice\Entity\Project')->getNotesByProject($project_id);
-                foreach ($notes as $note):
-                  ?>
-                  <tr>
-                    <td class="px-1 width-95">
-                      <?php 
-                      if($note->getCreatedAt()->format('d-M-Y') != $date_temp) {
-                        echo $note->getCreatedAt()->format('d-M-Y');
-                      }
-                      ?>
-                    </td>
-                    <td class="px-1" <?php echo ($user_role_id==1 ? 'title=" ' . $note->getCreatedByUser()->getUsername() . '"' : '' ); ?>>
-                      <?php echo nl2br($note->getNote()); ?>
-                    </td>
-                    <td class="px-1">
-                      <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete belešku?');" href="?view&project_id=<?php echo $project_id; ?>&note_id=<?php echo $note->getId() ?>&delNote" title="Brisanje beleške">
-                        <i class="fas fa-trash-alt"></i>
-                      </a>
-                    </td>
-                  </tr>
-                  <?php
-                  $date_temp = $note->getCreatedAt()->format('d-M-Y');
-                endforeach;
-                ?>
-              </table>
-            </div>
-            <!-- End Card Body -->
-          </div>
-          <!-- End Card -->
-        </div>
+                <div class="tab-pane fade show active" id="note" role="tabpanel" aria-labelledby="note-tab">
+                    <div class="card mb-4">
+                        <div class="card-header p-2">
+                            <div class="card-header-menu">
+                                <!-- dugme, okidač za modal addNote -->
+                                <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#addNote" title="Dodavanje beleške uz projekat!">
+                                    <i class="fa fa-plus"></i> <i class="fas fa-pencil-alt"> </i>
+                                </button>
+                                <!-- Pregled i štampanje radnog naloga sa beleškama uz projekat -->
+                                <a href="printProjectTaskWithNotes.php?project_id=<?php echo $project_id; ?>" title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
+                                        <i class="fa fa-print"></i> Beleške
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body p-2 tasks-note-scroll">
+                            <table class="table table-hover">
+                                <?php
+                                $date_temp = "";
+                                $notes = $entityManager->getRepository('\Roloffice\Entity\Project')->getNotesByProject($project_id);
+                                foreach ($notes as $note):
+                                    ?>
+                                    <tr>
+                                        <td class="px-1 width-95">
+                                            <?php
+                                            if($note->getCreatedAt()->format('d-M-Y') != $date_temp) {
+                                                echo $note->getCreatedAt()->format('d-M-Y');
+                                            }
+                                            ?>
+                                        </td>
+                                        <td class="px-1" <?php echo ($user_role_id==1 ? 'title=" ' . $note->getCreatedByUser()->getUsername() . '"' : '' ); ?>>
+                                            <?php echo nl2br($note->getNote()); ?>
+                                        </td>
+                                        <td class="px-1">
+                                            <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete belešku?');" href="?view&project_id=<?php echo $project_id; ?>&note_id=<?php echo $note->getId() ?>&delNote" title="Brisanje beleške">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                    $date_temp = $note->getCreatedAt()->format('d-M-Y');
+                                endforeach;
+                                ?>
+                            </table>
+                        </div>
+                        <!-- End Card Body -->
+                    </div>
+                    <!-- End Card -->
+                </div>
 
         <div class="tab-pane fade" id="document" role="tabpanel" aria-labelledby="document-tab">
           <div class="card mb-4">
@@ -338,7 +349,7 @@ else:
               </h6>
             </div>
             <div class="card-body p-2">
-              <div class="row row-cols-4">
+              <div class="row">
                 <?php
                 $dir = $_SERVER["DOCUMENT_ROOT"] . '/projects/upload/project_id_'.$project_id;
                 if(is_dir($dir)) :
@@ -346,14 +357,29 @@ else:
                     while (false !== ($entry = readdir($handle))) :
                       if ($entry != "." && $entry != ".." && $entry != "Thumbs.db") :
                         ?>
-                        <div class="col mb-4">
-                          <div class="card">
-                            <a href="/projects/upload/project_id_<?php echo $project_id.'/'.$entry; ?>" target="_blank" class="p-1">
-                              <img src="/projects/upload/project_id_<?php echo $project_id. '/'.$entry; ?>" alt="Attachment" class="card-img-top">
-                              <i class="fas fa-camera"></i> <?php echo $entry; ?>
-                            </a>
-                          </div>
-                        </div>  
+<!--                        <div class="col mb-4">-->
+
+                            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+                            <div class="card">
+                                <a href="/projects/upload/project_id_<?php echo $project_id.'/'.$entry; ?>" target="_blank" class="p-1">
+                                <img class="card-img-top" src="/projects/upload/project_id_<?php echo $project_id. '/'.$entry; ?>" alt="Attachment">
+                                </a>
+                                    <div class="card-body">
+                                    <p class="card-text"><?php echo $entry; ?></p>
+                                </div>
+                            </div>
+                            </div>
+
+<!--                          <div class="card">-->
+<!--                            <a href="/projects/upload/project_id_--><?php //echo $project_id.'/'.$entry; ?><!--" target="_blank" class="p-1">-->
+<!--                              <img src="/projects/upload/project_id_--><?php //echo $project_id. '/'.$entry; ?><!--" alt="Attachment" class="card-img-top">-->
+<!--                              <i class="fas fa-camera"></i> --><?php //echo $entry; ?>
+<!--                            </a>-->
+<!--                          </div>-->
+
+
+
+<!--                        </div>  -->
                         <?php
                       endif;
                     endwhile;

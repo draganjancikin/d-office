@@ -11,11 +11,11 @@
         <div class="col-sm-3"><input class="form-control" id="date" type="text" value="<?php echo date("d M Y"); ?>"" ></div>
       </div>
 
-      <div class="form-group row">
-        <label for="selectClientId" class="col-sm-3 col-lg-2 col-form-label text-right">Izaberi klijenta: </label>
-        <div class="col-sm-5">
-          <select id="selectClientId" class="form-control" name="client_id" required>
-            <?php
+      <div class=" form-group row">
+          <label for="selectClientId" class="col-sm-3 col-lg-2 col-form-label text-right">Izaberi klijenta: </label>
+          <div class="col-sm-5">
+            <select id="selectClientId" class="form-control" name="client_id" required>
+              <?php
             if(isset($_GET['client_id'])){
               $client_id = htmlspecialchars($_GET["client_id"]);
               $client_data = $entityManager->find('\Roloffice\Entity\Client', $client_id);
@@ -33,15 +33,15 @@
               <?php
             endforeach;
             ?>
-          </select>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div class="form-group row">
-        <div class="col-sm-3 offset-sm-3 offset-lg-2">
-          <button type="submit" class="btn btn-sm btn-success">Otvori novu krojnu listu</button>
+        <div class="form-group row">
+          <div class="col-sm-3 offset-sm-3 offset-lg-2">
+            <button type="submit" class="btn btn-sm btn-success text-nowrap">Otvori novu krojnu listu</button>
+          </div>
         </div>
-      </div>
 
     </form>
   </div>

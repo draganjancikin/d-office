@@ -1,10 +1,9 @@
 {
   "name": "rolostil/roloffice",
-  "version": "6.0.0",
+  "version": "6.6.2",
   "type": "project",
-  "description": "Web application for Rolostil company.",
+  "description": "Office Web Application.",
   "keywords": [
-    "Rolostil",
     "application"
   ],
   "authors": [
@@ -24,9 +23,11 @@
     }
   },
   "require": {
-    "doctrine/orm": "^2.11",
+    "doctrine/orm": "2.13.5",
     "doctrine/cache": "^1.12",
     "tecnickcom/tcpdf": "^6.3",
-    "symfony/http-foundation": "^5.4"
+    "symfony/http-foundation": "^5.4",
+    "doctrine/annotations": "^1.14",
+    "symfony/cache": "^5.4"
   }
 }

@@ -1,49 +1,58 @@
 <?php
 if($page == "clients"):
-  $term = filter_input(INPUT_GET, 'search');
-  $clients= $entityManager->getRepository('\Roloffice\Entity\Client')->search($term);
-  ?>
-  <div class="card mb-4">
-    <div class="card-header p-2">
-      <h6 class="m-0 font-weight-bold text-primary">Pretraga klijenata</h6>
+    $term = filter_input(INPUT_GET, 'search');
+    $clients= $entityManager->getRepository('\Roloffice\Entity\Client')->search($term);
+    ?>
+    <div class="card mb-4">
+        <div class="card-header p-2">
+            <h6 class="m-0 font-weight-bold text-primary">Pretraga klijenata</h6>
+        </div>
+        <div class="card-body p-2">
+            <!-- Table with list of last client. -->
+            <div class="table-responsive">
+                <table class="dataTable table table-bordered table-hover" id="" width="100%" cellspacing="0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>klijent</th>
+                            <th>adresa</th>
+                        </tr>
+                    </thead>
+                    <tfoot class="thead-light">
+                        <tr>
+                            <th>klijent</th>
+                            <th>adresa</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        <?php
+                        foreach ($clients as $client_data):
+                            ?>
+                            <tr>
+                                <td>
+                                    <a href="?view&client_id=<?php echo $client_data->getId() ?>">
+                                        <?php echo $client_data->getName() ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <?php echo ($client_data->getStreet() ? $client_data->getStreet()->getName() : "")
+                                        . " " . $client_data->getHomeNumber()
+                                        . ($client_data->getStreet() && $client_data->getCity() ? ", " : "")
+                                        . ($client_data->getCity() ? $client_data->getCity()->getName() : "")
+                                        . ($client_data->getCity() && $client_data->getCountry() ? ", " : "")
+                                        . ($client_data->getCountry() ? $client_data->getCountry()->getName() : "")
+                                    ?>
+                                </td>
+                            </tr>
+                            <?php
+                        endforeach;
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- End of Card body. -->
     </div>
-    <div class="card-body p-2">
-      <!-- Table with list of last client. -->
-      <div class="table-responsive">
-        <table class="dataTable table table-bordered table-hover" id="" width="100%" cellspacing="0">
-          <thead class="thead-light">
-            <tr>
-              <th>klijent</th>
-              <th>adresa</th>
-            </tr>
-          </thead>
-          <tfoot class="thead-light">
-            <tr>
-              <th>klijent</th>
-              <th>adresa</th>
-            </tr>
-          </tfoot>
-          <tbody>
-            <?php
-            foreach ($clients as $client_data):
-              ?>
-              <tr>
-                <td>
-                  <a href="?view&client_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a>
-                </td>
-                <td>
-                <?php echo ( $client_data->getStreet()->getName() == "" ? "" : $client_data->getStreet()->getName() . " " . $client_data->getHomeNumber() .  ", " ) . $client_data->getCity()->getName(). ', ' .$client_data->getCountry()->getName() ?>                              </td>
-              </tr>
-              <?php
-            endforeach;
-            ?>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <!-- End of Card body. -->
-  </div>
-  <?php
+    <?php
 endif;
 
 if($page == "pidb"):
@@ -725,7 +734,12 @@ if($page == "projects"):
                                 <a href="?view&project_id=<?php echo $project_item->getId(); ?>" class="d-block card-link" title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
                                     #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
                                 </a>
-                                <?php echo $project_item->getClient()->getName(). ', <span style="font-size: 0.9em;">' .$project_item->getClient()->getCity()->getName(). '</span>' ?>
+                                <?php
+                                    echo $project_item->getClient()->getName()
+                                        . ($project_item->getClient()->getCity()
+                                            ? ', <span style="font-size: 0.9em;">' .$project_item->getClient()->getCity()->getName(). '</span>'
+                                            : '');
+                                ?>
                                 </td>
                                 <!--<td class="px-1 order-status text-center">
                                     <?php

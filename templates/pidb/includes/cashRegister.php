@@ -19,7 +19,7 @@ $daily_cash_saldo = $entityManager->getRepository('\Roloffice\Entity\Payment')->
             <thead class="thead-light">
               <tr>
                 <th class="text-center">vrsta transakcije</th>
-                <th>vezani dokument</th>
+                <th class="text-center">vezani dokument</th>
                 <th class="text-center">beleška</th>
                 <th class="text-center">iznos</th>
               </tr>
@@ -27,20 +27,20 @@ $daily_cash_saldo = $entityManager->getRepository('\Roloffice\Entity\Payment')->
             <tbody>
               <?php foreach ($daily_transactions as $transaction):
               $accounting_document = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId()); ?>
-                <tr>
-                  <td><?php echo $transaction->getType()->getName() ?></td>
-                  <td>
-                    <?php if ($accounting_document && $accounting_document->getOrdinalNumInYear() <> 0): ?>
-                      <a href="/pidb?view&pidb_id=<?php echo $accounting_document->getId()?>">
-                        <?php echo str_pad($accounting_document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?>
-                        <?php echo $accounting_document->getClient()->getName() ?>
-                        <?php echo $accounting_document->getTitle() ?>
-                      </a>
-                    <?php endif; ?>
-                  </td>
-                  <td><?php echo $transaction->getNote() ?></td>
-                  <td class="text-right"><?php echo $transaction->getAmount() ?></td>
-                </tr>
+              <tr>
+                <td><?php echo $transaction->getType()->getName() ?></td>
+                <td>
+                  <?php if ($accounting_document && $accounting_document->getOrdinalNumInYear() <> 0): ?>
+                  <a href="/pidb?view&pidb_id=<?php echo $accounting_document->getId()?>">
+                    <?php echo str_pad($accounting_document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?>
+                    <?php echo $accounting_document->getClient()->getName() ?>
+                    <?php echo $accounting_document->getTitle() ?>
+                  </a>
+                  <?php endif; ?>
+                </td>
+                <td><?php echo $transaction->getNote() ?></td>
+                <td class="text-right"><?php echo $transaction->getAmount() ?></td>
+              </tr>
               <?php endforeach; ?>
             </tbody>
             <tfoot class="thead-light">

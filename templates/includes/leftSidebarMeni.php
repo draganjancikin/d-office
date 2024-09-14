@@ -3,9 +3,9 @@
   <!-- Sidebar - Brand -->
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
     <div class="sidebar-brand-icon rotate-n-15">
-      <i class="far fa-registered"></i>
+      <i class="fas fa-tasks"></i>
     </div>
-    <div class="sidebar-brand-text mx-3">RolOffice</div>
+    <div class="sidebar-brand-text mx-3">d-Office</div>
   </a>
 
   <!-- Divider -->
@@ -31,20 +31,20 @@
   </li>
 
   <!-- Nav Item - Knjigovodstvo Menu -->
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#knjigovodstvo" aria-expanded="true" aria-controls="collapseTwo">
-        <i class="fas fa-fw fa-list"></i>
-        <span>Knjigovodstvo</span>
-      </a>
-      <div id="knjigovodstvo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <a class="collapse-item" href="/pidb/">Knjigovodstvo</a>
-          <a class="collapse-item" href="/pidb/?transactions">Transakcije</a>
-          <a class="collapse-item" href="/pidb/?cashRegister">Kasa</a>
-          <a class="collapse-item" href="/pidb/index.php?new"><i class="fas fa-plus"></i> Novi dokument</a>
-          <a class="collapse-item" href="/pidb/index.php?set"><i class="fas fa-cog"></i> Podešavanja</a>
-        </div>
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#knjigovodstvo" aria-expanded="true" aria-controls="collapseTwo">
+      <i class="fas fa-fw fa-list"></i>
+      <span>Knjigovodstvo</span>
+    </a>
+    <div id="knjigovodstvo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/pidb/">Knjigovodstvo</a>
+        <a class="collapse-item" href="/pidb/?transactions">Transakcije</a>
+        <a class="collapse-item" href="/pidb/?cashRegister">Kasa</a>
+        <a class="collapse-item" href="/pidb/index.php?new"><i class="fas fa-plus"></i> Novi dokument</a>
+        <a class="collapse-item" href="/pidb/index.php?set"><i class="fas fa-cog"></i> Podešavanja</a>
       </div>
+    </div>
     </li>
 
     <!-- Nav Item - Krojne liste Menu -->
@@ -99,12 +99,20 @@
         <div class="bg-white py-2 collapse-inner rounded">
           <a class="collapse-item" href="/articles/">Proizvodi</a>
           <a class="collapse-item" href="/articles/index.php?new"><i class="fas fa-plus"></i> Novi proizvod</a>
+          <?php
+          if ($user_role_id == 1):
+            ?>
+            <a class="collapse-item" href="/articles/index.php?articleGroups">Grupe proizvoda</a>
+            <a class="collapse-item" href="/articles/index.php?newArticleGroup"><i class="fas fa-plus"></i> Nova grupa proizvoda</a>
+            <?php
+          endif;
+          ?>
         </div>
       </div>
     </li>
 
     <?php
-    if($user_role_id==1 OR $user_role_id==2):
+    if ($user_role_id == 1 OR $user_role_id == 2):
       ?>
       <!-- Nav Item - Admin Menu -->
       <li class="nav-item">
@@ -116,35 +124,43 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="/admin/">Admin</a>
             <a class="collapse-item" href="/admin/index.php?baseBackup"><i class="fas fa-download"></i> Bekap baze</a>
-            </div>
+            <a class="collapse-item" href="/admin/index.php?companyInfo&view"><i class="fas fa-info"></i> Company info</a>
+          </div>
         </div>
       </li>
       <?php
     endif;
     ?>
   
-    <!-- Nav Item - Projekti Menu -->
+    <!-- Nav Item - Projects Menu -->
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#projekti" aria-expanded="true" aria-controls="collapseTwo">
         <!-- <i class="fas fa-fw fa-folder"></i> -->
         <i class="fas fa-fw fa-project-diagram"></i>
         <span>Projekti</span>
-      </a>
-      <div id="projekti" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <a class="collapse-item" href="/projects/">Projekti</a>
-          <a class="collapse-item" href="/projects/index.php?new"><i class="fas fa-plus"></i> Novi Projekat</a>
-          <a class="collapse-item" href="/projects/index.php?advancedSearch"><i class="fa fa-search"></i> Detajna pretraga</a>
-          </div>
+    </a>
+    <div id="projekti" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/projects/">Projekti</a>
+        <a class="collapse-item" href="/projects/index.php?new"><i class="fas fa-plus"></i> Novi Projekat</a>
+        <a class="collapse-item" href="/projects/index.php?advancedSearch"><i class="fa fa-search"></i> Detajna pretraga</a>
+        <?php
+        if ($user_role_id == 1):
+          ?>
+          <a class="collapse-item" href="/projects/index.php?projectTasks"><i class="fa fa-tasks"></i> Projektni zadaci</a>
+          <?php
+        endif;
+        ?>
       </div>
-    </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider d-none d-md-block">
-
-    <!-- Sidebar Toggler (Sidebar) -->
-    <div class="text-center d-none d-md-inline">
-      <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider d-none d-md-block">
+
+  <!-- Sidebar Toggler (Sidebar) -->
+  <div class="text-center d-none d-md-inline">
+    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
 
 </ul>

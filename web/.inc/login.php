@@ -1,5 +1,5 @@
 <?php
-require_once filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '/../config/dbConfig.php';
+require_once '../../config/dbConfig.php';
 session_start();
 
 $table = "v6__users";    // the table that this script will set up and use.

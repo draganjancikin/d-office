@@ -32,6 +32,7 @@ endif;
                             <tr class="text-center">
                                 <th>datum</th>
                                 <th>vrsta</th>
+                                <th>beleška</th>
                                 <th>duguje</th>
                                 <th>potražuje</th>
                                 <th></th>
@@ -42,6 +43,7 @@ endif;
                             <tr>
                                 <td class="text-center"><?php echo $pidb_data->getDate()->format('d-m-Y'); ?></td>
                                 <td class="text-center"></td>
+                                <td class="text-center"></td>
                                 <td class="text-right"><?php echo number_format($total, 4, ",", "."); ?></td>
                                 <td class="text-right"></td>
                                 <td></td>
@@ -50,6 +52,7 @@ endif;
                                 <tr>
                                     <td class="text-center"><?php echo $transaction->getDate()->format('d-m-Y'); ?></td>
                                     <td class="text-center" title="<?php echo $transaction->getNote() ?>"><?php echo $transaction->getType()->getName(); ?></td>
+                                    <td class="text-center"><?php echo $transaction->getNote(); ?></td>
                                     <td class="text-right"></td>
                                     <td class="text-right">
                                         <?php echo number_format($transaction->getAmount(), 4, ",", "."); ?>
@@ -70,6 +73,7 @@ endif;
                         <tfoot>
                             <tr>
                                 <th></th>
+                                <th></th>
                                 <th class="text-right">ukupno</th>
                                 <th class="text-right"><?php echo number_format($total, 4, ",", ".") ?></th>
                                 <th class="text-right"><?php echo number_format($total_income, 4, ",", ".") ?></th>
@@ -77,10 +81,12 @@ endif;
                             </tr>
                             <tr>
                                 <th></th>
+                                <th></th>
                                 <th colspan="2" class="text-right">saldo</th>
                                 <th class="text-right <?php echo ( (round($total, 4) - round($total_income, 4)) <= 0 ? "bg-success" : "bg-danger text-white" ) ?>">
                                     <?php echo number_format($total-$total_income, 4, ",", ".") ?>
                                 </th>
+                                <th></th>
                             </tr>
                         </tfoot>
                     </table>

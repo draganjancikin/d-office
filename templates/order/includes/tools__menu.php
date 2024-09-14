@@ -6,6 +6,7 @@ require 'add__material.php';
 require 'edit__material.php';
 require 'remove__material.php';
 require 'duplicate__material.php';
+require 'change__material__in__order.php';
 ?>
 <div class="col-lg-12 px-2" id="topMeni">
   <div class="card mb-2">
@@ -19,9 +20,9 @@ require 'duplicate__material.php';
       if(isset($_GET['view']) || isset($_GET['edit'])):
         $order_id = filter_input(INPUT_GET, 'id');
         $order_data = $entityManager->find('\Roloffice\Entity\Order', $order_id);
-        $supplier_data = $entityManager->find('\Roloffice\Entity\Client', $order_data->getSupplier());
+        $supplier_data = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($order_data->getSupplier());
         $project_data = $entityManager->getRepository('Roloffice\Entity\Order')->getProject($order_id);
-        $materials = $entityManager->getRepository('\Roloffice\Entity\Material')->getSupplierMaterials($supplier_data->getId());
+        $materials = $entityManager->getRepository('\Roloffice\Entity\Material')->getSupplierMaterials($supplier_data['id']);
         // In view case show edit button.
         if(isset($_GET['view'])):
           ?>

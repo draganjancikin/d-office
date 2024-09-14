@@ -1,7 +1,7 @@
 <!-- New order -->
 <div class="card mb-4">
   <div class="card-header p-2">
-      <h6 class="m-0 text-dark">Otvaranje nove narudžbenice:</h6>
+    <h6 class="m-0 text-dark">Otvaranje nove narudžbenice:</h6>
   </div>
   <div class="card-body p-2">
     <form action="<?php echo $_SERVER['PHP_SELF'] . '?createOrder'; ?>" method="post">
@@ -43,15 +43,16 @@
       </div>
 
       <div class="form-group row">
-        <label for="inputTitle" class="col-sm-3 col-lg-2 col-form-label text-right" >Naslov: </label>
+        <label for="inputTitle" class="col-sm-3 col-lg-2 col-form-label text-right">Naslov: </label>
         <div class="col-sm-6">
-          <input id="inputTitle" class="form-control" type="text" name="title" placeholder="Unesite naslov narudžbenice" />
+          <input id="inputTitle" class="form-control" type="text" name="title"
+            placeholder="Unesite naslov narudžbenice" />
         </div>
       </div>
 
       <div class="form-group row">
         <label class="col-sm-3 col-lg-2 col-form-label text-right">Beleška: </label>
-        <div class="col-sm-10">
+        <div class="col-md-6 col-sm-10">
           <textarea class="form-control" rows="3" name="note" placeholder="Unesite belešku uz narudžbenicu"></textarea>
         </div>
       </div>

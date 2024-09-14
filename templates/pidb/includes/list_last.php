@@ -1,46 +1,52 @@
-<!-- Predračuni -->
+<!-- Proformas -->
 <?php
 $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getLast(1, 0, 10);
 ?>
 <div class="card  border-info mb-4">
-  <div class="card-header bg-info p-2">
-    <h6 class="m-0 font-weight-bold text-white">Predračun</h6>
-  </div>
-  <div class="card-body p-2">
-    <div class="table-responsive">
-      <table class="table table-bordered table-hover" id="" width="100%" cellspacing="0">
-        <thead class="thead-light">
-          <tr>
-            <th>oznaka</th>
-            <th>naziv klijenta</th>
-            <th>naslov dokumenta</th>
-          </tr>
-        </thead>
-        <tfoot class="thead-light">
-          <tr>
-            <th>oznaka</th>
-            <th>naziv klijenta</th>
-            <th>naslov dokumenta</th>
-          </tr>
-        </tfoot>
-        <tbody>
-          <?php foreach ($proformas as $proforma): ?>
-            <tr>
-              <td>
-                <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
-                  <?php echo "P_" . str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $proforma->getCreatedAt()->format('m / Y') ?>
-                </a>
-              </td>
-              <td>
-                <?php echo $proforma->getClient()->getName() ?>
-              </td>
-              <td><?php echo $proforma->getTitle() ?></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+    <div class="card-header bg-info p-2">
+        <h6 class="m-0 font-weight-bold text-white">Predračun</h6>
     </div>
-  </div>
+    <div class="card-body p-2">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="" width="100%" cellspacing="0">
+                <thead class="thead-light">
+                    <tr>
+                        <th>oznaka</th>
+                        <th>naziv klijenta</th>
+                        <th>naslov dokumenta</th>
+                    </tr>
+                </thead>
+                <tfoot class="thead-light">
+                    <tr>
+                        <th>oznaka</th>
+                        <th>naziv klijenta</th>
+                        <th>naslov dokumenta</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <?php
+                    foreach ($proformas as $proforma):
+                        ?>
+                        <tr>
+                            <td>
+                                <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
+                                    <?php
+                                    echo "P_" . str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $proforma->getCreatedAt()->format('m / Y')
+                                    ?>
+                                </a>
+                            </td>
+                            <td>
+                                <?php echo $proforma->getClient()->getName() ?>
+                            </td>
+                            <td><?php echo $proforma->getTitle() ?></td>
+                        </tr>
+                        <?php
+                    endforeach;
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <!-- Otpremnice -->

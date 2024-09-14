@@ -58,60 +58,45 @@ class CuttingSheetRepository extends EntityRepository {
     return $result;
   }
 
-  /**
-   * Method that set ordinal number in year of CuttingSheet
-   *
-   * @param int $cutting_sheet_id
-   * 
-   * @return void
-   */
-  public function setOrdinalNumInYear($cutting_sheet_id) {
-    
-    // count number of records in database table v6_cutting_sheets
-    $order_count = $this->getNumberOfCuttingSheets();
+    /**
+     * Method that set ordinal number in year of CuttingSheet
+     *
+     * @param int $cutting_sheet_id
+     *
+     * @return void
+     */
+    public function setOrdinalNumInYear($cutting_sheet_id) {
+        // Count number of records in database table v6_cutting_sheets.
+        $order_count = $this->getNumberOfCuttingSheets();
 
-    // get year of last order
-    $year_of_last_order = $this->getLastCuttingSheet()->getCreatedAt()->format('Y');
+        $year_of_last_order = $this->getLastCuttingSheet()->getCreatedAt()->format('Y');
+        $ordinal_number_of_order_before_last = $this->getCuttingSheetBeforeLast() ? $this->getCuttingSheetBeforeLast()->getOrdinalNumInYear() : 1;
+        $year_of_order_before_last = $this->getCuttingSheetBeforeLast() ? $this->getCuttingSheetBeforeLast()->getCreatedAt()->format('Y') : date('Y');
 
-    // get ordinal number in year of order before last
-    $ordinal_number_of_order_before_last = $this->getCuttingSheetBeforeLast()->getOrdinalNumInYear();
+        if ($order_count ==0) {  // First case - table $table is empty.
+            return die("Table order is empty!");
+        } elseif ($order_count ==1){  // Second case - kada postoji jedan unos u tabeli $table.
+            $ordinal_number_in_year = 1; // Pošto postoji samo jedan unos u tabelu $table $b_on dobija vrednost '1'.
+        } else {  // Svi ostali slučajevi kada ima više od jednog unosa u tabeli $table.
 
-    // year of order before last
-    $year_of_order_before_last = $this->getCuttingSheetBeforeLast()->getCreatedAt()->format('Y');
+            if ($year_of_last_order < $year_of_order_before_last){
+                return die("Godina zadnjeg unosa je manja od godine predzadnjeg unosa! Verovarno datum nije podešen");
+            } elseif ($year_of_last_order == $year_of_order_before_last){ // Nema promene godine.
+                $ordinal_number_in_year = $ordinal_number_of_order_before_last + 1;
+            } else {  // Došlo je do promene godine.
+                $ordinal_number_in_year = 1;
+            }
+        }
 
-    if($order_count ==0){  // prvi slučaj kada je tabela $table prazna
-    
-      return die("Table order is empty!");
-    
-    }elseif($order_count ==1){  // drugi slučaj - kada postoji jedan unos u tabeli $table
-    
-      $ordinal_number_in_year = 1; // pošto postoji samo jedan unos u tabelu $table $b_on dobija vrednost '1'
-    
-    }else{  // svi ostali slučajevi kada ima više od jednog unosa u tabeli $table
-    
-      if($year_of_last_order < $year_of_order_before_last){
-        return die("Godina zadnjeg unosa je manja od godine predzadnjeg unosa! Verovarno datum nije podešen");
-      }elseif($year_of_last_order == $year_of_order_before_last){ //nema promene godine
-        $ordinal_number_in_year = $ordinal_number_of_order_before_last + 1;
-      }else{  // došlo je do promene godine
-        $ordinal_number_in_year = 1;
-      }
-    
+        // Update ordinal_number_in_year.
+        $cutting_sheet = $this->_em->find('\Roloffice\Entity\CuttingSheet', $cutting_sheet_id);
+        if ($cutting_sheet === null) {
+            echo "Order with ID $cutting_sheet_id does not exist.\n";
+            exit(1);
+        }
+        $cutting_sheet->setOrdinalNumInYear($ordinal_number_in_year);
+        $this->_em->flush();
     }
-
-    // update ordinal_number_in_year
-    $cutting_sheet = $this->_em->find('\Roloffice\Entity\CuttingSheet', $cutting_sheet_id);
-
-    if ($cutting_sheet === null) {
-      echo "Order with ID $cutting_sheet_id does not exist.\n";
-      exit(1);
-    }
-
-    $cutting_sheet->setOrdinalNumInYear($ordinal_number_in_year);
-
-    $this->_em->flush();
-
-  }
 
   /**
    * Method that return last CuttingSheet in db table.
@@ -131,23 +116,23 @@ class CuttingSheetRepository extends EntityRepository {
     return $last__cutting_sheet;
   }
 
-  /**
-   * Method that return before last CuttingSheet in db table
-   *
-   * @return object
-   */
-  public function getCuttingSheetBeforeLast() {
-
-    $qb = $this->_em->createQueryBuilder();
-    $qb->select('cs')
-        ->from('Roloffice\Entity\CuttingSheet', 'cs')
-        ->orderBy('cs.id', 'DESC')
-        ->setMaxResults(2);
-    $query = $qb->getQuery();
-    $cutting_sheet__before_last = $query->getResult()[1];
-    
-    return $cutting_sheet__before_last;
-  }
+    /**
+     * Method that return before last CuttingSheet in db table
+     *
+     * @return object
+     */
+    public function getCuttingSheetBeforeLast() {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('cs')
+            ->from('Roloffice\Entity\CuttingSheet', 'cs')
+            ->orderBy('cs.id', 'DESC')
+            ->setMaxResults(2);
+        $query = $qb->getQuery();
+        if (count($query->getResult()) < 2) {
+            return null;
+        }
+        return $query->getResult()[1];
+    }
 
   /**
    * Search method by criteria: Client name.

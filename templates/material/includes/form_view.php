@@ -73,42 +73,55 @@
   </div>
 
   <div class="card-body p-2">
-    <?php
-    foreach ($material_suppliers as $material_supplier):
-      ?>
-      <form method="post">
-        <fieldset disabled>
-          <div class="form-group row">
-            
-            <div class="col-sm-4 col-lg-3 col-xl-2">
-              <select class="form-control" name="supplier_id">
-                <option value="<?php echo $material_supplier->getSupplier()->getId(); ?>"><?php echo $material_supplier->getSupplier()->getName(); ?></option>
-              </select>
-            </div>
-
-            <div class="col-sm-2">
-              <input class="form-control" type="text" value="<?php echo $material_supplier->getModifiedAt()->format('d M Y') ?>">
-            </div>
-
-            <div class="col-sm-2 col-lg-3">
-              <input class="form-control" type="text" name="code" value="<?php echo $material_supplier->getNote();?>">
-            </div>
-
-            <div class="col-sm-2">
-              <input class="form-control" type="text" name="price" value="<?php echo $material_supplier->getPrice(); ?>">
-            </div>
-
-            <div class="col-sm-2">
-              <button type="submit" class="btn btn-mini btn-secondary"><i class="fas fa-save"> </i> </button>
-              <a href="#" class="btn btn-mini btn-secondary disabled"><i class="fas fa-trash-alt"> </i> </a>
-            </div>
-
-          </div>
-        </fieldset>
-      </form>
-      <?php
-    endforeach;
-    ?>
+    <div class="table-responsive">
+      <table class="table table-hover" >
+        <thead>
+          <tr class="table-secondary">
+            <th class="px-1">#</th>
+            <th class="px-1 text-center">naziv</th>
+            <th class="px-1 text-center">datum izmene</th>
+            <th class="px-1 text-center">šifra po dobavljaču</th>
+            <th class="px-1 text-center">cena</th>
+            <th class="px-1"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          $count = 0;
+		  foreach ($material_suppliers as $material_supplier):
+            $count++;
+		    ?>
+            <form method="post">
+              <fieldset disabled>
+                <tr>
+                  <td class="px-1"><?php echo $count ;?></td>
+                  <td class="px-1">
+                    <select class="form-control" name="supplier_id" title="<?php echo $material_supplier->getSupplier()->getName(); ?>" disabled>
+                      <option value="<?php echo $material_supplier->getSupplier()->getId(); ?>"><?php echo $material_supplier->getSupplier()->getName(); ?></option>
+                    </select>
+                  </td>
+                  <td class="px-1">
+                      <input class="form-control" type="text" value="<?php echo $material_supplier->getModifiedAt()->format('d M Y') ?>" disabled>
+                  </td>
+                  <td class="px-1">
+                    <input class="form-control" type="text" name="code" value="<?php echo $material_supplier->getNote();?>" disabled>
+                  </td>
+                  <td class="px-1">
+                    <input class="form-control" type="text" name="price" value="<?php echo $material_supplier->getPrice(); ?>" disabled>
+                  </td>
+                    <td class="px-1">
+                      <button type="submit" class="btn btn-mini btn-secondary" disabled><i class="fas fa-save"> </i> </button>
+                      <a href="#" class="btn btn-mini btn-secondary disabled"><i class="fas fa-trash-alt"> </i> </a>
+                    </td>
+                </tr>
+              </fieldset>
+            </form>
+		    <?php
+		  endforeach;
+		?>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="card-header p-2">

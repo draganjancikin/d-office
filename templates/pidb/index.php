@@ -2,7 +2,7 @@
 <html lang="sr">
 <head>
   <title>Dokumenti</title>
-  <?php include '../../app/includes/pageHead.php'; ?>
+  <?php include '../../templates/includes/pageHead.php'; ?>
 </head>
 <body id="page-top">
 
@@ -10,7 +10,7 @@
   <div id="wrapper">
     
     <!-- Sidebar -->
-    <?php include '../../app/includes/leftSidebarMeni.php'; ?>
+    <?php include '../../templates/includes/leftSidebarMeni.php'; ?>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -20,7 +20,7 @@
       <div id="content">
 
         <!-- Topbar -->
-        <?php include '../../app/includes/topBar.php'; ?>
+        <?php include '../../templates/includes/topBar.php'; ?>
         <!-- End of Topbar -->
 
         <!-- Begin Page Content -->
@@ -53,7 +53,7 @@
 
                   if (isset($_GET['cashRegister']) ) include '../../templates/pidb/includes/cashRegister.php';
 
-                  if (isset($_GET['search'])) include '../../app/includes/search.php';
+                  if (isset($_GET['search'])) include '../../templates/includes/search.php';
                   if (isset($_GET['set'])) include '../../templates/pidb/includes/form_preferences.php';
 
                 endif;
@@ -65,7 +65,7 @@
             <?php 
             if (isset($_GET['pidb_id'])) include '../../templates/pidb/includes/modals.php';
             if (isset($_GET['cashRegister'])) include '../../templates/pidb/includes/modals2.php';
-            if (isset($_GET['transactions'])) include '../../templates/pidb/includes/modals3.php';
+            if (isset($_GET['transactions']) AND isset($_GET['pidb_id'])) include '../../templates/pidb/includes/modals3.php';
             ?>
             <!-- End of Modals -->
             
@@ -79,7 +79,7 @@
       <!-- End of Main Content -->
       
       <!-- Footer -->
-      <?php include '../../app/includes/mainFooter.php'; ?>
+      <?php include '../../templates/includes/mainFooter.php'; ?>
       <!-- End of Footer -->
 
 
@@ -95,6 +95,6 @@
   </a>
 
   <!-- page body footer -->
-  <?php include '../../app/includes/pageBodyFooter.php'; ?>
+  <?php include '../../templates/includes/pageBodyFooter.php'; ?>
 </body>
 </html>

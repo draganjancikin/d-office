@@ -2,7 +2,7 @@
 <html lang="sr">
 <head>
   <title>Projekti</title>
-  <?php include '../../app/includes/pageHead.php'; ?>
+  <?php include '../../templates/includes/pageHead.php'; ?>
 </head>
 <body id="page-top">
 
@@ -10,7 +10,7 @@
   <div id="wrapper">
     
     <!-- Sidebar -->
-    <?php include '../../app/includes/leftSidebarMeni.php'; ?>
+    <?php include '../../templates/includes/leftSidebarMeni.php'; ?>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -20,7 +20,7 @@
       <div id="content">
 
         <!-- Topbar -->
-        <?php include '../../app/includes/topBar.php'; ?>
+        <?php include '../../templates/includes/topBar.php'; ?>
         <!-- End of Topbar -->
 
         <!-- Begin Page Content -->
@@ -51,13 +51,15 @@
                       
               else:
                       
-                if(isset($_GET['new'])) include '../../templates/project/includes/form_new_project.php';
-                if(isset($_GET['view']) && isset($_GET['project_id'])) include '../../templates/project/includes/form_view_project.php';
-                if(isset($_GET['edit']) && isset($_GET['project_id'])) include '../../templates/project/includes/form_edit_project.php';
-                if(isset($_GET['editTask'])) include '../../templates/project/includes/form_edit_task.php';
+                if (isset($_GET['new'])) include '../../templates/project/includes/form_new_project.php';
+                if (isset($_GET['view']) && isset($_GET['project_id'])) include '../../templates/project/includes/form_view_project.php';
+                if (isset($_GET['edit']) && isset($_GET['project_id'])) include '../../templates/project/includes/form_edit_project.php';
+                if (isset($_GET['editTask'])) include '../../templates/project/includes/form_edit_task.php';
                       
-                if(isset($_GET['search'])) include '../../app/includes/search.php';
-                if(isset($_GET['advancedSearch'])) include '../../templates/project/includes/advanced_search.php';
+                if (isset($_GET['search'])) include '../../templates/includes/search.php';
+                if (isset($_GET['advancedSearch'])) include '../../templates/project/includes/advanced_search.php';
+
+                if (isset($_GET['projectTasks'])) include '../../templates/project/includes/project_tasks.php';
                       
               endif;
               ?>
@@ -76,7 +78,7 @@
       <!-- End of Main Content -->
       
       <!-- Footer -->
-      <?php include '../../app/includes/mainFooter.php'; ?>
+      <?php include '../../templates/includes/mainFooter.php'; ?>
       <!-- End of Footer -->
 
 
@@ -92,6 +94,6 @@
   </a>
 
   <!-- page body footer -->
-  <?php include '../../app/includes/pageBodyFooter.php'; ?>
+  <?php include '../../templates/includes/pageBodyFooter.php'; ?>
 </body>
 </html>

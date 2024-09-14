@@ -4,12 +4,12 @@
     <h6 class="m-0 text-dark">Upis podataka o novom proizvodu</h6>
   </div>
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?createArticle'; ?>" method="post" >
-    
+    <form action="<?php echo $_SERVER['PHP_SELF'] . '?createArticle'; ?>" method="post">
+
       <div class="form-group row">
         <label for="inputDate" class="col-sm-3 col-lg-2 col-form-label text-right">Datum:</label>
         <div class="col-sm-3">
-            <input id="inputDate" class="form-control" name="date" value="<?php echo date("d M Y"); ?>" disabled>
+          <input id="inputDate" class="form-control" name="date" value="<?php echo date("d M Y"); ?>" disabled>
         </div>
       </div>
 
@@ -22,8 +22,8 @@
             $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->getArticleGroups();
             foreach ($article_groups as $article_group) :
               ?>
-              <option value="<?php echo $article_group->getId() ?>"><?php echo $article_group->getName() ?></option>
-              <?php
+            <option value="<?php echo $article_group->getId() ?>"><?php echo $article_group->getName() ?></option>
+            <?php
             endforeach;
             ?>
           </select>
@@ -33,7 +33,8 @@
       <div class="form-group row">
         <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
         <div class="col-sm-8">
-          <input id="inputName" class="form-control" name="name" maxlength="64" placeholder="Broj karaktera ograničen na 64" required>
+          <input id="inputName" class="form-control" name="name" maxlength="64"
+            placeholder="Broj karaktera ograničen na 64" required>
         </div>
       </div>
 
@@ -46,8 +47,8 @@
             $units = $entityManager->getRepository('\Roloffice\Entity\Unit')->findBy(array(), array('name' => 'ASC'));
             foreach ($units as $unit) :
               ?>
-              <option value="<?php echo $unit->getId() ?>"><?php echo $unit->getName() ?></option>
-              <?php
+            <option value="<?php echo $unit->getId() ?>"><?php echo $unit->getName() ?></option>
+            <?php
             endforeach;
             ?>
           </select>
@@ -72,7 +73,7 @@
       <div class="form-group row">
         <label for="inputPrice" class="col-sm-3 col-lg-2 col-form-label text-right">Cena:</label>
         <div class="col-sm-3">
-          <input id="inputPrice" class="form-control" name="price" maxlength="5" placeholder="u eur bez PDV-a">
+          <input id="inputPrice" class="form-control" name="price" maxlength="9" placeholder="u eur bez PDV-a">
         </div>
         <div class="col-sm-2">eur</div>
       </div>
@@ -80,14 +81,15 @@
       <div class="form-group row">
         <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-right">Beleška:</label>
         <div class="col-md-8">
-            <textarea id="inputNote" class="form-control" rows="2" name="note"></textarea>
+          <textarea id="inputNote" class="form-control" rows="2" name="note"></textarea>
         </div>
       </div>
 
       <div class="form-group row">
-        <div class="col-sm-3 offset-sm-3 offset-lg-2">
-            <button type="submit" class="btn btn-sm btn-success" title="Snimi podatake o proizvodu!"><i class="fas fa-save"></i> Snimi</button>
-            <button type="reset" class="btn btn-sm btn-default">Poništi</button>
+        <div class="col-sm-3 col-md-6 offset-sm-3 offset-lg-2">
+          <button type="submit" class="btn btn-sm btn-success" title="Snimi podatake o proizvodu!"><i
+              class="fas fa-save"></i> Snimi</button>
+          <button type="reset" class="btn btn-sm btn-default">Poništi</button>
         </div>
       </div>
 
