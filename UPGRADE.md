@@ -1,4 +1,4 @@
-# Upgrade to 6.6.2
+# Upgrade to 6.6.3
 Resolved issues and bugfixes:
 * #215 - Table head for material suppliers
 
