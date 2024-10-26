@@ -1,4 +1,8 @@
 # Upgrade to 6.6.2
+Resolved issues and bugfixes:
+* #215 - Table head for material suppliers
+
+# Upgrade to 6.6.2
 * #139 - Table head for material suppliers
 * #162 - Create a form for create and edit Article group
 * #203 - Warning: Undefined variable $client_street_name in .../form_advanced_search.php on line 102
