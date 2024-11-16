@@ -1,3 +1,7 @@
+# Upgrade to 6.7.0
+Enhancement:
+* #227 - Update PHP to version 8.0 in project settings and on the Production environment 
+
 # Upgrade to 6.6.3
 Resolved issues and bugfixes:
 * #208 - Add possibility to delete order
