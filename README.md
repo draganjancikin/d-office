@@ -1,10 +1,13 @@
-# d-Office 6.6.3
+# d-Office 6.7.0
 
 Web Application
 
 ## Libraries
 
 ### Communication with database: Doctrine 2 ORM
+
+Environment requirements:
+* PHP 8.0
 
 Required:
 * doctrine/orm:2.13.5
