@@ -1,5 +1,6 @@
 # Upgrade to 6.6.3
 Resolved issues and bugfixes:
+* #208 - Add possibility to delete order
 * #215 - Table head for material suppliers
 
 # Upgrade to 6.6.2
