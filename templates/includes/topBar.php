@@ -7,7 +7,6 @@
 
     <!-- Topbar Search -->
     <?php
-    // ako je $page različito od home (početne) prikazaće serchForm
     if ($page <> "home") include 'formSearch.php';
     ?>
 
