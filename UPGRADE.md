@@ -1,3 +1,7 @@
+# Upgrade to 6.7.1
+Resolved issues and bugfixes:
+* #230 - Print Installation Record Issue
+
 # Upgrade to 6.7.0
 Enhancement:
 * #227 - Update PHP to version 8.0 in project settings and on the Production environment 
