@@ -61,19 +61,19 @@ $project = $entityManager->find('Roloffice\Entity\Project', $project_id);
 $client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($project->getClient()->getId());
 
 $html = '
-    <img src="../images/logo.png" >
-    <span>' . COMPANY_STREET . ', 21400 Bačka Palanka, tel: +381 21 751112, mob: +381 60 7511123</span>
+  <img src="../images/logo.png" >
+  <span>' . $company_info['name'] . ', ' . $company_info['city']. ', tel: +381 21 751112, mob: +381 60 7511123</span>
 
-    <h1 style="text-align: center">ZAPISNIK O MONTAŽI</h1>
-    <hr>
-    <div>Datum: ______________ Adresa montaže: ___________________________________</div>
+  <h1 style="text-align: center">ZAPISNIK O MONTAŽI</h1>
+  <hr>
+  <div>Datum: ______________ Adresa montaže: ___________________________________</div>
 
-    <div>Naručilac: <u>   ' . $client['name'] . ', ' . $client['city'] . '   </u></div>
+  <div>Naručilac: <u>   ' . $client['name'] . ', ' . $client['city'] . '   </u></div>
 
-    <div>Ugovor broj: _________________________ Projekat broj: <u>   ' . str_pad($project->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '/' . $project->getCreatedAt()->format('Y') . '   </u></div> 
-    <hr>
+  <div>Ugovor broj: _________________________ Projekat broj: <u>   ' . str_pad($project->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '/' . $project->getCreatedAt()->format('Y') . '   </u></div> 
+  <hr>
 
-    <pre style="color: #000000;">
+  <pre style="color: #000000;">
 
   Ugradjene pozicije: ________________________________________________________________
 
@@ -113,11 +113,12 @@ $html = '
   Napomena: Potpisivanjem ovog zapisnika narucilac potvrdjuje prijem narucenih
   proizvoda i od datuma ugradnje zapocinje garantni rok.
   <hr>
-    </pre>
-  ' . COMPANY_NAME . '    
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </pre>
+  ' . $company_info['name'] . '
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   za Narucioca
   <pre>
 ____________________                            ____________________
@@ -129,12 +130,12 @@ $pdf->writeHTML($html, true, false, true, false, '');
 // Reset pointer to the last page.
 $pdf->lastPage();
 
-// ---------------------------------------------------------
+// -----------------------------------------------------------------------------
 
 ob_end_clean();
 //Close and output PDF document
 $pdf->Output('test_name.pdf', 'I');
 
-//============================================================+
+//==============================================================================
 // END OF FILE
-//============================================================+
+//==============================================================================
