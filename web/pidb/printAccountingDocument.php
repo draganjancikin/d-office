@@ -12,6 +12,7 @@ require_once '../../config/tcpdf_include.php';
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 $company_info = $entityManager->getRepository('\Roloffice\Entity\CompanyInfo')->getCompanyInfoData(1);
+
 $company_accounts = (strlen($company_info['bank_account_1']) > 0 ? $company_info['bank_account_1'] . ', ' : "")
 	. (strlen($company_info['bank_account_2']) > 0 ? '<br />' . $company_info['bank_account_2'] . ', ' : "");
 
