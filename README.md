@@ -14,7 +14,7 @@ Required:
 * doctrine/cache:^1.12
 * tecnickcom/tcpdf:^6.3
 * symfony/http-foundation:^5.4
-* doctrine/annotations:1.14.4
+* doctrine/annotations:^2.0.2
 * symfony/cache:^5.4
 * bootstrap 4.4.1
 

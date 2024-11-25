@@ -4,6 +4,7 @@ Resolved issues and bugfixes:
 
 Enhancement:
 * Update "doctrine/annotations" package (1.14.2 => 1.14.4)
+* Update "doctrine/annotations" package (1.14.4 => 2.0.2)
 
 # Upgrade to 6.7.2
 Resolved issues and bugfixes:
