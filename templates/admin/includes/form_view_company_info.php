@@ -93,6 +93,51 @@ $company_street = $company->getStreet() ? $entityManager->find('\Roloffice\Entit
           </div>
         </div>
 
+        <div class="form-group row">
+          <label for="disabledInputPhone1" class="col-sm-3 col-lg-2 col-form-label text-right text-nowrap">Telefon
+            1:</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="disabledInputPhone1" type="text"
+                   value="<?php echo $company->getPhone1() ?>" disabled />
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="disabledInputPhone2" class="col-sm-3 col-lg-2 col-form-label text-right text-nowrap">Telefon
+            2:</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="disabledInputPhone2" type="text"
+                   value="<?php echo $company->getPhone2() ?>" disabled />
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="disabledInputEmail1" class="col-sm-3 col-lg-2 col-form-label text-right text-nowrap">Email
+            1:</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="disabledInputEmail1" type="text"
+                   value="<?php echo $company->getEmail1() ?>" disabled />
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="disabledInputEmail2" class="col-sm-3 col-lg-2 col-form-label text-right text-nowrap">Email
+            2:</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="disabledInputEmail2" type="text"
+                   value="<?php echo $company->getEmail2() ?>" disabled />
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="disabledInputWebsite1" class="col-sm-3 col-lg-2 col-form-label text-right text-nowrap">Website
+            2:</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="disabledInputWebsite1" type="text"
+                   value="<?php echo $company->getWebsite1() ?>" disabled />
+          </div>
+        </div>
+
       </fieldset>
     </form>
   </div>
