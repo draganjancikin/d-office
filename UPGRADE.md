@@ -1,3 +1,11 @@
+# Upgrade to 6.7.2
+Resolved issues and bugfixes:
+* #235 - Nov system update
+
+Enhancement:
+* Cleaning the code
+* Fixing typo errors
+ 
 # Upgrade to 6.7.1
 Resolved issues and bugfixes:
 * #230 - Print Installation Record Issue
