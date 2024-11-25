@@ -1,4 +1,4 @@
-# d-Office 6.7.2
+# d-Office 6.7.3
 
 Web Application
 
@@ -10,11 +10,11 @@ Environment requirements:
 * PHP 8.0
 
 Required:
-* doctrine/orm:2.14.3
+* doctrine/orm:^2.15
 * doctrine/cache:^1.12
 * tecnickcom/tcpdf:^6.3
 * symfony/http-foundation:^5.4
-* doctrine/annotations:^1.14
+* doctrine/annotations:^2.0.2
 * symfony/cache:^5.4
 * bootstrap 4.4.1
 
