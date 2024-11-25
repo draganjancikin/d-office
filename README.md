@@ -10,7 +10,7 @@ Environment requirements:
 * PHP 8.0
 
 Required:
-* doctrine/orm:2.14.3
+* doctrine/orm:^2.15
 * doctrine/cache:^1.12
 * tecnickcom/tcpdf:^6.3
 * symfony/http-foundation:^5.4
