@@ -288,26 +288,6 @@ else {
 	$pdf->Output($file_name, 'I');
 }
 
-/* old code ====================================================================
-// Check if folder exist on local machine.
-if (is_dir($root . $folder)) {
-    // Close and output PDF document and save PDF to "$root.$folder./" .
-    $pdf->Output(
-        $root . $folder . '/' . $file_name_prefix
-        . str_pad($order_data->getOrdinalNumInYear(), 3, "0", STR_PAD_LEFT) . '-'
-        . $order_data->getDate()->format('m'). ' - '
-        . $order_data->getDate()->format('d M') . '.pdf', 'FI'
-    );
-} else {
-    // Close and output PDF document.
-    $pdf->Output(
-        $file_name_prefix . str_pad($order_data->getOrdinalNumInYear(), 3, "0", STR_PAD_LEFT) . '-'
-        . $order_data->getDate()->format('m'). ' - '
-        . $order_data->getDate()->format('d M') . '.pdf', 'I'
-    );
-}
-*/
-
 //============================================================+
 // END OF FILE.
 //============================================================+
