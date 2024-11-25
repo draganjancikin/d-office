@@ -19,7 +19,7 @@ class ProjectTask {
   protected $id;
 
   /**
-   * Meny ProjectsTasks belongs to the One Project.
+   * Many Projects Tasks belongs to the One Project.
    * @ORM\ManyToOne(targetEntity="Project")
    * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
    * @var int
@@ -33,7 +33,7 @@ class ProjectTask {
   protected $created_at;
 
   /**
-   * Many Clients has ben created from One User.
+   * Many Clients can be created by One User.
    * @ORM\ManyToOne(targetEntity="User")
    * @ORM\JoinColumn(name="created_by_user_id", referencedColumnName="id")
    * @var int
@@ -47,7 +47,7 @@ class ProjectTask {
   protected $modified_at;
 
   /**
-   * Many Clients has ben updated from One User.
+   * Many clients can be updated by one user.
    * @ORM\ManyToOne(targetEntity="User")
    * @ORM\JoinColumn(name="modified_by_user_id", referencedColumnName="id")
    * @var int
@@ -55,7 +55,7 @@ class ProjectTask {
   protected $modified_by_user;
 
   /**
-   * Meny Project Tasks belongs to the One Project Tast Type.
+   * Many Project Tasks belongs to the One Project Tast Type.
    *    ('1'=>'Merenje', '2'=>'Ponuda', '3'=>'Nabavka', '4'=>'Proizvodnja',
    *    '5'=>'Isporuka', '6'=>'Montaža', '7'=>'Rreklamacija', '8'=>'Popravka')
    * @ORM\ManyToOne(targetEntity="ProjectTaskType")

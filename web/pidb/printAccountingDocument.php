@@ -12,6 +12,14 @@ require_once '../../config/tcpdf_include.php';
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 $company_info = $entityManager->getRepository('\Roloffice\Entity\CompanyInfo')->getCompanyInfoData(1);
+$company_accounts = (strlen($company_info['bank_account_1']) > 0 ? $company_info['bank_account_1'] . ', ' : "")
+	. (strlen($company_info['bank_account_2']) > 0 ? '<br />' . $company_info['bank_account_2'] . ', ' : "");
+
+$company_contacts = (strlen($company_info['phone_1']) > 0 ? $company_info['phone_1'] . ', ' : "")
+	. (strlen($company_info['phone_2']) > 0 ? $company_info['phone_2'] . ', ' : "")
+	. (strlen($company_info['email_1']) > 0 ? $company_info['email_1'] . ', ' : "")
+	. (strlen($company_info['email_2']) > 0 ? $company_info['email_2'] . ', ' : "")
+	. (strlen($company_info['website_1']) > 0 ? $company_info['website_1'] . ', ' : "");
 
 // Set document information.
 $pdf->SetCreator(PDF_CREATOR);
@@ -106,11 +114,11 @@ $html = '
   <tr>
     <td width="340px" colspan="2">'
       . $company_info['street'] . ' ' . $company_info['home_number'] . '<br />'
-      . $company_info['city'] . ', ' . $company_info['country'] . '<br />
-      PIB: ' . $company_info['pib'] . ', MB: ' . $company_info['mb'] . '<br />'
-      . $company_info['bank_account_1'] . '<br />'
-      . $company_info['bank_account_2'] . '
-    </td>
+      . $company_info['city'] . ', ' . $company_info['country'] . '<br />'
+      . 'PIB: ' . $company_info['pib'] . ', MB: ' . $company_info['mb'] . '<br />'
+      . 'žiro računi: <br />' . $company_accounts . '<br />'
+      . 'kontakti: <br />' . $company_contacts . '
+	  </td>
 		<td width="350px">Kupac:<br />'
 			. $client['name']
 			. ($client['lb'] <> ""

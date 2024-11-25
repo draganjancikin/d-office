@@ -1,3 +1,13 @@
+# Upgrade to 6.7.2
+Resolved issues and bugfixes:
+* #235 - Nov system update
+* #237 - Resolved issue with button "Create a new task" on project view page
+
+Enhancement:
+* #231 - Update company info page and Company data on printed documents
+* Cleaning the code
+* Fixing typo errors
+ 
 # Upgrade to 6.7.1
 Resolved issues and bugfixes:
 * #230 - Print Installation Record Issue
