@@ -4,6 +4,7 @@ Resolved issues and bugfixes:
 * #237 - Resolved issue with button "Create a new task" on project view page
 
 Enhancement:
+* #231 - Update company info page and Company data on printed documents
 * Cleaning the code
 * Fixing typo errors
  
