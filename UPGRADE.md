@@ -1,7 +1,9 @@
 # Upgrade to 6.7.2
 Resolved issues and bugfixes:
 * #235 - Nov system update
+  * Update "DoctrineORM" package (2.13.5 => 2.14.3)
 * #237 - Resolved issue with button "Create a new task" on project view page
+* #240 - Add a new suppliers to the PrintOrder document
 
 Enhancement:
 * #231 - Update company info page and Company data on printed documents
