@@ -1,7 +1,9 @@
 # Upgrade to 6.7.3
 Resolved issues and bugfixes:
 * #249 - Fatal error: Uncaught Error: Call to a member function getName() on null
-* 
+
+Enhancement:
+* Update "doctrine/annotations" package (1.14.2 => 1.14.4)
 
 # Upgrade to 6.7.2
 Resolved issues and bugfixes:
