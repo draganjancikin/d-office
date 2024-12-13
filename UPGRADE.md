@@ -1,3 +1,7 @@
+# Upgrade to 6.7.4
+Environment requirements:
+* PHP 8.2
+
 # Upgrade to 6.7.3
 Resolved issues and bugfixes:
 * #249 - Fatal error: Uncaught Error: Call to a member function getName() on null
