@@ -49,6 +49,10 @@ a:hover {
   padding: .1rem .3rem;
 }
 
+.form-select {
+  color: #6e707e;
+}
+
 .in-article-note {
   width: 100%;
   height: 20px;
