@@ -10,11 +10,11 @@
       <input type="hidden" name="project_id" value="<?php echo $_GET['project_id'] ?>">
       <?php endif; ?>
 
-      <div class="form-group row text-nowrap">
+      <div class="row mb-2 text-nowrap">
         <label for="select_pidb_type_id" class="col-sm-3 col-lg-2 col-form-label text-right">Vrsta dokumenta:</label>
         <div class="col-sm-4">
           <div id="type">
-            <select id="select_pidb_type_id" name="pidb_type_id" class="form-control">
+            <select id="select_pidb_type_id" name="pidb_type_id" class="form-select form-select-sm">
               <option value="1">Predračun</option>
               <option value="2">Otpremnica</option>
               <option value="4">Povratnica</option>
@@ -23,10 +23,10 @@
         </div>
       </div>
 
-      <div class="form-group row">
+      <div class="row mb-2 ">
         <label for="select_client_id" class="col-sm-3 col-lg-2 col-form-label text-right">Klijent: </label>
         <div class="col-sm-4">
-          <select id="select_client_id" class="form-control" name="client_id" required="required">
+          <select id="select_client_id" class="form-select form-select-sm" name="client_id" required="required">
             <?php
           if (isset($_GET['client_id'])){
             $client_id = htmlspecialchars($_GET["client_id"]);
@@ -48,22 +48,22 @@
         </div>
       </div>
 
-      <div class="form-group row">
+      <div class="row mb-2 ">
         <label for="input_title" class="col-sm-3 col-lg-2 col-form-label text-right">Naslov: </label>
         <div class="col-sm-6">
-          <input id="input_title" class="form-control" type="text" name="title" value="" />
+          <input id="input_title" class="form-control form-control-sm" type="text" name="title" value="" />
         </div>
       </div>
 
-      <div class="form-group row">
+      <div class="row mb-2 ">
         <label for="input_note" class="col-sm-3 col-lg-2 col-form-label text-right">Beleška: </label>
         <div class="col-md-6">
-          <textarea id="input_note" class="form-control" rows="3" name="note"
+          <textarea id="input_note" class="form-control form-control-sm" rows="3" name="note"
             placeholder="Unesite belešku uz dokument"></textarea>
         </div>
       </div>
 
-      <div class="form-group row">
+      <div class="row mb-2 ">
         <div class="col-sm-3 offset-sm-3 offset-lg-2">
           <button type="submit" class="btn btn-sm btn-success" title="Snimi izmene podataka o klijentu!">
             <i class="fas fa-save"></i> Snimi
