@@ -1,3 +1,7 @@
+# Upgrade to 6.7.5
+Theme updates:
+* Class bg-gradient-primary replaced with bg-gradient-primary-red
+
 # Upgrade to 6.7.4
 Environment requirements:
 * PHP 8.2

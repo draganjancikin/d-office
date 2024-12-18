@@ -1,4 +1,6 @@
-# d-Office 6.7.4
+# d-Office 6.7.5
+
+This is final version of d-Office application for 2024 year.
 
 Web Application
 

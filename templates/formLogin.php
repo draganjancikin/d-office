@@ -4,7 +4,7 @@
     <title><?php echo APP_VERSION ?></title>
     <?php include 'includes/pageHead.php'; ?>
 </head>
-<body class="bg-gradient-primary">
+<body class="bg-gradient-primary-red">
 
     <div class="container">
 
@@ -22,7 +22,7 @@
                                 <div class="p-4">
                                     <?php include 'includes/alerts.php'; ?>
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Prijava u sistem!</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Prijava u sistem 2024!</h1>
                                         <p><?php echo APP_VERSION . '©' . date('Y')?></p>
                                     </div>
 

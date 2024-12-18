@@ -224,3 +224,7 @@ dt {
   min-height: 10em;
   height: 26em;
 }
+
+.bg-gradient-primary-red {
+  background-color: #770205;
+}
