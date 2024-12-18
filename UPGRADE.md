@@ -1,3 +1,6 @@
+# Upgrade to 6.8.0
+New version for new year 2025.
+
 # Upgrade to 6.7.4
 Environment requirements:
 * PHP 8.2
