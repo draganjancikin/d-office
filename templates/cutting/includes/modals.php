@@ -14,10 +14,10 @@
         
           <input type="hidden" name="id" value="<?php echo $id; ?>" />
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="selectFenceModel" class="col-sm-4 col-form-label text-right">Model:</label>
             <div class="col-sm-5">
-              <select id="selectFenceModel" class="form-control" name="fence_model_id" required>
+              <select id="selectFenceModel" class="form-select form-select-sm" name="fence_model_id" required>
                 <option value="">izaberite model</option>
                 <?php
                 foreach ($fence_models as $fence_model):
@@ -30,10 +30,10 @@
             </div>
           </div>
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="selectPicketWidth" class="col-sm-4 col-form-label text-right">Širina letvice: </label>
             <div class="col-sm-5">
-            <select id="selectPicketWidth" class="form-control" name="picket_width" required>
+            <select id="selectPicketWidth" class="form-select form-select-sm" name="picket_width" required>
               <option value="35">35</option>
               <option value="60">60</option>
               <option value="80">80</option>
@@ -41,46 +41,46 @@
             </select>
             </div> 
           </div>
-          
-          <div class="form-group row">
+
+          <div class="row mb-2">
             <label for="inputWidth" class="col-sm-4 col-form-label text-right">Širina polja: </label>
             <div class="col-sm-3"> 
-              <input class="form-control" id="inputWidth" type="text" name="width" value="0">
-            </div>
-          </div>
-         
-          <div class="form-group row">
-            <label for="inputHeight" class="col-sm-4 col-form-label text-right">Visina polja: </label>
-            <div class="col-sm-3"> 
-              <input class="form-control" id="inputHeight" type="text" name="height" value="0">
-            </div>
-          </div>
-        
-          <div class="form-group row">
-            <label for="inputMidHeight" class="col-sm-4 col-form-label text-right">Visina sredine polja: </label>
-            <div class="col-sm-3"> 
-              <input class="form-control" id="inputMidHeight" type="text" name="mid_height" value="0">
+              <input class="form-control form-control-sm" id="inputWidth" type="text" name="width" value="0">
             </div>
           </div>
 
-          <div class="form-group row">
-            <label for="inputSpace" class="col-sm-4 col-form-label text-right">Razmak medju letvicama: </label>
-            <div class="col-sm-2"> 
-              <input class="form-control" id="inputSpace" type="text" name="space" value="0">
+          <div class="row mb-2">
+            <label for="inputHeight" class="col-sm-4 col-form-label text-right">Visina polja: </label>
+            <div class="col-sm-3"> 
+              <input class="form-control form-control-sm" id="inputHeight" type="text" name="height" value="0">
             </div>
           </div>
-      
-          <div class="form-group row">
+
+          <div class="row mb-2">
+            <label for="inputMidHeight" class="col-sm-4 col-form-label text-right">Visina sredine polja: </label>
+            <div class="col-sm-3"> 
+              <input class="form-control form-control-sm" id="inputMidHeight" type="text" name="mid_height" value="0">
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <label for="inputSpace" class="col-sm-4 col-form-label text-right">Razmak medju letvicama: </label>
+            <div class="col-sm-2"> 
+              <input class="form-control form-control-sm" id="inputSpace" type="text" name="space" value="0">
+            </div>
+          </div>
+
+          <div class="row mb-2">
             <label for="inputNumberOfFields" class="col-sm-4 col-form-label text-right"> Broj polja: </label>
             <div class="col-sm-2"> 
-              <input class="form-control" id="inputNumberOfFields" type="text" name="number_of_fields" value="0">
+              <input class="form-control form-control-sm" id="inputNumberOfFields" type="text" name="number_of_fields"
+                     value="0">
             </div>
           </div>
     
         </div>
       
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
           <button type="submit" class="btn btn-success">Dodaj Polje</button>
         </div>
 
