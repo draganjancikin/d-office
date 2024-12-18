@@ -5,29 +5,30 @@
 
   <div class="card-body">
     <form action="<?php echo $_SERVER['PHP_SELF'] . '?advancedSearch&result'; ?>" method="post">
-  
-      <div class="form-group row">
+
+      <div class="row mb-2">
         <label for="inputName" class="col-sm-3 col-form-label text-left text-sm-right" >Kijent: </label>
         <div class="col-sm-9">
-          <input class="form-control" type="text" id="inputName" name="client" value="<?php echo ( isset($_POST["client"]) ? $_POST["client"] : '') ?>" placeholder=" Unesite naziv klijenta" >
+          <input class="form-control form-control-sm" type="text" id="inputName" name="client" value="<?php echo (
+              isset($_POST["client"]) ? $_POST["client"] : '') ?>" placeholder=" Unesite naziv klijenta" >
         </div>
       </div>
-  
-      <div class="form-group row">
+
+      <div class="row mb-2">
         <label for="inputStreet" class="col-sm-3 col-form-label text-left text-sm-right">Ulica: </label>
         <div class="col-sm-9">
-          <input id="inputStreet" class="form-control" type="text" name="street" value="<?php echo ( isset($_POST["street"]) ? $_POST["street"] : '' )?>" placeholder=" Unesite naziv ulice" >	 
+          <input id="inputStreet" class="form-control form-control-sm" type="text" name="street" value="<?php echo ( isset($_POST["street"]) ? $_POST["street"] : '' )?>" placeholder=" Unesite naziv ulice" >
         </div>
       </div>
-  
-      <div class="form-group row">
+
+      <div class="row mb-2">
         <label for="inputCity" class="col-sm-3 col-form-label text-left text-sm-right">Naselje: </label>
         <div class="col-sm-9">
-          <input id="inputCity" class="form-control" type="text" name="city" value="<?php echo ( isset($_POST["city"]) ? $_POST["city"] : '') ?>" placeholder=" Unesite naziv naselja" />	 
+          <input id="inputCity" class="form-control form-control-sm" type="text" name="city" value="<?php echo ( isset($_POST["city"]) ? $_POST["city"] : '') ?>" placeholder=" Unesite naziv naselja" />
         </div>
       </div>
-  
-      <div class="form-group row">
+
+      <div class="row mb-2">
         <div class="col-sm-3 offset-sm-3"><button type="submit" class="btn btn-sm btn-secondary" title="Snimi izmene podataka o klijentu!"><i class="fa fa-search"></i> Pretaži</button></div>
       </div>
   
