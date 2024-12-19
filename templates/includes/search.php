@@ -380,7 +380,7 @@ if ($page == "cutting"):
   <?php
 endif;
 
-if($page == "materials"):
+if ($page == "materials"):
   $term = filter_input(INPUT_GET, 'search');
   $materials= $entityManager->getRepository('\Roloffice\Entity\Material')->search($term);
   $preferences = $entityManager->find('\Roloffice\Entity\Preferences', 1);
@@ -435,7 +435,7 @@ if($page == "materials"):
   <?php
 endif;
 
-if($page == "orders"):
+if ($page == "orders"):
   $term = filter_input(INPUT_GET, 'search');
   $orders = $entityManager->getRepository('\Roloffice\Entity\Order')->search($term);
   ?>
@@ -447,24 +447,24 @@ if($page == "orders"):
       <div class="table-responsive">
         <table class="table table-hover table-bordered" id="" width="100%" cellspacing="0">
           <thead class="thead-light">
-              <tr>
-                  <th class="px-1 order-number">narudžbenica</th>
-                  <th class="px-1 text-center order-status" title="Status narudžbenice">s</th>
-                  <th class="px-1 order-supplier">dobavljač</th>
-                  <th class="px-1">naslov</th>
-                  <th class="px-1">za projekat</th>
-                  <th class="px-1"></th>
-              </tr>
+            <tr>
+              <th class="px-1 order-number">narudžbenica</th>
+              <th class="px-1 text-center order-status" title="Status narudžbenice">s</th>
+              <th class="px-1 order-supplier">dobavljač</th>
+              <th class="px-1">naslov</th>
+              <th class="px-1">za projekat</th>
+              <th class="px-1"></th>
+            </tr>
           </thead>
           <tfoot class="thead-light">
-              <tr>
-                  <th class="px-1">narudžbenica</th>
-                  <th class="px-1 text-center order-status" title="Status narudžbenice">s</th>
-                  <th class="px-1">dobavljač</th>
-                  <th class="px-1">naslov</th>
-                  <th class="px-1">za projekat</th>
-                  <th class="px-1"></th>
-              </tr>
+            <tr>
+              <th class="px-1">narudžbenica</th>
+              <th class="px-1 text-center order-status" title="Status narudžbenice">s</th>
+              <th class="px-1">dobavljač</th>
+              <th class="px-1">naslov</th>
+              <th class="px-1">za projekat</th>
+              <th class="px-1"></th>
+            </tr>
           </tfoot>
           <tbody>
             <?php
@@ -629,7 +629,7 @@ if ($page == "articles"):
   <form class="form-horizontal" role="form" method="get">
     <div class="form-group row">
       <div class="col-md-5">
-        <select class="form-control" name="group_id">
+        <select class="form-select form-select-sm" name="group_id">
           <option value="0">Izaberi cenovnik</option>
           <?php
           $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->findAll();
@@ -641,7 +641,7 @@ if ($page == "articles"):
       </div>
 
       <div class="col-sm-5">
-        <button type="submit" class="btn btn-mini btn-outline-secondary" name="priceList" >Prikaži cenovnik</button>
+        <button type="submit" class="btn btn-sm btn-outline-secondary" name="priceList" >Prikaži cenovnik</button>
       </div>
     </div>
   </form>
@@ -1134,6 +1134,6 @@ if ($page == "projects"):
       </table>
     </div>
   </div>
-      
+
   <?php
 endif;

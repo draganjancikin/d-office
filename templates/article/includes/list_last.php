@@ -4,7 +4,7 @@
 <form method="get">
   <div class="form-group row">
     <div class="col-sm-5">
-      <select class="form-control" name="group_id">
+      <select class="form-select form-select-sm" name="group_id">
         <?php
         $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->findAll();
         foreach ($article_groups as $article_group) {
@@ -15,17 +15,18 @@
     </div>
         
     <div class="col-sm-5">
-      <button type="submit" class="btn btn-mini btn-outline-secondary" name="priceList">Prikaži cenovnik</button>
+      <button type="submit" class="btn btn-sm btn-outline-secondary" name="priceList">Prikaži cenovnik</button>
     </div>
   </div>
 </form>
 <!-- *********** End OLD CODE ********* -->
 
-
 <div class="card mb-4">
+
   <div class="card-header p-2">
     <h6 class="m-0 font-weight-bold text-primary">Zadnji upisani proizvodi</h6>
   </div>
+
   <div class="card-body p-2">
     <div class="table-responsive">
       <table class="dataTable table table-bordered table-hover" id="" width="100%" cellspacing="0">
