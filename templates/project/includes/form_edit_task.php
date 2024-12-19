@@ -5,23 +5,21 @@ $task = $entityManager->find("\Roloffice\Entity\ProjectTask", $task_id);
 $project_id = filter_input(INPUT_GET, 'project_id');
 $project = $entityManager->find("\Roloffice\Entity\Project", $project_id);
 
-if(empty($task)):
-  // ako nema task ne postoji
+if (empty($task)):
+  // ako nema task ne postoji.
   die('<script>location.href = "/project/" </script>');
 else:
 
-  if(isset($_GET["alertEnd"])):
+  if (isset($_GET["alertEnd"])):
     ?>
     <div class="row">
       <div class="col-md-12">
-                
         <div class="alert alert-warning alert-dismissible">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
           <h4><i class="icon fa fa-warning"></i> PAŽNJA!</h4>
           Pokušali ste da postavite datum završetka realizacije zadatka, 
           a to nije moguće jer realizacija zadatka nije ni započeta!
         </div>
-                
       </div>
     </div>
     <?php
@@ -58,14 +56,15 @@ else:
 
       <form action="<?php echo $_SERVER['PHP_SELF'] . '?editTask&task_id='.$task_id.'&project_id='.$project_id; ?>" method="post">
 
-        <div class="form-group row">
+        <div class="row mb-2">
           <label for="inputTitle" class="col-sm-3 col-lg-2 col-form-label text-right">Naslov: </label>
           <div class="col-sm-8">
-            <input id="inputTitle" type="text" class="form-control" name="title" value="<?php echo $task->getTitle() ?>" maxlength="64" placeholder="Unesite naslov zadatka">
+            <input id="inputTitle" type="text" class="form-control form-control-sm" name="title"
+                   value="<?php echo $task->getTitle() ?>" maxlength="64" placeholder="Unesite naslov zadatka">
           </div>
         </div>
 
-        <div class="form-group row">
+        <div class="row mb-2">
           <label for="inputStart" class="col-sm-3 col-lg-2 col-form-label text-right">Start: </label>
           <div class="col-sm-4">
             <?php
@@ -81,21 +80,23 @@ else:
               <?php
             else:
               ?>
-              <input id="inputStart" class="form-control" type="text" name="start" value="<?php echo $task->getStartDate()->format('d-M-Y') ?>" />
+              <input id="inputStart" class="form-control form-control-sm" type="text" name="start"
+                     value="<?php echo $task->getStartDate()->format('d-M-Y') ?>" />
               <?php
             endif;
             ?>
           </div>
         </div>
 
-        <div class="form-group row">
+        <div class="row mb-2">
           <label for="selectEmployee" class="col-sm-3 col-lg-2 col-form-label text-right">Izvršilac: </label>
           <div class="col-sm-5">
-            <select id="selectEmployee" name="employee_id" class="form-control">
+            <select id="selectEmployee" name="employee_id" class="form-select form-select-sm">
               <?php
               if (empty($task->getEmployee())) {
                 echo '<option value="">Izaberi izvršioca zadatka</option>';
-              } else {
+              }
+              else {
                 echo '<option value="'.$task->getEmployee()->getId().'">'.$task->getEmployee()->getName().'</option>';
               } 
               $employees_list = $entityManager->getRepository('\Roloffice\Entity\Employee')->findBy(array(), array('name' => "ASC"));
@@ -107,7 +108,7 @@ else:
           </div>
         </div>
 
-        <div class="form-group row">
+        <div class="row mb-2">
           <label class="col-sm-3 col-lg-2 col-form-label text-right">End: </label>
           <div class="col-sm-4">
             <?php 
@@ -123,14 +124,15 @@ else:
               <?php
             else:
               ?>
-              <input class="form-control" type="text" name="end" value="<?php echo $task->getEndDate()->format('d-M-Y') ?>" />
+              <input class="form-control form-control-sm" type="text" name="end" value="<?php echo $task->getEndDate()
+                ->format('d-M-Y') ?>" />
               <?php
             endif;
             ?>
           </div>
         </div>
 
-        <div class="form-group row">
+        <div class="row mb-2">
           <label class="col-sm-2 control-label"></label>
           <div class="col-sm-5">
             <button type="submit" class="btn btn-sm btn-success">
@@ -166,9 +168,10 @@ else:
           <tr>
             <td class="px-1 width-95">
               <?php 
-              if( $task_note->getCreatedAt()->format('d-M-Y') == $date_temp ) {
+              if ($task_note->getCreatedAt()->format('d-M-Y') == $date_temp ) {
 
-              }else{
+              }
+              else {
                 echo $task_note->getCreatedAt()->format('d-M-Y');
               }
               ?>

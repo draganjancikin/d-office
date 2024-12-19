@@ -1,5 +1,5 @@
 <?php
-if(isset($_GET['id'])):
+if (isset($_GET['id'])):
   ?>
   <!-- Modal addSupplier -->
   <div class="modal fade" id="addSupplier" tabindex="-1" role="dialog">
@@ -18,10 +18,10 @@ if(isset($_GET['id'])):
 
           <div class="modal-body">
 
-            <div class="form-group row">
+            <div class="row mb-2">
               <label for="selectClient" class="col-sm-3 col-form-label text-right">Dobavljač</label>
               <div class="col-sm-8">
-                <select id="selectClient" class="form-control" name="supplier_id" required="required">
+                <select id="selectClient" class="form-select form-select-sm" name="supplier_id" required="required">
                   <option value="">izaberi dobavljača</option>
                   <?php
                   foreach ($suppliers as $supplier) {
@@ -32,22 +32,22 @@ if(isset($_GET['id'])):
               </div>
             </div>
 
-            <div class="form-group row">
-              <label for="inputCode" class="col-sm-3 col-form-label text-right">Beleška</label>
+            <div class="row mb-2">
+              <label for="inputCode" class="col-sm-3 col-form-label text-right">Šifra po dobavljaču</label>
               <div class="col-sm-6">
-                <input id="inputCode" type="text" class="form-control" name="note" value="" placeholder="Upišite šifru materijala" />
+                <input id="inputCode" type="text" class="form-control form-control-sm" name="note" value=""
+                       placeholder="Upišite šifru materijala" />
               </div>
             </div>
 
-            <div class="form-group row">
+            <div class="row mb-2">
               <label for="inputPrice" class="col-sm-3 col-form-label text-right">Cena</label>
               <div class="col-sm-6">
-                <input id="inputPrice" type="text" class="form-control" name="price" value="" placeholder="Upišite cenu" />
+                <input id="inputPrice" type="text" class="form-control form-control-sm" name="price" value="" placeholder="Upišite cenu" />
               </div>
             </div>
 
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+            <div class="modal-footer p-2">
               <button type="submit" class="btn btn-primary" >Dodaj dobavljača</button>
             </div>
 
@@ -77,10 +77,11 @@ if(isset($_GET['id'])):
 
           <div class="modal-body">
 
-            <div class="form-group row">
+            <div class="row mb-2">
               <label for="selectPropertyItem" class="col-sm-3 col-form-label text-right">Osobina</label>
               <div class="col-sm-5">
-                <select id="selectPropertyItem" class="form-control" name="property_item_id" required="required">
+                <select id="selectPropertyItem" class="form-select form-select-sm" name="property_item_id"
+                        required="required">
                   <option value="">izaberi osobinu</option>
                   <?php
                   $property_list = $entityManager->getRepository('\Roloffice\Entity\Property')->findAll();
@@ -94,31 +95,31 @@ if(isset($_GET['id'])):
               </div>
             </div>
 
-            <div class="form-group row">
+            <div class="row mb-2">
               <label for="inputMin" class="col-sm-3 col-form-label text-right">Min</label>
               <div class="col-sm-8">
-                <input id="inputMin" type="text" class="form-control" name="min_size" value="0" placeholder="Minimalna moguća vrednost osobine" />
+                <input id="inputMin" type="text" class="form-control form-control-sm" name="min_size" value="0" placeholder="Minimalna moguća vrednost osobine" />
               </div>
             </div>
 
-            <div class="form-group row">
+            <div class="row mb-2">
               <label for="inputMax" class="col-sm-3 col-form-label text-right">Max</label>
               <div class="col-sm-8">
-                <input id="inputMax" type="text" class="form-control" name="max_size" value="0" placeholder="Maksimalna moguća vrednost osobine" />
+                <input id="inputMax" type="text" class="form-control form-control-sm" name="max_size" value="0"
+                       placeholder="Maksimalna moguća vrednost osobine" />
               </div>
             </div>
 
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+            <div class="modal-footer p-2">
               <button type="submit" class="btn btn-primary" >Dodaj osobinu</button>
             </div>
           </div>
-            
+
         </form>
 
       </div>
       <!-- /.modal-content -->
-    
+
     </div>
     <!-- /.modal-dialog -->
 

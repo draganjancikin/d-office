@@ -4,21 +4,26 @@ namespace Roloffice\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * Cutting sheet article repository class.
+ */
 class CuttingSheetArticleRepository extends EntityRepository {
 
   /**
-   * Method that return sum heights of all pickets in one article (field)
+   * Method that return sum heights of all pickets in one article (field).
    *  
    * @param $article_id
+   *   ID of CuttingSheetArticle.
    * 
    * @return float
+   *   Sum of pickets length.
    */
   public function getPicketsLength($article_id) {
-    
+
     // Get fence_model.
     $article = $this->_em->find('\Roloffice\Entity\CuttingSheetArticle', $article_id);
     $fence_model_id = $article->getFenceModel()->getId();
-    
+
     // Get Article (fence field) width, height and middle height.
     $article_width = $article->getWidth();
     $article_height = $article->getHeight();
@@ -29,10 +34,10 @@ class CuttingSheetArticleRepository extends EntityRepository {
 
     // Get picket width.
     $picket_width = $article->getPicketWidth();
-        
+
     // Real space between pickets.
     $space_between_pickets = $this->getSpaceBetweenPickets($article_width, $pickets_number, $picket_width);
-    
+
     // The difference between the highest and the lowest picket.
     $pickets_length = 0;
 
@@ -44,70 +49,66 @@ class CuttingSheetArticleRepository extends EntityRepository {
       $space_between_pickets, 
       $picket_width
     );
-    
+
     switch ($fence_model_id) {
 
       // Classic ===============================================================
       case '1':
-
         // Loop through all pickets.
-        for ( $i = 1; $i <= ceil($pickets_number/2); $i++ ){
+        for ($i = 1; $i <= ceil($pickets_number/2); $i++){
           $picket_height = $article_height;
 
           $pickets_length = $this->getLengthOfPickets($i, $pickets_length, $pickets_number, $picket_height);
         }
-    
+
         break;
 
       // Alpina ================================================================
       case '2':
-          
         $alpha_angle = rad2deg(atan($heigth_leg / $width_leg));
-        
+
         // Loop through all pickets.
-        for ( $i=1; $i <= ceil($pickets_number/2); $i++ ) {
+        for ($i=1; $i <= ceil($pickets_number/2); $i++) {
           $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1);
           $picket_height_over_post = tan(deg2rad($alpha_angle)) * $picket_x_position;
           $picket_height = $article_height + $picket_height_over_post;
-        
+
           $pickets_length = $this->getLengthOfPickets($i, $pickets_length, $pickets_number, $picket_height);
         }
 
         break;
 
-
       // Arizona ===============================================================
       case '3':
-
         // Tetiva kružnice.
         $tendon = $this->getTendon($article_width, $space_between_pickets, $heigth_leg);
-        
+
         $alpha_angle = rad2deg(atan( ($heigth_leg * 2) / ($article_width - $space_between_pickets * 2)));
         $beta_angle = 90 - $alpha_angle;
         $radius = $tendon / (2*cos(deg2rad($beta_angle)));;
-        
-        for ( $i = 1; $i <= ceil($pickets_number/2); $i++ ) {
+
+        for ($i = 1; $i <= ceil($pickets_number/2); $i++) {
           $corective_factor = $this->getCorrectiveFactor($i, $space_between_pickets, $pickets_number, $picket_width);
-          $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1) + $corective_factor * $i;
+          $picket_x_position = $picket_width * ($i-1) + $space_between_pickets * ($i-1) + $corective_factor * $i;
           $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
           $picket_height_over_post = $y - ($radius - $heigth_leg);
           $picket_height = $article_height + $picket_height_over_post;
-          
+
           $pickets_length = $this->getLengthOfPickets($i, $pickets_length, $pickets_number, $picket_height);
         }
         break;
 
       // Pacific ===============================================================
       case '4':
-      
+
         $tendon = $this->getTendon($article_width, $space_between_pickets, $heigth_leg);
 
         $ugao_alfa = rad2deg(atan(($heigth_leg * 2)/($article_width-$space_between_pickets * 2)));
         $ugao_beta = 90 - $ugao_alfa;
         $radius = $tendon / (2*cos(deg2rad($ugao_beta)));
-        for ( $i = 1; $i <= ceil($pickets_number/2); $i++ ) {
+        for ($i = 1; $i <= ceil($pickets_number/2); $i++) {
           $corective_factor = $this->getCorrectiveFactor($i, $space_between_pickets, $pickets_number, $picket_width);
-          $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1) + $corective_factor * $i;
+          $picket_x_position = $picket_width * ($i-1) + $space_between_pickets * ($i-1) + $corective_factor * $i;
           $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
           $picket_height_over_post = $y - ($radius - $heigth_leg);
           $picket_height = $article_height - $picket_height_over_post;
@@ -122,19 +123,17 @@ class CuttingSheetArticleRepository extends EntityRepository {
         $omega = 360 / $article_width;	//ugaona brzina
         $teta = 90;										// fazno pomeranje za 90stepeni
 
-        for ( $i=1; $i <= ceil($pickets_number/2); $i++ ) {
-          $picket_x_position = $space_between_pickets + $picket_width*($i-1) + $space_between_pickets*($i-1);
-          $y = sin(deg2rad($omega*$picket_x_position - $teta));
+        for ($i=1; $i <= ceil($pickets_number/2); $i++) {
+          $picket_x_position = $space_between_pickets + $picket_width * ($i-1) + $space_between_pickets * ($i-1);
+          $y = sin(deg2rad($omega * $picket_x_position - $teta));
           $picket_height = $article_height + ($heigth_leg / 2) + ($y * $heigth_leg )/2;
 
           $pickets_length = $this->getLengthOfPickets($i, $pickets_length, $pickets_number, $picket_height);
         }
-        
+
         break;
-  
-  
+
       default:
-        
         break;
     }
 
@@ -145,20 +144,22 @@ class CuttingSheetArticleRepository extends EntityRepository {
    * Method that return number of kaps in one CuttingSheetArticle (fence field).
    * 
    * @param $article_id
+   *   ID of CuttingSheetArticle.
    * 
    * @return int
+   *   Number of kaps.
    */
   public function getPicketsNumber($article_id) {
-    
+
     // Get CuttingSheetArticle (fence field) by $article_id.
     $article = $this->_em->find('\Roloffice\Entity\CuttingSheetArticle', $article_id);
 
     // Picket width.
     $picket_width = $article->getPicketWidth();
-    
+
     // Article (field) width.
     $width = $article->getWidth();
-    
+
     // Space between picket.
     $space = $article->getSpace();
 
@@ -166,11 +167,11 @@ class CuttingSheetArticleRepository extends EntityRepository {
     $rounded_cap_number = ceil($control_pickets_number);
     $razlika = $control_pickets_number-($rounded_cap_number-1);
 
-    if($razlika < 0.5){
+    if ($razlika < 0.5) {
       $pickets_number = ceil($control_pickets_number) - 1;
     }
 
-    if($razlika >= 0.5){
+    if ($razlika >= 0.5) {
       $pickets_number = ceil($control_pickets_number);
     }
 
@@ -181,10 +182,14 @@ class CuttingSheetArticleRepository extends EntityRepository {
    * Method that return cpace between pickets.
    * 
    * @param int $article_width
+   *   Article (fence field) width.
    * @param int $pickets_number
+   *   Number of pickets.
    * @param int $picket_width
+   *   Picket width.
    * 
    * @return int
+   *   Space between pickets.
    */
   public function getSpaceBetweenPickets($article_width, $pickets_number, $picket_width) {
     return ($article_width - $pickets_number * $picket_width) / ($pickets_number + 1);
@@ -194,12 +199,14 @@ class CuttingSheetArticleRepository extends EntityRepository {
    * Method that return difference between Article (fence field) height and middle height.
    * 
    * @param int $article_height
+   *   Article (fence field) height.
    * @param int $article_mid_height
+   *   Article (fence field) middle height.
    * 
    * @return int
    */
   public function getDiffMinMax($article_height, $article_mid_height) {
-    
+
     if ($article_mid_height > $article_height) {
       $diffMinMax = $article_mid_height - $article_height;
     }
@@ -217,8 +224,10 @@ class CuttingSheetArticleRepository extends EntityRepository {
    * Method that return true if argument even.
    * 
    * @param int $pickets_number
+   *   Number of pickets.
    * 
    * @return bool
+   *   True if argument even.
    */
   public function isEven($pickets_number) {
     return $pickets_number % 2 ? false : true;
@@ -228,11 +237,16 @@ class CuttingSheetArticleRepository extends EntityRepository {
    * Method that return width for angle calculation.
    * 
    * @param bool $is_even
+   *   True if number of pickets is even.
    * @param int $article_width
+   *   Article (fence field) width.
    * @param int $space_between_pickets
+   *   Space between pickets.
    * @param int $picket_width
+   *   Picket width.
    * 
    * @return int
+   *   Width for angle calculation.
    */
   public function getWidthForAngleCalc(
     $is_even, 
@@ -254,10 +268,14 @@ class CuttingSheetArticleRepository extends EntityRepository {
    * Method that return length of tendon.
    * 
    * @param int $article_width
+   *   Article (fence field) width.
    * @param int $space_between_pickets
+   *   Space between pickets.
    * @param int $min_max_l
+   *   The difference between the highest and the lowest picket.
    * 
    * @return int
+   *   Length of tendon.
    */
   public function getTendon($article_width, $space_between_pickets, $min_max_l) {
     $width = ($article_width - $space_between_pickets * 2) / 2;
@@ -268,7 +286,10 @@ class CuttingSheetArticleRepository extends EntityRepository {
    * Method that return Artiles in CuttingSheet.
    * 
    * @param obj $cs CuttingSheet
-   * @return 
+   *   CuttingSheet.
+   *
+   * @return array
+   *   Array of CuttingSheetArticles.
    */
   public function getCuttingSheetArticles($cs) {
     $qb = $this->_em->createQueryBuilder();
@@ -284,11 +305,21 @@ class CuttingSheetArticleRepository extends EntityRepository {
 
   /**
    * Method that return Picket length.
+   *
+   * @param int $i
+   *   Picket number.
+   * @param float $pickets_length
+   *   Sum of pickets length.
+   * @param int $pickets_number
+   *   Number of pickets.
+   * @param float $picket_height
+   *   Picket height.
    * 
    * @return int
+   *   Picket length.
    */
-  public function getLengthOfPickets(int $i, int $pickets_length, int $pickets_number, int $picket_height) {
-    if ( $i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0 ){
+  public function getLengthOfPickets(int $i, float $pickets_length, int $pickets_number, float $picket_height) {
+    if ($i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0 ){
       $pickets_length = $pickets_length + $picket_height;
     } 
     else {
@@ -300,10 +331,20 @@ class CuttingSheetArticleRepository extends EntityRepository {
 
   /**
    * Method that return corrective factor.
+   *
+   * @param int $i
+   *   Picket number.
+   * @param float $space_between_pickets
+   *   Space between pickets.
+   * @param int $pickets_number
+   *   Number of pickets.
+   * @param float $picket_width
+   *   Picket width.
    * 
    * @return int
+   *   Corrective factor.
    */
-  public function getCorrectiveFactor(int $i, int $space_between_pickets, int $pickets_number, int $picket_width) {
+  public function getCorrectiveFactor(int $i, float $space_between_pickets, int $pickets_number, float $picket_width) {
     $corective_factor = 0;
     if ($i > 1 ) {
       $corective_factor = ($space_between_pickets / 2) / ceil($pickets_number/2);
