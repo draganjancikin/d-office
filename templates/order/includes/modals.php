@@ -9,15 +9,15 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      
+
       <form action="<?php echo $_SERVER['PHP_SELF'] . '?edit&order_id='. $order_id .'&addMaterialToOrder'; ?>" method="post">
         <div class="modal-body">
-        
-          <div class="form-group row">
+
+          <div class="row mb-2">
             <label for="selectMaterial" class="col-sm-3 col-form-label text-right">Materijal:</label>
             <div class="col-sm-9">
               <div id="first">
-                <select class="form-control" name="material_id" id="selectMaterial">
+                <select class="form-select form-select-sm" name="material_id" id="selectMaterial">
                 <option value="">izaberi materijal</option>
                 <?php
                 foreach ($materials as $material) {
@@ -29,27 +29,27 @@
             </div>
           </div>
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="inputNote" class="col-sm-3 col-form-label text-right">Dodatni opis</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" name="note" id="inputNote" value="" placeholder="Upišite belešku" >
+              <input type="text" class="form-control form-control-sm" name="note" id="inputNote" value=""
+                     placeholder="Upišite belešku" >
             </div>
           </div>   
-      
-          <div class="form-group row">
+
+          <div class="row mb-2">
             <label for="inputPieces" class="col-sm-3 col-form-label text-right">Količina</label>
             <div class="col-sm-4">
-                <input type="text" class="form-control" name="pieces" id="inputPieces" value="" placeholder="Unesite količinu" />
+                <input type="text" class="form-control form-control-sm" name="pieces" id="inputPieces" value="" placeholder="Unesite količinu" />
             </div>
           </div>          
-          
+
           <div id="second"></div>
 
         </div>
         <!-- /.modal-body -->
-        
+
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
           <button type="submit" class="btn btn-primary" >Dodaj materijal</button>
         </div>
 

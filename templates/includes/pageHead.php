@@ -5,7 +5,9 @@
 <meta name="author" content="Dragan Jancikin">
 
 <!-- Bootstrap 4.4.1 -->
-<link rel="stylesheet" href="<?php echo $stylesheet ?>bootstrap-4.4.1/css/bootstrap.min.css">
+<!--<link rel="stylesheet" href="--><?php //echo $stylesheet ?><!--bootstrap-4.4.1/css/bootstrap.min.css">-->
+<!-- Bootstrap 5.1.3 -->
+<link rel="stylesheet" href="<?php echo $stylesheet ?>bootstrap-5.1.3/css/bootstrap.min.css">
 
 <!-- Custom fonts for this template-->
 <link href="<?php echo $stylesheet ?>theme-admin-2/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

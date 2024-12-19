@@ -18,26 +18,26 @@
 
         <div class="modal-body">
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="transaction_type" class="col-sm-3 col-form-label">Vrsta:</label>
             <div class="col-sm-5">
-              <select class="form-control" name="type_id" id="transaction_type">
+              <select class="form-select form-select-sm" name="type_id" id="transaction_type">
                 <option value="5">Početno stanje kase</option>
               </select>
             </div>
           </div>
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="amount" class="col-sm-3 col-form-label">Iznos:</label>
             <div class="col-sm-5">
-              <input type="text" class="form-control" name="amount" id="amount" value="" placeholder="Unesite iznos" />
+              <input type="text" class="form-control form-control-sm" name="amount" id="amount" value="" placeholder="Unesite iznos" />
             </div>
           </div>
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="note" class="col-sm-3 col-form-label">Beleška:</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" name="note" id="note" value="" >
+              <input type="text" class="form-control form-control-sm" name="note" id="note" value="" >
             </div>
           </div>
 
@@ -73,27 +73,27 @@
         
         <div class="modal-body">
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="transaction_type" class="col-sm-3 col-form-label">Vrsta:</label>
             <div class="col-sm-5">
-              <select class="form-control" name="type_id" id="transaction_type">
+              <select class="form-select form-select-sm" name="type_id" id="transaction_type">
                 <option value="7">Izlaz gotovine</option>
                 <option value="6">Izlaz gotovine na kraju dana (smene)</option>
               </select>
             </div>
           </div>
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="amount" class="col-sm-3 col-form-label">Iznos:</label>
             <div class="col-sm-5">
-              <input type="text" class="form-control" name="amount" id="amount" value="" placeholder="Unesite iznos" />
+              <input type="text" class="form-control form-control-sm" name="amount" id="amount" value="" placeholder="Unesite iznos" />
             </div>
           </div>
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="note" class="col-sm-3 col-form-label">Beleška:</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" name="note" id="note" value="" >
+              <input type="text" class="form-control form-control-sm" name="note" id="note" value="" >
             </div>
           </div>
 
