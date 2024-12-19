@@ -1,3 +1,18 @@
+# Upgrade to 6.8.1
+Upgrade:
+* #255 - Bootstrap (4.4.1 => 5.1.3)
+
+Enhancement:
+* #255 - Update forms with bootstrap5 classes:
+  * clients
+  * accounting documents
+  * cutting sheet
+  * materials
+  * orders
+  * articles
+  * admin
+  * projects
+
 # Upgrade to 6.8.0
 New version for new year 2025.
 
