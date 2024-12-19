@@ -12,44 +12,46 @@
 
           <?php
           if( isset($_GET['acc_doc_id']) ):
-            // hiden input for $pidb_id
+            // hiden input for $pidb_id.
             ?>
             <input type="hidden" name="acc_doc_id" value="<?php echo $_GET['acc_doc_id'] ?>">
             <?php
             endif;
           ?>
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="InputDate" class="col-sm-3 col-lg-2 col-form-label text-sm-right">Datum: </label>
             <div class="col-sm-3">
-              <input id="inputDate" class="form-control" type="text" value="<?php echo date("d M Y") ?>" disabled>
+              <input id="inputDate" class="form-control form-control-sm" type="text" value="<?php echo date("d M Y")
+              ?>" disabled>
             </div>
           </div>
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="selectProjectPriority" class="col-sm-3 col-lg-2 col-form-label text-sm-right">Prioritet: </label>
             <div class="col-sm-3">
-              <select id="selectProjectPriority" name="project_priority_id" class="form-control" required>
+              <select id="selectProjectPriority" name="project_priority_id" class="form-select form-select-sm" required>
                 <option value="3">Normalan</option>
               </select>
             </div>
           </div>
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="selectClient" class="col-sm-3 col-lg-2 col-form-label text-sm-right">Klijent: </label>
             <div class="col-sm-9">
-              <select id="selectClient" name="client_id" class="form-control" required>
+              <select id="selectClient" name="client_id" class="form-select form-select-sm" required>
                 <?php
-                if(isset($_GET['client_id'])){
+                if (isset($_GET['client_id'])){
                   $client_id = htmlspecialchars($_GET["client_id"]);
                   $client_data = $entityManager->find('\Roloffice\Entity\Client', $client_id);
                   echo '<option value="'.$client_data->getId().'">'.$client_data->getName().'</option>';
-                }else{
+                }
+                else {
                   echo '<option value="">Izaberi klijenta</option>';
                 }
 
                 $clients_list = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => "ASC"));
-                foreach( $clients_list as $client_item):
+                foreach ($clients_list as $client_item):
                   ?>
                   <option value="<?php echo $client_item->getId() ?>">
                     <?php echo $client_item->getName() ?>
@@ -61,17 +63,18 @@
             </div>
           </div>
       
-          <div class="form-group row">
+          <div class="row mb-2">
             <label for="inputTitle" class="col-sm-3 col-lg-2 col-form-label text-sm-right">Naslov: </label>
             <div class="col-sm-9">
-              <input id="inputTitle" type="text" class="form-control" name="title" maxlength="64" placeholder="Unesite naslov projekta" required>
+              <input id="inputTitle" type="text" class="form-control form-control-sm" name="title" maxlength="64"
+                     placeholder="Unesite naslov projekta" required>
             </div>
           </div>
 
-          <div class="form-group row">
+          <div class="row mb-2">
             <div class="col-sm-3 offset-sm-3 offset-lg-2">
               <button type="submit" class="btn btn-sm btn-success">
-                  <i class="fas fa-save"></i> Snimi
+                <i class="fas fa-save"></i> Snimi
               </button>
             </div>
           </div> 
