@@ -3,7 +3,7 @@
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateMaterial"])) {
   // Curent loged user.
   $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+  $user = $entityManager->find("\App\Entity\User", $user_id);
   
   $id = htmlspecialchars($_GET["id"]);
 
@@ -15,13 +15,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateMaterial"])) {
   }
 
   $unit_id = $_POST["unit_id"];
-  $unit = $entityManager->find("\Roloffice\Entity\Unit", $unit_id);
+  $unit = $entityManager->find("\App\Entity\Unit", $unit_id);
   
   $weight = htmlspecialchars($_POST['weight']);
   $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
   $note = htmlspecialchars($_POST['note']);
 
-  $material = $entityManager->find('\Roloffice\Entity\Material', $id);
+  $material = $entityManager->find('\App\Entity\Material', $id);
 
   if ($material === null) {
     echo "Client with ID $client_id does not exist.\n";

@@ -1,9 +1,9 @@
 <?php
 $task_id = filter_input(INPUT_GET, 'task_id');
-$task = $entityManager->find("\Roloffice\Entity\ProjectTask", $task_id);
+$task = $entityManager->find("\App\Entity\ProjectTask", $task_id);
 
 $project_id = filter_input(INPUT_GET, 'project_id');
-$project = $entityManager->find("\Roloffice\Entity\Project", $project_id);
+$project = $entityManager->find("\App\Entity\Project", $project_id);
 
 if (empty($task)):
   // ako nema task ne postoji.
@@ -99,7 +99,7 @@ else:
               else {
                 echo '<option value="'.$task->getEmployee()->getId().'">'.$task->getEmployee()->getName().'</option>';
               } 
-              $employees_list = $entityManager->getRepository('\Roloffice\Entity\Employee')->findBy(array(), array('name' => "ASC"));
+              $employees_list = $entityManager->getRepository('\App\Entity\Employee')->findBy(array(), array('name' => "ASC"));
               foreach ($employees_list as $employee) {
                 echo '<option value="' .$employee->getId(). '">' .$employee->getName(). '</option>';
               }
@@ -162,7 +162,7 @@ else:
       <table class="table table-hover">
         <?php
         $date_temp = "";
-        $task_notes = $entityManager->getRepository('\Roloffice\Entity\ProjectTaskNote')->findBy(array('project_task' => $task_id), array());
+        $task_notes = $entityManager->getRepository('\App\Entity\ProjectTaskNote')->findBy(array('project_task' => $task_id), array());
         foreach ($task_notes as $task_note):
           ?>
           <tr>

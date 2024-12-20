@@ -1,5 +1,5 @@
 <?php
-$city = $entityManager->find("\Roloffice\Entity\City", $city_id);
+$city = $entityManager->find("\App\Entity\City", $city_id);
 if (!$city){
   $city_name = '<spam class="text-warning"> Traženo mesto ne postoji!</spam>';
 }
@@ -22,7 +22,7 @@ else {
             <select class="form-select form-select-sm" name="city_id">
               <option value="">Izaberi naselje</option>
               <?php
-              $cities = $entityManager->getRepository('\Roloffice\Entity\Project')->getCitiesByActiveProject();
+              $cities = $entityManager->getRepository('\App\Entity\Project')->getCitiesByActiveProject();
               foreach ($cities as $city) :
                 ?>
                 <option value="<?php echo $city['id'] ?>"><?php echo $city['name'] ?></option>
@@ -62,10 +62,10 @@ else {
         <tbody>
           <?php
           $status = 1;
-          $project_list = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTrackingByCity($status, $city_id);
+          $project_list = $entityManager->getRepository('\App\Entity\Project')->projectTrackingByCity($status, $city_id);
           foreach( $project_list as $project_item):
             $project_id = $project_item->getId();
-            $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
+            $project_tasks = $entityManager->getRepository('\App\Entity\Project')->projectTasks($project_id);
             ?>
             <tr>
               <td>

@@ -11,7 +11,7 @@ require_once '../../config/tcpdf_include.php';
 // Create new PDF document.
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-$company_info = $entityManager->getRepository('\Roloffice\Entity\CompanyInfo')->getCompanyInfoData(1);
+$company_info = $entityManager->getRepository('\App\Entity\CompanyInfo')->getCompanyInfoData(1);
 
 $company_accounts = (strlen($company_info['bank_account_1']) > 0 ? $company_info['bank_account_1'] . ', ' : "")
 	. (strlen($company_info['bank_account_2']) > 0 ? '<br />' . $company_info['bank_account_2'] . ', ' : "");
@@ -60,9 +60,9 @@ $pdf->SetFont('dejavusans', '', 10);
 $pdf->AddPage();
 
 $order_id = $_GET['order_id'];
-$order_data = $entityManager->find("\Roloffice\Entity\Order", $order_id);
+$order_data = $entityManager->find("\App\Entity\Order", $order_id);
 
-$supplier_data = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($order_data->getSupplier());
+$supplier_data = $entityManager->getRepository('\App\Entity\Client')->getClientData($order_data->getSupplier());
 $supplier_contacts = $supplier_data['contacts'];
 
 $contact_item[0] = "";
@@ -157,12 +157,12 @@ $total_tax_amount = 0;
 $total = 0;
 $total_eur = 0;
 
-$materials_on_order = $entityManager->getRepository('\Roloffice\Entity\Order')->getMaterialsOnOrder($order_id);
+$materials_on_order = $entityManager->getRepository('\App\Entity\Order')->getMaterialsOnOrder($order_id);
 
 foreach ($materials_on_order as $material_on_order):
 	// $propertys = $material_on_order['propertys'];
-	// $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getPropertiesOnOrderMaterial($material_on_order->getId());
-	$material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')
+	// $material_on_order_properties = $entityManager->getRepository('\App\Entity\OrderMaterial')->getPropertiesOnOrderMaterial($material_on_order->getId());
+	$material_on_order_properties = $entityManager->getRepository('\App\Entity\OrderMaterial')
 																									->getProperties($material_on_order->getId());
 	$property_temp = '';
 	$property_counter = 0;
@@ -196,7 +196,7 @@ foreach ($materials_on_order as $material_on_order):
 			<td align="center" width="45px">' . $material_on_order->getMaterial()->getUnit()->getName() . '</td>
 			<td width="65px" align="right">'
 				. number_format(
-					$material_on_order_quantity = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')
+					$material_on_order_quantity = $entityManager->getRepository('\App\Entity\OrderMaterial')
 					                                            ->getQuantity($material_on_order->getId(), $material_on_order->getMaterial()->getMinCalcMeasure(), $material_on_order->getPieces()),
 					2,",", "."
 				) . '
@@ -207,9 +207,9 @@ foreach ($materials_on_order as $material_on_order):
 
 	$pdf->writeHTML($html, true, false, true, false, '');
 
-	$total_tax_base = $total_tax_base + $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')
+	$total_tax_base = $total_tax_base + $entityManager->getRepository('\App\Entity\OrderMaterial')
 																										->getTaxBase($material_on_order->getPrice(), $material_on_order->getDiscount(), $material_on_order_quantity);
-	$total_tax_amount = $total_tax_amount + $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')
+	$total_tax_amount = $total_tax_amount + $entityManager->getRepository('\App\Entity\OrderMaterial')
 																												->getTaxAmount($total_tax_base, $material_on_order->getTax() );
 	$total = $total_tax_base + $total_tax_amount;
 endforeach;

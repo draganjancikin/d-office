@@ -6,7 +6,7 @@
 if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET['delNote']) ) {
   
   $note_id = htmlspecialchars($_GET["note_id"]);
-  $note = $entityManager->find("\Roloffice\Entity\ProjectNote", $note_id);
+  $note = $entityManager->find("\App\Entity\ProjectNote", $note_id);
   
   $project_id = htmlspecialchars($_GET["project_id"]);
   

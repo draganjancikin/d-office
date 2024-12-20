@@ -20,7 +20,7 @@
           <select id="inputUnit" class="form-select form-select-sm" name="unit_id" required>
             <option value="">izaberi jedinicu mere</option>
             <?php
-            $units = $entityManager->getRepository('\Roloffice\Entity\Unit')->findAll();
+            $units = $entityManager->getRepository('\App\Entity\Unit')->findAll();
             foreach ($units as $unit) {
               echo '<option value="' .$unit->getId(). '">' .$unit->getName(). '</option>';
             }

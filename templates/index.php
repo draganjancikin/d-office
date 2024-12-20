@@ -44,7 +44,7 @@
                         <div class="text-sm font-weight-bold text-info text-uppercase mb-1">Klijenti</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                          echo $entityManager->getRepository('\Roloffice\Entity\Client')->count([]);
+                          echo $entityManager->getRepository('\App\Entity\Client')->count([]);
                           ?>
                         </div>
                       </div>
@@ -67,7 +67,7 @@
                                     <div class="text-sm font-weight-bold text-success text-uppercase mb-1">Dokumenti</div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
                                     <?php
-                                      echo $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->count([]);
+                                      echo $entityManager->getRepository('\App\Entity\AccountingDocument')->count([]);
                                     ?>
                                     </div>
                                 </div>
@@ -90,7 +90,7 @@
                         <div class="text-sm font-weight-bold text-danger text-uppercase mb-1">Krojne liste</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                            echo $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->count([]);
+                            echo $entityManager->getRepository('\App\Entity\CuttingSheet')->count([]);
                           ?>
                         </div>
                       </div>
@@ -113,7 +113,7 @@
                         <div class="text-sm font-weight-bold text-success text-uppercase mb-1">Materijal</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                          echo $entityManager->getRepository('\Roloffice\Entity\Material')->count([]);
+                          echo $entityManager->getRepository('\App\Entity\Material')->count([]);
                           ?>
                         </div>
                       </div>
@@ -136,7 +136,7 @@
                         <div class="text-sm font-weight-bold text-primary text-uppercase mb-1">Nabavka</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                          echo $entityManager->getRepository('\Roloffice\Entity\Order')->count([]);
+                          echo $entityManager->getRepository('\App\Entity\Order')->count([]);
                           ?>
                         </div>
                       </div>
@@ -159,7 +159,7 @@
                         <div class="text-sm font-weight-bold text-warning text-uppercase mb-1">Proizvodi</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                          echo $entityManager->getRepository('\Roloffice\Entity\Article')->count([]);
+                          echo $entityManager->getRepository('\App\Entity\Article')->count([]);
                           ?>
                         </div>
                       </div>
@@ -207,7 +207,7 @@
                         <div class="text-sm font-weight-bold text-warning text-uppercase mb-1">Projekti</div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <?php
-                          echo $entityManager->getRepository('\Roloffice\Entity\Project')->count([]);
+                          echo $entityManager->getRepository('\App\Entity\Project')->count([]);
                           ?>
                         </div>
                       </div>

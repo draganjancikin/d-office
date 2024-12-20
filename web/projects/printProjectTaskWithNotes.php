@@ -10,7 +10,7 @@ require_once '../../config/tcpdf_include.php';
 // Create new PDF document.
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-$company_info = $entityManager->getRepository('\Roloffice\Entity\CompanyInfo')->getCompanyInfoData(1);
+$company_info = $entityManager->getRepository('\App\Entity\CompanyInfo')->getCompanyInfoData(1);
 
 // Set document information.
 $pdf->SetCreator(PDF_CREATOR);
@@ -50,8 +50,8 @@ $pdf->SetFont('dejavusans', '', 10);
 $pdf->AddPage();
 
 $project_id = $_GET['project_id'];
-$project = $entityManager->find('Roloffice\Entity\Project', $project_id);
-$client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($project->getClient()->getId());
+$project = $entityManager->find('App\Entity\Project', $project_id);
+$client = $entityManager->getRepository('\App\Entity\Client')->getClientData($project->getClient()->getId());
 $client_contacts = $client['contacts'];
     
 $contact_item[0] = "";
@@ -109,7 +109,7 @@ $pdf->writeHTML($html, true, false, true, false, '');
 
 // Get amd print project notes.
 $date_temp = "";
-$notes = $entityManager->getRepository('\Roloffice\Entity\Project')->getNotesByProject($project_id);
+$notes = $entityManager->getRepository('\App\Entity\Project')->getNotesByProject($project_id);
 foreach ($notes as $note):
     $html = '
     <table>

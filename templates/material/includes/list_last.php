@@ -23,8 +23,8 @@
         </tfoot>
         <tbody>
         <?php
-        $materials = $entityManager->getRepository('\Roloffice\Entity\Material')->getLastMaterials(10);
-        $preferences = $entityManager->find('\Roloffice\Entity\Preferences', 1);
+        $materials = $entityManager->getRepository('\App\Entity\Material')->getLastMaterials(10);
+        $preferences = $entityManager->find('\App\Entity\Preferences', 1);
         foreach ($materials as $material_data):
           ?>
           <tr>

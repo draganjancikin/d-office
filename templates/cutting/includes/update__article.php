@@ -6,10 +6,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateArticle"]) ) {
   $id = htmlspecialchars($_POST['id']);
   
   $cutting_sheet__article_id = htmlspecialchars($_POST['cutting_sheet__article_id']);
-  $cutting_sheet__article = $entityManager->find("\Roloffice\Entity\CuttingSheetArticle", $cutting_sheet__article_id);
+  $cutting_sheet__article = $entityManager->find("\App\Entity\CuttingSheetArticle", $cutting_sheet__article_id);
   
   $fence_model_id = htmlspecialchars($_POST['fence_model_id']);
-  $fence_model = $entityManager->find("\Roloffice\Entity\FenceModel", $fence_model_id);
+  $fence_model = $entityManager->find("\App\Entity\FenceModel", $fence_model_id);
 
   $picket_width = htmlspecialchars($_POST['picket_width']);
   $width = htmlspecialchars($_POST['width']);

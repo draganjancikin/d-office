@@ -10,7 +10,7 @@ require_once '../../config/tcpdf_include.php';
 // Create new PDF document.
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-$company_info = $entityManager->getRepository('\Roloffice\Entity\CompanyInfo')->getCompanyInfoData(1);
+$company_info = $entityManager->getRepository('\App\Entity\CompanyInfo')->getCompanyInfoData(1);
 $company_accounts = (strlen($company_info['bank_account_1']) > 0 ? $company_info['bank_account_1'] . ', ' : "")
 	. (strlen($company_info['bank_account_2']) > 0 ? $company_info['bank_account_2'] . ', ' : "");
 $company_contacts = (strlen($company_info['phone_1']) > 0 ? $company_info['phone_1'] . ', ' : "")
@@ -57,7 +57,7 @@ $pdf->SetFont('dejavusans', '', 10);
 $pdf->AddPage();
 
 $accounting_document__id = $_GET['accounting_document__id'];
-$accounting_document__data = $entityManager->find("\Roloffice\Entity\AccountingDocument", $accounting_document__id);
+$accounting_document__data = $entityManager->find("\App\Entity\AccountingDocument", $accounting_document__id);
 
 if ($accounting_document__data->getType()->getId() == 2) $accounting_document__type = "Otpremnica - račun";
 
@@ -66,19 +66,19 @@ if ($client_data->getCountry() === null) {
   $client_country = null;
 }
 else {
-  $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
+  $client_country = $entityManager->find('\App\Entity\Country', $client_data->getCountry());
 }
 if ($client_data->getCity() === null) {
   $client_city = null;
 }
 else {
-  $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
+  $client_city = $entityManager->find('\App\Entity\City', $client_data->getCity());
 }
 if ($client_data->getStreet() === null) {
   $client_street = null;
 }
 else {
-  $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
+  $client_street = $entityManager->find('\App\Entity\Street', $client_data->getStreet());
 }
 
 $client_contacts = $client_data->getContacts();
@@ -99,7 +99,7 @@ if (!empty($client_contacts)) {
 	endforeach;
 }
 
-$preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+$preferences = $entityManager->find('App\Entity\Preferences', 1);
 $kurs = $preferences->getKurs();
 
 $html = '
@@ -166,10 +166,10 @@ $total_tax_base = 0;
 $total_tax_amount = 0;
 $total = 0;
 $total_eur = 0;
-$ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($accounting_document__id);
+$ad_articles = $entityManager->getRepository('\App\Entity\AccountingDocument')->getArticles($accounting_document__id);
 
 foreach ($ad_articles as $ad_article):
-	$ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article->getId()), array());
+	$ad_a_properties = $entityManager->getRepository('\App\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article->getId()), array());
 	$property_temp = '';
 	$property_counter = 0;
 	foreach ($ad_a_properties as $ad_a_property):
@@ -181,13 +181,13 @@ foreach ($ad_articles as $ad_article):
 
 	$count++;
 
-	$ad_a_quantity = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+	$ad_a_quantity = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
 																	->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces() );
 
-	$tax_base = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+	$tax_base = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
 															->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
 
-	$tax_amount = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+	$tax_amount = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
 															->getTaxAmount($tax_base, $ad_article->getTax() );
 
 	$html = '
@@ -221,7 +221,7 @@ foreach ($ad_articles as $ad_article):
 			</td>
 			<td width="80px" align="right">'
 				. number_format(
-					$sub_total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+					$sub_total = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
 																			->getSubTotal($tax_base, $tax_amount ) * $kurs, 2, ",", "."
 				) . '
 			</td>
@@ -236,7 +236,7 @@ foreach ($ad_articles as $ad_article):
 	$total = $total_tax_base + $total_tax_amount;
 endforeach;
 
-$income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($accounting_document__id);
+$income = $entityManager->getRepository('\App\Entity\AccountingDocument')->getIncome($accounting_document__id);
 
 $html = '
 <style type="text/css">table {	padding: 0px; margin: 0px; }</style>
@@ -268,7 +268,7 @@ $html = '
 		<td colspan="5" style="border-bottom-width: inherit;">Avans</td>
 		<td colspan="2" align="right" style="border-bottom-width: inherit;">'
 			. number_format(
-				($avans = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')
+				($avans = $entityManager->getRepository('\App\Entity\AccountingDocument')
 																			->getAvans($accounting_document__id)) * $kurs, 2, ",", "."
 			) . '
 		</td>

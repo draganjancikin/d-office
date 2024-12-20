@@ -2,7 +2,7 @@
 if (isset($_GET['group_id']) AND $_GET['group_id'] <> "") {
 
   $group_id = $_GET['group_id'];
-  $group = $entityManager->find("\Roloffice\Entity\ArticleGroup", $group_id);
+  $group = $entityManager->find("\App\Entity\ArticleGroup", $group_id);
   $title = "Cenovnik: " . $group->getName();
 
   $count = 0;
@@ -14,7 +14,7 @@ if (isset($_GET['group_id']) AND $_GET['group_id'] <> "") {
       <div class="col-sm-5">
         <select class="form-select form-select-sm" name="group_id">
           <?php
-          $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->findAll();
+          $article_groups = $entityManager->getRepository('\App\Entity\ArticleGroup')->findAll();
           foreach ($article_groups as $article_group) :
             ?>
             <option value="<?php echo $article_group->getId() ?>"><?php echo $article_group->getName() ?></option>
@@ -58,8 +58,8 @@ if (isset($_GET['group_id']) AND $_GET['group_id'] <> "") {
           </tfoot>
           <tbody>
             <?php
-            $articles_by_group = $entityManager->getRepository('\Roloffice\Entity\Article')->getArticlesByGroup($group_id);
-            $preferences = $entityManager->find('\Roloffice\Entity\Preferences', 1);
+            $articles_by_group = $entityManager->getRepository('\App\Entity\Article')->getArticlesByGroup($group_id);
+            $preferences = $entityManager->find('\App\Entity\Preferences', 1);
             foreach ($articles_by_group as $article_by_group):
               $count++;
               ?>

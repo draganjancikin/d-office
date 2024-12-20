@@ -3,22 +3,22 @@
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleToAccountingDocument"]) ) {
 
   $ad_id = htmlspecialchars($_POST["pidb_id"]);
-  $accounting_document = $entityManager->find("\Roloffice\Entity\AccountingDocument", $ad_id);
+  $accounting_document = $entityManager->find("\App\Entity\AccountingDocument", $ad_id);
 
   $article_id = htmlspecialchars($_POST["article_id"]);
-  $article = $entityManager->find("\Roloffice\Entity\Article", $article_id);
+  $article = $entityManager->find("\App\Entity\Article", $article_id);
 
   $price = $article->getPrice();
   $discount = 0;
   $weight = $article->getWeight();
   $pieces = htmlspecialchars($_POST["pieces"]);
   
-  $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+  $preferences = $entityManager->find('App\Entity\Preferences', 1);
   $tax = $preferences->getTax();
 
   $note = htmlspecialchars($_POST["note"]);
 
-  $newAccountingDocumentArticle = new \Roloffice\Entity\AccountingDocumentArticle();
+  $newAccountingDocumentArticle = new \App\Entity\AccountingDocumentArticle();
 
   $newAccountingDocumentArticle->setAccountingDocument($accounting_document);
   $newAccountingDocumentArticle->setArticle($article);
@@ -36,10 +36,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addArticleToAccountingD
   // $last__accounting_document__article_id = $newAccountingDocumentArticle->getId();
 
   //insert Article properties in table v6__accounting_documents__articles__properties
-  $article_properties = $entityManager->getRepository('\Roloffice\Entity\ArticleProperty')->getArticleProperties($article->getId());
+  $article_properties = $entityManager->getRepository('\App\Entity\ArticleProperty')->getArticleProperties($article->getId());
   foreach ($article_properties as $article_property) {
     // insert to table v6__accounting_documents__articles__properties
-    $newAccountingDocumentArticleProperty = new \Roloffice\Entity\AccountingDocumentArticleProperty();
+    $newAccountingDocumentArticleProperty = new \App\Entity\AccountingDocumentArticleProperty();
     
     $newAccountingDocumentArticleProperty->setAccountingDocumentArticle($newAccountingDocumentArticle);
     $newAccountingDocumentArticleProperty->setProperty($article_property->getProperty());

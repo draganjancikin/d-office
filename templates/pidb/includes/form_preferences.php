@@ -1,7 +1,7 @@
 <!-- Settings Data -->
 <?php
 if (isset($_GET['set'])):
-  $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+  $preferences = $entityManager->find('App\Entity\Preferences', 1);
   ?>
   <div class="card mb-4">
     <div class="card-header p-2">

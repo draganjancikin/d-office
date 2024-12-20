@@ -18,7 +18,7 @@
         </tfoot>
         <tbody>
           <?php
-          $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->findAll();
+          $article_groups = $entityManager->getRepository('\App\Entity\ArticleGroup')->findAll();
           foreach ($article_groups as $group_data):
             ?>
             <tr>

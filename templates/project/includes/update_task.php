@@ -6,18 +6,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['editTask']) ) {
   
   // Curent loged user.
   $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+  $user = $entityManager->find("\App\Entity\User", $user_id);
   
   $project_id = htmlspecialchars($_GET["project_id"]);
-  $project = $entityManager->find("\Roloffice\Entity\Project", $project_id);
+  $project = $entityManager->find("\App\Entity\Project", $project_id);
 
   $title = htmlspecialchars($_POST["title"]);
   
   $employee_id = htmlspecialchars($_POST["employee_id"]);
-  $employee = $entityManager->find("\Roloffice\Entity\Employee", $employee_id);
+  $employee = $entityManager->find("\App\Entity\Employee", $employee_id);
 
   $task_id = htmlspecialchars($_GET["task_id"]);
-  $task = $entityManager->find("\Roloffice\Entity\ProjectTask", $task_id);
+  $task = $entityManager->find("\App\Entity\ProjectTask", $task_id);
 
   $start = htmlspecialchars($_POST["start"]);
   $end = htmlspecialchars($_POST["end"]);
@@ -101,7 +101,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['editTask']) ) {
     $status_id = 1;
   }
   
-  $status = $entityManager->find("\Roloffice\Entity\ProjectTaskStatus", $status_id);
+  $status = $entityManager->find("\App\Entity\ProjectTaskStatus", $status_id);
 
   $task->setProject($project);
   $task->setTitle($title);

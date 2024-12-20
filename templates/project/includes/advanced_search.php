@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["advancedSearch"])) :
   $client = $_POST["client"];
   $project_title = $_POST["project_title"];
   $city = $_POST["city"];
-  $project_advanced_search_list = $entityManager->getRepository('\Roloffice\Entity\Project')->advancedSearch($client, $project_title, $city);
+  $project_advanced_search_list = $entityManager->getRepository('\App\Entity\Project')->advancedSearch($client, $project_title, $city);
   ?>
 
   <div class="card mb-4">
@@ -80,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["advancedSearch"])) :
             <?php
             foreach ($project_advanced_search_list as $project_item):
               $project_id = $project_item->getId();
-              $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
+              $project_tasks = $entityManager->getRepository('\App\Entity\Project')->projectTasks($project_id);
               ?>
               <tr>
                 <td>

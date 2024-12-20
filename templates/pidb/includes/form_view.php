@@ -55,7 +55,7 @@ switch ($pidb_data->getType()->getId()) {
             <?php
             $contactsCount = 0;
             foreach ($client['contacts'] as $client_contact):
-                $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy( array('id' =>$client_contact->getId()) );
+                $client_contact_data = $entityManager->getRepository('\App\Entity\Contact')->findOneBy( array('id' =>$client_contact->getId()) );
                 $client_contact_type = $client_contact_data->getType();
                 $contactsCount ++;
                 if($contactsCount < 5):
@@ -89,14 +89,14 @@ switch ($pidb_data->getType()->getId()) {
                 <tbody>
                     <?php
                     $count = 0;
-                    $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+                    $preferences = $entityManager->find('App\Entity\Preferences', 1);
                     $kurs = $preferences->getKurs();
 
                     $total_tax_base = 0;
                     $total_tax_amount = 0;
                     $total = 0;
 
-                    $ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($pidb_id);
+                    $ad_articles = $entityManager->getRepository('\App\Entity\AccountingDocument')->getArticles($pidb_id);
                     foreach ($ad_articles as $ad_article):
                         $count++;
                         ?>
@@ -109,7 +109,7 @@ switch ($pidb_data->getType()->getId()) {
                                     kom <input class="input-box-pieces" type="text" name="pieces" value="<?php echo $ad_article->getPieces() ?>" placeholder="(kom)" disabled >
                                     <?php
                                     // AccountingDocument Article Properties.
-                                    $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article->getId()), array());
+                                    $ad_a_properties = $entityManager->getRepository('\App\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $ad_article->getId()), array());
                                     foreach ($ad_a_properties as $ad_a_property):
                                         echo $ad_a_property->getProperty()->getName() . ' <input class="input-box-55" type="text" name="' .$ad_a_property->getProperty()->getName(). '" value="' . number_format($ad_a_property->getQuantity(), 2, ",", "."). '" title="(cm)" disabled > ';
                                     endforeach;
@@ -121,7 +121,7 @@ switch ($pidb_data->getType()->getId()) {
                                 <td class="px-1 input-box-45">
                                     <!-- količina artikla, treba da se izračunava kao proizvod property-a -->
                                     <?php
-                                        echo number_format($ad_a_quantity = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces() ), 2, ",", ".");
+                                        echo number_format($ad_a_quantity = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces() ), 2, ",", ".");
                                     ?>
                                 </td>
                                 <td class="px-1 text-center">
@@ -132,20 +132,20 @@ switch ($pidb_data->getType()->getId()) {
                                 </td>
                                 <td class="px-1 input-box-65">
                                       <?php
-                                      $tax_base = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
+                                      $tax_base = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
                                       echo number_format($tax_base * $kurs, 2, ",", ".")
                                       ?>
                                 </td>
                                 <td class="px-1 text-center"><?php echo $ad_article->getTax() ?></td>
                                 <td class="px-1 input-box-45">
                                     <?php
-                                    $tax_amount = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxAmount($tax_base, $ad_article->getTax() );
+                                    $tax_amount = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')->getTaxAmount($tax_base, $ad_article->getTax() );
                                     echo number_format($tax_amount * $kurs, 2, ",", ".");
                                     ?>
                                 </td>
                                 <td class="px-1 input-box-65">
                                     <?php
-                                    $sub_total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getSubTotal($tax_base, $tax_amount );
+                                    $sub_total = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')->getSubTotal($tax_base, $tax_amount );
                                     echo number_format($sub_total * $kurs, 2, ",", ".");
                                     ?>
                                 </td>
@@ -170,8 +170,8 @@ switch ($pidb_data->getType()->getId()) {
                         $total_tax_amount = $total_tax_amount + $tax_amount;
                     endforeach;
                     $total = $total_tax_base + $total_tax_amount;
-                    $avans = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAvans($pidb_id);
-                    $income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($pidb_id);
+                    $avans = $entityManager->getRepository('\App\Entity\AccountingDocument')->getAvans($pidb_id);
+                    $income = $entityManager->getRepository('\App\Entity\AccountingDocument')->getIncome($pidb_id);
                     ?>
                 </tbody>
                 <tfoot>

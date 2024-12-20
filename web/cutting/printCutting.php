@@ -49,7 +49,7 @@ $pdf->SetFont('dejavusans', '', 10);
 $pdf->AddPage();
 
 $id = $_GET['cutting_id'];
-$cutting_sheet = $entityManager->find("\Roloffice\Entity\CuttingSheet", $id);
+$cutting_sheet = $entityManager->find("\App\Entity\CuttingSheet", $id);
 
 $html =
 '<style type="text/css">table { padding-top: 0px; padding-bottom: 0px; }</style>
@@ -71,13 +71,13 @@ $pdf->writeHTML($html, true, false, true, false, '');
 
 $pickets_number = 0;
 
-$articles = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getArticlesOnCuttingSheet($id);
+$articles = $entityManager->getRepository('\App\Entity\CuttingSheet')->getArticlesOnCuttingSheet($id);
 
 // Ovde pocinje petlja iscitavanja artikala iz krojnie liste.
 foreach ($articles as $article):
     
   $count = 0;
-  $article_repo = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle');
+  $article_repo = $entityManager->getRepository('\App\Entity\CuttingSheetArticle');
   
   $fence_model_id = $article->getFenceModel()->getId();
   

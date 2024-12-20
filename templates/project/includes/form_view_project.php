@@ -2,7 +2,7 @@
 if (!$project_data):
   die('<script>location.href = "/projects/" </script>');
 else:
-  $client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($project_data->getClient()->getId());
+  $client = $entityManager->getRepository('\App\Entity\Client')->getClientData($project_data->getClient()->getId());
   ?>
   <!-- ************** START OLD CODE ***************** -->
   <!-- dugme, okidač za modal addNote -->
@@ -41,7 +41,7 @@ else:
             $count = 0;
             foreach ($client['contacts'] as $client_contact):
               if ($count < 8):
-                $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')
+                $client_contact_data = $entityManager->getRepository('\App\Entity\Contact')
                                                      ->findOneBy( array('id' =>$client_contact->getId()) );
                 $client_contact_type = $client_contact_data->getType();
                 ?>
@@ -102,7 +102,7 @@ else:
               <table class="table table-hover">
                 <?php
                 $date_temp = "";
-                $notes = $entityManager->getRepository('\Roloffice\Entity\Project')->getNotesByProject($project_id);
+                $notes = $entityManager->getRepository('\App\Entity\Project')->getNotesByProject($project_id);
                 foreach ($notes as $note):
                   ?>
                   <tr>
@@ -137,7 +137,7 @@ else:
           <div class="card mb-4">
             <div class="card-body p-2 tasks-note-scroll">
               <?php
-              if ($orders = $entityManager->find("\Roloffice\Entity\Project", $project_id)->getOrders() ):
+              if ($orders = $entityManager->find("\App\Entity\Project", $project_id)->getOrders() ):
                 echo "<h5>Narudžbenice:</h5>";
                 foreach ($orders as $order):
                   ?>
@@ -175,7 +175,7 @@ else:
                   <?php
                 endforeach;
               endif;
-              if ($accounting_documents = $entityManager->find("\Roloffice\Entity\Project", $project_id)->getAccountingDocuments()):
+              if ($accounting_documents = $entityManager->find("\App\Entity\Project", $project_id)->getAccountingDocuments()):
                 echo "<br><h5>Dokumenti:</h5>";
                 foreach ($accounting_documents as $accounting_document):
                   ?>
@@ -234,7 +234,7 @@ else:
                 <div class="col-sm-4">
                   <p class="text-center"><strong><?php echo $naslov ?></strong></p>
                   <?php
-                  $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
+                  $project_tasks = $entityManager->getRepository('\App\Entity\Project')->projectTasks($project_id);
                   foreach ($project_tasks as $project_task):
                     $count ++;
                     if ($project_task->getStatus()->getId() == $i):
@@ -274,7 +274,7 @@ else:
                               </tr>
                               <?php
                               $date_temp = "";
-                              $task_notes = $entityManager->getRepository('\Roloffice\Entity\ProjectTaskNote')->findBy(array('project_task' => $project_task));
+                              $task_notes = $entityManager->getRepository('\App\Entity\ProjectTaskNote')->findBy(array('project_task' => $project_task));
                               foreach ($task_notes as $task_note):
                                 ?>
                                 <tr>

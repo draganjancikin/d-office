@@ -4,23 +4,23 @@ if (isset($_GET["exportProformaToDispatch"]) ) {
   
   // Current loged user.
   $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+  $user = $entityManager->find("\App\Entity\User", $user_id);
     
   $proforma_id = htmlspecialchars($_GET["pidb_id"]);
   
   // Get proforma data.
-  $proforma = $entityManager->find("\Roloffice\Entity\AccountingDocument", $proforma_id);
+  $proforma = $entityManager->find("\App\Entity\AccountingDocument", $proforma_id);
 
   $ordinal_num_in_year = 0;
 
   // Save Proforma data to Dispatch.
-  $newDispatch = new \Roloffice\Entity\AccountingDocument();
+  $newDispatch = new \App\Entity\AccountingDocument();
 
   $newDispatch->setOrdinalNumInYear($ordinal_num_in_year);
   $newDispatch->setDate(new DateTime("now"));
   $newDispatch->setIsArchived(0);
 
-  $newDispatch->setType($entityManager->find("\Roloffice\Entity\AccountingDocumentType", 2));
+  $newDispatch->setType($entityManager->find("\App\Entity\AccountingDocumentType", 2));
   $newDispatch->setTitle($proforma->getTitle());
   $newDispatch->setClient($proforma->getClient());
   $newDispatch->setParent($proforma);
@@ -37,7 +37,7 @@ if (isset($_GET["exportProformaToDispatch"]) ) {
   $last_accounting_document_id = $newDispatch->getId();
   
   // Set Ordinal Number In Year.
-  $entityManager->getRepository('Roloffice\Entity\AccountingDocument')->setOrdinalNumInYear($last_accounting_document_id);
+  $entityManager->getRepository('App\Entity\AccountingDocument')->setOrdinalNumInYear($last_accounting_document_id);
   
   // Get proforma payments.
   $payments = $proforma->getPayments();
@@ -62,12 +62,12 @@ if (isset($_GET["exportProformaToDispatch"]) ) {
   }
 
   // Get articles from proforma.
-  $proforma_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($proforma->getId());
+  $proforma_articles = $entityManager->getRepository('\App\Entity\AccountingDocument')->getArticles($proforma->getId());
 
   // Save articles to dispatch.
 
   foreach ($proforma_articles as $proforma_article) {
-    $newDispatchArticle = new \Roloffice\Entity\AccountingDocumentArticle();
+    $newDispatchArticle = new \App\Entity\AccountingDocumentArticle();
 
     $newDispatchArticle->setAccountingDocument($newDispatch);
     $newDispatchArticle->setArticle($proforma_article->getArticle());
@@ -82,11 +82,11 @@ if (isset($_GET["exportProformaToDispatch"]) ) {
     $entityManager->flush();
 
     // Get $proforma_article properies
-    $proforma_article_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $proforma_article->getId()), array());
+    $proforma_article_properties = $entityManager->getRepository('\App\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $proforma_article->getId()), array());
     
     // Save $proforma_article properies to $newDispatchArticle
     foreach ($proforma_article_properties as $article_property) {
-      $newDispatchArticleProperty = new \Roloffice\Entity\AccountingDocumentArticleProperty();
+      $newDispatchArticleProperty = new \App\Entity\AccountingDocumentArticleProperty();
       
       $newDispatchArticleProperty->setAccountingDocumentArticle($newDispatchArticle);
       $newDispatchArticleProperty->setProperty($article_property->getProperty());
@@ -102,7 +102,7 @@ if (isset($_GET["exportProformaToDispatch"]) ) {
   $entityManager->flush();
 
   // Check if proforma belong to any Project
-  $project = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getProjectByAccountingDocument($proforma->getId());
+  $project = $entityManager->getRepository('\App\Entity\AccountingDocument')->getProjectByAccountingDocument($proforma->getId());
 
   if ($project) {
     // Set same project to dispatch.

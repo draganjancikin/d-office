@@ -19,7 +19,7 @@
         </tfoot>
         <tbody>
           <?php
-          $cutting_sheets = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getLastCuttingSheets(10);
+          $cutting_sheets = $entityManager->getRepository('\App\Entity\CuttingSheet')->getLastCuttingSheets(10);
           foreach ($cutting_sheets as $cutting_sheet):
             ?>
           <tr>

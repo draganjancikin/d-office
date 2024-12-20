@@ -4,12 +4,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateClient"])) {
   
   // curent loged user
   $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+  $user = $entityManager->find("\App\Entity\User", $user_id);
 
   $client_id = $_POST["client_id"];
 
   $type_id = $_POST["type_id"];
-  $type = $entityManager->find("\Roloffice\Entity\ClientType", $type_id);
+  $type = $entityManager->find("\App\Entity\ClientType", $type_id);
 
   if (empty($_POST['name'])) {
     $nameError = 'Ime mora biti upisano';
@@ -33,16 +33,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateClient"])) {
   }
 
   $country_id = $_POST["country_id"];
-  $country = $entityManager->find("\Roloffice\Entity\Country", $country_id);
+  $country = $entityManager->find("\App\Entity\Country", $country_id);
   $city_id = $_POST["city_id"];
-  $city = $entityManager->find("\Roloffice\Entity\City", $city_id);
+  $city = $entityManager->find("\App\Entity\City", $city_id);
   $street_id = $_POST["street_id"];
-  $street = $entityManager->find("\Roloffice\Entity\Street", $street_id);
+  $street = $entityManager->find("\App\Entity\Street", $street_id);
   $home_number = basicValidation($_POST["home_number"]);
   $address_note = basicValidation($_POST["address_note"]);
   $note = basicValidation($_POST["note"]);
 
-  $client = $entityManager->find('\Roloffice\Entity\Client', $client_id);
+  $client = $entityManager->find('\App\Entity\Client', $client_id);
 
   if ($client === null) {
     echo "Client with ID $client_id does not exist.\n";

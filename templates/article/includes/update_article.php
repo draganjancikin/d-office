@@ -4,17 +4,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateArticle"]) ) {
   
   // Curent logged user.
   $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+  $user = $entityManager->find("\App\Entity\User", $user_id);
 
   $article_id = htmlspecialchars($_GET["article_id"]);
   
   $group_id = htmlspecialchars($_POST['group_id']);
-  $group = $entityManager->find("\Roloffice\Entity\ArticleGroup", $group_id);
+  $group = $entityManager->find("\App\Entity\ArticleGroup", $group_id);
   
   $name = htmlspecialchars($_POST["name"]);
   
   $unit_id = htmlspecialchars($_POST["unit_id"]);
-  $unit = $entityManager->find("\Roloffice\Entity\Unit", $unit_id);
+  $unit = $entityManager->find("\App\Entity\Unit", $unit_id);
   
   if($_POST['weight']){
     $weight = htmlspecialchars($_POST['weight']);
@@ -26,7 +26,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateArticle"]) ) {
   $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
   $note = htmlspecialchars($_POST["note"]);
   
-  $article = $entityManager->find('\Roloffice\Entity\Article', $article_id);
+  $article = $entityManager->find('\App\Entity\Article', $article_id);
 
   if ($article === null) {
     echo "Article with ID $article_id does not exist.\n";

@@ -4,15 +4,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["updateAcountingDocumen
 
   // Curent loged user.
   $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+  $user = $entityManager->find("\App\Entity\User", $user_id);
   
   $ad_id = htmlspecialchars($_GET["pidb_id"]);
-  $accounting_document = $entityManager->find("\Roloffice\Entity\AccountingDocument", $ad_id);
+  $accounting_document = $entityManager->find("\App\Entity\AccountingDocument", $ad_id);
   
   $title = htmlspecialchars($_POST["title"]);
 
   $client_id = htmlspecialchars($_POST["client_id"]);
-  $client = $entityManager->find("\Roloffice\Entity\Client", $client_id);
+  $client = $entityManager->find("\App\Entity\Client", $client_id);
 
   $is_archived = htmlspecialchars($_POST["archived"]);
   $note = htmlspecialchars($_POST["note"]);

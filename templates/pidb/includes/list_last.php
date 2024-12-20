@@ -1,6 +1,6 @@
 <!-- Proformas -->
 <?php
-$proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getLast(1, 0, 10);
+$proformas = $entityManager->getRepository('\App\Entity\AccountingDocument')->getLast(1, 0, 10);
 ?>
 <div class="card  border-info mb-4">
     <div class="card-header bg-info p-2">
@@ -51,7 +51,7 @@ $proformas = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument
 
 <!-- Otpremnice -->
 <?php
-$delivery_notes = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getLast(2, 0, 10);
+$delivery_notes = $entityManager->getRepository('\App\Entity\AccountingDocument')->getLast(2, 0, 10);
 ?>
 <div class="card  border-secondary mb-4">
   <div class="card-header bg-secondary p-2">
@@ -96,7 +96,7 @@ $delivery_notes = $entityManager->getRepository('\Roloffice\Entity\AccountingDoc
 
 <!-- Povratnice -->
 <?php
-$return_receipts = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getLast(4, 0, 10);
+$return_receipts = $entityManager->getRepository('\App\Entity\AccountingDocument')->getLast(4, 0, 10);
 ?>
 <div class="card  border-warning mb-4">
   <div class="card-header bg-warning p-2">

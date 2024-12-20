@@ -4,8 +4,8 @@ if (isset($_GET['date'])) {
 } else {
   $date = "";
 }
-$daily_transactions = $entityManager->getRepository('\Roloffice\Entity\Payment')->getDailyCashTransactions($date);
-$daily_cash_saldo = $entityManager->getRepository('\Roloffice\Entity\Payment')->getDailyCashSaldo($date);
+$daily_transactions = $entityManager->getRepository('\App\Entity\Payment')->getDailyCashTransactions($date);
+$daily_cash_saldo = $entityManager->getRepository('\App\Entity\Payment')->getDailyCashSaldo($date);
 ?>
 <div class="row">
   <div class="col-lg-10 col-md-12">
@@ -26,7 +26,7 @@ $daily_cash_saldo = $entityManager->getRepository('\Roloffice\Entity\Payment')->
             </thead>
             <tbody>
               <?php foreach ($daily_transactions as $transaction):
-              $accounting_document = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId()); ?>
+              $accounting_document = $entityManager->getRepository('\App\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId()); ?>
               <tr>
                 <td><?php echo $transaction->getType()->getName() ?></td>
                 <td>

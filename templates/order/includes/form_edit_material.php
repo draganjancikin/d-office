@@ -2,8 +2,8 @@
 $material_on_order_id = $_GET['material_on_order_id'];
 $supplier_id = $_GET['supplier_id'];
 // Get Material data.
-$material_data = $entityManager->find('\Roloffice\Entity\OrderMaterial', $material_on_order_id);
-$materials_by_supplier = $entityManager->getRepository('\Roloffice\Entity\Material')->getSupplierMaterials($supplier_id);
+$material_data = $entityManager->find('\App\Entity\OrderMaterial', $material_on_order_id);
+$materials_by_supplier = $entityManager->getRepository('\App\Entity\Material')->getSupplierMaterials($supplier_id);
 ?>
 <div class="card border-secondary mb-4">
   <div class="card-header p-2">

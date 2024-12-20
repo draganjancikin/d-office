@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -14,7 +14,7 @@ class ClientRepository extends EntityRepository {
   public function getLastClients($limit = 5) {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('c')
-        ->from('Roloffice\Entity\Client', 'c')
+        ->from('App\Entity\Client', 'c')
         ->orderBy('c.id', 'DESC')
         ->setMaxResults( $limit );
     $query = $qb->getQuery();
@@ -33,7 +33,7 @@ class ClientRepository extends EntityRepository {
     // Create a QueryBilder instance
     $qb = $this->_em->createQueryBuilder();
     $qb->select('cl')
-      ->from('Roloffice\Entity\Client', 'cl')
+      ->from('App\Entity\Client', 'cl')
       ->leftJoin('cl.street', 's', 'WITH', 'cl.street = s.id')
       ->leftJoin('cl.city', 'c', 'WITH', 'cl.city = c.id')
       ->where(
@@ -63,7 +63,7 @@ class ClientRepository extends EntityRepository {
       // Create a QueryBuilder instance.
       $qb = $this->_em->createQueryBuilder();
       $qb->select('cl')
-        ->from('Roloffice\Entity\Client', 'cl')
+        ->from('App\Entity\Client', 'cl')
         ->where(
           $qb->expr()->orX(
             $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
@@ -98,7 +98,8 @@ class ClientRepository extends EntityRepository {
         if ($id) {
             $new = preg_replace('/[^0-9]/', '', $id);
             return $new;
-        } else {
+        }
+        else {
             die('<script>location.href = "/clients/" </script>');
         }
     }
@@ -110,22 +111,25 @@ class ClientRepository extends EntityRepository {
      * @return array
      */
     public function getClientData($client_id): array {
-        $client_data = $this->_em->find('\Roloffice\Entity\Client', $client_id);
-        $client_type = $this->_em->find('\Roloffice\Entity\ClientType', $client_data->getType());
+        $client_data = $this->_em->find('\App\Entity\Client', $client_id);
+        $client_type = $this->_em->find('\App\Entity\ClientType', $client_data->getType());
         if ($client_data->getCountry() === null) {
             $client_country = null;
-        } else {
-            $client_country = $this->_em->find('\Roloffice\Entity\Country', $client_data->getCountry());
+        }
+        else {
+            $client_country = $this->_em->find('\App\Entity\Country', $client_data->getCountry());
         }
         if ($client_data->getCity() === null) {
             $client_city = null;
-        } else {
-            $client_city = $this->_em->find('\Roloffice\Entity\City', $client_data->getCity());
+        }
+        else {
+            $client_city = $this->_em->find('\App\Entity\City', $client_data->getCity());
         }
         if ($client_data->getStreet() === null) {
             $client_street = null;
-        } else {
-            $client_street = $this->_em->find('\Roloffice\Entity\Street', $client_data->getStreet());
+        }
+        else {
+            $client_street = $this->_em->find('\App\Entity\Street', $client_data->getStreet());
         }
         $client_contacts = $client_data->getContacts();
         return [

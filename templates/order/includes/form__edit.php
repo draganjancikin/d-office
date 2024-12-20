@@ -26,7 +26,7 @@
             $supplier_contacts = $supplier_data['contacts'];
             $contactsCount = 0;
             foreach ($supplier_contacts as $supplier_contact):
-                $supplier_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy( array('id' =>$supplier_contact->getId()) );
+                $supplier_contact_data = $entityManager->getRepository('\App\Entity\Contact')->findOneBy( array('id' =>$supplier_contact->getId()) );
                 $supplier_contact_type = $supplier_contact_data->getType();
                 $contactsCount ++;
                 if ($contactsCount < 5){
@@ -58,14 +58,14 @@
                 <tbody>
 
                     <?php
-                    $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+                    $preferences = $entityManager->find('App\Entity\Preferences', 1);
                     $kurs = $preferences->getKurs();
 
                     $count = 0;
                     $total_tax_base = 0;
                     $total_tax_amount = 0;
                     $total = 0;
-                    $materials_on_order = $entityManager->getRepository('\Roloffice\Entity\Order')->getMaterialsOnOrder($order_id);
+                    $materials_on_order = $entityManager->getRepository('\App\Entity\Order')->getMaterialsOnOrder($order_id);
                     foreach ($materials_on_order as $material_on_order):
                         $count++;
                         ?>
@@ -79,7 +79,7 @@
                                     <br />
                                     kol. <input class="input-box-45" type="text" name="pieces" value="<?php echo $material_on_order->getPieces() ?>" placeholder="(kom)" />
                                     <?php
-                                    $material_on_order_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getProperties($material_on_order->getId());
+                                    $material_on_order_properties = $entityManager->getRepository('\App\Entity\OrderMaterial')->getProperties($material_on_order->getId());
                                     foreach ($material_on_order_properties as $material_on_order_property):
                                         echo $material_on_order_property->getProperty()->getName() . ' <input class="input-box-50" type="text" name="' .$material_on_order_property->getProperty()->getName(). '" value="' .number_format($material_on_order_property->getQuantity(), 2, ",", "."). '" placeholder="(cm)" > ';
                                     endforeach;
@@ -93,7 +93,7 @@
                                 <td class="px-1 input-box-45">
                                     <!-- količina artikla, treba da se izračunava kao proizvod property-a -->
                                     <?php
-                                    echo number_format($material_on_order_quantity = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getQuantity($material_on_order->getId(), $material_on_order->getMaterial()->getMinCalcMeasure(), $material_on_order->getPieces() ), 2, ",", ".");
+                                    echo number_format($material_on_order_quantity = $entityManager->getRepository('\App\Entity\OrderMaterial')->getQuantity($material_on_order->getId(), $material_on_order->getMaterial()->getMinCalcMeasure(), $material_on_order->getPieces() ), 2, ",", ".");
                                     ?>
                                 </td>
                                 <td class="px-1 text-center">
@@ -104,19 +104,19 @@
                                 </td>
                                 <td class="px-1 input-box-65">
                                     <?php
-                                    $tax_base = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getTaxBase($material_on_order->getPrice(), $material_on_order->getDiscount(), $material_on_order_quantity);
+                                    $tax_base = $entityManager->getRepository('\App\Entity\OrderMaterial')->getTaxBase($material_on_order->getPrice(), $material_on_order->getDiscount(), $material_on_order_quantity);
                                     echo number_format($tax_base * $kurs, 2, ",", ".")
                                     ?>
                                 </td>
                                 <td class="px-1 text-center"><?php echo $material_on_order->getTax() ?></td>
                                 <td class="px-1 input-box-45">
-                                    <?php $tax_amount = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getTaxAmount($tax_base, $material_on_order->getTax() );
+                                    <?php $tax_amount = $entityManager->getRepository('\App\Entity\OrderMaterial')->getTaxAmount($tax_base, $material_on_order->getTax() );
                                     echo number_format($tax_amount * $kurs, 2, ",", ".");
                                     ?>
                                 </td>
                                 <td class="px-1 input-box-65">
                                     <?php
-                                    $sub_total = $entityManager->getRepository('\Roloffice\Entity\OrderMaterial')->getSubTotal($tax_base, $tax_amount );
+                                    $sub_total = $entityManager->getRepository('\App\Entity\OrderMaterial')->getSubTotal($tax_base, $tax_amount );
                                     echo number_format($sub_total * $kurs, 2, ",", ".");
                                     ?>
                                 </td>
@@ -187,7 +187,7 @@
                                     </option>
                                     <!-- List of active project. -->
                                     <?php
-                                    $project_list = $entityManager->getRepository('Roloffice\Entity\Project')->getAllActiveProjects();
+                                    $project_list = $entityManager->getRepository('App\Entity\Project')->getAllActiveProjects();
                                     foreach( $project_list as $project_item):
                                         $project_id = $project_item->getId();
                                         $project_pr_id = $project_item->getOrdinalNumInYear();

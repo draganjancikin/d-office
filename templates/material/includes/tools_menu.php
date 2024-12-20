@@ -17,15 +17,15 @@ require 'delete_property.php';
       <?php
       if(isset($_GET['view']) || isset($_GET['edit'])):
         $material_id = filter_input(INPUT_GET, 'id');
-        $material = $entityManager->find('\Roloffice\Entity\Material', $material_id);
+        $material = $entityManager->find('\App\Entity\Material', $material_id);
         if (!$material) {
           die('<script>location.href = "/materials/"</script>');
         }
-        $material_suppliers = $entityManager->getRepository('\Roloffice\Entity\MaterialSupplier')->getMaterialSuppliers($material_id);
-        $clients = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => 'ASC'));
-        $suppliers = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC'));
+        $material_suppliers = $entityManager->getRepository('\App\Entity\MaterialSupplier')->getMaterialSuppliers($material_id);
+        $clients = $entityManager->getRepository('\App\Entity\Client')->findBy(array(), array('name' => 'ASC'));
+        $suppliers = $entityManager->getRepository('\App\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC'));
         
-        $material_propertys = $entityManager->getRepository('\Roloffice\Entity\MaterialProperty')->getMaterialProperties($material_id);
+        $material_propertys = $entityManager->getRepository('\App\Entity\MaterialProperty')->getMaterialProperties($material_id);
 
         // In view case show edit button.
         if(isset($_GET['view'])):

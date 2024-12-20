@@ -16,7 +16,7 @@ switch ($pidb_tip_id) {
         break;
 }
 // Get article data.
-$article_data = $entityManager->find('\Roloffice\Entity\AccountingDocumentArticle', $pidb_article_id);
+$article_data = $entityManager->find('\App\Entity\AccountingDocumentArticle', $pidb_article_id);
 ?>
 <div class="card border-<?php echo $style ?> mb-4">
   <div class="card-header bg-<?php echo $style ?> p-2">

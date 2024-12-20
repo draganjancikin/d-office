@@ -19,10 +19,10 @@ require 'change__material__in__order.php';
       <?php
       if(isset($_GET['view']) || isset($_GET['edit'])):
         $order_id = filter_input(INPUT_GET, 'id');
-        $order_data = $entityManager->find('\Roloffice\Entity\Order', $order_id);
-        $supplier_data = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($order_data->getSupplier());
-        $project_data = $entityManager->getRepository('Roloffice\Entity\Order')->getProject($order_id);
-        $materials = $entityManager->getRepository('\Roloffice\Entity\Material')->getSupplierMaterials($supplier_data['id']);
+        $order_data = $entityManager->find('\App\Entity\Order', $order_id);
+        $supplier_data = $entityManager->getRepository('\App\Entity\Client')->getClientData($order_data->getSupplier());
+        $project_data = $entityManager->getRepository('App\Entity\Order')->getProject($order_id);
+        $materials = $entityManager->getRepository('\App\Entity\Material')->getSupplierMaterials($supplier_data['id']);
         // In view case show edit button.
         if(isset($_GET['view'])):
           ?>

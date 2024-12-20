@@ -25,7 +25,7 @@
         </tfoot>
         <tbody>
           <?php
-          $orders = $entityManager->getRepository('\Roloffice\Entity\Order')->getLastOrders(10);
+          $orders = $entityManager->getRepository('\App\Entity\Order')->getLastOrders(10);
           foreach ($orders as $order):
             ?>
             <tr>
@@ -62,7 +62,7 @@
               <td class="px-1"><?php echo $order->getTitle() ?></td>
               <td class="px-1">
                 <?php
-                if ($project = $entityManager->getRepository('Roloffice\Entity\Order')->getProject($order->getId()) ) :
+                if ($project = $entityManager->getRepository('App\Entity\Order')->getProject($order->getId()) ) :
                   ?>
                   <a href="/projects/?view&project_id=<?php echo $project->getId() ?>">
                   <?php echo $project->getOrdinalNumInYear() .' '. $project->getClient()->getName() .' - '. $project->getTitle() ?>
@@ -84,7 +84,7 @@
 <?php
 // Don't delete code below. This is for database checking
 /*
-$svi_materijali_na_svim_narudzbenicama = $entityManager->getRepository('Roloffice\Entity\OrderMaterial')->findAll();
+$svi_materijali_na_svim_narudzbenicama = $entityManager->getRepository('App\Entity\OrderMaterial')->findAll();
 
 foreach ($svi_materijali_na_svim_narudzbenicama as $jedan_materijal_na_narudzbenici) {
   $id_jednog_materijala_na_narudzbenici = $jedan_materijal_na_narudzbenici->getId();
@@ -93,7 +93,7 @@ foreach ($svi_materijali_na_svim_narudzbenicama as $jedan_materijal_na_narudzben
   if ($id_jednog_materijala_na_narudzbenici > 2300) {
     echo $id_jednog_materijala_na_narudzbenici . " - " . $id_materijala_na_narudzbenici . "<br>";
 
-    $svi_materijali = $entityManager->getRepository('Roloffice\Entity\Material')->findAll();
+    $svi_materijali = $entityManager->getRepository('App\Entity\Material')->findAll();
     $control = FALSE;
     foreach ($svi_materijali as $jedan_materijal) {
       if ($id_materijala_na_narudzbenici == $jedan_materijal->getId()) {
@@ -110,7 +110,7 @@ foreach ($svi_materijali_na_svim_narudzbenicama as $jedan_materijal_na_narudzben
 */
 
 /*
-$sve_osobine_svih_materijala_na_svim_narudzbenicama = $entityManager->getRepository('Roloffice\Entity\OrderMaterialProperty')->findAll();
+$sve_osobine_svih_materijala_na_svim_narudzbenicama = $entityManager->getRepository('App\Entity\OrderMaterialProperty')->findAll();
 
 foreach ($sve_osobine_svih_materijala_na_svim_narudzbenicama as $jedna_osobina_materijala) {
   $id_jedne_osobine_materijala = $jedna_osobina_materijala->getId();
@@ -122,7 +122,7 @@ foreach ($sve_osobine_svih_materijala_na_svim_narudzbenicama as $jedna_osobina_m
     // echo "ID materijala na narudžbenici: " . $id_materijala_na_narudzbenici  . "</br>";
     echo $id_jedne_osobine_materijala . "<br>";
     
-    $svi_materijali_na_narudzbenicama = $entityManager->getRepository('Roloffice\Entity\OrderMaterial')->findAll();
+    $svi_materijali_na_narudzbenicama = $entityManager->getRepository('App\Entity\OrderMaterial')->findAll();
     $control = FALSE;
     foreach ($svi_materijali_na_narudzbenicama as $jedan_materijal_na_narudzbenici) {
       if ($id_materijala_na_narudzbenici == $jedan_materijal_na_narudzbenici->getId()) {

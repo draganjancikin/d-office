@@ -10,7 +10,7 @@ require_once '../../config/tcpdf_include.php';
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-$company_info = $entityManager->getRepository('\Roloffice\Entity\CompanyInfo')->getCompanyInfoData(1);
+$company_info = $entityManager->getRepository('\App\Entity\CompanyInfo')->getCompanyInfoData(1);
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
@@ -51,8 +51,8 @@ $pdf->AddPage();
 
 $date = $_GET['date'];
 
-$daily_transactions = $entityManager->getRepository('\Roloffice\Entity\Payment')->getDailyCashTransactions($date);
-$daily_cash_saldo = $entityManager->getRepository('\Roloffice\Entity\Payment')->getDailyCashSaldo($date);
+$daily_transactions = $entityManager->getRepository('\App\Entity\Payment')->getDailyCashTransactions($date);
+$daily_cash_saldo = $entityManager->getRepository('\App\Entity\Payment')->getDailyCashSaldo($date);
 
 $html = '
   <h1>Dnevni izveštaj</h1>
@@ -71,7 +71,7 @@ $html = '
 $pdf->writeHTML($html, true, false, true, false, '');
 
 foreach($daily_transactions as $transaction):
-  $accounting_document = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId());
+  $accounting_document = $entityManager->getRepository('\App\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId());
   if ($accounting_document) {
     // $pidb_data = $pidb->getPidb($transaction['pidb_id']);
     $accounting_document_data = $accounting_document->getOrdinalNumInYear(). ' ' .$accounting_document->getClient()->getName(). ' ' .$accounting_document->getTitle();

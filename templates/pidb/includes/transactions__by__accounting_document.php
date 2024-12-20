@@ -1,12 +1,12 @@
 <?php
 if(isset($_GET['pidb_id'])) :
     $accounting_document_id = $_GET['pidb_id'];
-    $pidb_data = $entityManager->find('\Roloffice\Entity\AccountingDocument', $accounting_document_id);
-    $client_data = $entityManager->find('\Roloffice\Entity\Client',$pidb_data->getClient());
+    $pidb_data = $entityManager->find('\App\Entity\AccountingDocument', $accounting_document_id);
+    $client_data = $entityManager->find('\App\Entity\Client',$pidb_data->getClient());
     $transactions = $pidb_data->getPayments();
-    $total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getTotalAmountsByAccountingDocument($accounting_document_id);
-    $avans = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAvans($accounting_document_id);
-    $income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($accounting_document_id);
+    $total = $entityManager->getRepository('\App\Entity\AccountingDocument')->getTotalAmountsByAccountingDocument($accounting_document_id);
+    $avans = $entityManager->getRepository('\App\Entity\AccountingDocument')->getAvans($accounting_document_id);
+    $income = $entityManager->getRepository('\App\Entity\AccountingDocument')->getIncome($accounting_document_id);
     $total_income = $avans + $income;
 else :
     die('<script>location.href = "/pidb/index.php?transactions" </script>');

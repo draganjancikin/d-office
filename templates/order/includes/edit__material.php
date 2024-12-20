@@ -4,12 +4,12 @@
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialInOrder"]) ) {
   
   $order_id = htmlspecialchars($_GET["order_id"]);
-  // $order = $entityManager->find("\Roloffice\Entity\Order", $order_id);
+  // $order = $entityManager->find("\App\Entity\Order", $order_id);
   
   $order_material_id = htmlspecialchars($_GET["orderm_material_id"]);
   
   $material_id = htmlspecialchars($_POST["material_id"]);
-  // $material = $entityManager->find("\Roloffice\Entity\Material", $material_id);
+  // $material = $entityManager->find("\App\Entity\Material", $material_id);
   
   $note = htmlspecialchars($_POST["note"]);
 
@@ -22,7 +22,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialInOrder"]) 
   $discount_1 = htmlspecialchars($_POST["discount"]);
   $discount = str_replace(",", ".", $discount_1);
   
-  $orderMaterial = $entityManager->find("\Roloffice\Entity\OrderMaterial", $order_material_id);
+  $orderMaterial = $entityManager->find("\App\Entity\OrderMaterial", $order_material_id);
   // $orderMaterial->setOrder($order);
   // $orderMaterial->setMaterial($material);
   $orderMaterial->setNote($note);
@@ -32,7 +32,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialInOrder"]) 
   $entityManager->flush();
 
   // Properies update in table v6_orders_materials_properties
-  $order_material_properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterialProperty')->getOrderMaterialProperties($order_material_id);
+  $order_material_properties = $entityManager->getRepository('\App\Entity\OrderMaterialProperty')->getOrderMaterialProperties($order_material_id);
   foreach ($order_material_properties as $order_material_property) {
     
     // Get property name from $order_material_property.
@@ -40,7 +40,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialInOrder"]) 
     // Get property value from $_POST
     $property_value = str_replace(",", ".", htmlspecialchars($_POST["$property_name"]));
 
-    $orderMaterialProperty = $entityManager->find("\Roloffice\Entity\OrderMaterialProperty", $order_material_property->getId());
+    $orderMaterialProperty = $entityManager->find("\App\Entity\OrderMaterialProperty", $order_material_property->getId());
 
     $orderMaterialProperty->setQuantity($property_value);
     $entityManager->flush();

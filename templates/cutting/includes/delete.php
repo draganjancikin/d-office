@@ -11,10 +11,10 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["delete"])) {
 
 
   // Check if exist CuttingSheet.
-  if ($cs = $entityManager->find("\Roloffice\Entity\CuttingSheet", $cs_id)) {
+  if ($cs = $entityManager->find("\App\Entity\CuttingSheet", $cs_id)) {
 
     // Check if exist Article in CuttingSheet.
-    if ($cs_articles = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getCuttingSheetArticles($cs_id)) {
+    if ($cs_articles = $entityManager->getRepository('\App\Entity\CuttingSheetArticle')->getCuttingSheetArticles($cs_id)) {
 
       // Loop trough all Articles of CuttingSheet.
       foreach ($cs_articles as $cs_article) {

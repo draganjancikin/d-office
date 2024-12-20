@@ -5,10 +5,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["deleteAccountingDocumen
   $acc_doc_id = htmlspecialchars($_GET["acc_doc_id"]);
   
   // Check if exist AccountingDocument.
-  if ($accounting_document = $entityManager->find("\Roloffice\Entity\AccountingDocument", $acc_doc_id)) {
+  if ($accounting_document = $entityManager->find("\App\Entity\AccountingDocument", $acc_doc_id)) {
   
     // Check if AccountingDocument have Payments, where PaymentType is Income.
-    if ( $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getPaymentsByIncome($acc_doc_id) ) {
+    if ( $entityManager->getRepository('\App\Entity\AccountingDocument')->getPaymentsByIncome($acc_doc_id) ) {
           
       echo "Brisanje dokumenta nije moguće jer postoje uplate vezane za ovaj dokument!";
       exit();
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["deleteAccountingDocumen
         
       } else {
 
-        if ( $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getPaymentsByAvans($acc_doc_id) ){
+        if ( $entityManager->getRepository('\App\Entity\AccountingDocument')->getPaymentsByAvans($acc_doc_id) ){
           echo "Brisanje dokumenta nije moguće jer postoje avansi vezani za ovaj dokument!";
           exit();
         }
@@ -59,13 +59,13 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["deleteAccountingDocumen
     }
 
     // Check if exist Articles in AccountingDocument.
-    if ($accounting_document__articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->findBy(array('accounting_document' => $acc_doc_id), array())) {
+    if ($accounting_document__articles = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')->findBy(array('accounting_document' => $acc_doc_id), array())) {
 
       // Loop trough all articles.
       foreach ($accounting_document__articles as $accounting_document__article) {
 
         // Check if exist Properties in AccontingDocument Article.
-        if ($accounting_document__article__properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $accounting_document__article))) {
+        if ($accounting_document__article__properties = $entityManager->getRepository('\App\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $accounting_document__article))) {
 
           // Remove AccountingDocument Article Properties.
           foreach ($accounting_document__article__properties as $accounting_document__article__property) {

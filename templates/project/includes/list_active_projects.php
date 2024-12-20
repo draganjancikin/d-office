@@ -9,7 +9,7 @@
             <select class="form-select form-select-sm" name="city_id">
               <option value="">Izaberi naselje</option>
               <?php
-              $cities = $entityManager->getRepository('\Roloffice\Entity\Project')->getCitiesByActiveProject();
+              $cities = $entityManager->getRepository('\App\Entity\Project')->getCitiesByActiveProject();
               foreach ($cities as $city) :
                 ?>
                 <option value="<?php echo $city['id'] ?>"><?php echo $city['name'] ?></option>
@@ -48,10 +48,10 @@
         <tbody>
           <?php
           $status = 1;
-          $project_list = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTracking($status);
+          $project_list = $entityManager->getRepository('\App\Entity\Project')->projectTracking($status);
           foreach ($project_list as $project_item):
             $project_id = $project_item->getId();
-            $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
+            $project_tasks = $entityManager->getRepository('\App\Entity\Project')->projectTasks($project_id);
             ?>
             <tr>
               <td>
@@ -188,10 +188,10 @@
         <tbody>
           <?php
           $status = 2;
-          $project_list = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTracking($status);
+          $project_list = $entityManager->getRepository('\App\Entity\Project')->projectTracking($status);
           foreach ($project_list as $project_item):
             $project_id = $project_item->getId();
-            $project_tasks = $entityManager->getRepository('\Roloffice\Entity\Project')->projectTasks($project_id);
+            $project_tasks = $entityManager->getRepository('\App\Entity\Project')->projectTasks($project_id);
             ?>
             <tr>
               <td>

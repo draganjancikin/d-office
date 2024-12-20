@@ -45,7 +45,7 @@ if (isset($_GET["result"]) ) {
   $street = $_POST["street"];
   $city = $_POST["city"];
 
-  $clients_data = $entityManager->getRepository('\Roloffice\Entity\Client')->advancedSearch($term, $street, $city);
+  $clients_data = $entityManager->getRepository('\App\Entity\Client')->advancedSearch($term, $street, $city);
   ?>
   
   <div class="card mb-4">
@@ -81,15 +81,15 @@ if (isset($_GET["result"]) ) {
               $client_street = $client_city = $client_country = NULL;
               $client_street_name = $cient_city_name = $client_country_name = "";
               if ($client_data->getStreet()) {
-                $client_street = $entityManager->find('\Roloffice\Entity\Street', $client_data->getStreet());
+                $client_street = $entityManager->find('\App\Entity\Street', $client_data->getStreet());
                 $client_street_name = $client_street ? $client_street->getName() . " " . $client_data->getHomeNumber() . ", " : "";
               }
               if ($client_data->getCity()) {
-                $client_city = $entityManager->find('\Roloffice\Entity\City', $client_data->getCity());
+                $client_city = $entityManager->find('\App\Entity\City', $client_data->getCity());
                 $cient_city_name = $client_city ? $client_city->getName() . ", " : "";
               }
               if ($client_data->getCountry()) {
-                $client_country = $entityManager->find('\Roloffice\Entity\Country', $client_data->getCountry());
+                $client_country = $entityManager->find('\App\Entity\Country', $client_data->getCountry());
                 $client_country_name = $client_country ? $client_country->getAbbr() : "";
               }
               ?>

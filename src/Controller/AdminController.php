@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Controller;
+namespace App\Controller;
 
 require_once __DIR__ . '/../../config/dbConfig.php';
 /**

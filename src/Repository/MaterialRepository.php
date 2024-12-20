@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -14,7 +14,7 @@ class MaterialRepository extends EntityRepository {
   public function getLastMaterials($limit = 5) {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('m')
-        ->from('Roloffice\Entity\Material', 'm')
+        ->from('App\Entity\Material', 'm')
         ->orderBy('m.id', 'DESC')
         ->setMaxResults( $limit );
     $query = $qb->getQuery();
@@ -31,7 +31,7 @@ class MaterialRepository extends EntityRepository {
     // Create a QueryBilder instance
     $qb = $this->_em->createQueryBuilder();
     $qb->select('m')
-      ->from('Roloffice\Entity\Material', 'm')
+      ->from('App\Entity\Material', 'm')
     
     /*
       ->join('m.street', 's', 'WITH', 'm.street = s.id')
@@ -58,7 +58,7 @@ class MaterialRepository extends EntityRepository {
     // Create a QueryBilder instance
     $qb = $this->_em->createQueryBuilder();
     $qb->select('ms')
-      ->from('Roloffice\Entity\MaterialSupplier', 'ms')
+      ->from('App\Entity\MaterialSupplier', 'ms')
       ->join('ms.material', 'm', 'WITH', "ms.material = m.id")
       ->where(
         $qb->expr()->eq('ms.supplier', $supplier_id)

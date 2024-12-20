@@ -114,7 +114,7 @@
     <p class="h5">Kontakti</p>
     <?php
     foreach ($client['contacts'] as $contact):
-      $client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy( array('id' =>$contact->getId()) );
+      $client_contact_data = $entityManager->getRepository('\App\Entity\Contact')->findOneBy( array('id' =>$contact->getId()) );
       $client_contact_type = $client_contact_data->getType();
       ?>
       <form>

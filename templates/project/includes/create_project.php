@@ -3,25 +3,25 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['createProject'])) {
     // Current logged user.
     $user_id = $_SESSION['user_id'];
-    $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+    $user = $entityManager->find("\App\Entity\User", $user_id);
 
     $ordinal_num_in_year = 0;
 
     $client_id = htmlspecialchars($_POST["client_id"]);
-    $client = $entityManager->find("\Roloffice\Entity\Client", $client_id);
+    $client = $entityManager->find("\App\Entity\Client", $client_id);
 
     $title = htmlspecialchars($_POST['title']);
 
     $project_priority_id = htmlspecialchars($_POST['project_priority_id']);
-    $project_priority = $entityManager->find("\Roloffice\Entity\ProjectPriority", $project_priority_id);
+    $project_priority = $entityManager->find("\App\Entity\ProjectPriority", $project_priority_id);
 
     // $note = htmlspecialchars($_POST['note']);
     $note = "";
 
-    $project_status = $entityManager->find("\Roloffice\Entity\ProjectStatus", 1);
+    $project_status = $entityManager->find("\App\Entity\ProjectStatus", 1);
 
     // Save a new Project.
-    $newProject = new \Roloffice\Entity\Project();
+    $newProject = new \App\Entity\Project();
 
     $newProject->setOrdinalNumInYear($ordinal_num_in_year);
     $newProject->setClient($client);
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET['createProject'])) {
     $new_project_id = $newProject->getId();
 
     // Set Ordinal Number In Year.
-    $entityManager->getRepository('Roloffice\Entity\Project')->setOrdinalNumInYear($new_project_id);
+    $entityManager->getRepository('App\Entity\Project')->setOrdinalNumInYear($new_project_id);
 
     if (isset($_POST['acc_doc_id'])) {
         $acc_doc_id = $_POST['acc_doc_id'];

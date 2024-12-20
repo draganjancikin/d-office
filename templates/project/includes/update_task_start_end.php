@@ -5,12 +5,12 @@
 if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET['setTaskStart']) ) {
 
   $task_id = htmlspecialchars($_GET["task_id"]);
-  $task = $entityManager->find("\Roloffice\Entity\ProjectTask", $task_id);
+  $task = $entityManager->find("\App\Entity\ProjectTask", $task_id);
 
   $project_id = htmlspecialchars($_GET["project_id"]);
   
   $status_id = 2;
-  $status = $entityManager->find("\Roloffice\Entity\ProjectTaskStatus", $status_id);
+  $status = $entityManager->find("\App\Entity\ProjectTaskStatus", $status_id);
 
   $task->setStartDate(new DateTime("now"));
   $task->setStatus($status);
@@ -23,7 +23,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET['setTaskStart']) ) {
 if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET['setTaskEnd']) ) {
 
     $task_id = htmlspecialchars($_GET["task_id"]);
-    $task = $entityManager->find("\Roloffice\Entity\ProjectTask", $task_id);
+    $task = $entityManager->find("\App\Entity\ProjectTask", $task_id);
     
     $project_id = htmlspecialchars($_GET["project_id"]);
 
@@ -36,7 +36,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET['setTaskEnd']) ) {
 
     }
     $status_id = 3;
-    $status = $entityManager->find("\Roloffice\Entity\ProjectTaskStatus", $status_id);
+    $status = $entityManager->find("\App\Entity\ProjectTaskStatus", $status_id);
     
     $task->setEndDate(new DateTime("now"));
     $task->setStatus($status);

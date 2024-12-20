@@ -1,8 +1,8 @@
 <?php
-$company = $entityManager->find('\Roloffice\Entity\CompanyInfo', '1');
-$company_country = $company->getCountry() ? $entityManager->find('\Roloffice\Entity\Country', $company->getCountry()) : null;
-$company_city = $company->getCity() ? $entityManager->find('\Roloffice\Entity\City', $company->getCity()) : null;
-$company_street = $company->getStreet() ? $entityManager->find('\Roloffice\Entity\Street', $company->getStreet()) : null;
+$company = $entityManager->find('\App\Entity\CompanyInfo', '1');
+$company_country = $company->getCountry() ? $entityManager->find('\App\Entity\Country', $company->getCountry()) : null;
+$company_city = $company->getCity() ? $entityManager->find('\App\Entity\City', $company->getCity()) : null;
+$company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Street', $company->getStreet()) : null;
 ?>
 <!-- View Company Data -->
 <div class="card mb-4">
@@ -53,7 +53,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\Roloffice\Entit
               <option value="<?php echo $company_country->getId() ?>"><?php echo $company_country->getName() ?></option>
               <?php
             }
-            $states = $entityManager->getRepository('\Roloffice\Entity\Country')->findBy(array(), array('name' => 'ASC'));
+            $states = $entityManager->getRepository('\App\Entity\Country')->findBy(array(), array('name' => 'ASC'));
             foreach ($states as $state) :
               ?>
               <option value="<?php echo $state->getId() ?>">
@@ -81,7 +81,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\Roloffice\Entit
               <option value="<?php echo $company_city->getId() ?>"><?php echo $company_city->getName() ?></option>
               <?php
             }
-            $citys = $entityManager->getRepository('\Roloffice\Entity\City')->findBy(array(), array('name' => 'ASC'));
+            $citys = $entityManager->getRepository('\App\Entity\City')->findBy(array(), array('name' => 'ASC'));
             foreach ($citys as $city) :
               ?>
               <option value="<?php echo $city->getId() ?>">
@@ -109,7 +109,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\Roloffice\Entit
               <option value="<?php echo $company_street->getId() ?>"><?php echo $company_street->getName() ?></option>
               <?php
             }
-            $streets = $entityManager->getRepository('\Roloffice\Entity\Street')->findBy(array(), array('name' => 'ASC'));
+            $streets = $entityManager->getRepository('\App\Entity\Street')->findBy(array(), array('name' => 'ASC'));
             foreach ($streets as $street) :
               ?>
               <option value="<?php echo $street->getId() ?>">

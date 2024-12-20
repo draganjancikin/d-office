@@ -4,10 +4,10 @@
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPropertyToArticle"]) ) {
 
   $article_id = htmlspecialchars($_POST['article_id']);
-  $article = $entityManager->find("\Roloffice\Entity\Article", $article_id);
+  $article = $entityManager->find("\App\Entity\Article", $article_id);
   
   $property_id = htmlspecialchars($_POST['property_id']);
-  $property = $entityManager->find("\Roloffice\Entity\Property", $property_id);
+  $property = $entityManager->find("\App\Entity\Property", $property_id);
   
   if(isset($_POST['min'])) {
       $min_size = trim(htmlspecialchars($_POST['min']));
@@ -21,7 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addPropertyToArticle"])
       $max_size = 0;
   }
   
-  $newArticleProperty = new \Roloffice\Entity\ArticleProperty();
+  $newArticleProperty = new \App\Entity\ArticleProperty();
 
   $newArticleProperty->setArticle($article);
   $newArticleProperty->setProperty($property);

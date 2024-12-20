@@ -6,12 +6,12 @@ if($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET['delTask']) ) {
   $project_id = htmlspecialchars($_GET["project_id"]);
   
   $task_id = htmlspecialchars($_GET["task_id"]);
-  $task = $entityManager->find("\Roloffice\Entity\ProjectTask", $task_id);
+  $task = $entityManager->find("\App\Entity\ProjectTask", $task_id);
   
   // First deleting task notes.
-  $task_notes = $entityManager->getRepository('\Roloffice\Entity\ProjectTaskNote')->findBy(array('project_task' => $task_id), array('id' => "ASC"));
+  $task_notes = $entityManager->getRepository('\App\Entity\ProjectTaskNote')->findBy(array('project_task' => $task_id), array('id' => "ASC"));
   foreach ($task_notes as $task_note) {
-    $task_note = $entityManager->find("\Roloffice\Entity\ProjectTaskNote", $task_note->getId());
+    $task_note = $entityManager->find("\App\Entity\ProjectTaskNote", $task_note->getId());
     $entityManager->remove($task_note);
     $entityManager->flush();
   }

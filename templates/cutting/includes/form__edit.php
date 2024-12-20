@@ -36,7 +36,7 @@
                     $count = 0;
                     $total_picket_lenght = 0;
                     $total_kap = 0;
-                    $cutting_sheet_articles = $entityManager->getRepository('\Roloffice\Entity\CuttingSheet')->getArticlesOnCuttingSheet($id);
+                    $cutting_sheet_articles = $entityManager->getRepository('\App\Entity\CuttingSheet')->getArticlesOnCuttingSheet($id);
                     foreach ($cutting_sheet_articles as $cutting_sheet_article):
                         $count ++;
                         ?>
@@ -91,9 +91,9 @@
                             </tr>
                         </form>
                         <?php
-                        $cutting_sheet__article__picket_number = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getPicketsNumber($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
+                        $cutting_sheet__article__picket_number = $entityManager->getRepository('\App\Entity\CuttingSheetArticle')->getPicketsNumber($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
 
-                        $cutting_sheet__article__picket_lenght = $entityManager->getRepository('\Roloffice\Entity\CuttingSheetArticle')->getPicketsLength($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
+                        $cutting_sheet__article__picket_lenght = $entityManager->getRepository('\App\Entity\CuttingSheetArticle')->getPicketsLength($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
 
                         $total_kap = $total_kap + $cutting_sheet__article__picket_number;
                         $total_picket_lenght = $total_picket_lenght + $cutting_sheet__article__picket_lenght;

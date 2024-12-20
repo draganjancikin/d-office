@@ -4,10 +4,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editTransaction"]) ) {
   
   $pidb_id = htmlspecialchars($_POST["pidb_id"]);
   $transaction_id = htmlspecialchars($_POST["transaction_id"]);
-  $transaction = $entityManager->find("\Roloffice\Entity\Payment", $transaction_id);
+  $transaction = $entityManager->find("\App\Entity\Payment", $transaction_id);
     
   $type_id = htmlspecialchars($_POST["type_id"]);
-  $type = $entityManager->find("\Roloffice\Entity\PaymentType", $type_id);
+  $type = $entityManager->find("\App\Entity\PaymentType", $type_id);
   
   $date = date('Y-m-d H:i:s', strtotime($_POST["date"]));
   $amount_1 = htmlspecialchars($_POST["amount"]);

@@ -11,7 +11,7 @@ require_once '../../config/tcpdf_include.php';
 // Create new PDF document.
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-$company_info = $entityManager->getRepository('\Roloffice\Entity\CompanyInfo')->getCompanyInfoData(1);
+$company_info = $entityManager->getRepository('\App\Entity\CompanyInfo')->getCompanyInfoData(1);
 
 $company_accounts = (strlen($company_info['bank_account_1']) > 0 ? $company_info['bank_account_1'] . ', ' : "")
 	. (strlen($company_info['bank_account_2']) > 0 ? '<br />' . $company_info['bank_account_2'] . ', ' : "");
@@ -60,8 +60,8 @@ $pdf->SetFont('dejavusans', '', 10);
 $pdf->AddPage();
 
 $accounting_document__id = $_GET['accounting_document__id'];
-$accounting_document__data = $entityManager->find("\Roloffice\Entity\AccountingDocument", $accounting_document__id);
-$client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($accounting_document__data->getClient()->getId());
+$accounting_document__data = $entityManager->find("\App\Entity\AccountingDocument", $accounting_document__id);
+$client = $entityManager->getRepository('\App\Entity\Client')->getClientData($accounting_document__data->getClient()->getId());
 
 switch ($accounting_document__data->getType()->getId()) {
 	case 1:
@@ -81,7 +81,7 @@ switch ($accounting_document__data->getType()->getId()) {
 		break;
 }
 
-$client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($accounting_document__data->getClient()->getId());
+$client = $entityManager->getRepository('\App\Entity\Client')->getClientData($accounting_document__data->getClient()->getId());
 
 $client_contacts = '';
 $contact_counter = 0;
@@ -89,7 +89,7 @@ foreach ($client['contacts'] as $client_contact) {
 	if ($contact_counter == 2) {
 		break;
 	}
-	$client_contact_data = $entityManager->getRepository('\Roloffice\Entity\Contact')->findOneBy(['id' => $client_contact->getId()]);
+	$client_contact_data = $entityManager->getRepository('\App\Entity\Contact')->findOneBy(['id' => $client_contact->getId()]);
 	$client_contact_type = $client_contact_data->getType();
 	$client_contacts .= $client_contact_type->getName() . ': ' . $client_contact_data->getBody() . ', ';
 	$contact_counter++;
@@ -100,7 +100,7 @@ if ($client_contacts) {
 	$client_contacts = substr($client_contacts, 0, -2);
 }
 
-$preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+$preferences = $entityManager->find('App\Entity\Preferences', 1);
 $kurs = $preferences->getKurs();
 
 $html = '
@@ -185,11 +185,11 @@ $total_tax_amount = 0;
 $total = 0;
 $total_eur = 0;
 
-$ad_articles = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getArticles($accounting_document__id);
+$ad_articles = $entityManager->getRepository('\App\Entity\AccountingDocument')->getArticles($accounting_document__id);
 
 foreach ($ad_articles as $ad_article):
 
-  $ad_a_properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')
+  $ad_a_properties = $entityManager->getRepository('\App\Entity\AccountingDocumentArticleProperty')
                                    ->findBy(array('accounting_document_article' => $ad_article->getId()), array());
   $property_temp = '';
   $property_counter = 0;
@@ -202,13 +202,13 @@ foreach ($ad_articles as $ad_article):
 
   $count++;
 
-  $ad_a_quantity = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+  $ad_a_quantity = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
                                   ->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces());
 
-  $tax_base = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+  $tax_base = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
                             ->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
 
-  $tax_amount = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+  $tax_amount = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
                               ->getTaxAmount($tax_base, $ad_article->getTax());
 
   $html = '
@@ -244,7 +244,7 @@ foreach ($ad_articles as $ad_article):
 					</td>
 					<td width="80px" align="right">'
 						. number_format(
-							$sub_total = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')
+							$sub_total = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')
 																				 ->getSubTotal($tax_base, $tax_amount ) * $kurs, 2, ",", "."
 						) . '
 					</td>'
@@ -261,7 +261,7 @@ foreach ($ad_articles as $ad_article):
 
 endforeach;
 
-$income = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getIncome($accounting_document__id);
+$income = $entityManager->getRepository('\App\Entity\AccountingDocument')->getIncome($accounting_document__id);
 
 $html = ''.($accounting_document__data->getType()->getId() == 2 ? "" : '
 <style type="text/css">table {	padding: 0px; margin: 0px; }</style>
@@ -298,7 +298,7 @@ $html = ''.($accounting_document__data->getType()->getId() == 2 ? "" : '
     <td colspan="5" style="border-bottom-width: inherit;">Avans</td>
     <td colspan="2" align="right" style="border-bottom-width: inherit;">'
       . number_format(
-        ($avans = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAvans($accounting_document__id)) * $kurs, 2, ",", "."
+        ($avans = $entityManager->getRepository('\App\Entity\AccountingDocument')->getAvans($accounting_document__id)) * $kurs, 2, ",", "."
       ).'
     </td>
     <td></td>

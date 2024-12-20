@@ -4,22 +4,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialDataInOrde
   $order_id = htmlspecialchars($_GET["order_id"]);
   $material_on_order_id = htmlspecialchars($_GET["material_on_order_id"]);
 
-  $order_material = $entityManager->find('\Roloffice\Entity\OrderMaterial', $material_on_order_id);
+  $order_material = $entityManager->find('\App\Entity\OrderMaterial', $material_on_order_id);
 
-  $old_material = $entityManager->find('\Roloffice\Entity\Material', $order_material->getMaterial()->getId());
+  $old_material = $entityManager->find('\App\Entity\Material', $order_material->getMaterial()->getId());
   $old_material_id = $old_material->getId();
 
   $new_material_id = htmlspecialchars($_POST["material_id"]);
-  $new_material = $entityManager->find('\Roloffice\Entity\Material', $new_material_id);
+  $new_material = $entityManager->find('\App\Entity\Material', $new_material_id);
 
   // Check if material_id in Order changed.
   if ($old_material_id != $new_material_id){
     // Remove the Properties of the old Material. (from table v6__order__materials__properties)
     if (
-      $order__material__properties = $entityManager->getRepository('\Roloffice\Entity\OrderMaterialProperty')->findBy(['order_material' => $material_on_order_id], [])
+      $order__material__properties = $entityManager->getRepository('\App\Entity\OrderMaterialProperty')->findBy(['order_material' => $material_on_order_id], [])
     ) {
       foreach ($order__material__properties as $order__material__property) {
-        $orderMaterialProperty = $entityManager->find("\Roloffice\Entity\OrderMaterialProperty", $order__material__property->getId());
+        $orderMaterialProperty = $entityManager->find("\App\Entity\OrderMaterialProperty", $order__material__property->getId());
         $entityManager->remove($orderMaterialProperty);
         $entityManager->flush();
       }
@@ -33,10 +33,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editMaterialDataInOrde
     $entityManager->flush();
 
     // insert Material properties in table v6__order__materials__properties
-    $material_properties = $entityManager->getRepository('\Roloffice\Entity\MaterialProperty')->getMaterialProperties($new_material->getId());
+    $material_properties = $entityManager->getRepository('\App\Entity\MaterialProperty')->getMaterialProperties($new_material->getId());
     foreach ($material_properties as $material_property) {
       // insert to v6__order__materials__properties
-      $newOrderMaterialProperty = new \Roloffice\Entity\OrderMaterialProperty();
+      $newOrderMaterialProperty = new \App\Entity\OrderMaterialProperty();
 
       $newOrderMaterialProperty->setOrderMaterial($order_material);
       $newOrderMaterialProperty->setProperty($material_property->getProperty());

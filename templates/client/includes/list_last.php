@@ -11,7 +11,7 @@
                     <tfoot class="thead-light"><tr><th>klijent</th><th>adresa</th></tr></tfoot>
                     <tbody>
                     <?php
-                    $last_clients = $entityManager->getRepository('\Roloffice\Entity\Client')->getLastClients(10);
+                    $last_clients = $entityManager->getRepository('\App\Entity\Client')->getLastClients(10);
                     foreach ($last_clients as $client):
                         ?>
                         <tr>

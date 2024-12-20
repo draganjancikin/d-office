@@ -4,12 +4,12 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["removeArticlefromAccoun
   $accounting_document__id = htmlspecialchars($_GET["pidb_id"]);
   
   $accounting_document__article__id = htmlspecialchars($_GET["pidb_article_id"]);
-  $accounting_document__article = $entityManager->find("\Roloffice\Entity\AccountingDocumentArticle", $accounting_document__article__id);
+  $accounting_document__article = $entityManager->find("\App\Entity\AccountingDocumentArticle", $accounting_document__article__id);
 
   // First remove properties from table v6__accounting_documents__articles__properties.
-  if ($accounting_document__article__properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $accounting_document__article__id), array())) {
+  if ($accounting_document__article__properties = $entityManager->getRepository('\App\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $accounting_document__article__id), array())) {
     foreach ($accounting_document__article__properties as $accounting_document__article__property) {
-      $accountingDocumentArticleProperty = $entityManager->find("\Roloffice\Entity\AccountingDocumentArticleProperty", $accounting_document__article__property->getId());
+      $accountingDocumentArticleProperty = $entityManager->find("\App\Entity\AccountingDocumentArticleProperty", $accounting_document__article__property->getId());
       $entityManager->remove($accountingDocumentArticleProperty);
       $entityManager->flush();
     }

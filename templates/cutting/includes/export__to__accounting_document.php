@@ -3,10 +3,10 @@
 if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocument"]) ) {
     // Current logged user.
     $user_id = $_SESSION['user_id'];
-    $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+    $user = $entityManager->find("\App\Entity\User", $user_id);
 
     $id = htmlspecialchars($_GET['id']);
-    $cutting = $entityManager->find("\Roloffice\Entity\CuttingSheet", $id);
+    $cutting = $entityManager->find("\App\Entity\CuttingSheet", $id);
 
     // Get total length of pickets in cm.
     $total_picket_lenght = htmlspecialchars($_GET['total_picket_lenght']) / 10;
@@ -22,10 +22,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocum
     $note = "ROLOSTIL szr je PDV obveznik.";
 
     $accounting_document__type_id = 1;
-    $accounting_document__type = $entityManager->find("\Roloffice\Entity\AccountingDocumentType", $accounting_document__type_id);
+    $accounting_document__type = $entityManager->find("\App\Entity\AccountingDocumentType", $accounting_document__type_id);
 
     // Create a new AccountingDocument (Proforma).
-    $newProforma = new \Roloffice\Entity\AccountingDocument();
+    $newProforma = new \App\Entity\AccountingDocument();
 
     $newProforma->setOrdinalNumInYear($ordinal_num_in_year);
     $newProforma->setDate(new DateTime("now"));
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocum
     $newProforma_id = $newProforma->getId();
 
     // Set Ordinal Number In Year.
-    $entityManager->getRepository('Roloffice\Entity\AccountingDocument')->setOrdinalNumInYear($newProforma_id);
+    $entityManager->getRepository('App\Entity\AccountingDocument')->setOrdinalNumInYear($newProforma_id);
 
     // Add Article to Proforma.
     // First add picket.
@@ -66,14 +66,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocum
             $article_id = 6;
             break;
     }
-    $article_picket = $entityManager->find("\Roloffice\Entity\Article", $article_id);
+    $article_picket = $entityManager->find("\App\Entity\Article", $article_id);
     $note = "";
     $pieces = 1;
-    $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+    $preferences = $entityManager->find('App\Entity\Preferences', 1);
     $tax = $preferences->getTax();
 
     // Add article to proforma.
-    $newProformaArticle = new \Roloffice\Entity\AccountingDocumentArticle();
+    $newProformaArticle = new \App\Entity\AccountingDocumentArticle();
     
     $newProformaArticle->setAccountingDocument($newProforma);
     $newProformaArticle->setArticle($article_picket);
@@ -90,9 +90,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocum
     $last__accounting_document__article_id = $newProformaArticle->getId();
 
     // Add article properties to AccountingDocumentArticle.
-    $article_properties = $entityManager->getRepository('\Roloffice\Entity\ArticleProperty')->getArticleProperties($article_picket->getId());
+    $article_properties = $entityManager->getRepository('\App\Entity\ArticleProperty')->getArticleProperties($article_picket->getId());
     foreach ($article_properties as $article_property) {
-        $newProformaArticleProperty = new \Roloffice\Entity\AccountingDocumentArticleProperty();
+        $newProformaArticleProperty = new \App\Entity\AccountingDocumentArticleProperty();
         
         $newProformaArticleProperty->setAccountingDocumentArticle($newProformaArticle);
         $newProformaArticleProperty->setProperty($article_property->getProperty());
@@ -122,11 +122,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["exportToAccountingDocum
     }
     $note = "";
     $cap_pieces = $total_kap;
-    $article_cap = $entityManager->find("\Roloffice\Entity\Article", $cap_article_id);
+    $article_cap = $entityManager->find("\App\Entity\Article", $cap_article_id);
 
 
     // Add article to proforma.
-    $newProformaArticle = new \Roloffice\Entity\AccountingDocumentArticle();
+    $newProformaArticle = new \App\Entity\AccountingDocumentArticle();
     
     $newProformaArticle->setAccountingDocument($newProforma);
     $newProformaArticle->setArticle($article_cap);

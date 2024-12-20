@@ -2,15 +2,15 @@
 // Add Property to Material.
 if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addProperty"]) ) {
   $material_id = htmlspecialchars($_POST['id']);
-  $material = $entityManager->find("\Roloffice\Entity\Material", $material_id);
+  $material = $entityManager->find("\App\Entity\Material", $material_id);
   
   $property_item_id = htmlspecialchars($_POST['property_item_id']);
-  $property = $entityManager->find("\Roloffice\Entity\Property", $property_item_id);
+  $property = $entityManager->find("\App\Entity\Property", $property_item_id);
   
   $min_size = htmlspecialchars($_POST['min_size']);
   $max_size = htmlspecialchars($_POST['max_size']);
   
-  $newMaterialproperty = new \Roloffice\Entity\MaterialProperty();
+  $newMaterialproperty = new \App\Entity\MaterialProperty();
   
   $newMaterialproperty->setMaterial($material);
   $newMaterialproperty->setProperty($property);

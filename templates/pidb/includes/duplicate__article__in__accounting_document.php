@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" AND isset($_GET["duplicateArticleInAccou
   $accounting_document__article__id = htmlspecialchars($_GET["pidb_article_id"]);
   
   // sledeća metoda duplicira artikal iz pidb_article i property-e iz pidb_article_property
-  $accounting_document__article__properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->duplicateArticleInAccountingDocument($accounting_document__article__id);
+  $accounting_document__article__properties = $entityManager->getRepository('\App\Entity\AccountingDocumentArticle')->duplicateArticleInAccountingDocument($accounting_document__article__id);
   
   die('<script>location.href = "?edit&pidb_id='.$accounting_document_id.'" </script>');
 }

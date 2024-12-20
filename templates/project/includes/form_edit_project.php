@@ -2,7 +2,7 @@
 if($project_data == 'noProject'):
   die('<script>location.href = "/project/" </script>');
 else:
-  $client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($project_data->getClient()->getId());
+  $client = $entityManager->getRepository('\App\Entity\Client')->getClientData($project_data->getClient()->getId());
   ?>
   <div class="card mb-4">
     <div class="card-header p-2">
@@ -28,7 +28,7 @@ else:
             <select id="selectProjectPriority" name="project_priority_id" class="form-select form-select-sm" required>
               <option value="<?php echo $project_data->getPriority()->getId() ?>"><?php echo $project_data->getPriority()->getName() ?></option>
               <?php
-              $priority_list = $entityManager->getRepository('\Roloffice\Entity\ProjectPriority')->findBy(array(), array('id' => "ASC"));
+              $priority_list = $entityManager->getRepository('\App\Entity\ProjectPriority')->findBy(array(), array('id' => "ASC"));
               foreach ($priority_list as $priority_item):
                 ?>
                 <option value="<?php echo $priority_item->getId() ?>">
@@ -47,7 +47,7 @@ else:
               <select id="selectClient" name="client_id" class="form-select form-select-sm" required >
                 <option value="<?php echo $client['id'] ?>"><?php echo $client['name'] ?></option>
                 <?php
-                $clients_list = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array(), array('name' => "ASC"));
+                $clients_list = $entityManager->getRepository('\App\Entity\Client')->findBy(array(), array('name' => "ASC"));
                 foreach ($clients_list as $client_item):
                   ?>
                   <option value="<?php echo $client_item->getId() ?>">

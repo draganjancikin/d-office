@@ -6,7 +6,7 @@
     <div class="col-sm-5">
       <select class="form-select form-select-sm" name="group_id">
         <?php
-        $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->findAll();
+        $article_groups = $entityManager->getRepository('\App\Entity\ArticleGroup')->findAll();
         foreach ($article_groups as $article_group) {
           echo '<option value="' .$article_group->getId(). '">' .$article_group->getName(). '</option>';
         }
@@ -48,8 +48,8 @@
         </tfoot>
         <tbody>
           <?php
-          $last_articles = $entityManager->getRepository('\Roloffice\Entity\Article')->getLastArticles(15);
-          $preferences = $entityManager->find('\Roloffice\Entity\Preferences', 1);
+          $last_articles = $entityManager->getRepository('\App\Entity\Article')->getLastArticles(15);
+          $preferences = $entityManager->find('\App\Entity\Preferences', 1);
           foreach ($last_articles as $article_data):
             ?>
             <tr>

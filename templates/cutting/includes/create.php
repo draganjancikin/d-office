@@ -5,14 +5,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["create"]) ) {
 
   // Curent logged User.
   $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+  $user = $entityManager->find("\App\Entity\User", $user_id);
   
   $ordinal_num_in_year = 0;
 
   $client_id = htmlspecialchars($_POST['client_id']);
-  $client = $entityManager->find("\Roloffice\Entity\Client", $client_id);
+  $client = $entityManager->find("\App\Entity\Client", $client_id);
   
-  $newCuttingSheet = new \Roloffice\Entity\CuttingSheet();
+  $newCuttingSheet = new \App\Entity\CuttingSheet();
 
   $newCuttingSheet->setOrdinalNumInYear($ordinal_num_in_year);
   $newCuttingSheet->setClient($client);
@@ -27,7 +27,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["create"]) ) {
   $new__cutting_sheet__id = $newCuttingSheet->getId();
   
   // Set Ordinal Number In Year.
-  $entityManager->getRepository('Roloffice\Entity\CuttingSheet')->setOrdinalNumInYear($new__cutting_sheet__id);
+  $entityManager->getRepository('App\Entity\CuttingSheet')->setOrdinalNumInYear($new__cutting_sheet__id);
 
   die('<script>location.href = "?view&id='.$new__cutting_sheet__id.'" </script>');
 }

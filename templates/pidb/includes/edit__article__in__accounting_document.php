@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleInAccountin
   $discounts_1 = htmlspecialchars($_POST["discounts"]);
   $discounts = str_replace(",", ".", $discounts_1);
   
-  $accountingDocumentArticle = $entityManager->find("\Roloffice\Entity\AccountingDocumentArticle", $accounting_document__article_id);
+  $accountingDocumentArticle = $entityManager->find("\App\Entity\AccountingDocumentArticle", $accounting_document__article_id);
 
   $accountingDocumentArticle->setNote($note);
   $accountingDocumentArticle->setPieces($pieces);
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleInAccountin
   $entityManager->flush();
 
   // Properies update in table v6__accounting_documents__articles__properties
-  $accounting_document__article__properties = $entityManager->getRepository('\Roloffice\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $accounting_document__article_id), array());
+  $accounting_document__article__properties = $entityManager->getRepository('\App\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $accounting_document__article_id), array());
   foreach ($accounting_document__article__properties as $accounting_document__article__property) {
     
     // Get property name from $accounting_document__article__property.
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["editArticleInAccountin
     // Get property value from $_POST
     $property_value = str_replace(",", ".", htmlspecialchars($_POST["$property_name"]));
 
-    $accountingDocumentArticleProperty = $entityManager->find("\Roloffice\Entity\AccountingDocumentArticleProperty", $accounting_document__article__property->getId());
+    $accountingDocumentArticleProperty = $entityManager->find("\App\Entity\AccountingDocumentArticleProperty", $accounting_document__article__property->getId());
 
     $accountingDocumentArticleProperty->setQuantity($property_value);
     $entityManager->flush();

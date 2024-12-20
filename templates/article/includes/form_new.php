@@ -22,7 +22,7 @@
           <select id="selectGroup" class="form-select form-select-sm" name="group_id">
             <option value="4">Ostalo</option>
             <?php
-            $article_groups = $entityManager->getRepository('\Roloffice\Entity\ArticleGroup')->getArticleGroups();
+            $article_groups = $entityManager->getRepository('\App\Entity\ArticleGroup')->getArticleGroups();
             foreach ($article_groups as $article_group) :
               ?>
               <option value="<?php echo $article_group->getId() ?>"><?php echo $article_group->getName() ?></option>
@@ -47,7 +47,7 @@
           <select id="selectUnit" class="form-select form-select-sm" name="unit_id" required>
             <option value="">Izaberi jedinicu mere</option>
             <?php
-            $units = $entityManager->getRepository('\Roloffice\Entity\Unit')->findBy(array(), array('name' => 'ASC'));
+            $units = $entityManager->getRepository('\App\Entity\Unit')->findBy(array(), array('name' => 'ASC'));
             foreach ($units as $unit) :
               ?>
               <option value="<?php echo $unit->getId() ?>"><?php echo $unit->getName() ?></option>

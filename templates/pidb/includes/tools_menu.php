@@ -23,13 +23,13 @@ require 'delete_accounting_document.php';
             <?php
             if ( isset($_GET['view']) || isset($_GET['edit']) || isset($_GET['editArticle']) ):
                 $pidb_id = filter_input(INPUT_GET, 'pidb_id');
-                $pidb_data = $entityManager->find('\Roloffice\Entity\AccountingDocument', $pidb_id);
+                $pidb_data = $entityManager->find('\App\Entity\AccountingDocument', $pidb_id);
                 if (!$pidb_data) {
                     die('<script>location.href = "/pidb/"</script>');
                 }
-                $client = $entityManager->getRepository('\Roloffice\Entity\Client')->getClientData($pidb_data->getClient()->getId());
+                $client = $entityManager->getRepository('\App\Entity\Client')->getClientData($pidb_data->getClient()->getId());
 
-                $all_articles = $entityManager->getRepository('\Roloffice\Entity\Article')->findAll();
+                $all_articles = $entityManager->getRepository('\App\Entity\Article')->findAll();
 
                 // In view case show edit button.
                 if (isset($_GET['view'])):
@@ -109,7 +109,7 @@ require 'delete_accounting_document.php';
 
                 // Next and Previous button.
                 if ($user_role_id == 1 && isset($_GET['edit'])):
-                    if ($previous = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getPrevious($pidb_id, $pidb_data->getType()->getId())) :
+                    if ($previous = $entityManager->getRepository('\App\Entity\AccountingDocument')->getPrevious($pidb_id, $pidb_data->getType()->getId())) :
                         ?>
                         <a href="?edit&pidb_id=<?php echo $previous->getId() ?>">
                             <button type="submit" class="btn btn-sm btn-outline-secondary mr-1">
@@ -118,7 +118,7 @@ require 'delete_accounting_document.php';
                         </a>
                         <?php
                     endif;
-                    if ($next = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getNext($pidb_id, $pidb_data->getType()->getId())) :
+                    if ($next = $entityManager->getRepository('\App\Entity\AccountingDocument')->getNext($pidb_id, $pidb_data->getType()->getId())) :
                         ?>
                         <a href="?edit&pidb_id=<?php echo $next->getId() ?>">
                             <button type="submit" class="btn btn-sm btn-outline-secondary mr-1">

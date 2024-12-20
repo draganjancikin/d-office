@@ -12,7 +12,7 @@
           <select id="selectSupplier" class="form-select form-select-sm" name="supplier_id" required>
             <option value="">izaberi dobavljača</option>
             <?php
-            $suppliers = $entityManager->getRepository('\Roloffice\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC') );
+            $suppliers = $entityManager->getRepository('\App\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC') );
             foreach ($suppliers as $supplier) {
               echo '<option value="' .$supplier->getId(). '">' .$supplier->getName(). '</option>';
             }
@@ -28,13 +28,13 @@
             <?php
             if (isset($_GET['project_id'])){
               $project_id = htmlspecialchars($_GET["project_id"]);
-              $project_data = $entityManager->find('\Roloffice\Entity\Project', $project_id);
+              $project_data = $entityManager->find('\App\Entity\Project', $project_id);
               echo '<option value="'.$project_data->getId().'">' .$project_data->getOrdinalNumInYear(). ' ' .$project_data->getClient()->getName(). ': ' .$project_data->getTitle().'</option>';
             }
             else {
               echo '<option value="">izaberi projekat</option>';
             }
-            $projects = $entityManager->getRepository('\Roloffice\Entity\Project')->findAll();
+            $projects = $entityManager->getRepository('\App\Entity\Project')->findAll();
             foreach ($projects as $project) {
               echo '<option value="' .$project->getId(). '">' .$project->getOrdinalNumInYear(). ' ' .$project->getClient()->getName(). ': ' .$project->getTitle().'</option>';
             }

@@ -2,22 +2,22 @@
 // Add material to order.
 if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addMaterialToOrder"]) ) {
     $order_id = htmlspecialchars($_GET["order_id"]);
-    $order = $entityManager->find("\Roloffice\Entity\Order", $order_id);
+    $order = $entityManager->find("\App\Entity\Order", $order_id);
 
     $material_id = htmlspecialchars($_POST["material_id"]);
-    $material = $entityManager->find("\Roloffice\Entity\Material", $material_id);
+    $material = $entityManager->find("\App\Entity\Material", $material_id);
 
     $price = $material->getPrice();
     $weight = $material->getWeight();
 
     $pieces = $_POST["pieces"] ? htmlspecialchars($_POST["pieces"]) : 0;
 
-    $preferences = $entityManager->find('Roloffice\Entity\Preferences', 1);
+    $preferences = $entityManager->find('App\Entity\Preferences', 1);
     $tax = $preferences->getTax();
 
     $note = htmlspecialchars($_POST["note"]);
 
-    $newOrderMaterial = new \Roloffice\Entity\OrderMaterial();
+    $newOrderMaterial = new \App\Entity\OrderMaterial();
 
     $newOrderMaterial->setOrder($order);
     $newOrderMaterial->setMaterial($material);
@@ -35,10 +35,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["addMaterialToOrder"]) 
     $last_order_material_id = $newOrderMaterial->getId();
 
     // Insert material properties in table v6_orders_materials_properties.
-    $material_properties = $entityManager->getRepository('\Roloffice\Entity\MaterialProperty')->getMaterialProperties($material->getId());
+    $material_properties = $entityManager->getRepository('\App\Entity\MaterialProperty')->getMaterialProperties($material->getId());
     foreach ($material_properties as $material_property) {
         // Insert to table v6_orders_materials_properties.
-        $newOrderMaterialProperty = new \Roloffice\Entity\OrderMaterialProperty();
+        $newOrderMaterialProperty = new \App\Entity\OrderMaterialProperty();
         $newOrderMaterialProperty->setOrderMaterial($newOrderMaterial);
         $newOrderMaterialProperty->setProperty($material_property->getProperty());
         $newOrderMaterialProperty->setQuantity(0);

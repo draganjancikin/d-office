@@ -1,5 +1,5 @@
 <?php
-$transactions = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getLastTransactions(10);
+$transactions = $entityManager->getRepository('\App\Entity\AccountingDocument')->getLastTransactions(10);
 ?>
 <div class="row">
   <div class="col-lg-10 col-md-12">
@@ -29,7 +29,7 @@ $transactions = $entityManager->getRepository('\Roloffice\Entity\AccountingDocum
             <tbody>
               <?php
               foreach ($transactions as $transaction):
-                $accounting_document = $entityManager->getRepository('\Roloffice\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId());
+                $accounting_document = $entityManager->getRepository('\App\Entity\AccountingDocument')->getAccountingDocumentByTransaction($transaction->getId());
                 ?>
                 <tr>
                   <td class="text-center"><?php echo $transaction->getDate()->format('d-m-Y') ?></td>

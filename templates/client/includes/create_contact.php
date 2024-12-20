@@ -4,20 +4,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["createContact"])) {
 
   // Curent loged user.
   $user_id = $_SESSION['user_id'];
-  $user = $entityManager->find("\Roloffice\Entity\User", $user_id);
+  $user = $entityManager->find("\App\Entity\User", $user_id);
 
   $client_id = $_POST["client_id"];
-  $client = $entityManager->find("\Roloffice\Entity\Client", $client_id);
+  $client = $entityManager->find("\App\Entity\Client", $client_id);
 
   $type_id = $_POST["contact_type_id"];
-  $type = $entityManager->find("\Roloffice\Entity\ClientType", $type_id);
+  $type = $entityManager->find("\App\Entity\ClientType", $type_id);
 
   $contact_type_id = $_POST["contact_type_id"];
-  $contact_type = $entityManager->find("\Roloffice\Entity\ContactType", $contact_type_id);
+  $contact_type = $entityManager->find("\App\Entity\ContactType", $contact_type_id);
   $body = basicValidation($_POST["body"]);
   $note = basicValidation($_POST["note"]);
 
-  $newContact = new \Roloffice\Entity\Contact();
+  $newContact = new \App\Entity\Contact();
 
   $newContact->setType($contact_type);
   $newContact->setBody($body);
