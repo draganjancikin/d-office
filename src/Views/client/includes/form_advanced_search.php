@@ -4,7 +4,6 @@
   </div>
 
   <div class="card-body">
-<!--    <form action="--><?php //echo $_SERVER['PHP_SELF'] . '?advancedSearch&result'; ?><!--" method="post">-->
     <form action="/clients/advancedSearch" method="post">
 
       <div class="row mb-2">
@@ -97,7 +96,8 @@ if ($_POST && isset($_GET["url"]) && str_contains($_GET["url"], 'advancedSearch'
               ?>
               <tr>
                 <td><?php echo $count ?></td>  
-                <td><a href="?view&client_id=<?php echo $client_data->getId() ?>"><?php echo $client_data->getName() ?></a></td>
+                <td><a href="/client/<?php echo $client_data->getId() ?>"><?php echo
+                    $client_data->getName() ?></a></td>
                 <td><?php echo $client_street_name . $cient_city_name . $client_country_name ?></td>
               </tr>
               <?php

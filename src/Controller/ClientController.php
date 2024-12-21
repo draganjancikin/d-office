@@ -2,31 +2,26 @@
 
 namespace App\Controller;
 
+use App\Core\BaseController;
 use App\Core\EntityManagerFactory;
 
 /**
- * ClientController class
+ * ClientController class.
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class ClientController {
-
-  private $user_id;
-  private $username;
-  private $user_role_id;
-  private $entityManager;
+class ClientController extends BaseController {
 
   /**
    * ClientController constructor.
    */
   public function __construct() {
-    $this->user_id = $_SESSION['user_id'];
-    $this->username = $_SESSION['username'];
-    $this->user_role_id = $_SESSION['user_role_id'];
-    $this->entityManager = EntityManagerFactory::getEntityManager();
+    parent::__construct();
   }
 
   /**
+   * Index action.
+   *
    * @return void
    */
   public function index($search = NULL) {
@@ -39,6 +34,9 @@ class ClientController {
       'stylesheet' => '../libraries/',
       'search' => $search,
     ];
+
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
 
     $this->render('index', $data);
   }
@@ -64,6 +62,9 @@ class ClientController {
       'contact_id' => $contact_id,
     ];
 
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
+
     $this->render('view', $data);
   }
 
@@ -86,6 +87,9 @@ class ClientController {
       'client' => $client,
     ];
 
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
+
     $this->render('edit', $data);
   }
 
@@ -101,6 +105,10 @@ class ClientController {
       'entityManager' => $this->entityManager,
       'stylesheet' => '../libraries/',
     ];
+
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
+
     $this->render('add', $data);
   }
 
@@ -116,6 +124,10 @@ class ClientController {
       'entityManager' => $this->entityManager,
       'stylesheet' => '../libraries/',
     ];
+
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
+
     $this->render('view', $data);
   }
 
@@ -131,6 +143,10 @@ class ClientController {
       'entityManager' => $this->entityManager,
       'stylesheet' => '../libraries/',
     ];
+
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
+
     $this->render('addCountry', $data);
   }
 
@@ -146,6 +162,10 @@ class ClientController {
       'entityManager' => $this->entityManager,
       'stylesheet' => '../libraries/',
     ];
+
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
+
     $this->render('addCity', $data);
   }
 
@@ -161,6 +181,10 @@ class ClientController {
       'entityManager' => $this->entityManager,
       'stylesheet' => '../libraries/',
     ];
+
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
+
     $this->render('addStreet', $data);
   }
 
@@ -176,6 +200,10 @@ class ClientController {
       'entityManager' => $this->entityManager,
       'stylesheet' => '../libraries/',
     ];
+
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
+
     $this->render('advancedSearch', $data);
   }
 
@@ -188,10 +216,19 @@ class ClientController {
    * @return void
    */
   private function render($view, $data = []) {
-    // Extract data array to variables
+    // Extract data array to variables.
     extract($data);
-    // Include the view file
+    // Include the view file.
     require_once __DIR__ . "/../Views/client/$view.php";
+  }
+
+  /**
+   * @return void
+   */
+  private function isUserNotLoggedIn() {
+    if ($this->username === NULL)  {
+      header("Location: /login");
+    }
   }
 
 }
