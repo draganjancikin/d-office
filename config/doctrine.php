@@ -22,3 +22,5 @@ $connectionParams = [
 
 $config = ORMSetup::createAnnotationMetadataConfiguration($paths, $isDevMode);
 $entityManager = EntityManager::create($connectionParams, $config);
+
+return $entityManager;

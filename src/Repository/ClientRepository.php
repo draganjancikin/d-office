@@ -7,9 +7,10 @@ use Doctrine\ORM\EntityRepository;
 class ClientRepository extends EntityRepository {
   
   /**
-   * Method that return last $limit clients
+   * Method that return last $limit clients.
    * 
-   * @return 
+   * @return array
+   *   Array of clients.
    */
   public function getLastClients($limit = 5) {
     $qb = $this->_em->createQueryBuilder();
