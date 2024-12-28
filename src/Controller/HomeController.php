@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Core\BaseController;
-use App\Core\EntityManagerFactory;
 
 /**
  * HomeController class.
@@ -124,17 +123,6 @@ class HomeController extends BaseController {
 
     // Include the view file.
     require_once __DIR__ . "/../Views/$view.php";
-  }
-
-  /**
-   * Redirect the user to the login page if they are not logged in.
-   *
-   * @return void
-   */
-  private function isUserNotLoggedIn() {
-    if ($this->username === NULL)  {
-      header("Location: /login");
-    }
   }
 
 }

@@ -32,6 +32,26 @@ $router->add('GET', '/client/{client_id}/editContact', 'ClientController@view');
 $router->add('POST', '/client/{client_id}/editContact', 'ClientController@view');
 $router->add('GET', '/client/{client_id}/contact/{contact_id}/removeContact', 'ClientController@view');
 
+$router->add('GET', '/pidbs/', 'PidbController@index');
+$router->add('GET', '/pidbs/add', 'PidbController@add');
+$router->add('POST', '/pidbs/add', 'PidbController@add');
+$router->add('GET', '/pidb/{pidb_id}', 'PidbController@view');
+$router->add('GET', '/pidb/{pidb_id}/print', 'PidbController@printAccountingDocument');
+$router->add('GET', '/pidb/{pidb_id}/printW', 'PidbController@printAccountingDocumentW');
+$router->add('GET', '/pidb/{pidb_id}/printI', 'PidbController@printAccountingDocumentI');
+$router->add('GET', '/pidb/{pidb_id}/printIW', 'PidbController@printAccountingDocumentIW');
+$router->add('GET', '/pidb/{pidb_id}/edit', 'PidbController@edit');
+$router->add('POST', '/pidb/{pidb_id}/edit', 'PidbController@edit');
+$router->add('POST', '/pidb/{pidb_id}/addArticle', 'PidbController@view');
+$router->add('GET', '/pidb/{pidb_id}/exportProformaToDispatch', 'PidbController@exportProformaToDispatch');
+$router->add('POST', '/pidb/{pidb_id}/addPayment', 'PidbController@view');
+$router->add('POST', '/pidb/{pidb_id}/article/{pidb_article_id}/edit', 'PidbController@editArticleInAccountingDocument');
+$router->add('GET', '/pidb/{pidb_id}/transactions', 'PidbController@transactions');
+$router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@formEditTransaction');
+$router->add('POST', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@editTransaction');
+$router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/delete', 'PidbController@deleteTransaction');
+
+
 // Get the current request URL.
 $requestUri = $_SERVER['REQUEST_URI'];
 

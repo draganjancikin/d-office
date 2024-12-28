@@ -55,7 +55,7 @@ if ($page == "clients"):
   <?php
 endif;
 
-if ($page == "pidb"):
+if ($page == "pidbs"):
   require '../../templates/pidb/includes/delete_accounting_document.php';
   $term = filter_input(INPUT_GET, 'search');
   $last_pidb = $entityManager->getRepository('\App\Entity\AccountingDocument')->getLastAccountingDocument();

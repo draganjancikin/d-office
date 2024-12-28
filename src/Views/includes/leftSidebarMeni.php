@@ -39,7 +39,7 @@
     </a>
     <div id="knjigovodstvo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="/pidb/">Knjigovodstvo</a>
+        <a class="collapse-item" href="/pidbs/">Knjigovodstvo</a>
         <a class="collapse-item" href="/pidb/?transactions">Transakcije</a>
         <a class="collapse-item" href="/pidb/?cashRegister">Kasa</a>
         <a class="collapse-item" href="/pidb/index.php?new"><i class="fas fa-plus"></i> Novi dokument</a>

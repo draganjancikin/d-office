@@ -59,25 +59,25 @@
 
             <!-- Dokumenti Card -->
             <div class="col-xl-3 col-md-6 mb-4">
-                <a href="pidb/" class="card-link">
-                    <div class="card border-left-success shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-sm font-weight-bold text-success text-uppercase mb-1">Dokumenti</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    <?php
-                                      echo $entityManager->getRepository('\App\Entity\AccountingDocument')->count([]);
-                                    ?>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-list fa-2x text-success"></i>
-                                </div>
-                            </div>
+              <a href="pidbs/" class="card-link">
+                <div class="card border-left-success shadow h-100 py-2">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div class="text-sm font-weight-bold text-success text-uppercase mb-1">Dokumenti</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        <?php
+                          echo $entityManager->getRepository('\App\Entity\AccountingDocument')->count([]);
+                        ?>
                         </div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-list fa-2x text-success"></i>
+                      </div>
                     </div>
-                </a>
+                  </div>
+                </div>
+              </a>
             </div>
 
             <!-- Krojne liste Card -->
