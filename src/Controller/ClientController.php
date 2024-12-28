@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Core\BaseController;
-use App\Core\EntityManagerFactory;
 
 /**
  * ClientController class.
@@ -220,15 +219,6 @@ class ClientController extends BaseController {
     extract($data);
     // Include the view file.
     require_once __DIR__ . "/../Views/client/$view.php";
-  }
-
-  /**
-   * @return void
-   */
-  private function isUserNotLoggedIn() {
-    if ($this->username === NULL)  {
-      header("Location: /login");
-    }
   }
 
 }
