@@ -26,7 +26,7 @@ class HomeController extends BaseController {
    */
   public function index() {
     $data = [
-      'page_title' => APP_VERSION,
+      'page_title' => 'D-Office 2025',
       'stylesheet' => 'libraries/',
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
