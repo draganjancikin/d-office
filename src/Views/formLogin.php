@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="sr">
-<head>
-  <title><?php echo APP_VERSION ?></title>
-  <?php
-  $stylesheet = 'libraries/';
-  include 'includes/pageHead.php';
-  ?>
-</head>
+<?php include '../src/Views/includes/pageHead.php' ?>
+
 <body class="bg-gradient-primary">
 
   <div class="container">

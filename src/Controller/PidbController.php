@@ -25,11 +25,12 @@ class PidbController extends BaseController {
    */
   public function index($search = NULL) {
     $data = [
+      'page_title' => 'Dokumenti',
+      'stylesheet' => '../libraries/',
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'pidbs',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '../libraries/',
       'search' => $search,
     ];
 
@@ -43,12 +44,13 @@ class PidbController extends BaseController {
    */
   public function add() {
     $data = [
+      'page_title' => 'Dokumenti',
+      'stylesheet' => '../libraries/',
       'user_id' => $this->user_id,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'pidbs',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '../libraries/',
     ];
 
     // If the user is not logged in, redirect them to the login page.
@@ -73,12 +75,13 @@ class PidbController extends BaseController {
     $all_articles = $this->entityManager->getRepository('\App\Entity\Article')->findAll();
 
     $data = [
+      'page_title' => 'Dokumenti',
+      'stylesheet' => '../libraries/',
       'user_id' => $this->user_id,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'pidb',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '../libraries/',
       'search' => $search,
       'pidb_id' => $pidb_id,
       'pidb_data' => $pidb_data,
@@ -107,12 +110,13 @@ class PidbController extends BaseController {
     $all_articles = $this->entityManager->getRepository('\App\Entity\Article')->findAll();
 
     $data = [
+      'page_title' => 'Dokumenti',
+      'stylesheet' => '/../libraries/',
       'user_id' => $this->user_id,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'pidb',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '/../libraries/',
       'client' => $client,
       'pidb_id' => $pidb_id,
       'pidb_data' => $pidb_data,
@@ -323,12 +327,13 @@ class PidbController extends BaseController {
     $transactions = $this->entityManager->getRepository('\App\Entity\AccountingDocument')->getLastTransactions(10);
 
     $data = [
+      'page_title' => 'Dokumenti',
+      'stylesheet' => '/../libraries/',
       'transactions' => $transactions,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'pidb',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '/../libraries/',
       'pidb_id' => $pidb_id,
       'accounting_document_id' => $pidb_id,
       'pidb_data' => $pidb_data,
@@ -346,11 +351,12 @@ class PidbController extends BaseController {
     $client_id = $pidb_data->getClient()->getId();
     $client_data = $this->entityManager->getRepository('\App\Entity\Client')->getClientData($client_id);
     $data = [
+      'page_title' => 'Dokumenti',
+      'stylesheet' => '/../libraries/',
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'pidb',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '/../libraries/',
       'pidb_id' => $pidb_id,
       'pidb_data' => $pidb_data,
       'transaction' => $transaction,

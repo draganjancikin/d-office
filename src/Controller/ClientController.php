@@ -25,12 +25,13 @@ class ClientController extends BaseController {
    */
   public function index($search = NULL) {
     $data = [
+      'page_title' => 'Klijenti',
+      'stylesheet' => '../libraries/',
       'user_id' => $this->user_id,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'clients',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '../libraries/',
       'search' => $search,
     ];
 
@@ -41,6 +42,8 @@ class ClientController extends BaseController {
   }
 
   /**
+   * View Client form.
+   *
    * @param $client_id
    *
    * @return void
@@ -49,12 +52,13 @@ class ClientController extends BaseController {
     $client = $this->entityManager->getRepository('\App\Entity\Client')->getClientData($client_id);
 
     $data = [
+      'page_title' => 'Klijenti',
+      'stylesheet' => '../libraries/',
       'user_id' => $this->user_id,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'client',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '../libraries/',
       'search' => $search,
       'client_id' => $client_id,
       'client' => $client,
@@ -68,6 +72,8 @@ class ClientController extends BaseController {
   }
 
   /**
+   * Edit Client form.
+   *
    * @param $client_id
    *
    * @return void
@@ -76,12 +82,13 @@ class ClientController extends BaseController {
     $client = $this->entityManager->getRepository('\App\Entity\Client')->getClientData($client_id);
 
     $data = [
+      'page_title' => 'Klijenti',
+      'stylesheet' => '/../libraries/',
       'user_id' => $this->user_id,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'client',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '/../libraries/',
       'client_id' => $client_id,
       'client' => $client,
     ];
@@ -97,12 +104,13 @@ class ClientController extends BaseController {
    */
   public function add() {
     $data = [
+      'page_title' => 'Klijenti',
+      'stylesheet' => '../libraries/',
       'user_id' => $this->user_id,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'client',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '../libraries/',
     ];
 
     // If the user is not logged in, redirect them to the login page.
@@ -135,12 +143,13 @@ class ClientController extends BaseController {
    */
   public function addCountry() {
     $data = [
+      'page_title' => 'Klijenti',
+      'stylesheet' => '../libraries/',
       'user_id' => $this->user_id,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'client',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '../libraries/',
     ];
 
     // If the user is not logged in, redirect them to the login page.
@@ -154,12 +163,13 @@ class ClientController extends BaseController {
    */
   public function addCity() {
     $data = [
+      'page_title' => 'Klijenti',
+      'stylesheet' => '../libraries/',
       'user_id' => $this->user_id,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'client',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '../libraries/',
     ];
 
     // If the user is not logged in, redirect them to the login page.
@@ -173,12 +183,13 @@ class ClientController extends BaseController {
    */
   public function addStreet() {
     $data = [
+      'page_title' => 'Klijenti',
+      'stylesheet' => '../libraries/',
       'user_id' => $this->user_id,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'client',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '../libraries/',
     ];
 
     // If the user is not logged in, redirect them to the login page.
@@ -192,12 +203,13 @@ class ClientController extends BaseController {
    */
   public function advancedSearch() {
     $data = [
+      'page_title' => 'Klijenti',
+      'stylesheet' => '../libraries/',
       'user_id' => $this->user_id,
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'client',
       'entityManager' => $this->entityManager,
-      'stylesheet' => '../libraries/',
     ];
 
     // If the user is not logged in, redirect them to the login page.

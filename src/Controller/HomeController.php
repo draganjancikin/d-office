@@ -26,11 +26,12 @@ class HomeController extends BaseController {
    */
   public function index() {
     $data = [
+      'page_title' => APP_VERSION,
+      'stylesheet' => 'libraries/',
       'username' => $this->username,
       'user_role_id' => $this->user_role_id,
       'page' => 'home',
       'entityManager' => $this->entityManager,
-      'stylesheet' => 'libraries/',
     ];
 
     // If the user is not logged in, redirect them to the login page.
@@ -46,7 +47,11 @@ class HomeController extends BaseController {
    *   The rendered view.
    */
   public function login() {
-    $this->render('formLogin');
+    $data = [
+      'page_title' => APP_VERSION,
+      'stylesheet' => 'libraries/',
+    ];
+    $this->render('formLogin', $data);
   }
 
   /**

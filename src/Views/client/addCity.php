@@ -1,9 +1,5 @@
-<!DOCTYPE html>
-<html lang="sr">
-<head>
-  <title>Klijenti</title>
-  <?php include '../src/Views/includes/pageHead.php' ?>
-</head>
+<?php include '../src/Views/includes/pageHead.php' ?>
+
 <body id="page-top">
 
   <!-- Page Wrapper -->
