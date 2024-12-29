@@ -56,8 +56,8 @@
       </a>
       <div id="krojne-liste" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-          <a class="collapse-item" href="/cutting/">Krojne liste</a>
-          <a class="collapse-item" href="/cutting/index.php?new"><i class="fas fa-plus"></i> Nova krojna lista</a>
+          <a class="collapse-item" href="/cuttings/">Krojne liste</a>
+          <a class="collapse-item" href="/cuttings/add"><i class="fas fa-plus"></i> Nova krojna lista</a>
         </div>
       </div>
     </li>

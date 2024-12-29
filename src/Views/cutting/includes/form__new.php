@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">Otvaranje nove krojne liste:</h6>
   </div>
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?create'; ?>" method="post">
+    <form action="<?php '/cutting/add' ?>" method="post">
 
       <div class="row mb-2">
         <label for="date" class="col-sm-3 col-lg-2 col-form-label text-right">Datum: </label>
@@ -27,7 +27,6 @@
             echo '<option value="">Izaberi klijenta</option>';
           }
 
-          $clients_list = $entityManager->getRepository('\App\Entity\Client')->findBy(array(), array('name' => "ASC"));
           foreach( $clients_list as $client_item):
             ?>
             <option value="<?php echo $client_item->getId() ?>">

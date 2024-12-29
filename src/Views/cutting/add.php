@@ -3,15 +3,14 @@
 <?php include '../src/Views/includes/pageHeader.php' ?>
 
   <!-- Tools Meni -->
-  <?php include 'includes/tools_menu.php' ?>
+  <?php include 'includes/tools__menu.php' ?>
   <!-- End of Tools Meni -->
 
+  <!-- Main content -->
   <?php
-
-  echo '<div class="col-sm-12 col-md-11 col-lg-9 col-xl-7 px-2">';
-  include 'includes/form_view_client.php';
-  echo '</div>';
+  include 'includes/form__new.php';
   ?>
+  <!-- Enf of Main content -->
 
   <!-- Modals -->
   <?php include 'includes/modals.php' ?>

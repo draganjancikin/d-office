@@ -51,6 +51,17 @@ $router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbCo
 $router->add('POST', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@editTransaction');
 $router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/delete', 'PidbController@deleteTransaction');
 
+$router->add('GET', '/cuttings/', 'CuttingController@index');
+$router->add('GET', '/cuttings/add', 'CuttingController@formAdd');
+$router->add('POST', '/cuttings/add', 'CuttingController@add');
+$router->add('GET', '/cutting/{cutting_id}', 'CuttingController@view');
+$router->add('GET', '/cutting/{cutting_id}/edit', 'CuttingController@edit');
+$router->add('GET', '/cutting/{cutting_id}/print', 'CuttingController@print');
+$router->add('POST', '/cutting/{cutting_id}/addArticle', 'CuttingController@addArticle');
+$router->add('POST', '/cutting/{cutting_id}/article/{article_id}/edit', 'CuttingController@editArticle');
+$router->add('GET', '/cutting/{cutting_id}/article/{article_id}/delete', 'CuttingController@deleteArticle');
+$router->add('GET', '/cutting/{cutting_id}/exportToAccountingDocument', 'CuttingController@exportToAccountingDocument');
+$router->add('GET', '/cutting/{cutting_id}/delete', 'CuttingController@delete');
 
 // Get the current request URL.
 $requestUri = $_SERVER['REQUEST_URI'];

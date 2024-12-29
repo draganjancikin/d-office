@@ -48,7 +48,7 @@ $pdf->SetFont('dejavusans', '', 10);
 // Add a page.
 $pdf->AddPage();
 
-$id = $_GET['cutting_id'];
+$id = $cutting_id;
 $cutting_sheet = $entityManager->find("\App\Entity\CuttingSheet", $id);
 
 $html =

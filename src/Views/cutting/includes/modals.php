@@ -9,10 +9,10 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="<?php echo $_SERVER['PHP_SELF']. '?addArticle' ?>" method="post">
+      <form action="<?php echo '/cutting/' . $cutting_id . '/addArticle' ?>" method="post">
         <div class="modal-body">
         
-          <input type="hidden" name="id" value="<?php echo $id; ?>" />
+          <input type="hidden" name="id" value="<?php echo $cutting_id; ?>" />
 
           <div class="row mb-2">
             <label for="selectFenceModel" class="col-sm-4 col-form-label text-right">Model:</label>

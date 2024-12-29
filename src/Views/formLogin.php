@@ -43,8 +43,5 @@
     </div>
   </div>
 
-  <!-- page body footer -->
-  <?php include 'includes/pageBodyFooter.php'; ?>
-
 </body>
 </html>

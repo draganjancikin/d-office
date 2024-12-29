@@ -9,6 +9,16 @@ switch ($url[0]) {
     $action = '/clients/';
     break;
 
+  case 'pidbs':
+  case 'pidb':
+    $action = '/pidbs/';
+    break;
+
+  case 'cuttings':
+  case 'cutting':
+    $action = '/cuttings/';
+    break;
+
   default:
     $action = '/';
     break;

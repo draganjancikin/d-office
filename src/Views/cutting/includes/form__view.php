@@ -1,51 +1,51 @@
 <!-- View Cutting Data -->
 <div class="card mb-4">
-  
-    <div class="card-header p-2">
-        <h6 class="m-0 font-weight-bold text-dark">
-            Krojna lista: KL <?php echo str_pad($cutting_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$cutting_data->getCreatedAt()->format('m') . ' <span class="font-weight-normal">(' . $cutting_data->getCreatedAt()->format('d-M-Y') . ')</span>';?>
-        </h6>
-    </div>
-    <div class="card-body p-2">
 
-        <dl class="row mb-0">
-            <dt class="col-sm-3 col-md-2">klijent:</dt>
-            <dd class="col-sm-9 col-md-10"><?php echo $client['name'] ?></dd>
-            <dt class="col-sm-3 col-md-2">adresa:</dt>
-            <dd class="col-sm-9 col-md-10">
-                <?php echo $client['street'] . ' ' . $client['home_number']. ', ' . $client['city'] . ', ' . $client['country'] ?>
-            </dd>
-        </dl>
+  <div class="card-header p-2">
+    <h6 class="m-0 font-weight-bold text-dark">
+      Krojna lista: KL <?php echo str_pad($cutting_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$cutting_data->getCreatedAt()->format('m') . ' <span class="font-weight-normal">(' . $cutting_data->getCreatedAt()->format('d-M-Y') . ')</span>';?>
+    </h6>
+  </div>
+  <div class="card-body p-2">
 
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>red.<br />broj</th>
-                        <th class="px-1">vrsta polja</th>
-                        <th class="px-1">širina<br /> letvice</th>
-                        <th class="px-1">širina<br />polja</th>
-                        <th class="px-1">visina<br />polja</th>
-                        <th class="px-1">srednja<br />visina<br />polja</th>
-                        <th class="px-1">razmak<br />letvica</th>
-                        <th class="px-1">broj<br />polja</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-          <?php 
+    <dl class="row mb-0">
+      <dt class="col-sm-3 col-md-2">klijent:</dt>
+      <dd class="col-sm-9 col-md-10"><?php echo $client['name'] ?></dd>
+      <dt class="col-sm-3 col-md-2">adresa:</dt>
+      <dd class="col-sm-9 col-md-10">
+          <?php echo $client['street'] . ' ' . $client['home_number']. ', ' . $client['city'] . ', ' . $client['country'] ?>
+      </dd>
+    </dl>
+
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>red.<br />broj</th>
+            <th class="px-1">vrsta polja</th>
+            <th class="px-1">širina<br /> letvice</th>
+            <th class="px-1">širina<br />polja</th>
+            <th class="px-1">visina<br />polja</th>
+            <th class="px-1">srednja<br />visina<br />polja</th>
+            <th class="px-1">razmak<br />letvica</th>
+            <th class="px-1">broj<br />polja</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
           $count = 0;
           $total_picket_lenght = 0;
           $total_kap = 0;
-          $cutting_sheet_articles = $entityManager->getRepository('\App\Entity\CuttingSheet')->getArticlesOnCuttingSheet($id);
+          $cutting_sheet_articles = $entityManager->getRepository('\App\Entity\CuttingSheet')->getArticlesOnCuttingSheet($cutting_id);
           foreach ($cutting_sheet_articles as $cutting_sheet_article):
             $count ++;
             ?>
             <form >
               <fieldset disabled>
                 <input type="hidden" name="cutting_fence_article_id" value="<?php echo $cutting_sheet_article->getId() ?>" />
-                <input type="hidden" name="id" value="<?php echo $id ?>" />
+                <input type="hidden" name="id" value="<?php echo $cutting_id ?>" />
         
                 <tr>
                   <td class="px-1"><?php echo $count; ?>.</td>
@@ -94,7 +94,9 @@
               <?php
               if ($cutting_sheet_articles):
                 ?>
-                <a href="<?php echo $_SERVER['PHP_SELF']. '?exportToAccountingDocument&id=' .$id. '&total_picket_lenght=' .$total_picket_lenght. '&total_kap=' .$total_kap. '&picket_width=' . $cutting_sheet_article->getPicketWidth() ?>">
+                <a href="<?php echo '/cutting/' . $cutting_id . '/exportToAccountingDocument?total_picket_lenght='
+                  . $total_picket_lenght . '&total_kap=' . $total_kap . '&picket_width=' .
+                  $cutting_sheet_article->getPicketWidth() ?>">
                   <button type="submit" class="btn btn-outline-secondary btn-sm">Otvori novi predracun</button>
                 </a>
                 <?php
