@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">Upis podataka o novom materijalu</strong></h6>
   </div>
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?createMaterial'; ?>" method="post">
+    <form action="<?php echo '/materials/add' ?>" method="post">
 
       <div class="row mb-2">
         <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
@@ -20,9 +20,8 @@
           <select id="inputUnit" class="form-select form-select-sm" name="unit_id" required>
             <option value="">izaberi jedinicu mere</option>
             <?php
-            $units = $entityManager->getRepository('\App\Entity\Unit')->findAll();
             foreach ($units as $unit) {
-              echo '<option value="' .$unit->getId(). '">' .$unit->getName(). '</option>';
+              echo '<option value="' . $unit->getId() . '">' . $unit->getName() . '</option>';
             }
             ?>
           </select>

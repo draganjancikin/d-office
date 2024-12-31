@@ -51,6 +51,7 @@ $router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbCo
 $router->add('POST', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@editTransaction');
 $router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/delete', 'PidbController@deleteTransaction');
 
+// ========== Cuttings routes ==================================================
 $router->add('GET', '/cuttings/', 'CuttingController@index');
 $router->add('GET', '/cuttings/add', 'CuttingController@formAdd');
 $router->add('POST', '/cuttings/add', 'CuttingController@add');
@@ -62,6 +63,22 @@ $router->add('POST', '/cutting/{cutting_id}/article/{article_id}/edit', 'Cutting
 $router->add('GET', '/cutting/{cutting_id}/article/{article_id}/delete', 'CuttingController@deleteArticle');
 $router->add('GET', '/cutting/{cutting_id}/exportToAccountingDocument', 'CuttingController@exportToAccountingDocument');
 $router->add('GET', '/cutting/{cutting_id}/delete', 'CuttingController@delete');
+
+// ========== Material routes ==================================================
+$router->add('GET', '/materials/', 'MaterialController@index');
+$router->add('GET', '/materials/add', 'MaterialController@addForm');
+$router->add('POST', '/materials/add', 'MaterialController@add');
+
+$router->add('GET', '/material/{material_id}', 'MaterialController@view');
+$router->add('GET', '/material/{material_id}/edit', 'MaterialController@editForm');
+$router->add('POST', '/material/{material_id}/edit', 'MaterialController@edit');
+
+$router->add('POST', '/material/{material_id}/addSupplier', 'MaterialController@addSupplier');
+$router->add('POST', '/material/{material_id}/supplier/{supplier_id}/edit', 'MaterialController@editSupplier');
+$router->add('GET', '/material/{material_id}/supplier/{supplier_id}/delete', 'MaterialController@deleteSupplier');
+
+$router->add('POST', '/material/{material_id}/addProperty', 'MaterialController@addProperty');
+$router->add('GET', '/material/{material_id}/property/{property_id}/delete', 'MaterialController@deleteProperty');
 
 // Get the current request URL.
 $requestUri = $_SERVER['REQUEST_URI'];

@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">Izmena materiala: <strong><?php echo $material->getName() ?></strong></h6>
   </div>
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterial&id=' . $material_id ?>" method="post">
+    <form action="<?php echo '/material/' . $material_id . '/edit' ?>" method="post">
 
       <div class="row mb-2">
         <label for="disabledModified" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Izmenjen:</label>
@@ -29,7 +29,6 @@
             <option value="<?php echo $material->getUnit()->getId() ?>"><?php echo $material->getUnit()->getName(); ?>
             </option>
             <?php
-              $units = $entityManager->getRepository('\App\Entity\Unit')->FindAll();
               foreach ($units as $unit) {
                 echo '<option value="' .$unit->getId(). '">' .$unit->getName(). '</option>';
               }
@@ -106,7 +105,8 @@
           foreach ($material_suppliers as $material_supplier):
             $count++;
             ?>
-            <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateMaterialSupplier&id=' .$material_id ?>" method="post">
+            <form action="<?php echo '/material/' . $material_id . '/supplier/' . $material_supplier->getId() .'/edit'?>"
+                  method="post">
               <input class="form-control" type="hidden" name="material_supplier_id"
                      value="<?php echo $material_supplier->getId() ?>" />
               <tr>
@@ -134,7 +134,7 @@
                 </td>
                 <td class="p-1">
                   <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save"> </i> </button>
-                  <a href="<?php echo $_SERVER['PHP_SELF']. '?edit&id=' .$material_id. '&material_supplier_id=' .$material_supplier->getId(). '&deleteMaterialSupplier'; ?>"
+                  <a href="<?php echo '/material/' . $material_id . '/supplier/' . $material_supplier->getId() . '/delete'; ?>"
                       class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>
                 </td>
               </tr>
@@ -154,7 +154,7 @@
 
   <div class="card-body p-2">
     <?php
-    foreach ($material_propertys as $material_property):
+    foreach ($material_properties as $material_property):
       ?>
     <form method="post">
       <div class="row mb-2">
@@ -167,7 +167,7 @@
         </div>
 
         <div class="col-sm-2">
-          <a href="<?php echo $_SERVER['PHP_SELF'] . '?deleteMaterialProperty&id=' .$material_id. '&material_property_id=' .$material_property->getId() ?>"
+          <a href="<?php echo '/material/' . $material_id . '/property/' . $material_property->getId() . '/delete' ?>"
             class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"> </i> </a>
         </div>
 

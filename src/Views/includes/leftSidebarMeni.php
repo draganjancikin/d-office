@@ -71,7 +71,7 @@
       <div id="materijal" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
           <a class="collapse-item" href="/materials/">Materijal</a>
-          <a class="collapse-item" href="/materials/index.php?new"><i class="fas fa-plus"></i> Novi materijal</a>
+          <a class="collapse-item" href="/materials/add"><i class="fas fa-plus"></i> Novi materijal</a>
         </div>
       </div>
     </li>

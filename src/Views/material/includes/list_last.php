@@ -23,12 +23,11 @@
         </tfoot>
         <tbody>
         <?php
-        $materials = $entityManager->getRepository('\App\Entity\Material')->getLastMaterials(10);
-        $preferences = $entityManager->find('\App\Entity\Preferences', 1);
         foreach ($materials as $material_data):
           ?>
           <tr>
-            <td><a href="?view&id=<?php echo $material_data->getId() ?>"><?php echo $material_data->getName() ?></a></td>
+            <td><a href="/material/<?php echo $material_data->getId() ?>"><?php echo $material_data->getName()
+                ?></a></td>
             <td class="text-center"><?php echo $material_data->getUnit()->getName() ?></td>
             <td class="text-right"><?php echo number_format( ($material_data->getPrice() * $preferences->getKurs() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
             <td class="text-right"><?php echo number_format( ($material_data->getPrice() * ($preferences->getTax()/100 + 1) ) , 1, ",", ".") ?></td>
