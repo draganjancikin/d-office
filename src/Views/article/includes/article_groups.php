@@ -18,11 +18,12 @@
         </tfoot>
         <tbody>
           <?php
-          $article_groups = $entityManager->getRepository('\App\Entity\ArticleGroup')->findAll();
           foreach ($article_groups as $group_data):
             ?>
             <tr>
-              <td><a href="?viewArticleGroup&article_group_id=<?php echo $group_data->getId() ?>"><?php echo $group_data->getName() ?></a></td>
+              <td><a href="/articles/group/<?php echo $group_data->getId() ?>"><?php
+                  echo
+                  $group_data->getName() ?></a></td>
             </tr>
             <?php
           endforeach;

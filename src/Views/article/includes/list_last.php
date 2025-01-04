@@ -6,7 +6,6 @@
     <div class="col-sm-5">
       <select class="form-select form-select-sm" name="group_id">
         <?php
-        $article_groups = $entityManager->getRepository('\App\Entity\ArticleGroup')->findAll();
         foreach ($article_groups as $article_group) {
           echo '<option value="' .$article_group->getId(). '">' .$article_group->getName(). '</option>';
         }
@@ -48,12 +47,11 @@
         </tfoot>
         <tbody>
           <?php
-          $last_articles = $entityManager->getRepository('\App\Entity\Article')->getLastArticles(15);
-          $preferences = $entityManager->find('\App\Entity\Preferences', 1);
           foreach ($last_articles as $article_data):
             ?>
             <tr>
-              <td><a href="?view&article_id=<?php echo $article_data->getId() ?>"><?php echo $article_data->getName() ?></a></td>
+              <td><a href="/article/<?php echo $article_data->getId() ?>"><?php echo
+                  $article_data->getName() ?></a></td>
               <td class="text-center"><?php echo $article_data->getUnit()->getName() ?></td>
               <td class="text-right"><?php echo number_format( ($article_data->getPrice() * $preferences->getKurs() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
               <td class="text-right"><?php echo number_format( ($article_data->getPrice() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?></td>

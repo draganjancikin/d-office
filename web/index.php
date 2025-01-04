@@ -98,6 +98,25 @@ $router->add('GET', '/order/{order_id}/material/{order_material_id}/duplicate', 
 
 $router->add('GET', '/order/{order_id}/print', 'OrderController@print');
 
+// ========== Articles routes ==================================================
+$router->add('GET', '/articles/', 'ArticleController@index');
+$router->add('GET', '/articles/add', 'ArticleController@addForm');
+$router->add('POST', '/articles/add', 'ArticleController@add');
+
+$router->add('GET', '/articles/groups', 'ArticleController@groups');
+$router->add('GET', '/articles/groups/add', 'ArticleController@addGroupForm');
+$router->add('POST', '/articles/groups/add', 'ArticleController@addGroup');
+$router->add('GET', '/articles/group/{group_id}', 'ArticleController@viewGroup');
+$router->add('GET', '/articles/group/{group_id}/edit', 'ArticleController@editGroupForm');
+$router->add('POST', '/articles/group/{group_id}/edit', 'ArticleController@editGroup');
+
+$router->add('GET', '/article/{article_id}', 'ArticleController@view');
+$router->add('GET', '/article/{article_id}/edit', 'ArticleController@editForm');
+$router->add('POST', '/article/{article_id}/edit', 'ArticleController@edit');
+
+$router->add('POST', '/article/{article_id}/addProperty', 'ArticleController@addProperty');
+$router->add('GET', '/article/{article_id}/property/{property_id}/delete', 'ArticleController@deleteProperty');
+
 // Get the current request URL.
 $requestUri = $_SERVER['REQUEST_URI'];
 

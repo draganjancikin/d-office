@@ -359,6 +359,14 @@ class MaterialController extends BaseController {
     die('<script>location.href = "/material/' . $material_id . '" </script>');
   }
 
+  /**
+   * Delete property from material.
+   *
+   * @param $material_id
+   * @param $property_id
+   *
+   * @return void
+   */
   public function deleteProperty($material_id, $property_id) {
     $material_property = $this->entityManager->find("\App\Entity\MaterialProperty", $property_id);
 
@@ -366,7 +374,6 @@ class MaterialController extends BaseController {
     $this->entityManager->flush();;
 
     die('<script>location.href = "/material/' . $material_id . '" </script>');
-
   }
 
   /**

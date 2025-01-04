@@ -6,7 +6,7 @@
   </div>
 
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?createArticleGroup'; ?>" method="post">
+    <form action="<?php echo '/articles/groups/add' ?>" method="post">
 
       <div class="row mb-2">
         <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>

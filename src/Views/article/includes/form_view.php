@@ -15,11 +15,12 @@
           <div class="col-sm-3">
             <select id="disabledSelectGroup" name="group_id" class="form-select form-select-sm">
               <?php
-                if($article_data->getGroup() ) :
+                if ($article_data->getGroup() ) :
                   ?>
-              <option value="<?php echo $article_data->getGroup()->getId() ?>">
-                <?php echo $article_data->getGroup()->getName() ?></option>
-              <?php
+                  <option value="<?php echo $article_data->getGroup()->getId() ?>">
+                    <?php echo $article_data->getGroup()->getName() ?>
+                  </option>
+                <?php
                 endif;
               ?>
             </select>

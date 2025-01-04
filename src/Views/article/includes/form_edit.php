@@ -6,7 +6,7 @@
   </div>
 
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateArticle&article_id=' .$article_id ?>" method="post">
+    <form action="<?php echo '/article/' . $article_id . '/edit' ?>" method="post">
 
       <div class="row mb-2">
         <label for="selectGroup" class="col-sm-3 col-lg-2 col-form-label text-right">Grupa proizvoda:</label>
@@ -22,7 +22,6 @@
               <option >Izaberite grupu</option>
               <?php
             endif;
-            $article_groups = $entityManager->getRepository('\App\Entity\ArticleGroup')->getArticleGroups();
             foreach ($article_groups as $article_group) :
               ?>
               <option value="<?php echo $article_group->getId() ?>"><?php echo $article_group->getName() ?></option>
@@ -47,7 +46,6 @@
           <select id="selectUnit" name="unit_id" class="form-select form-select-sm">
             <option value="<?php echo $article_data->getUnit()->getId() ?>"><?php echo $article_data->getUnit()->getName() ?></option>
             <?php
-            $units = $entityManager->getRepository('\App\Entity\Unit')->findBy(array(), array('name' => 'ASC'));
             foreach ($units as $unit) :
               ?>
               <option value="<?php echo $unit->getId() ?>"><?php echo $unit->getName() ?></option>
@@ -117,7 +115,9 @@
             </select>
           </div>
           <div class="col-sm-2">
-            <a href="<?php echo $_SERVER['PHP_SELF'] . '?removePropertyFromArticle&article_id=' .$article_id. '&property_id=' .$article_property->getId() ?>" class="btn btn-sm btn-danger">
+            <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete osobinu proizvoda?')"
+               href="<?php echo '/article/' . $article_id . '/property/' . $article_property->getId() . '/delete' ?>"
+               class="btn btn-sm btn-danger">
               <i class="fas fa-trash-alt"> </i>
             </a>
           </div>

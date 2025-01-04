@@ -99,12 +99,13 @@
       <div id="proizvodi" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
           <a class="collapse-item" href="/articles/">Proizvodi</a>
-          <a class="collapse-item" href="/articles/index.php?new"><i class="fas fa-plus"></i> Novi proizvod</a>
+          <a class="collapse-item" href="/articles/add"><i class="fas fa-plus"></i> Novi proizvod</a>
           <?php
           if ($user_role_id == 1):
             ?>
-            <a class="collapse-item" href="/articles/index.php?articleGroups">Grupe proizvoda</a>
-            <a class="collapse-item" href="/articles/index.php?newArticleGroup"><i class="fas fa-plus"></i> Nova grupa proizvoda</a>
+            <a class="collapse-item" href="/articles/groups">Grupe proizvoda</a>
+            <a class="collapse-item" href="/articles/groups/add"><i class="fas fa-plus"></i>
+              Nova grupa proizvoda</a>
             <?php
           endif;
           ?>

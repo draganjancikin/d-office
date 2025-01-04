@@ -624,7 +624,7 @@ if ($page == "order"):
   <?php
 endif;
 
-if ($page == "articles"):
+if ($page == "article"):
   $term = filter_input(INPUT_GET, 'search');
   ?>
 
@@ -680,7 +680,8 @@ if ($page == "articles"):
             foreach ($articles as $articl):
               ?>
               <tr>
-                <td><a href="?view&article_id=<?php echo $articl->getId() ?>" title="<?php echo $articl->getNote() ?>"><?php echo $articl->getName() ?></a></td>
+                <td><a href="/article/<?php echo $articl->getId() ?>" title="<?php echo
+                  $articl->getNote() ?>"><?php echo $articl->getName() ?></a></td>
                 <td class="text-center"><?php echo $articl->getUnit()->getName() ?></td>
                 <td class="text-right"><?php echo number_format( ($articl->getPrice() * $preferences->getKurs() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?></td>
                 <td class="text-right"><?php echo number_format( ($articl->getPrice() * ($preferences->getTax()/100 + 1) ) , 2, ",", ".") ?></td>

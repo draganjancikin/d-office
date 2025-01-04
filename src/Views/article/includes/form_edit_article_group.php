@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">Izmena grupe artikala: <strong><?php echo $article_group_data->getName() ?></strong></h6>
   </div>
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?updateArticleGroup&article_group_id=' .$article_group_id ?>" method="post">
+    <form action="<?php echo '/articles/group/' . $group_id . '/edit' ?>" method="post">
 
       <div class="form-group row">
         <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
