@@ -1,17 +1,11 @@
-<?php
-$material_on_order_id = $_GET['material_on_order_id'];
-$supplier_id = $_GET['supplier_id'];
-// Get Material data.
-$material_data = $entityManager->find('\App\Entity\OrderMaterial', $material_on_order_id);
-$materials_by_supplier = $entityManager->getRepository('\App\Entity\Material')->getSupplierMaterials($supplier_id);
-?>
 <div class="card border-secondary mb-4">
   <div class="card-header p-2">
     <h6 class="m-0 font-weight-bold">Promena materijala</h6>
   </div>
   <div class="card-body p-2">
 
-    <form action="<?php echo $_SERVER['PHP_SELF']. '?editMaterialDataInOrder&order_id='.$material_data->getOrder()->getId().'&material_on_order_id=' .$material_on_order_id ?>" class="form-horizontal" role="form" method="post">
+    <form action="<?php echo '/order/' . $material_data->getOrder()->getId().'/material/' . $material_on_order_id . '/edit' ?>"
+          class="form-horizontal" role="form" method="post">
       <!--            <input type="hidden" name="material_id" value="-->
       <?php //echo $material_data->getArticle()->getId() ?><!--" />-->
 

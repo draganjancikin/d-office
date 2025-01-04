@@ -4,7 +4,7 @@
     <h6 class="m-0 text-dark">Otvaranje nove narudžbenice:</h6>
   </div>
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?createOrder'; ?>" method="post">
+    <form action="<?php echo '/orders/add'; ?>" method="post">
 
       <div class="row mb-2">
         <label for="selectSupplier" class="col-sm-3 col-lg-2 col-form-label text-right">Dobavljač: </label>
@@ -12,7 +12,6 @@
           <select id="selectSupplier" class="form-select form-select-sm" name="supplier_id" required>
             <option value="">izaberi dobavljača</option>
             <?php
-            $suppliers = $entityManager->getRepository('\App\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC') );
             foreach ($suppliers as $supplier) {
               echo '<option value="' .$supplier->getId(). '">' .$supplier->getName(). '</option>';
             }
@@ -26,15 +25,13 @@
         <div class="col-sm-4">
           <select id="selectProject" class="form-select form-select-sm" name="project_id">
             <?php
-            if (isset($_GET['project_id'])){
-              $project_id = htmlspecialchars($_GET["project_id"]);
-              $project_data = $entityManager->find('\App\Entity\Project', $project_id);
+            if (isset($project_data)){
               echo '<option value="'.$project_data->getId().'">' .$project_data->getOrdinalNumInYear(). ' ' .$project_data->getClient()->getName(). ': ' .$project_data->getTitle().'</option>';
             }
             else {
               echo '<option value="">izaberi projekat</option>';
             }
-            $projects = $entityManager->getRepository('\App\Entity\Project')->findAll();
+
             foreach ($projects as $project) {
               echo '<option value="' .$project->getId(). '">' .$project->getOrdinalNumInYear(). ' ' .$project->getClient()->getName(). ': ' .$project->getTitle().'</option>';
             }

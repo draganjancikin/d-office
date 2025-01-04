@@ -438,7 +438,7 @@ if ($page == "materials"):
   <?php
 endif;
 
-if ($page == "orders"):
+if ($page == "order"):
   $term = filter_input(INPUT_GET, 'search');
   $orders = $entityManager->getRepository('\App\Entity\Order')->search($term);
   ?>
@@ -477,7 +477,7 @@ if ($page == "orders"):
                 ?>
                 <tr>
                   <td class="px-1">
-                    <a href="?view&id=<?php echo $order_data->getId() ?>">
+                    <a href="/order/<?php echo $order_data->getId() ?>">
                       <?php echo str_pad($order_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $order_data->getDate()->format('m_Y') ?>
                     </a>
                   </td>
@@ -515,7 +515,7 @@ if ($page == "orders"):
                     <?php
                     if (null !== $project_data):
                       ?>
-                      <a href="/projects/?view&project_id=<?php echo $project_data->getId() ?>">
+                      <a href="/project/<?php echo $project_data->getId() ?>">
                         <?php echo $project_data->getOrdinalNumInYear() .' '. $project_data->getClient()->getName() .' - '. $project_data->getTitle() ?>
                       </a>
                       <?php
@@ -525,7 +525,7 @@ if ($page == "orders"):
                   <td class="px-1">
                     <?php
                     $last_order = $entityManager->getRepository('\App\Entity\Order')->getLastOrder();
-                    echo ( $order_data == $last_order ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="' .$_SERVER['PHP_SELF']. '?name=&search&deleteOrder&order_id=' .$order_data->getId(). '" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : '');
+                    echo ( $order_data == $last_order ? '<a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')" href="/order/' . $order_data->getId(). '/delete" class="btn btn-danger btn-mini btn-article"><i class="fas fa-trash-alt"> </i> </a>' : '');
                     ?>
                   </td>
                 </tr>
@@ -546,15 +546,15 @@ if ($page == "orders"):
               <th class="px-1">za projekat</th>
             </tr>
           </thead>
-          <tfoot class="thead-light">
-            <tr>
-              <th class="px-1">narudžbenica</th>
-              <th class="px-1 text-center order-status" title="Status narudžbenice">s</th>
-              <th class="px-1">dobavljač</th>
-              <th class="px-1">naslov</th>
-              <th class="px-1">za projekat</th>
-            </tr>
-          </tfoot>
+<!--          <tfoot class="thead-light">-->
+<!--            <tr>-->
+<!--              <th class="px-1">narudžbenica</th>-->
+<!--              <th class="px-1 text-center order-status" title="Status narudžbenice">s</th>-->
+<!--              <th class="px-1">dobavljač</th>-->
+<!--              <th class="px-1">naslov</th>-->
+<!--              <th class="px-1">za projekat</th>-->
+<!--            </tr>-->
+<!--          </tfoot>-->
           <tbody>
 
           <?php
@@ -565,7 +565,7 @@ if ($page == "orders"):
               ?>
               <tr class="table-secondary">
                 <td class="px-1">
-                  <a href="?view&id=<?php echo $order_data->getId() ?>">
+                  <a href="/order/<?php echo $order_data->getId() ?>">
                     <?php echo str_pad($order_data->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $order_data->getDate()->format('m_Y') ?>
                   </a>
                 </td>

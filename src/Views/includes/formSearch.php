@@ -19,6 +19,16 @@ switch ($url[0]) {
     $action = '/cuttings/';
     break;
 
+  case 'materials':
+  case 'material':
+    $action = '/materials/';
+    break;
+
+  case 'orders':
+  case 'order':
+    $action = '/orders/';
+    break;
+
   default:
     $action = '/';
     break;

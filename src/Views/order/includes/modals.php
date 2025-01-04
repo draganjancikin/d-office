@@ -10,7 +10,7 @@
         </button>
       </div>
 
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?edit&order_id='. $order_id .'&addMaterialToOrder'; ?>" method="post">
+      <form action="<?php echo '/order/'. $order_id .'/addMaterial' ?>" method="post">
         <div class="modal-body">
 
           <div class="row mb-2">

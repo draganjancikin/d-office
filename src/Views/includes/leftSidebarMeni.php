@@ -85,7 +85,7 @@
       <div id="nabavka" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
           <a class="collapse-item" href="/orders/">Nabavka</a>
-          <a class="collapse-item" href="/orders/index.php?new"><i class="fas fa-plus"></i> Nova porudžbenica</a>
+          <a class="collapse-item" href="/orders/add"><i class="fas fa-plus"></i> Nova porudžbenica</a>
         </div>
       </div>
     </li>

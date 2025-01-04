@@ -14,23 +14,22 @@
             <th class="px-1">za projekat</th>
           </tr>
         </thead>
-        <tfoot class="thead-light">
-          <tr>
-            <th class="px-1">narudžbenica</th>
-            <th class="px-1 text-center order-status" title="Status narudžbenice">s</th>
-            <th class="px-1">dobavljač</th>
-            <th class="px-1">naslov</th>
-            <th class="px-1">za projekat</th>
-          </tr>
-        </tfoot>
+<!--        <tfoot class="thead-light">-->
+<!--          <tr>-->
+<!--            <th class="px-1">narudžbenica</th>-->
+<!--            <th class="px-1 text-center order-status" title="Status narudžbenice">s</th>-->
+<!--            <th class="px-1">dobavljač</th>-->
+<!--            <th class="px-1">naslov</th>-->
+<!--            <th class="px-1">za projekat</th>-->
+<!--          </tr>-->
+<!--        </tfoot>-->
         <tbody>
           <?php
-          $orders = $entityManager->getRepository('\App\Entity\Order')->getLastOrders(10);
           foreach ($orders as $order):
             ?>
             <tr>
               <td class="px-1">
-                <a href="?view&id=<?php echo $order->getId() ?>">
+                <a href="/order/<?php echo $order->getId() ?>">
                   <?php echo str_pad($order->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . '_' . $order->getDate()->format('m_Y') ?>
                 </a>
               </td>
@@ -65,7 +64,7 @@
                 if ($project = $entityManager->getRepository('App\Entity\Order')->getProject($order->getId()) ) :
                   ?>
                   <a href="/projects/?view&project_id=<?php echo $project->getId() ?>">
-                  <?php echo $project->getOrdinalNumInYear() .' '. $project->getClient()->getName() .' - '. $project->getTitle() ?>
+                  <?php echo $project->getOrdinalNumInYear() . ' list__last.php' . $project->getClient()->getName() .' - '. $project->getTitle() ?>
                   </a>
                   <?php
                 endif;

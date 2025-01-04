@@ -1,12 +1,12 @@
 <?php
 $page = "nabavka";
 
-require_once '../../config/appConfig.php';
-require_once '../../vendor/autoload.php';
-require_once '../../config/bootstrap.php';
+require_once '../config/appConfig.php';
+require_once '../vendor/autoload.php';
+require_once '../config/bootstrap.php';
 
 // Include the main TCPDF library (search for installation path).
-require_once '../../config/tcpdf_include.php';
+require_once '../config/tcpdf_include.php';
 
 // Create new PDF document.
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -59,7 +59,6 @@ $pdf->SetFont('dejavusans', '', 10);
 // Add a page.
 $pdf->AddPage();
 
-$order_id = $_GET['order_id'];
 $order_data = $entityManager->find("\App\Entity\Order", $order_id);
 
 $supplier_data = $entityManager->getRepository('\App\Entity\Client')->getClientData($order_data->getSupplier());

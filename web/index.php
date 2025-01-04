@@ -64,7 +64,7 @@ $router->add('GET', '/cutting/{cutting_id}/article/{article_id}/delete', 'Cuttin
 $router->add('GET', '/cutting/{cutting_id}/exportToAccountingDocument', 'CuttingController@exportToAccountingDocument');
 $router->add('GET', '/cutting/{cutting_id}/delete', 'CuttingController@delete');
 
-// ========== Material routes ==================================================
+// ========== Materials routes =================================================
 $router->add('GET', '/materials/', 'MaterialController@index');
 $router->add('GET', '/materials/add', 'MaterialController@addForm');
 $router->add('POST', '/materials/add', 'MaterialController@add');
@@ -79,6 +79,24 @@ $router->add('GET', '/material/{material_id}/supplier/{supplier_id}/delete', 'Ma
 
 $router->add('POST', '/material/{material_id}/addProperty', 'MaterialController@addProperty');
 $router->add('GET', '/material/{material_id}/property/{property_id}/delete', 'MaterialController@deleteProperty');
+
+// ========== Orders routes ====================================================
+$router->add('GET', '/orders/', 'OrderController@index');
+$router->add('GET', '/orders/add', 'OrderController@addForm');
+$router->add('POST', '/orders/add', 'OrderController@add');
+
+$router->add('GET', '/order/{order_id}', 'OrderController@view');
+$router->add('GET', '/order/{order_id}/edit', 'OrderController@editForm');
+$router->add('POST', '/order/{order_id}/edit', 'OrderController@edit');
+$router->add('GET', '/order/{order_id}/delete', 'OrderController@delete');
+
+$router->add('POST', '/order/{order_id}/addMaterial', 'OrderController@addMaterial');
+$router->add('GET', '/order/{order_id}/material/{order_material_id}/edit', 'OrderController@editMaterialForm');
+$router->add('POST', '/order/{order_id}/material/{order_material_id}/edit', 'OrderController@editMaterial');
+$router->add('GET', '/order/{order_id}/material/{order_material_id}/delete', 'OrderController@deleteMaterial');
+$router->add('GET', '/order/{order_id}/material/{order_material_id}/duplicate', 'OrderController@duplicateMaterial');
+
+$router->add('GET', '/order/{order_id}/print', 'OrderController@print');
 
 // Get the current request URL.
 $requestUri = $_SERVER['REQUEST_URI'];
