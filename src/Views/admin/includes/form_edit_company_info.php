@@ -1,9 +1,3 @@
-<?php
-$company = $entityManager->find('\App\Entity\CompanyInfo', '1');
-$company_country = $company->getCountry() ? $entityManager->find('\App\Entity\Country', $company->getCountry()) : null;
-$company_city = $company->getCity() ? $entityManager->find('\App\Entity\City', $company->getCity()) : null;
-$company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Street', $company->getStreet()) : null;
-?>
 <!-- View Company Data -->
 <div class="card mb-4">
   <div class="card-header p-2">
@@ -13,7 +7,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
   </div>
 
   <div class="card-body px-2">
-    <form action="<?php echo $_SERVER['PHP_SELF']. '?updateCompanyInfo'?>" method="post">
+    <form action="<?php echo '/admin/company-info/edit'?>" method="post">
 
       <div class="row mb-2">
         <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">Naziv:</label>
@@ -25,15 +19,16 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
       <div class="row mb-2">
         <label for="inputPIB" class="col-sm-3 col-lg-2 col-form-label text-right">PIB: </label>
         <div class="col-sm-4">
-          <input class="form-control form-control-sm" id="inputPIB" type="text" name="pib" value="<?php echo $company->getPib() ?>"  maxlength="9" >
+          <input class="form-control form-control-sm" id="inputPIB" type="text" name="pib"
+                 value="<?php echo $company->getPib() ?>"  maxlength="9" >
         </div>
       </div>
 
       <div class="row mb-2">
         <label for="inputMb" class="col-sm-3 col-lg-2 col-form-label text-right">MB: </label>
         <div class="col-sm-4">
-          <input class="form-control form-control-sm" id="inputMb" type="text" name="mb" value="<?php echo
-          $company->getMb() ?>"
+          <input class="form-control form-control-sm" id="inputMb" type="text" name="mb"
+                 value="<?php echo $company->getMb() ?>"
                  maxlength="9" >
         </div>
       </div>
@@ -53,7 +48,6 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
               <option value="<?php echo $company_country->getId() ?>"><?php echo $company_country->getName() ?></option>
               <?php
             }
-            $states = $entityManager->getRepository('\App\Entity\Country')->findBy(array(), array('name' => 'ASC'));
             foreach ($states as $state) :
               ?>
               <option value="<?php echo $state->getId() ?>">
@@ -81,7 +75,6 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
               <option value="<?php echo $company_city->getId() ?>"><?php echo $company_city->getName() ?></option>
               <?php
             }
-            $citys = $entityManager->getRepository('\App\Entity\City')->findBy(array(), array('name' => 'ASC'));
             foreach ($citys as $city) :
               ?>
               <option value="<?php echo $city->getId() ?>">
@@ -109,7 +102,6 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
               <option value="<?php echo $company_street->getId() ?>"><?php echo $company_street->getName() ?></option>
               <?php
             }
-            $streets = $entityManager->getRepository('\App\Entity\Street')->findBy(array(), array('name' => 'ASC'));
             foreach ($streets as $street) :
               ?>
               <option value="<?php echo $street->getId() ?>">
@@ -125,21 +117,24 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
       <div class="row mb-2">
         <label for="inputNum" class="col-sm-3 col-lg-2 col-form-label text-right">Broj:</label>
         <div class="col-sm-2">
-          <input class="form-control form-control-sm" id="inputNum" type="text" name="home_number" value="<?php echo $company->getHomeNumber() ?>" />
+          <input class="form-control form-control-sm" id="inputNum" type="text" name="home_number"
+                 value="<?php echo $company->getHomeNumber() ?>" />
         </div>
       </div>
 
       <div class="row mb-2">
         <label for="inputBankAccount1" class="col-sm-3 col-lg-2 col-form-label text-right">Broj žiro računa 1:</label>
         <div class="col-sm-4">
-          <input class="form-control form-control-sm" id="inputBankAccount1" type="text" name="bank_account_1" value="<?php echo $company->getBankAccount1() ?>" />
+          <input class="form-control form-control-sm" id="inputBankAccount1" type="text" name="bank_account_1"
+                 value="<?php echo $company->getBankAccount1() ?>" />
         </div>
       </div>
 
       <div class="row mb-2">
         <label for="inputBankAccount2" class="col-sm-3 col-lg-2 col-form-label text-right">Broj žiro računa 2:</label>
         <div class="col-sm-4">
-          <input class="form-control form-control-sm" id="inputBankAccount2" type="text" name="bank_account_2" value="<?php echo $company->getBankAccount2() ?>" />
+          <input class="form-control form-control-sm" id="inputBankAccount2" type="text" name="bank_account_2"
+                 value="<?php echo $company->getBankAccount2() ?>" />
         </div>
       </div>
 

@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../config/bootstrap.php';
 
-use App\Router;
+use App\Core\Router;
 
 $router = new Router();
 
@@ -116,6 +116,13 @@ $router->add('POST', '/article/{article_id}/edit', 'ArticleController@edit');
 
 $router->add('POST', '/article/{article_id}/addProperty', 'ArticleController@addProperty');
 $router->add('GET', '/article/{article_id}/property/{property_id}/delete', 'ArticleController@deleteProperty');
+
+// ========== Admins routes ====================================================
+$router->add('GET', '/admin/', 'AdminController@index');
+$router->add('GET', '/admin/base-backup', 'AdminController@baseBackup');
+$router->add('GET', '/admin/company-info', 'AdminController@viewCompanyInfo');
+$router->add('GET', '/admin/company-info/edit', 'AdminController@editCompanyInfoForm');
+$router->add('POST', '/admin/company-info/edit', 'AdminController@editCompanyInfo');
 
 // Get the current request URL.
 $requestUri = $_SERVER['REQUEST_URI'];

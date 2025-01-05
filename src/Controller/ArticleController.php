@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Core\BaseController;
 use App\Entity\Article;
 use App\Entity\ArticleProperty;
-use Doctrine\Common\Annotations\Annotation\Attribute;
 
 /**
  * ArticleController class

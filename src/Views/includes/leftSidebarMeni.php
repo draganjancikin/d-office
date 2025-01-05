@@ -125,8 +125,8 @@
         <div id="admin" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="/admin/">Admin</a>
-            <a class="collapse-item" href="/admin/index.php?baseBackup"><i class="fas fa-download"></i> Bekap baze</a>
-            <a class="collapse-item" href="/admin/index.php?companyInfo&view"><i class="fas fa-info"></i> Company info</a>
+            <a class="collapse-item" href="/admin/base-backup"><i class="fas fa-download"></i> Bekap baze</a>
+            <a class="collapse-item" href="/admin/company-info"><i class="fas fa-info"></i> Company info</a>
           </div>
         </div>
       </li>
