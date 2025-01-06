@@ -46,12 +46,12 @@ class HomeController extends BaseController {
    * @return void
    *   The rendered view.
    */
-  public function login() {
+  public function loginForm() {
     $data = [
       'page_title' => APP_VERSION,
       'stylesheet' => 'libraries/',
     ];
-    $this->render('formLogin', $data);
+    $this->render('loginForm', $data);
   }
 
   /**
@@ -59,7 +59,7 @@ class HomeController extends BaseController {
    *
    * @return void
    */
-  public function loginPost() {
+  public function login() {
 
     require_once '../config/dbConfig.php';
 

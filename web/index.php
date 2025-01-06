@@ -8,29 +8,34 @@ $router = new Router();
 
 // Define routes (could also load routes from a separate file).
 $router->add('GET', '/', 'HomeController@index');
-$router->add('GET', '/login', 'HomeController@login');
-$router->add('POST', '/login', 'HomeController@loginPost');
+$router->add('GET', '/login', 'HomeController@loginForm');
+$router->add('POST', '/login', 'HomeController@login');
 $router->add('GET', '/logout', 'HomeController@logout');
 
+// ========== Clients routes ===================================================
+
 $router->add('GET', '/clients/', 'ClientController@index');
-$router->add('GET', '/clients/add', 'ClientController@add');
-$router->add('POST', '/clients/add', 'ClientController@add');
-$router->add('GET', '/clients/addCountry', 'ClientController@addCountry');
+$router->add('GET', '/clients/add', 'ClientController@addClientForm');
+$router->add('POST', '/clients/add', 'ClientController@addClient');
+$router->add('GET', '/client/{client_id}', 'ClientController@view');
+$router->add('GET', '/client/{client_id}/edit', 'ClientController@editClientForm');
+$router->add('POST', '/client/{client_id}/edit', 'ClientController@editClient');
+
+$router->add('GET', '/clients/addCountry', 'ClientController@addCountryForm');
 $router->add('POST', '/clients/addCountry', 'ClientController@addCountry');
-$router->add('GET', '/clients/addCity', 'ClientController@addCity');
+$router->add('GET', '/clients/addCity', 'ClientController@addCityForm');
 $router->add('POST', '/clients/addCity', 'ClientController@addCity');
-$router->add('GET', '/clients/addStreet', 'ClientController@addStreet');
+$router->add('GET', '/clients/addStreet', 'ClientController@addStreetForm');
 $router->add('POST', '/clients/addStreet', 'ClientController@addStreet');
 $router->add('GET', '/clients/advancedSearch', 'ClientController@advancedSearch');
 $router->add('POST', '/clients/advancedSearch', 'ClientController@advancedSearch');
-$router->add('GET', '/client/{client_id}', 'ClientController@view');
-$router->add('GET', '/client/{client_id}/edit', 'ClientController@edit');
-$router->add('POST', '/client/{client_id}/edit', 'ClientController@edit');
+
 $router->add('GET', '/client/{client_id}/addContact', 'ClientController@view');
-$router->add('POST', '/client/{client_id}/addContact', 'ClientController@view');
+$router->add('POST', '/client/{client_id}/addContact', 'ClientController@addContact');
+
 $router->add('GET', '/client/{client_id}/editContact', 'ClientController@view');
-$router->add('POST', '/client/{client_id}/editContact', 'ClientController@view');
-$router->add('GET', '/client/{client_id}/contact/{contact_id}/removeContact', 'ClientController@view');
+$router->add('POST', '/client/{client_id}/contact/{contact_id}/editContact', 'ClientController@editContact');
+$router->add('GET', '/client/{client_id}/contact/{contact_id}/removeContact', 'ClientController@removeContact');
 
 // ========== Documents routes =================================================
 

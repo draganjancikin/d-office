@@ -1,16 +1,3 @@
-<?php
-function basicValidation($str){
-  return trim(htmlspecialchars($str));
-}
-require 'create_client.php';
-require 'create_contact.php';
-require 'create_country.php';
-require 'create_city.php';
-require 'create_street.php';
-require 'update_client.php';
-require 'update_contact.php';
-require 'delete_contact.php';
-?>
 <div class="col-sm-12 px-2" id="topMeni">
 
   <div class="card mb-2">

@@ -184,8 +184,7 @@
                                               ->findOneBy( array('id' =>$contact->getId()) );
       $client_contact_type = $client_contact_data->getType();
       ?>
-      <form action="/client/<?php echo $client_id ?>/editContact" method="post">
-        <input type="hidden" name="contact_id" value="<?php echo $contact->getId() ?>">
+      <form action="/client/<?php echo $client_id ?>/contact/<?php echo $contact->getId() ?>/editContact" method="post">
 
         <div class="row mb-2">
           <div class="col-sm-3">
