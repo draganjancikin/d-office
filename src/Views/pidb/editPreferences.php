@@ -7,14 +7,11 @@
   <!-- End of Tools Meni -->
 
   <!-- Main content -->
+  <div class="col-lg-12 px-2">
   <?php
-  if (!isset($search)) include 'includes/form_view.php';
-  if (isset($_GET['search'])) include '../src/Views/includes/search.php';
+  include 'includes/form_preferences.php';
   ?>
+  </div>
   <!-- Enf of Main content -->
-
-  <!-- Modals -->
-  <?php include 'includes/modals.php' ?>
-  <!-- End of Modals -->
 
 <?php include '../src/Views/includes/pageFooter.php' ?>

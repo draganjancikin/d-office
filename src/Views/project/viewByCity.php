@@ -8,13 +8,9 @@
 
   <!-- Main content -->
   <?php
-  if (!isset($search)) include 'includes/form_view.php';
+  if (!isset($search)) include 'includes/list_projects_by_city.php';
   if (isset($_GET['search'])) include '../src/Views/includes/search.php';
   ?>
   <!-- Enf of Main content -->
-
-  <!-- Modals -->
-  <?php include 'includes/modals.php' ?>
-  <!-- End of Modals -->
 
 <?php include '../src/Views/includes/pageFooter.php' ?>

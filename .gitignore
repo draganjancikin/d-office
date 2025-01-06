@@ -7,7 +7,7 @@ RolOffice v4.0.code-workspace
 /app/config/dbConfig.php
 /config/dbConfig.live.php
 /config/database/
-web/projects/upload/
+web/upload/
 
 # Ignore DEV enviroments files an folders
 /config/dbConfig.dev.php

@@ -32,17 +32,24 @@ $router->add('GET', '/client/{client_id}/editContact', 'ClientController@view');
 $router->add('POST', '/client/{client_id}/editContact', 'ClientController@view');
 $router->add('GET', '/client/{client_id}/contact/{contact_id}/removeContact', 'ClientController@view');
 
+// ========== Documents routes =================================================
+
 $router->add('GET', '/pidbs/', 'PidbController@index');
-$router->add('GET', '/pidbs/add', 'PidbController@add');
+$router->add('GET', '/pidbs/preferences', 'PidbController@editPreferencesForm');
+$router->add('POST', '/pidbs/preferences', 'PidbController@editPreferences');
+$router->add('GET', '/pidbs/add', 'PidbController@addForm');
 $router->add('POST', '/pidbs/add', 'PidbController@add');
+
 $router->add('GET', '/pidb/{pidb_id}', 'PidbController@view');
+$router->add('GET', '/pidb/{pidb_id}/edit', 'PidbController@editForm');
+$router->add('POST', '/pidb/{pidb_id}/edit', 'PidbController@edit');
+
+$router->add('POST', '/pidb/{pidb_id}/addArticle', 'PidbController@addArticle');
+
 $router->add('GET', '/pidb/{pidb_id}/print', 'PidbController@printAccountingDocument');
 $router->add('GET', '/pidb/{pidb_id}/printW', 'PidbController@printAccountingDocumentW');
 $router->add('GET', '/pidb/{pidb_id}/printI', 'PidbController@printAccountingDocumentI');
 $router->add('GET', '/pidb/{pidb_id}/printIW', 'PidbController@printAccountingDocumentIW');
-$router->add('GET', '/pidb/{pidb_id}/edit', 'PidbController@edit');
-$router->add('POST', '/pidb/{pidb_id}/edit', 'PidbController@edit');
-$router->add('POST', '/pidb/{pidb_id}/addArticle', 'PidbController@view');
 $router->add('GET', '/pidb/{pidb_id}/exportProformaToDispatch', 'PidbController@exportProformaToDispatch');
 $router->add('POST', '/pidb/{pidb_id}/addPayment', 'PidbController@view');
 $router->add('POST', '/pidb/{pidb_id}/article/{pidb_article_id}/edit', 'PidbController@editArticleInAccountingDocument');
@@ -123,6 +130,33 @@ $router->add('GET', '/admin/base-backup', 'AdminController@baseBackup');
 $router->add('GET', '/admin/company-info', 'AdminController@viewCompanyInfo');
 $router->add('GET', '/admin/company-info/edit', 'AdminController@editCompanyInfoForm');
 $router->add('POST', '/admin/company-info/edit', 'AdminController@editCompanyInfo');
+
+// ========== Projects routes ====================================================
+$router->add('GET', '/projects/', 'ProjectController@index');
+$router->add('GET', '/projects/by-city', 'ProjectController@viewByCity');
+$router->add('GET', '/projects/add', 'ProjectController@addForm');
+$router->add('POST', '/projects/add', 'ProjectController@add');
+
+$router->add('GET', '/project/{project_id}', 'ProjectController@view');
+$router->add('GET', '/project/{project_id}/edit', 'ProjectController@editForm');
+$router->add('POST', '/project/{project_id}/edit', 'ProjectController@edit');
+$router->add('GET', '/project/{project_id}/printProjectTaskWithNotes', 'ProjectController@printProjectTaskWithNotes');
+$router->add('GET', '/project/{project_id}/printProjectTask', 'ProjectController@printProjectTask');
+$router->add('GET', '/project/{project_id}/printInstallationRecord', 'ProjectController@printInstallationRecord');
+$router->add('POST', '/project/{project_id}/addFile', 'ProjectController@addFileToProject');
+
+$router->add('POST', '/project/{project_id}/task/add', 'ProjectController@addTask');
+$router->add('GET', '/project/{project_id}/task/{task_id}/edit', 'ProjectController@editTaskForm');
+$router->add('POST', '/project/{project_id}/task/{task_id}/edit', 'ProjectController@editTask');
+$router->add('GET', '/project/{project_id}/task/{task_id}/delete', 'ProjectController@deleteTask');
+
+$router->add('POST', '/project/{project_id}/note/add', 'ProjectController@addNote');
+$router->add('GET', '/project/{project_id}/note/{note_id}/delete', 'ProjectController@deleteNote');
+
+$router->add('GET', '/project/{project_id}/task/{task_id}/setStartDate', 'ProjectController@setStartDate');
+$router->add('GET', '/project/{project_id}/task/{task_id}/setEndDate', 'ProjectController@setEndDate');
+$router->add('POST', '/project/{project_id}/task/{task_id}/addNote', 'ProjectController@addTaskNote');
+$router->add('GET', '/project/{project_id}/task/{task_id}/note/{note_id}/delete', 'ProjectController@deleteTaskNote');
 
 // Get the current request URL.
 $requestUri = $_SERVER['REQUEST_URI'];

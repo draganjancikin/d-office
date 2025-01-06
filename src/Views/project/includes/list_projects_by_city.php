@@ -1,28 +1,24 @@
 <?php
-$city = $entityManager->find("\App\Entity\City", $city_id);
 if (!$city){
   $city_name = '<spam class="text-warning"> Traženo mesto ne postoji!</spam>';
 }
 else {
   $city_name = $city->getName();
 }
-
 ?>
-
 <div class="card mb-4">
   <div class="card-header p-2">
     <h6 class="d-inline m-0 text-dark">
         Aktivni projekti iz mesta: <span class="text-primary"><?php echo $city_name; ?></span>
     </h6>
     <div class="float-right">
-      <form method="get">
+      <form method="get" action="/projects/by-city">
 
         <div class="row mb-2">
           <div class="col-sm-7">
-            <select class="form-select form-select-sm" name="city_id">
+            <select class="form-select form-select-sm" name="city_id" required>
               <option value="">Izaberi naselje</option>
               <?php
-              $cities = $entityManager->getRepository('\App\Entity\Project')->getCitiesByActiveProject();
               foreach ($cities as $city) :
                 ?>
                 <option value="<?php echo $city['id'] ?>"><?php echo $city['name'] ?></option>

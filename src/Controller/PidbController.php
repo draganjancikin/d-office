@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Core\BaseController;
+use App\Entity\AccountingDocument;
+use App\Entity\AccountingDocumentArticle;
+use App\Entity\AccountingDocumentArticleProperty;
 
 /**
  * PidbController class
@@ -39,10 +42,11 @@ class PidbController extends BaseController {
 
     $this->render('index', $data);
   }
+
   /**
    * @return void
    */
-  public function add() {
+  public function addForm($client_id = NULL, $project_id = NULL) {
     $data = [
       'page_title' => 'Dokumenti',
       'stylesheet' => '../libraries/',
@@ -57,6 +61,66 @@ class PidbController extends BaseController {
     $this->isUserNotLoggedIn();
 
     $this->render('add', $data);
+  }
+
+  /**
+   * Add new Accounting Document.
+   *
+   * @return void
+   */
+  public function add(): void {
+    $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+
+    $ordinal_num_in_year = 0;
+
+    $client_id = htmlspecialchars($_POST["client_id"]);
+    $client = $this->entityManager->find("\App\Entity\Client", $client_id);
+
+    $accd_type_id = htmlspecialchars($_POST["pidb_type_id"]);
+    $accd_type = $this->entityManager->find("\App\Entity\AccountingDocumentType", $accd_type_id);
+
+    $title = htmlspecialchars($_POST["title"]);
+    $note = htmlspecialchars($_POST["note"]);
+
+    // Create a new AccountingDocument.
+    $newAccountingDocument = new AccountingDocument();
+
+    $newAccountingDocument->setOrdinalNumInYear($ordinal_num_in_year);
+    $newAccountingDocument->setDate(new \DateTime("now"));
+    $newAccountingDocument->setIsArchived(0);
+
+    $newAccountingDocument->setType($accd_type);
+    $newAccountingDocument->setClient($client);
+    $newAccountingDocument->setTitle($title);
+    $newAccountingDocument->setNote($note);
+
+    $newAccountingDocument->setCreatedAt(new \DateTime("now"));
+    $newAccountingDocument->setCreatedByUser($user);
+    $newAccountingDocument->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
+
+    $this->entityManager->persist($newAccountingDocument);
+    $this->entityManager->flush();
+
+    // Get id of last AccountingDocument.
+    $new_accounting_document_id = $newAccountingDocument->getId();
+
+    // Set Ordinal Number In Year.
+    $this->entityManager->getRepository('App\Entity\AccountingDocument')->setOrdinalNumInYear($new_accounting_document_id);
+
+
+    if (isset($_POST["project_id"])) {
+      $project_id = htmlspecialchars($_POST["project_id"]);
+      $project = $this->entityManager->find("\App\Entity\Project", $project_id);
+
+      $project->getAccountingDocuments()->add($newAccountingDocument);
+
+      $this->entityManager->flush();
+    }
+    else {
+      $project_id = NULL;
+    }
+
+    die('<script>location.href = "/pidb/'.$new_accounting_document_id.'" </script>');
   }
 
   /**
@@ -100,7 +164,7 @@ class PidbController extends BaseController {
    *
    * @return void
    */
-  public function edit($pidb_id) {
+  public function editForm($pidb_id): void {
     $pidb_data = $this->entityManager->find('\App\Entity\AccountingDocument', $pidb_id);
 
     // get client data from $pidb_data
@@ -129,7 +193,101 @@ class PidbController extends BaseController {
     $this->render('edit', $data);
   }
 
-  public function printAccountingDocument($pidb_id) {
+  /**
+   * @param $pidb_id
+   * @return void
+   */
+  public function edit($pidb_id): void {
+    $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+
+    $accounting_document = $this->entityManager->find("\App\Entity\AccountingDocument", $pidb_id);
+
+    $title = htmlspecialchars($_POST["title"]);
+
+    $client_id = htmlspecialchars($_POST["client_id"]);
+    $client = $this->entityManager->find("\App\Entity\Client", $client_id);
+
+    $is_archived = htmlspecialchars($_POST["archived"]);
+    $note = htmlspecialchars($_POST["note"]);
+
+    $accounting_document->setTitle($title);
+    $accounting_document->setClient($client);
+    $accounting_document->setIsArchived($is_archived);
+    $accounting_document->setNote($note);
+    $accounting_document->setModifiedByUser($user);
+    $accounting_document->setModifiedAt(new \DateTime("now"));
+
+    $this->entityManager->flush();
+
+    die('<script>location.href = "/pidb/'.$pidb_id.'" </script>');
+  }
+
+  /**
+   * Add article to Accounting Document.
+   *
+   * @param $pidb_id
+   *
+   * @return void
+   */
+  public function addArticle($pidb_id): void {
+
+    $accounting_document = $this->entityManager->find("\App\Entity\AccountingDocument", $pidb_id);
+
+    $article_id = htmlspecialchars($_POST["article_id"]);
+    $article = $this->entityManager->find("\App\Entity\Article", $article_id);
+
+    $price = $article->getPrice();
+    $discount = 0;
+    $weight = $article->getWeight();
+    $pieces = htmlspecialchars($_POST["pieces"]);
+
+    $preferences = $this->entityManager->find('App\Entity\Preferences', 1);
+    $tax = $preferences->getTax();
+
+    $note = htmlspecialchars($_POST["note"]);
+
+    $newAccountingDocumentArticle = new AccountingDocumentArticle();
+
+    $newAccountingDocumentArticle->setAccountingDocument($accounting_document);
+    $newAccountingDocumentArticle->setArticle($article);
+    $newAccountingDocumentArticle->setPieces($pieces);
+    $newAccountingDocumentArticle->setPrice($price);
+    $newAccountingDocumentArticle->setDiscount($discount);
+    $newAccountingDocumentArticle->setTax($tax);
+    $newAccountingDocumentArticle->setWeight($weight);
+    $newAccountingDocumentArticle->setNote($note);
+
+    $this->entityManager->persist($newAccountingDocumentArticle);
+    $this->entityManager->flush();
+
+    // Last inserted Accounting Document Article.
+    // $last__accounting_document__article_id = $newAccountingDocumentArticle->getId();
+
+    // Insert Article properties in table v6__accounting_documents__articles__properties.
+    $article_properties = $this->entityManager->getRepository('\App\Entity\ArticleProperty')->getArticleProperties($article->getId());
+    foreach ($article_properties as $article_property) {
+      // Insert to table v6__accounting_documents__articles__properties.
+      $newAccountingDocumentArticleProperty = new AccountingDocumentArticleProperty();
+
+      $newAccountingDocumentArticleProperty->setAccountingDocumentArticle($newAccountingDocumentArticle);
+      $newAccountingDocumentArticleProperty->setProperty($article_property->getProperty());
+      $newAccountingDocumentArticleProperty->setQuantity(0);
+
+      $this->entityManager->persist($newAccountingDocumentArticleProperty);
+      $this->entityManager->flush();
+    }
+
+    die('<script>location.href = "/pidb/' . $pidb_id . ' " </script>');
+  }
+
+  /**
+   * Print Accounting Document.
+   *
+   * @param $pidb_id
+   *
+   * @return void
+   */
+  public function printAccountingDocument($pidb_id): void {
     $data = [
       'entityManager' => $this->entityManager,
       'accounting_document__id' => $pidb_id,
@@ -140,7 +298,14 @@ class PidbController extends BaseController {
     $this->render('printAccountingDocument', $data);
   }
 
-  public function printAccountingDocumentW($pidb_id) {
+  /**
+   * Print Accounting Document W.
+   *
+   * @param $pidb_id
+   *
+   * @return void
+   */
+  public function printAccountingDocumentW($pidb_id): void {
     $data = [
       'entityManager' => $this->entityManager,
       'accounting_document__id' => $pidb_id,
@@ -151,7 +316,14 @@ class PidbController extends BaseController {
     $this->render('printAccountingDocumentW', $data);
   }
 
-  public function printAccountingDocumentI($pidb_id) {
+  /**
+   * Print Accounting Document I.
+   *
+   * @param $pidb_id
+   *
+   * @return void
+   */
+  public function printAccountingDocumentI($pidb_id): void {
     $data = [
       'entityManager' => $this->entityManager,
       'accounting_document__id' => $pidb_id,
@@ -162,7 +334,14 @@ class PidbController extends BaseController {
     $this->render('printAccountingDocumentI', $data);
   }
 
-  public function printAccountingDocumentIW($pidb_id) {
+  /**
+   * Print Accounting Document IW.
+   *
+   * @param $pidb_id
+   *
+   * @return void
+   */
+  public function printAccountingDocumentIW($pidb_id): void {
     $data = [
       'entityManager' => $this->entityManager,
       'accounting_document__id' => $pidb_id,
@@ -173,7 +352,15 @@ class PidbController extends BaseController {
     $this->render('printAccountingDocumentIW', $data);
   }
 
-  public function exportProformaToDispatch($pidb_id) {
+  /**
+   * Export Proforma to Dispatch.
+   *
+   * @param $pidb_id
+   *
+   * @return void
+   * @throws \Doctrine\DBAL\Exception
+   */
+  public function exportProformaToDispatch($pidb_id): void {
     // Current logged user.
     $user_id = $this->user_id;
     $user = $this->entityManager->find("\App\Entity\User", $user_id);
@@ -282,7 +469,15 @@ class PidbController extends BaseController {
     die('<script>location.href = "/pidb/'.$last_accounting_document_id.'" </script>');
   }
 
-  public function editArticleInAccountingDocument($pidb_id, $pidb_article_id) {
+  /**
+   * Edit article in Accounting Document.
+   *
+   * @param $pidb_id
+   * @param $pidb_article_id
+   *
+   * @return void
+   */
+  public function editArticleInAccountingDocument($pidb_id, $pidb_article_id): void {
     $accounting_document__article_id = $pidb_article_id;
 
     $note = htmlspecialchars($_POST["note"]);
@@ -322,6 +517,13 @@ class PidbController extends BaseController {
     die('<script>location.href = "/pidb/'.$pidb_id.'" </script>');
   }
 
+  /**
+   * Document transactions.
+   *
+   * @param $pidb_id
+   *
+   * @return void
+   */
   public function transactions($pidb_id) {
     $pidb_data = $this->entityManager->find('\App\Entity\AccountingDocument', $pidb_id);
     $transactions = $this->entityManager->getRepository('\App\Entity\AccountingDocument')->getLastTransactions(10);
@@ -345,7 +547,15 @@ class PidbController extends BaseController {
     $this->render('transactions', $data);
   }
 
-  public function formEditTransaction($pidb_id, $transaction_id) {
+  /**
+   * Edit transaction form.
+   *
+   * @param $pidb_id
+   * @param $transaction_id
+   *
+   * @return void
+   */
+  public function formEditTransaction($pidb_id, $transaction_id): void {
     $pidb_data = $this->entityManager->find('\App\Entity\AccountingDocument', $pidb_id);
     $transaction = $this->entityManager->find('\App\Entity\Payment', $transaction_id);
     $client_id = $pidb_data->getClient()->getId();
@@ -369,7 +579,16 @@ class PidbController extends BaseController {
     $this->render('transaction', $data);
   }
 
-  public function editTransaction($pidb_id, $transaction_id) {
+  /**
+   * Edit transaction.
+   *
+   * @param $pidb_id
+   * @param $transaction_id
+   *
+   * @return void
+   * @throws \DateMalformedStringException
+   */
+  public function editTransaction($pidb_id, $transaction_id): void {
     $transaction = $this->entityManager->find("\App\Entity\Payment", $transaction_id);
 
     $type_id = htmlspecialchars($_POST["type_id"]);
@@ -390,12 +609,60 @@ class PidbController extends BaseController {
     die('<script>location.href = "/pidb/' . $pidb_id . '/transactions" </script>');
   }
 
-  public function deleteTransaction($pidb_id, $transaction_id) {
+  /**
+   * Delete transaction.
+   *
+   * @param $pidb_id
+   * @param $transaction_id
+   *
+   * @return void
+   */
+  public function deleteTransaction($pidb_id, $transaction_id): void {
     $transaction = $this->entityManager->find("\App\Entity\Payment", $transaction_id);
     $this->entityManager->remove($transaction);
     $this->entityManager->flush();
 
     die('<script>location.href = "/pidb/' . $pidb_id . '/transactions" </script>');
+  }
+
+  /**
+   * Edit preferences form.
+   *
+   * @return void
+   */
+  public function editPreferencesForm(): void {
+    $preferences = $this->entityManager->find('App\Entity\Preferences', 1);
+    $data = [
+      'page_title' => 'Dokumenti',
+      'stylesheet' => '/../libraries/',
+      'username' => $this->username,
+      'user_role_id' => $this->user_role_id,
+      'page' => 'pidb',
+      'preferences' => $preferences,
+    ];
+
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
+
+    $this->render('editPreferences', $data);
+  }
+
+  /**
+   * Edit Preferences.
+   *
+   * @return void
+   */
+  public function editPreferences(): void {
+    $kurs = str_replace(",", ".", htmlspecialchars($_POST["kurs"]));
+    $tax = str_replace(",", ".", htmlspecialchars($_POST["tax"]));
+
+    $preferences = $this->entityManager->find('\App\Entity\Preferences', 1);
+
+    $preferences->setKurs($kurs);
+    $preferences->setTax($tax);
+    $this->entityManager->flush();
+
+    die('<script>location.href = "/pidbs/preferences" </script>');
   }
 
   /**

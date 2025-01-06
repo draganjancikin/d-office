@@ -1,8 +1,4 @@
 <?php
-require 'update_preferences.php';
-require 'create__accounting_document.php';
-require 'update__accounting_document.php';
-require 'add__article__to__accounting_document.php';
 require 'add__payment__to__accounting_document.php';
 require 'delete__transaction.php';
 require 'change__article__in__accounting_document.php';
@@ -91,7 +87,8 @@ require 'delete_accounting_document.php';
               </button>
             </a>
 
-            <a href="/projects/index.php?new&client_id=<?php echo $pidb_data->getClient()->getId() ?>&acc_doc_id=<?php echo $pidb_id ?>">
+            <a href="/projects/add?client_id=<?php echo $pidb_data->getClient()->getId() ?>&acc_doc_id=<?php echo
+            $pidb_id ?>">
               <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Novi projekat!">
                 <i class="fas fa-share"> </i> <i class="fas fa-project-diagram"></i>
               </button>

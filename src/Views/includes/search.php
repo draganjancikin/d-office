@@ -56,7 +56,6 @@ if ($page == "clients"):
 endif;
 
 if ($page == "pidbs"):
-  require '../../templates/pidb/includes/delete_accounting_document.php';
   $term = filter_input(INPUT_GET, 'search');
   $last_pidb = $entityManager->getRepository('\App\Entity\AccountingDocument')->getLastAccountingDocument();
   ?>
@@ -699,7 +698,7 @@ if ($page == "article"):
   <?php
 endif;
 
-if ($page == "projects"):
+if ($page == "project"):
   $term = filter_input(INPUT_GET, 'search');
   $project_list = $entityManager->getRepository('\App\Entity\Project')->search($term);
   ?>
@@ -738,7 +737,8 @@ if ($page == "projects"):
                 ?>
                 <tr>
                   <td>
-                    <a href="?view&project_id=<?php echo $project_item->getId(); ?>" class="d-block card-link" title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
+                    <a href="/project/<?php echo $project_item->getId() ?>" class="d-block card-link"
+                       title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
                       #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
                     </a>
                     <?php
@@ -1035,7 +1035,8 @@ if ($page == "projects"):
               ?>
               <tr>
                 <td>
-                  <a href="?view&project_id=<?php echo $project_item->getId() ?>" class="d-block card-link" title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
+                  <a href="/project/<?php echo $project_item->getId() ?>" class="d-block card-link"
+                     title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
                     #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
                   </a>
                   <?php

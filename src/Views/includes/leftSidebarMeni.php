@@ -43,7 +43,7 @@
         <a class="collapse-item" href="/pidb/?transactions">Transakcije</a>
         <a class="collapse-item" href="/pidb/?cashRegister">Kasa</a>
         <a class="collapse-item" href="/pidbs/add"><i class="fas fa-plus"></i> Novi dokument</a>
-        <a class="collapse-item" href="/pidb/index.php?set"><i class="fas fa-cog"></i> Podešavanja</a>
+        <a class="collapse-item" href="/pidbs/preferences"><i class="fas fa-cog"></i> Podešavanja</a>
       </div>
     </div>
     </li>
@@ -144,7 +144,7 @@
     <div id="projekti" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <a class="collapse-item" href="/projects/">Projekti</a>
-        <a class="collapse-item" href="/projects/index.php?new"><i class="fas fa-plus"></i> Novi Projekat</a>
+        <a class="collapse-item" href="/projects/add"><i class="fas fa-plus"></i> Novi Projekat</a>
         <a class="collapse-item" href="/projects/index.php?advancedSearch"><i class="fa fa-search"></i> Detajna pretraga</a>
         <?php
         if ($user_role_id == 1):

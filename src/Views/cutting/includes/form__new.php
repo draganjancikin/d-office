@@ -19,8 +19,6 @@
           <select id="selectClientId" class="form-select form-select-sm" name="client_id" required>
             <?php
           if (isset($_GET['client_id'])){
-            $client_id = htmlspecialchars($_GET["client_id"]);
-            $client_data = $entityManager->find('\App\Entity\Client', $client_id);
             echo '<option value="'.$client_data->getId().'">'.$client_data->getName().'</option>';
           }
           else {

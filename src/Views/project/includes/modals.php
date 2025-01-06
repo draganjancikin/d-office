@@ -10,7 +10,7 @@
         </button>
       </div>
 
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?view&project_id=' .$project_id. '&createTask' ?>" method="post">
+      <form action="<?php echo '/project/' . $project_id . '/task/add' ?>" method="post">
 
         <input type="hidden" name="status_id" value="1">
         
@@ -68,7 +68,7 @@
         </button>
       </div>
 
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?view&project_id=' .$project_id. '&addNote'; ?>" method="post" >
+      <form action="<?php echo '/project/' .$project_id. '/note/add' ?>" method="post" >
         
         <div class="modal-body">
         
@@ -100,13 +100,14 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title">Dodaj fajl uz nalog (jpg, png, pdf)</h5>
+        <h5 class="modal-title">Dodaj fajl uz projekat (jpg, png, pdf)</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
 
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?view&project_id=' .$project_id. '&addFile'; ?>" method="post" enctype="multipart/form-data">
+      <form action="<?php echo '/project/' . $project_id . '/addFile'; ?>" method="post"
+            enctype="multipart/form-data">
 
         <div class="modal-body">
           <div class="row mb-2">
@@ -144,7 +145,8 @@
         </button>
       </div>
 
-      <form action="<?php echo $_SERVER['PHP_SELF'] . '?view&project_id=' .$project_id. '&task_id=' .$task_id. '&addTaskNote'; ?>" method="post" >
+      <form action="<?php echo '/project/' . $project_id . '/task/' . $task_id . '/addNote' ?>"
+            method="post" >
 
         <div class="modal-body">
 

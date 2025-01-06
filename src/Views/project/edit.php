@@ -8,7 +8,7 @@
 
   <!-- Main content -->
   <?php
-  if (!isset($search)) include 'includes/form_view.php';
+  if (!isset($search)) include 'includes/form_edit_project.php';
   if (isset($_GET['search'])) include '../src/Views/includes/search.php';
   ?>
   <!-- Enf of Main content -->

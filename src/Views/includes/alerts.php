@@ -8,12 +8,12 @@
         $name = ($_GET['name']);
         ?>
         <div class="col-lg-8">
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Obaveštenje!</strong>  Izvršen je "Back up" baze u fajl: C:/<?php echo $name;?>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Obaveštenje!</strong>  Izvršen je "Back up" baze u fajl: C:/<?php echo $name;?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
         </div>
         <?php
         break;
@@ -21,9 +21,9 @@
         ?>
         <!-- NEW CODE -->
         <div class="col-lg-8">
-            <div class="alert alert-warning" role="alert">
-                <strong>Pažnja!</strong> Unos postoji u bazi.
-            </div>
+          <div class="alert alert-warning" role="alert">
+            <strong>Pažnja!</strong> Unos postoji u bazi.
+          </div>
         </div>
         <?php
         break;

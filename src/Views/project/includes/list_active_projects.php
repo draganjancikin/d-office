@@ -3,13 +3,12 @@
   <div class="card-header p-2">
     <h6 class="d-inline m-0 text-dark">Aktivni projekti</h6>
     <div class="float-right">
-      <form method="get">
+      <form method="get" action="/projects/by-city">
         <div class="row mb-2">
           <div class="col-sm-7">
-            <select class="form-select form-select-sm" name="city_id">
+            <select class="form-select form-select-sm" name="city_id" required>
               <option value="">Izaberi naselje</option>
               <?php
-              $cities = $entityManager->getRepository('\App\Entity\Project')->getCitiesByActiveProject();
               foreach ($cities as $city) :
                 ?>
                 <option value="<?php echo $city['id'] ?>"><?php echo $city['name'] ?></option>
@@ -55,15 +54,15 @@
             ?>
             <tr>
               <td>
-                <a href="?view&project_id=<?php echo $project_item->getId(); ?>" class="d-block card-link"
+                <a href="/project/<?php echo $project_item->getId() ?>" class="d-block card-link"
                   title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
                   #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
                 </a>
                 <?php
                   echo $project_item->getClient()->getName()
-                  . ($project_item->getClient()->getCity()
-                  ? ', <span style="font-size: 0.9em;">' . $project_item->getClient()->getCity()->getName() . '</span>'
-                  : '')
+                    . ($project_item->getClient()->getCity()
+                      ? ', <span style="font-size: 0.9em;">' . $project_item->getClient()->getCity()->getName() . '</span>'
+                      : '')
                 ?>
               </td>
               <td>
@@ -195,7 +194,7 @@
             ?>
             <tr>
               <td>
-                <a href="?view&project_id=<?php echo $project_item->getId(); ?>" class="d-block card-link"
+                <a href="/project/<?php echo $project_item->getId() ?>" class="d-block card-link"
                   title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
                   #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
                 </a>

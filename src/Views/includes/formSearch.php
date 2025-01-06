@@ -4,14 +4,14 @@ $url = explode('/', $_GET['url']);
 
 switch ($url[0]) {
 
+  case 'articles':
+  case 'article':
+    $action = '/articles/';
+    break;
+
   case 'clients':
   case 'client':
     $action = '/clients/';
-    break;
-
-  case 'pidbs':
-  case 'pidb':
-    $action = '/pidbs/';
     break;
 
   case 'cuttings':
@@ -29,9 +29,14 @@ switch ($url[0]) {
     $action = '/orders/';
     break;
 
-  case 'articles':
-  case 'article':
-    $action = '/articles/';
+  case 'pidbs':
+  case 'pidb':
+    $action = '/pidbs/';
+    break;
+
+  case 'projects':
+  case 'project':
+    $action = '/projects/';
     break;
 
   default:

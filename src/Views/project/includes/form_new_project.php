@@ -8,11 +8,11 @@
       </div>
 
       <div class="card-body p-2">
-        <form action="<?php echo $_SERVER['PHP_SELF'] . '?createProject'; ?>" method="post">
+        <form action="<?php echo '/projects/add' ?>" method="post">
 
           <?php
-          if( isset($_GET['acc_doc_id']) ):
-            // hiden input for $pidb_id.
+          if (isset($_GET['acc_doc_id']) ):
+             // hiden input for $pidb_id.
             ?>
             <input type="hidden" name="acc_doc_id" value="<?php echo $_GET['acc_doc_id'] ?>">
             <?php
@@ -50,7 +50,6 @@
                   echo '<option value="">Izaberi klijenta</option>';
                 }
 
-                $clients_list = $entityManager->getRepository('\App\Entity\Client')->findBy(array(), array('name' => "ASC"));
                 foreach ($clients_list as $client_item):
                   ?>
                   <option value="<?php echo $client_item->getId() ?>">

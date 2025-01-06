@@ -46,8 +46,11 @@ class CuttingController extends BaseController {
    *
    * @return void
    */
-  public function formAdd(): void {
+  public function formAdd($project_id = NULL, $client_id = NULL): void {
     $clients_list = $this->entityManager->getRepository('\App\Entity\Client')->findBy(array(), array('name' => "ASC"));
+    if ($client_id) {
+      $client_data = $this->entityManager->find('\App\Entity\Client', $client_id);
+    }
 
     $data = [
       'page_title' => 'Krojne liste',
@@ -56,6 +59,8 @@ class CuttingController extends BaseController {
       'user_role_id' => $this->user_role_id,
       'page' => 'cutting',
       'clients_list' => $clients_list,
+      'client_id' => $client_id,
+      'client_data' => $client_data ?? NULL,
     ];
 
     // If the user is not logged in, redirect them to the login page.
@@ -69,12 +74,14 @@ class CuttingController extends BaseController {
    *
    * @return void
    */
-  public function add(): void {
+  public function add($project_id = NULL, $client_id = NULL): void {
     $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
 
     $ordinal_num_in_year = 0;
 
-    $client_id = htmlspecialchars($_POST['client_id']);
+    if (!$client_id) {
+      $client_id = htmlspecialchars($_POST['client_id']);
+    }
     $client = $this->entityManager->find("\App\Entity\Client", $client_id);
 
     $newCuttingSheet = new CuttingSheet();
