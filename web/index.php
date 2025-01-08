@@ -48,6 +48,7 @@ $router->add('POST', '/pidbs/add', 'PidbController@add');
 $router->add('GET', '/pidb/{pidb_id}', 'PidbController@view');
 $router->add('GET', '/pidb/{pidb_id}/edit', 'PidbController@editForm');
 $router->add('POST', '/pidb/{pidb_id}/edit', 'PidbController@edit');
+$router->add('GET', '/pidb/{pidb_id}/delete', 'PidbController@delete');
 
 $router->add('POST', '/pidb/{pidb_id}/addArticle', 'PidbController@addArticle');
 
@@ -56,8 +57,13 @@ $router->add('GET', '/pidb/{pidb_id}/printW', 'PidbController@printAccountingDoc
 $router->add('GET', '/pidb/{pidb_id}/printI', 'PidbController@printAccountingDocumentI');
 $router->add('GET', '/pidb/{pidb_id}/printIW', 'PidbController@printAccountingDocumentIW');
 $router->add('GET', '/pidb/{pidb_id}/exportProformaToDispatch', 'PidbController@exportProformaToDispatch');
-$router->add('POST', '/pidb/{pidb_id}/addPayment', 'PidbController@view');
+$router->add('POST', '/pidb/{pidb_id}/addPayment', 'PidbController@addPayment');
 $router->add('POST', '/pidb/{pidb_id}/article/{pidb_article_id}/edit', 'PidbController@editArticleInAccountingDocument');
+$router->add('GET', '/pidb/{pidb_id}/article/{pidb_article_id}/change', 'PidbController@changeArticleInAccountingDocumentForm');
+$router->add('POST', '/pidb/{pidb_id}/article/{pidb_article_id}/change', 'PidbController@changeArticleInAccountingDocument');
+$router->add('GET', '/pidb/{pidb_id}/article/{pidb_article_id}/duplicate', 'PidbController@duplicateArticleInAccountingDocument');
+$router->add('GET', '/pidb/{pidb_id}/article/{pidb_article_id}/delete', 'PidbController@deleteArticleInAccountingDocument');
+
 $router->add('GET', '/pidb/{pidb_id}/transactions', 'PidbController@transactions');
 $router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@formEditTransaction');
 $router->add('POST', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@editTransaction');

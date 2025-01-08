@@ -1,29 +1,5 @@
 <?php
-switch ($pidb_data->getType()->getId()) {
-  case 1:
-    $vrsta = "Predračun";
-    $oznaka = "P_";
-    $style = 'info';
-    break;
 
-  case 2:
-    $vrsta = "Otpremnica";
-    $oznaka = "O_";
-    $style = 'secondary';
-    break;
-
-  case 4:
-    $vrsta = "Povratnica";
-    $oznaka = "POV_";
-    $style = 'warning';
-    break;
-
-  default:
-    $vrsta = "_";
-    $oznaka = "_";
-    $style = 'default';
-    break;
-}
 ?>
 <div class="card border-<?php echo $style; ?> mb-4">
   <div class="card-header bg-<?php echo $style; ?> p-2">
@@ -108,7 +84,6 @@ switch ($pidb_data->getType()->getId()) {
             <form action="<?php echo '/pidb/' . $pidb_id . '/article/' . $ad_article->getId() ?>/edit"
                   class="form-horizontal" role="form"
                   method="post">
-<!--            <form action="--><?php //echo $_SERVER['PHP_SELF'] . '?editArticleInAccountingDocument&pidb_id=' . $pidb_id . '&pidb_article_id=' . $ad_article->getId(); ?><!--" class="form-horizontal" role="form" method="post">-->
               <input type="hidden" name="article_id" value="<?php echo $ad_article->getId() ?>" />
               <input type="hidden" name="pidb_tip_id" value="<?php echo $pidb_data->getType()->getId() ?>" />
               <tr>
@@ -176,15 +151,20 @@ switch ($pidb_data->getType()->getId()) {
                     <i class="fas fa-save" title="Snimi izmenu"> </i>
                   </button>
 
-                  <a href="<?php echo $_SERVER['PHP_SELF']. '?editArticle&pidb_article_id=' . $ad_article->getId() . '&pidb_id='.$pidb_id.'&pidb_tip_id=' . $pidb_data->getType()->getId() ?>" class="btn btn-mini btn-outline-info px-1">
+                  <a href="<?php echo '/pidb/' . $pidb_id . '/article/' . $ad_article->getId() . '/change' ?>"
+                  class="btn btn-mini
+                  btn-outline-info px-1">
                     <i class="fas fa-edit" title="Promeni artikal"> </i>
                   </a>
 
-                  <a href="<?php echo $_SERVER['PHP_SELF'] . '?duplicateArticleInAccountingDocument&pidb_id=' . $pidb_id . '&pidb_tip_id=' .$pidb_data->getType()->getId() . '&pidb_article_id=' .$ad_article->getId() ?>" class="btn btn-mini btn-outline-info px-1">
+                  <a href="<?php echo '/pidb/' . $pidb_id . '/article/' . $ad_article->getId() . '/duplicate' ?>"
+                     class="btn btn-mini btn-outline-info px-1">
                     <i class="fas fa-plus" title="Dupliciraj artikal"> </i>
                   </a>
 
-                  <a onClick="javascript: return confirm('Da li ste sigurni da želite da uklonite artikal iz dokumenta?')"  href="<?php echo $_SERVER['PHP_SELF']. '?removeArticlefromAccountingDocument&pidb_id='.$pidb_id.'&pidb_article_id=' .$ad_article->getId() ?>" class="btn btn-mini btn-outline-danger px-1">
+                  <a onClick="javascript: return confirm('Da li ste sigurni da želite da uklonite artikal iz ' +
+                   'dokumenta?')"  href="<?php echo '/pidb/' . $pidb_id . '/article/' .$ad_article->getId() ?>/delete"
+                     class="btn btn-mini btn-outline-danger px-1">
                     <i class="fas fa-trash" title="Obriši artikal"> </i>
                   </a>
                 </td>

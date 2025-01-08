@@ -1,12 +1,3 @@
-<?php
-require 'add__payment__to__accounting_document.php';
-require 'delete__transaction.php';
-require 'change__article__in__accounting_document.php';
-require 'duplicate__article__in__accounting_document.php';
-require 'remove__article__from__accounting_document.php';
-require 'export__proforma__to__dispatch.php';
-require 'delete_accounting_document.php';
-?>
 <div class="col-lg-12 px-2" id="topMeni">
 
   <div class="card mb-2">
@@ -20,9 +11,7 @@ require 'delete_accounting_document.php';
         if (isset($_GET['url'])) {
           $url = $_GET['url'];
           $url = explode('/', $url);
-//          if (!$pidb_data) {
-//            die('<script>location.href = "/pidbs/"</script>');
-//          }
+
           // In view case show edit button.
           if (count($url) == 2 && $url[0] == 'pidb' && is_numeric($url[1]) && !isset($url[2])) {
             ?>

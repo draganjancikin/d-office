@@ -227,20 +227,22 @@ class AccountingDocumentRepository extends EntityRepository {
         $this->_em->flush();
     }
 
-    /**
-     * Method that rerurn ID of last AccountingDocument in db table
-     *
-     * @return object
-     */
-    public function getLastAccountingDocument() {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('ad')
-            ->from('App\Entity\AccountingDocument', 'ad')
-            ->orderBy('ad.id', 'DESC')
-            ->setMaxResults(1);
-        $query = $qb->getQuery();
-        return $query->getResult()[0];
-    }
+  /**
+   * Method that return ID of last AccountingDocument in db table
+   *
+   * @return object
+   */
+  public function getLastAccountingDocument() {
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('ad')
+        ->from('App\Entity\AccountingDocument', 'ad')
+        ->orderBy('ad.id', 'DESC')
+        ->setMaxResults(1);
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+
+    return $result[0] ?? null;
+  }
 
     /**
      * Method that rerurn ID of AccountingDocument before last in db table for given AccountingDocumentType

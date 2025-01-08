@@ -86,13 +86,12 @@ if ($page == "pidbs"):
           </tfoot>
           <tbody>
             <?php
-            $proformas = $entityManager->getRepository('\App\Entity\AccountingDocument')->search( array( 1,
-              $term, 0 ));
+            $proformas = $entityManager->getRepository('\App\Entity\AccountingDocument')->search( array( 1, $term, 0 ));
             foreach ($proformas as $proforma):
               ?>
               <tr>
                 <td>
-                  <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
+                  <a href="/pidb/<?php echo $proforma->getId() ?>">
                     P_<?php echo str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $proforma->getDate()->format('m / Y') ?>
                   </a>
                 </td>
@@ -100,7 +99,7 @@ if ($page == "pidbs"):
                 <td><?php echo $proforma->getTitle() ?></td>
                 <td>
                   <?php 
-                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="/pidb/' . $proforma->getId() . '/delete" class="btn btn-mini btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                   ?>
                 </td>
               </tr>
@@ -135,7 +134,7 @@ if ($page == "pidbs"):
               ?>
               <tr class="table-secondary">
                 <td>
-                  <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
+                  <a href="/pidb/<?php echo $proforma->getId() ?>">
                     P_<?php echo str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' .$proforma->getDate()->format('m / Y') ?>
                   </a>
                 </td>
@@ -143,7 +142,7 @@ if ($page == "pidbs"):
                 <td><?php echo $proforma->getTitle() ?></td>
                 <td>
                   <?php 
-                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="/pidb/' . $proforma->getId() . '/delete" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                   ?>
                 </td>
               </tr>
@@ -187,7 +186,7 @@ if ($page == "pidbs"):
               ?>
               <tr>
                 <td>
-                  <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
+                  <a href="/pidb/<?php echo $proforma->getId() ?>">
                     O_<?php echo str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $proforma->getDate()->format('m / Y') ?>
                   </a>
                 </td>
@@ -195,7 +194,7 @@ if ($page == "pidbs"):
                 <td><?php echo $proforma->getTitle() ?></td>
                 <td>
                   <?php
-                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma->getId(). '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="/pidb/' . $proforma->getId() . '/delete" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                   ?>
                 </td>
               </tr>
@@ -230,7 +229,7 @@ if ($page == "pidbs"):
               ?>
               <tr class="table-secondary">
                 <td>
-                  <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
+                  <a href="/pidb/<?php echo $proforma->getId() ?>">
                     O_<?php echo str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $proforma->getDate()->format('m / Y') ?>
                   </a>
                 </td>
@@ -238,7 +237,7 @@ if ($page == "pidbs"):
                 <td><?php echo $proforma->getTitle() ?></td>
                 <td>
                   <?php
-                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="' .$_SERVER['PHP_SELF']. '?search&deleteAccountingDocument&acc_doc_id=' .$proforma['id']. '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="/pidb/' . $proforma->getId() . '/delete" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                   ?>
                 </td>
               </tr>
@@ -283,7 +282,7 @@ if ($page == "pidbs"):
               ?>
               <tr>
                 <td>
-                  <a href="?view&pidb_id=<?php echo $proforma['id']; ?>">
+                  <a href="/pidb/<?php echo $proforma['id']; ?>">
                     POV_<?php echo str_pad($proforma['y_id'], 4, "0", STR_PAD_LEFT) . ' - ' . date('m / Y', strtotime($proforma['date'])); ?>
                   </a>
                 </td>
@@ -291,7 +290,7 @@ if ($page == "pidbs"):
                 <td><?php echo $proforma['title']; ?></td>
                 <td>
                   <?php
-                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="' . $_SERVER['PHP_SELF'] . '?search&deleteAccountingDocument&acc_doc_id=' . $proforma['id'] . '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete dokument?\');" href="/pidb/' . $proforma->getId() . '/delete" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                   ?>
                 </td>
               </tr>
@@ -304,7 +303,7 @@ if ($page == "pidbs"):
               ?>
               <tr class="table-secondary">
                 <td>
-                  <a href="?view&pidb_id=<?php echo $proforma->getId() ?>">
+                  <a href="/pidb/<?php echo $proforma->getId() ?>">
                       POV_<?php echo str_pad($proforma->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) . ' - ' . $proforma->getDate()->format('m / Y') ?>
                   </a>
                 </td>
@@ -312,7 +311,7 @@ if ($page == "pidbs"):
                 <td><?php echo $proforma->getTitle() ?></td>
                 <td>
                   <?php
-                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete zadatak?\');" href="' . $_SERVER['PHP_SELF'] . '?search&deleteAccountingDocument&acc_doc_id=' . $proforma['id'] . '" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
+                  echo ( $proforma->getId() == $last_pidb->getId() ? '<a onclick="javascript: return confirm(\'Da li ste sigurni da želite da obrišete zadatak?\');" href="/pidb/' . $proforma->getId() . '/delete" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i> </a>' : '');
                   ?>
                 </td>
               </tr>

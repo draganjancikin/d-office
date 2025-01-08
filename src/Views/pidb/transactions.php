@@ -14,10 +14,4 @@
   </div>
   <!-- Enf of Main content -->
 
-  <!-- Modals -->
-  <?php
-  include 'includes/modals3.php';
-  ?>
-  <!-- End of Modals -->
-
 <?php include '../src/Views/includes/pageFooter.php' ?>

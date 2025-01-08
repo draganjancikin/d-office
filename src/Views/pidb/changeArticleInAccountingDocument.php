@@ -9,9 +9,15 @@
   <!-- Main content -->
   <div class="col-lg-12 px-2">
   <?php
-  include 'includes/form_edit_transaction.php';
+  include 'includes/form_edit_article.php';
   ?>
   </div>
   <!-- Enf of Main content -->
+
+  <!-- Modals -->
+  <?php
+  include 'includes/modals.php';
+  ?>
+  <!-- End of Modals -->
 
 <?php include '../src/Views/includes/pageFooter.php' ?>

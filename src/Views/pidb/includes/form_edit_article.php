@@ -1,30 +1,11 @@
-<?php 
-$pidb_article_id = $_GET['pidb_article_id'];
-$pidb_tip_id = $_GET['pidb_tip_id'];
-switch ($pidb_tip_id) {
-    case '1':
-        $style = 'info';
-        break;
-    case '2':
-        $style = 'secondary';
-        break;
-    case '4':
-        $style = 'warning';
-        break;
-    default:
-        $style = 'default';
-        break;
-}
-// Get article data.
-$article_data = $entityManager->find('\App\Entity\AccountingDocumentArticle', $pidb_article_id);
-?>
 <div class="card border-<?php echo $style ?> mb-4">
   <div class="card-header bg-<?php echo $style ?> p-2">
       <h6 class="m-0 font-weight-bold text-white">Promena proizvoda</h6>
   </div>
   <div class="card-body p-2">
 
-    <form action="<?php echo $_SERVER['PHP_SELF']. '?editArticleDataInAccountingDocument&pidb_id='.$article_data->getAccountingDocument()->getId().'&pidb_article_id=' .$pidb_article_id ?>" class="form-horizontal" role="form" method="post">
+    <form action="<?php echo '/pidb/'. $pidb_id . '/article/' .$pidb_article_id ?>/change" class="form-horizontal"
+          role="form" method="post">
       <input type="hidden" name="article_id" value="<?php echo $article_data->getArticle()->getId() ?>" />
 
       <div class="row mb-2">
