@@ -783,6 +783,27 @@ class ProjectController extends BaseController {
   }
 
   /**
+   * Advanced project search.
+   *
+   * @return void
+   */
+  public function advancedSearch(): void {
+    $data = [
+      'page' => $this->page,
+      'page_title' => $this->page_title,
+      'stylesheet' => $this->stylesheet,
+      'username' => $this->username,
+      'user_role_id' => $this->user_role_id,
+      'entityManager' => $this->entityManager,
+    ];
+
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
+
+    $this->render('advancedSearch', $data);
+  }
+
+  /**
    * A helper method to render views.
    *
    * @param $view

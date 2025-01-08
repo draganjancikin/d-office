@@ -145,7 +145,7 @@
       <div class="bg-white py-2 collapse-inner rounded">
         <a class="collapse-item" href="/projects/">Projekti</a>
         <a class="collapse-item" href="/projects/add"><i class="fas fa-plus"></i> Novi Projekat</a>
-        <a class="collapse-item" href="/projects/index.php?advancedSearch"><i class="fa fa-search"></i> Detajna pretraga</a>
+        <a class="collapse-item" href="/projects/advancedSearch"><i class="fa fa-search"></i> Detajna pretraga</a>
         <?php
         if ($user_role_id == 1):
           ?>

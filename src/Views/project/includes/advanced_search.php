@@ -6,7 +6,7 @@
   </div>
 
   <div class="card-body p-2">
-    <form action="<?php echo $_SERVER['PHP_SELF'] . '?advancedSearch' ?>" method="post">
+    <form action="<?php echo '/projects/advancedSearch' ?>" method="post">
 
       <div class="row mb-2">
         <label for="inputClient" class="col-sm-3 col-lg-2 col-form-label text-right">Kijent: </label>
@@ -44,7 +44,8 @@
 </div>
 
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_GET["advancedSearch"])) :
+
+if ($_POST && isset($_GET["url"]) && str_contains($_GET["url"], 'advancedSearch')):
   $client = $_POST["client"];
   $project_title = $_POST["project_title"];
   $city = $_POST["city"];
