@@ -49,17 +49,18 @@
             <i class="fas fa-plus"> </i> Kontakt
           </a>
           <!-- Open new project with client data. -->
-          <a href="/projects/index.php?new&client_id=<?php echo $client_id ?>" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog projekta!">
+          <a href="/projects/add?client_id=<?php echo $client_id ?>" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog projekta!">
             <i class="fas fa-arrow-right"> </i> Projekat
           </a>
 
           <!-- Open new proforma-invoice with client data. -->
-          <a href="/pidb/index.php?new&client_id=<?php echo $client_id ?>" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog predračuna!">
+          <a href="/pidbs/add?client_id=<?php echo $client_id ?>" class="btn btn-sm btn-outline-secondary
+          mr-1" title="Otvaranje novog predračuna!">
             <i class="fas fa-arrow-right"> </i> Predračun
           </a>
 
           <!-- Open new cutting with client data. -->
-          <a href="/cutting/index.php?new&client_id=<?php echo $client_id ?>" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove krojne liste!">
+          <a href="/cuttings/add?client_id=<?php echo $client_id ?>" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove krojne liste!">
             <i class="fas fa-arrow-right"> </i> <i class="fas fa-cut"> </i>
           </a>
 
