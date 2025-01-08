@@ -415,7 +415,8 @@ if ($page == "materials"):
               ?>
               <tr>
                 <td>
-                  <a href="?view&id=<?php echo $material_data->getId() ?>" title="<?php echo $material_data->getNote() ?>"><?php echo $material_data->getName() ?></a>
+                  <a href="/material/<?php echo $material_data->getId() ?>" title="<?php echo
+                  $material_data->getNote() ?>"><?php echo $material_data->getName() ?></a>
                 </td>
                 <td class="text-center"><?php echo $material_data->getUnit()->getName() ?></td>
                 <td class="text-right">
@@ -627,7 +628,7 @@ if ($page == "article"):
   ?>
 
   <!--  *********** Start OLD CODE **************** -->
-  <form class="form-horizontal" role="form" method="get">
+  <form method="get" action="/articles/price-list" class="form-horizontal" role="form" method="get">
     <div class="form-group row">
       <div class="col-md-5">
         <select class="form-select form-select-sm" name="group_id">
@@ -642,7 +643,7 @@ if ($page == "article"):
       </div>
 
       <div class="col-sm-5">
-        <button type="submit" class="btn btn-sm btn-outline-secondary" name="priceList" >Prikaži cenovnik</button>
+        <button type="submit" class="btn btn-sm btn-outline-secondary">Prikaži cenovnik</button>
       </div>
     </div>
   </form>

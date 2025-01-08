@@ -1,7 +1,5 @@
 <!-- List Last Article -->
-
-<!-- *********** Start OLD CODE ********* -->
-<form method="get">
+<form method="get" action="/articles/price-list">
   <div class="form-group row">
     <div class="col-sm-5">
       <select class="form-select form-select-sm" name="group_id">
@@ -14,11 +12,10 @@
     </div>
         
     <div class="col-sm-5">
-      <button type="submit" class="btn btn-sm btn-outline-secondary" name="priceList">Prikaži cenovnik</button>
+      <button type="submit" class="btn btn-sm btn-outline-secondary">Prikaži cenovnik</button>
     </div>
   </div>
 </form>
-<!-- *********** End OLD CODE ********* -->
 
 <div class="card mb-4">
 

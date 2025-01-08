@@ -425,6 +425,35 @@ class ArticleController extends BaseController {
   }
 
   /**
+   * Article price list.
+   *
+   * @param $group_id
+   *
+   * @return void
+   */
+  public function priceList($group_id): void {
+    $group_id = htmlspecialchars($_GET['group_id']);
+    $group = $this->entityManager->find("\App\Entity\ArticleGroup", $group_id);
+    $articles_by_group =  $this->entityManager->getRepository('\App\Entity\Article')->getArticlesByGroup($group_id);
+
+    $data = [
+      'page' => $this->page,
+      'page_title' => $this->page_title,
+      'stylesheet' => $this->stylesheet,
+      'username' => $this->username,
+      'user_role_id' => $this->user_role_id,
+      'entityManager' => $this->entityManager,
+      'group' => $group,
+      'articles_by_group' => $articles_by_group,
+    ];
+
+    // If the user is not logged in, redirect them to the login page.
+    $this->isUserNotLoggedIn();
+
+    $this->render('price_list', $data);
+  }
+
+  /**
    * A helper method to render views.
    *
    * @param $view
