@@ -65,7 +65,8 @@ else {
             ?>
             <tr>
               <td>
-                <a href="?view&project_id=<?php echo $project_item->getId() ?>" class="d-block card-link" title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
+                <a href="/project/<?php echo $project_item->getId() ?>" class="d-block card-link"
+                   title='<?php echo $project_item->getCreatedAt()->format('d M Y')?>'>
                   #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
                 </a>
                 <?php echo $project_item->getClient()->getName(). ', <span style="font-size: 0.9em;">' .$project_item->getClient()->getCity()->getName(). '</span>' ?>
@@ -77,7 +78,7 @@ else {
                 foreach ($project_tasks as $project_task):
                   if ($project_task->getStatus()->getId() == 1):
                     ?>
-                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                    <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                       <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                         <?php echo $project_task->getType()->getName() ?>
                       </span>
@@ -105,7 +106,7 @@ else {
                 foreach ($project_tasks as $project_task):
                   if ($project_task->getStatus()->getId() == 2):
                     ?>
-                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                    <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                       <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                         <?php echo $project_task->getType()->getName() ?>
                       </span>
@@ -133,7 +134,7 @@ else {
                 foreach ($project_tasks as $project_task):
                   if ($project_task->getStatus()->getId() == 3):
                     ?>
-                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                      <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                       <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                         <?php echo $project_task->getType()->getName() ?>
                       </span>

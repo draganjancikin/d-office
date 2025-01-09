@@ -16,7 +16,7 @@
       </a>
 
       <?php
-      if (!str_contains($_GET['url'], 'projects')) {
+      if (!str_contains($_GET['url'], 'projects') && !str_contains($_GET['url'], 'task')) {
         if (isset($_GET['url'])) {
           $url = $_GET['url'];
           $url = explode('/', $url);

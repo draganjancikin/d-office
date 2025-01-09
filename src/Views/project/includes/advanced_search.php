@@ -85,7 +85,7 @@ if ($_POST && isset($_GET["url"]) && str_contains($_GET["url"], 'advancedSearch'
               ?>
               <tr>
                 <td>
-                  <a href="?view&project_id=<?php echo $project_item->getId() ?>" class="d-block card-link"
+                  <a href="/project/<?php echo $project_item->getId() ?>" class="d-block card-link"
                      title='<?php echo $project_item->getCreatedAt()->format('M Y')?>'>
                     #<?php echo str_pad($project_item->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT).' - '.$project_item->getTitle() ?>
                   </a>
@@ -117,7 +117,7 @@ if ($_POST && isset($_GET["url"]) && str_contains($_GET["url"], 'advancedSearch'
                   foreach ($project_tasks as $project_task):
                     if ($project_task->getStatus()->getId() == 1):
                       ?>
-                      <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                      <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                         <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                           <?php echo $project_task->getType()->getName() ?>
                         </span>
@@ -147,7 +147,7 @@ if ($_POST && isset($_GET["url"]) && str_contains($_GET["url"], 'advancedSearch'
                   foreach ($project_tasks as $project_task):
                     if ($project_task->getStatus()->getId() == 2):
                       ?>
-                      <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                      <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                         <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                           <?php echo $project_task->getType()->getName() ?>
                         </span>
@@ -177,7 +177,7 @@ if ($_POST && isset($_GET["url"]) && str_contains($_GET["url"], 'advancedSearch'
                   foreach ($project_tasks as $project_task):
                     if ($project_task->getStatus()->getId() == 3):
                       ?>
-                      <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                      <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                         <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                           <?php echo $project_task->getType()->getName() ?>
                         </span>

@@ -71,7 +71,7 @@
                 foreach($project_tasks as $project_task):
                   if ($project_task->getStatus()->getId() == 1):
                     ?>
-                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                    <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                       <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                         <?php echo $project_task->getType()->getName() ?>
                       </span>
@@ -99,7 +99,7 @@
                 foreach($project_tasks as $project_task):
                   if ($project_task->getStatus()->getId() == 2):
                     ?>
-                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                    <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                       <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                         <?php echo $project_task->getType()->getName() ?>
                       </span>
@@ -127,7 +127,7 @@
                 foreach($project_tasks as $project_task):
                   if ($project_task->getStatus()->getId() == 3):
                     ?>
-                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                    <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                       <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                         <?php echo $project_task->getType()->getName() ?>
                       </span>
@@ -206,7 +206,7 @@
                 foreach ($project_tasks as $project_task):
                   if ($project_task->getStatus()->getId() == 1):
                     ?>
-                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                    <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                       <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                         <?php echo $project_task->getType()->getName() ?>
                       </span>
@@ -234,7 +234,7 @@
                 foreach ($project_tasks as $project_task):
                   if ($project_task->getStatus()->getId() == 2):
                     ?>
-                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                    <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                       <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                         <?php echo $project_task->getType()->getName() ?>
                       </span>
@@ -262,7 +262,7 @@
                 foreach ($project_tasks as $project_task):
                   if ($project_task->getStatus()->getId() == 3):
                     ?>
-                    <a href="?editTask&task_id=<?php echo $project_task->getId() ?>&project_id=<?php echo $project_id; ?>">
+                    <a href="/project/<?php echo $project_id ?>/task/<?php echo $project_task->getId() ?>/edit">
                       <span class="badge badge-<?php echo $project_task->getType()->getClass() ?>">
                         <?php echo $project_task->getType()->getName() ?>
                       </span>

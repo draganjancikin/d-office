@@ -305,6 +305,7 @@ class ProjectController extends BaseController {
   public function editTaskForm($project_id, $task_id): void {
     $task = $this->entityManager->find("\App\Entity\ProjectTask", $task_id);
     $project = $this->entityManager->find("\App\Entity\Project", $project_id);
+    $project_data = $this->entityManager->find('\App\Entity\Project', $project_id);
 
     $task_data['class'] = match($task->getType()->getId()) {
       1 => 'info',
@@ -331,6 +332,7 @@ class ProjectController extends BaseController {
       'task_data' => $task_data,
       'project_id' => $project_id,
       'project' => $project,
+      'project_data' => $project_data,
     ];
 
     // If the user is not logged in, redirect them to the login page.
