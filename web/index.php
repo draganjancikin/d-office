@@ -173,6 +173,9 @@ $router->add('GET', '/project/{project_id}/task/{task_id}/note/{note_id}/delete'
 $router->add('GET', '/projects/advancedSearch', 'ProjectController@advancedSearch');
 $router->add('POST', '/projects/advancedSearch', 'ProjectController@advancedSearch');
 
+// Add exception folders
+$router->addExceptionFolder('upload'); // Exclude the "static" folder
+
 // Get the current request URL.
 $requestUri = $_SERVER['REQUEST_URI'];
 
