@@ -1,3 +1,8 @@
+# Upgrade to 7.0.0
+Enhancement:
+* #259 - Implement simple front controller
+  * Change root namepace from "Roloffice" to "App"
+
 # Upgrade to 6.8.1
 Upgrade:
 * #255 - Bootstrap (4.4.1 => 5.1.3)

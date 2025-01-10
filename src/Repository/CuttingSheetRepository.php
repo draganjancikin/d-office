@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -14,7 +14,7 @@ class CuttingSheetRepository extends EntityRepository {
   public function getNumberOfCuttingSheets() {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('count(cs.id)')
-        ->from('Roloffice\Entity\CuttingSheet','cs');
+        ->from('App\Entity\CuttingSheet','cs');
     $count = $qb->getQuery()->getSingleScalarResult();
     return $count;
   }
@@ -27,7 +27,7 @@ class CuttingSheetRepository extends EntityRepository {
   public function getLastCuttingSheets($limit = 5) {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('cs')
-        ->from('Roloffice\Entity\CuttingSheet', 'cs')
+        ->from('App\Entity\CuttingSheet', 'cs')
         ->orderBy('cs.id', 'DESC')
         ->setMaxResults( $limit );
     $query = $qb->getQuery();
@@ -46,7 +46,7 @@ class CuttingSheetRepository extends EntityRepository {
     // Create a QueryBilder instance
     $qb = $this->_em->createQueryBuilder();
     $qb->select('csa')
-        ->from('Roloffice\Entity\CuttingSheetArticle', 'csa')
+        ->from('App\Entity\CuttingSheetArticle', 'csa')
         ->join('csa.fence_model', 'fm', 'csa.fence_model = fm.id')
         ->where(
           $qb->expr()->eq('csa.cutting_sheet', $cutting_sheet_id),
@@ -89,7 +89,7 @@ class CuttingSheetRepository extends EntityRepository {
         }
 
         // Update ordinal_number_in_year.
-        $cutting_sheet = $this->_em->find('\Roloffice\Entity\CuttingSheet', $cutting_sheet_id);
+        $cutting_sheet = $this->_em->find('\App\Entity\CuttingSheet', $cutting_sheet_id);
         if ($cutting_sheet === null) {
             echo "Order with ID $cutting_sheet_id does not exist.\n";
             exit(1);
@@ -107,7 +107,7 @@ class CuttingSheetRepository extends EntityRepository {
 
     $qb = $this->_em->createQueryBuilder();
     $qb->select('cs')
-        ->from('Roloffice\Entity\CuttingSheet', 'cs')
+        ->from('App\Entity\CuttingSheet', 'cs')
         ->orderBy('cs.id', 'DESC')
         ->setMaxResults(1);
     $query = $qb->getQuery();
@@ -124,7 +124,7 @@ class CuttingSheetRepository extends EntityRepository {
     public function getCuttingSheetBeforeLast() {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('cs')
-            ->from('Roloffice\Entity\CuttingSheet', 'cs')
+            ->from('App\Entity\CuttingSheet', 'cs')
             ->orderBy('cs.id', 'DESC')
             ->setMaxResults(2);
         $query = $qb->getQuery();
@@ -145,7 +145,7 @@ class CuttingSheetRepository extends EntityRepository {
     // Create a QueryBilder instance
     $qb = $this->_em->createQueryBuilder();
     $qb->select('cs')
-      ->from('Roloffice\Entity\CuttingSheet', 'cs')
+      ->from('App\Entity\CuttingSheet', 'cs')
       ->join('cs.client', 'cl', 'WITH', 'cs.client = cl.id')
       ->where(
         $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),

@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -16,7 +16,7 @@ class ArticlePropertyRepository extends EntityRepository {
   public function getArticleProperties($article_id) {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('ap')
-      ->from('Roloffice\Entity\ArticleProperty', 'ap')
+      ->from('App\Entity\ArticleProperty', 'ap')
       
       ->where(
         $qb->expr()->eq('ap.article', $article_id)

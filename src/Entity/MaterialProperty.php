@@ -1,11 +1,11 @@
 <?php
 
-namespace Roloffice\Entity;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity (repositoryClass="Roloffice\Repository\MaterialPropertyRepository")
+ * @ORM\Entity (repositoryClass="App\Repository\MaterialPropertyRepository")
  * @ORM\Table(name="v6__materials__properties")
  */
 class MaterialProperty {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -16,7 +16,7 @@ class MaterialPropertyRepository extends EntityRepository {
   public function getMaterialProperties($material) {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('mp')
-      ->from('Roloffice\Entity\MaterialProperty', 'mp')
+      ->from('App\Entity\MaterialProperty', 'mp')
       ->join('mp.property', 'p', 'WITH', 'mp.property = p.id')
       ->where(
         $qb->expr()->eq('mp.material', $material)

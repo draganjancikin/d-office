@@ -1,4 +1,4 @@
-# d-Office 6.8.1
+# d-Office 7.0.0
 
 Web Application
 

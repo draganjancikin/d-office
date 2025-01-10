@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -19,14 +19,14 @@ class AccountingDocumentRepository extends EntityRepository {
         if ($type_id) {
             // If exist type_id query only AccountingDocument for given type_id
             $qb->select('count(ad.id)')
-                ->from('Roloffice\Entity\AccountingDocument','ad')
+                ->from('App\Entity\AccountingDocument','ad')
                 ->where(
                     $qb->expr()->eq('ad.type', $type_id),
                 );
         } else {
             // If type_id dont exist query all Accounting Document
             $qb->select('count(ad.id)')
-                ->from('Roloffice\Entity\AccountingDocument','ad');
+                ->from('App\Entity\AccountingDocument','ad');
         }
         $count = $qb->getQuery()->getSingleScalarResult();
         return $count;
@@ -43,7 +43,7 @@ class AccountingDocumentRepository extends EntityRepository {
     public function getLast($type, $isArchived, $limit) {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('ad')
-            ->from('Roloffice\Entity\AccountingDocument', 'ad')
+            ->from('App\Entity\AccountingDocument', 'ad')
             ->where(
                 $qb->expr()->andX(
                     $qb->expr()->eq('ad.type', $type),
@@ -66,7 +66,7 @@ class AccountingDocumentRepository extends EntityRepository {
         // Create a QueryBilder instance
         $qb = $this->_em->createQueryBuilder();
         $qb->select('ada')
-            ->from('Roloffice\Entity\AccountingDocumentArticle', 'ada')
+            ->from('App\Entity\AccountingDocumentArticle', 'ada')
             ->join('ada.article', 'a', 'ada.article = a.id')
             ->where(
                 $qb->expr()->eq('ada.accounting_document', $ad_id),
@@ -89,7 +89,7 @@ class AccountingDocumentRepository extends EntityRepository {
     public function getAvans($accd_id) {
         // Get all payment for $accd_id where payment type = 1 or 2 (avans gotovinski, avans virmanski).
         $avans = 0;
-        $payments = $this->_em->find('\Roloffice\Entity\AccountingDocument', $accd_id)->getPayments();
+        $payments = $this->_em->find('\App\Entity\AccountingDocument', $accd_id)->getPayments();
         foreach ($payments as $payment) {
             if ($payment->getType()->getId() == 1 || $payment->getType()->getId() == 2) {
                 // Sabrati sve avanse.
@@ -110,7 +110,7 @@ class AccountingDocumentRepository extends EntityRepository {
     public function getIncome($accd_id) {
         // Get all payment for $accd_id where payment type = 3 or 4 (uplata gotovinska, uplata virmanska).
         $income = 0;
-        $payments = $this->_em->find('\Roloffice\Entity\AccountingDocument', $accd_id)->getPayments();
+        $payments = $this->_em->find('\App\Entity\AccountingDocument', $accd_id)->getPayments();
         foreach ($payments as $payment) {
             if ($payment->getType()->getId() == 3 || $payment->getType()->getId() == 4) {
                 // Sabrati sve uplate.
@@ -132,7 +132,7 @@ class AccountingDocumentRepository extends EntityRepository {
         // Create a QueryBuilder instance.
         $qb = $this->_em->createQueryBuilder();
         $qb->select('ad')
-            ->from('Roloffice\Entity\AccountingDocument', 'ad')
+            ->from('App\Entity\AccountingDocument', 'ad')
             ->where(
                 $qb->expr()->andX(
                     $qb->expr()->lt('ad.id', $accd_id),
@@ -158,7 +158,7 @@ class AccountingDocumentRepository extends EntityRepository {
         // Create a QueryBuilder instance.
         $qb = $this->_em->createQueryBuilder();
         $qb->select('ad')
-            ->from('Roloffice\Entity\AccountingDocument', 'ad')
+            ->from('App\Entity\AccountingDocument', 'ad')
             ->where(
                 $qb->expr()->andX(
                     $qb->expr()->gt('ad.id', $accd_id),
@@ -182,7 +182,7 @@ class AccountingDocumentRepository extends EntityRepository {
     public function setOrdinalNumInYear($acd_id) {
 
         // Given AccountingDocument.
-        $acd = $this->_em->find("\Roloffice\Entity\AccountingDocument", $acd_id);
+        $acd = $this->_em->find("\App\Entity\AccountingDocument", $acd_id);
         // Type of given AccountingDocument.
         $acd__type_id = $acd->getType()->getId();
 
@@ -215,7 +215,7 @@ class AccountingDocumentRepository extends EntityRepository {
         }
 
         // update ordinal_number_in_year
-        $acd = $this->_em->find('\Roloffice\Entity\AccountingDocument', $acd_id);
+        $acd = $this->_em->find('\App\Entity\AccountingDocument', $acd_id);
 
         if ($acd === null) {
             echo "AccountingDocument with ID $acd_id does not exist.\n";
@@ -227,20 +227,22 @@ class AccountingDocumentRepository extends EntityRepository {
         $this->_em->flush();
     }
 
-    /**
-     * Method that rerurn ID of last AccountingDocument in db table
-     *
-     * @return object
-     */
-    public function getLastAccountingDocument() {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('ad')
-            ->from('Roloffice\Entity\AccountingDocument', 'ad')
-            ->orderBy('ad.id', 'DESC')
-            ->setMaxResults(1);
-        $query = $qb->getQuery();
-        return $query->getResult()[0];
-    }
+  /**
+   * Method that return ID of last AccountingDocument in db table
+   *
+   * @return object
+   */
+  public function getLastAccountingDocument() {
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('ad')
+        ->from('App\Entity\AccountingDocument', 'ad')
+        ->orderBy('ad.id', 'DESC')
+        ->setMaxResults(1);
+    $query = $qb->getQuery();
+    $result = $query->getResult();
+
+    return $result[0] ?? null;
+  }
 
     /**
      * Method that rerurn ID of AccountingDocument before last in db table for given AccountingDocumentType
@@ -253,7 +255,7 @@ class AccountingDocumentRepository extends EntityRepository {
         // Create a QueryBilder instance.
         $qb = $this->_em->createQueryBuilder();
         $qb->select('ad')
-            ->from('Roloffice\Entity\AccountingDocument', 'ad')
+            ->from('App\Entity\AccountingDocument', 'ad')
             ->orderBy('ad.id', 'DESC')
             ->where(
                 $qb->expr()->eq('ad.type', $type_id)
@@ -286,11 +288,11 @@ class AccountingDocumentRepository extends EntityRepository {
 
         foreach ($ad_articles as $ad_article) {
             // Get AcountingDocument Article quantity.
-            $ad_a_quantity = $this->_em->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces() );
+            $ad_a_quantity = $this->_em->getRepository('\App\Entity\AccountingDocumentArticle')->getQuantity($ad_article->getId(), $ad_article->getArticle()->getMinCalcMeasure(), $ad_article->getPieces() );
 
-            $tax_base = $this->_em->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
+            $tax_base = $this->_em->getRepository('\App\Entity\AccountingDocumentArticle')->getTaxBase($ad_article->getPrice(), $ad_article->getDiscount(), $ad_a_quantity);
 
-            $tax_amount = $this->_em->getRepository('\Roloffice\Entity\AccountingDocumentArticle')->getTaxAmount($tax_base, $ad_article->getTax() );
+            $tax_amount = $this->_em->getRepository('\App\Entity\AccountingDocumentArticle')->getTaxAmount($tax_base, $ad_article->getTax() );
 
             $total_tax_base = $total_tax_base + $tax_base;
             $total_tax_amount = $total_tax_amount + $tax_amount;
@@ -309,7 +311,7 @@ class AccountingDocumentRepository extends EntityRepository {
         // Create a QueryBuilder instance.
         $qb = $this->_em->createQueryBuilder();
         $qb->select('p')
-            ->from('Roloffice\Entity\Payment', 'p')
+            ->from('App\Entity\Payment', 'p')
             ->where(
                 $qb->expr()->orX(
                     $qb->expr()->eq('p.type', '1'),
@@ -334,7 +336,7 @@ class AccountingDocumentRepository extends EntityRepository {
     public function getAccountingDocumentByTransaction($transaction_id) {
         // Create a Query.
         $query = $this->_em->createQuery('SELECT ad, p '
-                                            . 'FROM Roloffice\Entity\AccountingDocument ad '
+                                            . 'FROM App\Entity\AccountingDocument ad '
                                             . 'JOIN ad.payments p '
                                             . 'WITH p.id = :payment_id');
         $query->setParameter('payment_id', $transaction_id);
@@ -358,7 +360,7 @@ class AccountingDocumentRepository extends EntityRepository {
         // Create a QueryBilder instance.
         $qb = $this->_em->createQueryBuilder();
         $qb->select('ad')
-            ->from('Roloffice\Entity\AccountingDocument', 'ad')
+            ->from('App\Entity\AccountingDocument', 'ad')
             ->join('ad.client', 'cl', 'WITH', 'ad.client = cl.id')
             ->where(
                 $qb->expr()->andX(
@@ -384,7 +386,7 @@ class AccountingDocumentRepository extends EntityRepository {
     public function getProjectByAccountingDocument($acc_doc_id) {
         // Create a Query.
         $query = $this->_em->createQuery('SELECT p, acd '
-                                            . 'FROM Roloffice\Entity\Project p '
+                                            . 'FROM App\Entity\Project p '
                                             . 'JOIN p.accounting_documents acd '
                                             . 'WITH acd.id = :acc_doc_id');
         $query->setParameter('acc_doc_id', $acc_doc_id);
@@ -401,7 +403,7 @@ class AccountingDocumentRepository extends EntityRepository {
      * @return array
      */
     public function getPaymentsByIncome($acc_doc_id) {
-        $acc_doc = $this->_em->find('\Roloffice\Entity\AccountingDocument', $acc_doc_id);
+        $acc_doc = $this->_em->find('\App\Entity\AccountingDocument', $acc_doc_id);
         $payments = $acc_doc->getPayments();
         foreach ($payments as $payment) {
             if ($payment->getType()->getId() == 3 || $payment->getType()->getId() == 4) {
@@ -420,7 +422,7 @@ class AccountingDocumentRepository extends EntityRepository {
      * @return array
      */
     public function getPaymentsByAvans($acc_doc_id) {
-        $acc_doc = $this->_em->find('\Roloffice\Entity\AccountingDocument', $acc_doc_id);
+        $acc_doc = $this->_em->find('\App\Entity\AccountingDocument', $acc_doc_id);
         $payments = $acc_doc->getPayments();
         foreach ($payments as $payment) {
             if ($payment->getType()->getId() == 1 || $payment->getType()->getId() == 2) {
