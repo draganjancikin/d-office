@@ -12,6 +12,7 @@ use Exception;
  */
 class Router {
   private $routes = [];
+  private $exceptionFolders = [];
 
   /**
    * Add a route.
@@ -29,6 +30,11 @@ class Router {
     $method = strtoupper($method);
     $this->routes[] = ['method' => $method, 'route' => $route, 'action' => $action];
   }
+
+  public function addExceptionFolder($folder) {
+    $this->exceptionFolders[] = trim($folder, '/');
+  }
+
 
   /**
    * Dispatch a route.
@@ -50,6 +56,15 @@ class Router {
     $path = $uriParts[0];
     $queryString = $uriParts[1] ?? '';
 
+    // Check if the request is for an exception folder.
+    foreach ($this->exceptionFolders as $folder) {
+      if (strpos($path, $folder) === 0) {
+        // Handle exception folder (e.g., serve a static file, redirect, or skip routing).
+        $this->handleExceptionFolder($path);
+        return;
+      }
+    }
+
     // Parse query string into an array.
     parse_str($queryString, $queryParams);
 
@@ -66,6 +81,19 @@ class Router {
       }
     }
     throw new Exception("Route not found or method not allowed");
+  }
+
+  private function handleExceptionFolder($path) {
+    // Example: Serve static files
+    $filePath = $_SERVER['DOCUMENT_ROOT'] . '/' . $path;
+    if (file_exists($filePath)) {
+      // Output the file content and exit.
+      readfile($filePath);
+      exit;
+    }
+
+    // If the file doesn't exist, throw an exception or handle it as needed.
+    throw new Exception("File not found: $path");
   }
 
 
