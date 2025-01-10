@@ -1,6 +1,6 @@
 {
-  "name": "rolostil/roloffice",
-  "version": "6.8.1",
+  "name": "d-office/d-office",
+  "version": "7.0.0",
   "type": "project",
   "description": "Office Web Application.",
   "keywords": [
@@ -16,10 +16,11 @@
   "autoload": {
     "files": [],
     "psr-4": {
-      "Roloffice\\Controller\\": "src/Controller",
-      "Roloffice\\Core\\": "src/Core",
-      "Roloffice\\Entity\\": "src/Entity",
-      "Roloffice\\Repository\\": "src/Repository"
+      "App\\": "src/",
+      "App\\Controller\\": "src/Controller",
+      "App\\Core\\": "src/Core",
+      "App\\Entity\\": "src/Entity",
+      "App\\Repository\\": "src/Repository"
     }
   },
   "require": {

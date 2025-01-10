@@ -10,12 +10,12 @@ if (empty($page)) {
 }
 
 // Folders with CSS, JS, ...
-switch ($page){
-  case ("home"):
-    $stylesheet = ".lib/";
-    break;
-
-  default:
-    $stylesheet = "../.lib/";
-    break;
-}
+//switch ($page){
+//  case ("home"):
+//    $stylesheet = "libraries/";
+//    break;
+//
+//  default:
+//    $stylesheet = "../libraries/";
+//    break;
+//}

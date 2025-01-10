@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -12,24 +12,24 @@ class CompanyInfoRepository extends EntityRepository
 	 * @return array
 	 */
 	public function getCompanyInfoData($id): array {
-		$company_info_data = $this->_em->find('\Roloffice\Entity\CompanyInfo', $id);
+		$company_info_data = $this->_em->find('\App\Entity\CompanyInfo', $id);
 		if ($company_info_data->getCountry() === null) {
 				$company_info_country = null;
 		}
 		else {
-				$company_info_country = $this->_em->find('\Roloffice\Entity\Country', $company_info_data->getCountry());
+				$company_info_country = $this->_em->find('\App\Entity\Country', $company_info_data->getCountry());
 		}
 		if ($company_info_data->getCity() === null) {
 				$company_info_city = null;
 		}
 		else {
-				$company_info_city = $this->_em->find('\Roloffice\Entity\City', $company_info_data->getCity());
+				$company_info_city = $this->_em->find('\App\Entity\City', $company_info_data->getCity());
 		}
 		if ($company_info_data->getStreet() === null) {
 				$company_info_street = null;
 		}
 		else {
-				$company_info_street = $this->_em->find('\Roloffice\Entity\Street', $company_info_data->getStreet());
+				$company_info_street = $this->_em->find('\App\Entity\Street', $company_info_data->getStreet());
 		}
 
 		return [

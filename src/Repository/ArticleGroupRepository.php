@@ -1,6 +1,6 @@
 <?php
 
-namespace Roloffice\Repository;
+namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -14,7 +14,7 @@ class ArticleGroupRepository extends EntityRepository {
   public function getArticleGroups() {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('ag')
-      ->from('Roloffice\Entity\ArticleGroup', 'ag')
+      ->from('App\Entity\ArticleGroup', 'ag')
       ->where(
         $qb->expr()->neq('ag.id', '1')
       )
