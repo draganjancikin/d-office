@@ -17,7 +17,7 @@
     <dl class="row mb-0">
       <dt class="col-sm-3 col-md-2">klijent:</dt>
       <dd class="col-sm-9 col-md-10">
-        <a href="/clients/?view&client_id=<?php echo $client['id'] ?>" title="Pregled svih podataka o: <?php echo $client['name'] ?>">
+        <a href="/client/<?php echo $client['id'] ?>" title="Pregled svih podataka o: <?php echo $client['name'] ?>">
           <?php echo $client['name'] ?>
         </a>
       </dd>
