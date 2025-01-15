@@ -1,3 +1,7 @@
+# Upgrade to 7.0.1
+Bug:
+* #264 - View Client from Accounting document error
+
 # Upgrade to 7.0.0
 Enhancement:
 * #259 - Implement simple front controller
