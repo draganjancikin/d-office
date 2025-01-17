@@ -1,3 +1,7 @@
+# Upgrade to 7.0.2
+Bug:
+* #267 - Dont display images in projects
+
 # Upgrade to 7.0.1
 Bug:
 * #264 - View Client from Accounting document error
