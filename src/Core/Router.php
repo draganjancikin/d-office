@@ -58,7 +58,7 @@ class Router {
 
     // Check if the request is for an exception folder.
     foreach ($this->exceptionFolders as $folder) {
-      if (strpos($path, $folder) === 0) {
+      if (strpos($path, $folder) != 0) {
         // Handle exception folder (e.g., serve a static file, redirect, or skip routing).
         $this->handleExceptionFolder($path);
         return;
@@ -84,10 +84,20 @@ class Router {
   }
 
   private function handleExceptionFolder($path) {
-    // Example: Serve static files
     $filePath = $_SERVER['DOCUMENT_ROOT'] . '/' . $path;
-    if (file_exists($filePath)) {
-      // Output the file content and exit.
+
+    if (file_exists($filePath) && is_readable($filePath)) {
+      // $mimeType = mime_content_type($filePath);
+
+      // header('Content-Type: ' . $mimeType);
+      header('Content-Type: image/jpeg');
+      header('Content-Length: ' . filesize($filePath));
+      header('Content-Disposition: inline; filename="' . basename($filePath) . '"');
+      header('Cache-Control: public, max-age=3600'); // Optional: adjust cache settings
+
+      // Clear output buffer, read the file and exit.
+      ob_clean();
+      flush();
       readfile($filePath);
       exit;
     }
