@@ -416,7 +416,7 @@ class PidbController extends BaseController {
       $this->entityManager->flush();
     }
 
-    die('<script>location.href = "/pidb/' . $pidb_id . ' " </script>');
+    die('<script>location.href = "/pidb/' . $pidb_id . '/edit " </script>');
   }
 
   /**
