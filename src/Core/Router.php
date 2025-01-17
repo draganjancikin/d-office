@@ -87,10 +87,10 @@ class Router {
     $filePath = $_SERVER['DOCUMENT_ROOT'] . '/' . $path;
 
     if (file_exists($filePath) && is_readable($filePath)) {
-      // $mimeType = mime_content_type($filePath);
+      $mimeType = mime_content_type($filePath);
 
-      // header('Content-Type: ' . $mimeType);
-      header('Content-Type: image/jpeg');
+      header('Content-Type: ' . $mimeType);
+      // header('Content-Type: image/jpeg');
       header('Content-Length: ' . filesize($filePath));
       header('Content-Disposition: inline; filename="' . basename($filePath) . '"');
       header('Cache-Control: public, max-age=3600'); // Optional: adjust cache settings
