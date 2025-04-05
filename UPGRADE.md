@@ -1,3 +1,7 @@
+# Upgrade to 7.2.0
+Upgrade:
+* #279 - doctrine/cache (1.13.0 => 2.2.0)
+
 # Upgrade to 7.1.0
 Upgrade:
 * #274 - symfony/http-foundation (5.4.48 => 6.1.12)
