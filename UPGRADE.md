@@ -1,3 +1,13 @@
+# Upgrade to 7.1.0
+Upgrade:
+* #274 - symfony/http-foundation (5.4.48 => 6.1.12)
+* #274 - symfony/cache (5.4.46 => 6.4.20)
+
+# Upgrade to 7.0.3
+Upgrade:
+* #274 - symfony/http-foundation (5.4.16 => 5.4.48)
+* #274 - symfony/cache (5.4.15 => 5.4.46)
+
 # Upgrade to 7.0.2
 Bug:
 * #267 - Dont display images in projects
