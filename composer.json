@@ -1,6 +1,6 @@
 {
   "name": "d-office/d-office",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "type": "project",
   "description": "Office Web Application.",
   "keywords": [
@@ -25,7 +25,6 @@
   },
   "require": {
     "doctrine/orm": "^2.15",
-    "doctrine/cache": "^1.12",
     "tecnickcom/tcpdf": "^6.3",
     "symfony/http-foundation": "^6.0",
     "doctrine/annotations": "^2.0.2",
