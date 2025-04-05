@@ -1,6 +1,6 @@
 {
   "name": "d-office/d-office",
-  "version": "7.0.2",
+  "version": "7.0.3",
   "type": "project",
   "description": "Office Web Application.",
   "keywords": [
@@ -10,7 +10,7 @@
     {
       "name": "Dragan Jancikin",
       "email": "dragan.jancikin@gmail.com",
-      "role": "lead"
+      "role": "Lead developer"
     }
   ],
   "autoload": {
