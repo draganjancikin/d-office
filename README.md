@@ -13,9 +13,9 @@ Required:
 * doctrine/orm:^2.15
 * doctrine/cache:^1.12
 * tecnickcom/tcpdf:^6.3
-* symfony/http-foundation:^5.4
+* symfony/http-foundation:^6.0
 * doctrine/annotations:^2.0.2
-* symfony/cache:^5.4
+* symfony/cache:^6.0
 * bootstrap 5.1.3
 
 ## Settings
