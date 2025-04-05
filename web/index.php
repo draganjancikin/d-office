@@ -143,6 +143,8 @@ $router->add('GET', '/admin/company-info', 'AdminController@viewCompanyInfo');
 $router->add('GET', '/admin/company-info/edit', 'AdminController@editCompanyInfoForm');
 $router->add('POST', '/admin/company-info/edit', 'AdminController@editCompanyInfo');
 
+
+
 // ========== Projects routes ====================================================
 $router->add('GET', '/projects/', 'ProjectController@index');
 $router->add('GET', '/projects/by-city', 'ProjectController@viewByCity');
