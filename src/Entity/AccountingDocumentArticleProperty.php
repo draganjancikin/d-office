@@ -2,70 +2,81 @@
 
 namespace App\Entity;
 
+use App\Entity\AccountingDocumentArticle;
+use App\Entity\Property;
+use App\Repository\AccountingDocumentArticlePropertyRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity (repositoryClass="App\Repository\AccountingDocumentArticlePropertyRepository")
- * @ORM\Table(name="v6__accounting_documents__articles__properties")
+ * AccountingDocumentArticleProperty entity.
  */
-class AccountingDocumentArticleProperty {
+#[ORM\Entity(repositoryClass: AccountingDocumentArticlePropertyRepository::class)]
+#[ORM\Table(name: 'v6__accounting_documents__articles__properties')]
+class AccountingDocumentArticleProperty
+{
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+    /**
+     * Identifier of the Accounting Document Article Property.
+     *
+     * @var int
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  /**
-   * Meny ...
-   * @ORM\ManyToOne(targetEntity="AccountingDocumentArticle")
-   * @ORM\JoinColumn(name="accounting_document_article_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $accounting_document_article;
-  
-  /**
-   * Meny ...
-   * @ORM\ManyToOne(targetEntity="Property")
-   * @ORM\JoinColumn(name="property_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $property;
+    /**
+     * Many to One ...
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: AccountingDocumentArticle::class)]
+    #[ORM\JoinColumn(name: "accounting_document_article_id", referencedColumnName: "id")]
+    protected $accounting_document_article;
 
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=2)
-   * @var float
-   */
-  protected $quantity;
+    /**
+     * Many to One ...
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: Property::class)]
+    #[ORM\JoinColumn(name: "property_id", referencedColumnName: "id")]
+    protected $property;
 
-  public function getId() {
-    return $this->id;
-  }
+    /**
+     * Accounting Document Article Property quantity.
+     *
+     * @var float
+     */
+    #[ORM\Column(type: "decimal", precision: 11, scale: 2)]
+    protected $quantity;
 
-  public function setAccountingDocumentArticle($accounting_document_article) {
-    $this->accounting_document_article = $accounting_document_article;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function getAccountingDocumentArticle() {
-    return $this->accounting_document_article;
-  }
+    public function setAccountingDocumentArticle($accounting_document_article) {
+        $this->accounting_document_article = $accounting_document_article;
+    }
 
-  public function setProperty($property) {
-    $this->property = $property;
-  }
+    public function getAccountingDocumentArticle() {
+        return $this->accounting_document_article;
+    }
 
-  public function getProperty() {
-    return $this->property;
-  }
+    public function setProperty($property) {
+        $this->property = $property;
+    }
 
-  public function setQuantity($quantity) {
-    $this->quantity = $quantity;
-  }
+    public function getProperty() {
+        return $this->property;
+    }
 
-  public function getQuantity() {
-    return $this->quantity;
-  }
+    public function setQuantity($quantity) {
+        $this->quantity = $quantity;
+    }
+
+    public function getQuantity() {
+        return $this->quantity;
+    }
 
 }

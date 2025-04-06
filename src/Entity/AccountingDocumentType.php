@@ -5,35 +5,41 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="v6__accounting_document__types")
+ * AccountingDocumentType Entity.
  */
-class AccountingDocumentType {
-
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+#[ORM\Entity]
+#[ORM\Table(name: 'v6__accounting_document__types')]
+class AccountingDocumentType
+{
 
     /**
-   * @ORM\Column(type="string", length=48)
-   * @var string
-   */
-  protected $name;
+     * Identifier of the Accounting Document Type.
+     *
+     * @var int
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  public function getId() {
-    return $this->id;
-  }
+    /**
+     * Accounting Document Type name.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 48)]
+    protected $name;
 
-  public function setName($name) {
-    $this->name = $name;
-  }
-  
-  public function getName() {
-    return $this->name;
-  }
+    public function getId() {
+        return $this->id;
+    }
+
+    public function setName($name) {
+        $this->name = $name;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
 
 }

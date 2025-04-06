@@ -2,140 +2,160 @@
 
 namespace App\Entity;
 
+use App\Entity\AccountingDocument;
+use App\Entity\Article;
+use App\Repository\AccountingDocumentArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity (repositoryClass="App\Repository\AccountingDocumentArticleRepository")
- * @ORM\Table(name="v6__accounting_documents__articles")
+ * AccountingDocumentArticle entity.
  */
-class AccountingDocumentArticle {
+#[ORM\Entity(repositoryClass: AccountingDocumentArticleRepository::class)]
+#[ORM\Table(name: 'v6__accounting_documents__articles')]
+class AccountingDocumentArticle
+{
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+    /**
+     * Identifier of the Accounting Document Article.
+     *
+     * @var int
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  /**
-   * Meny ...
-   * @ORM\ManyToOne(targetEntity="AccountingDocument")
-   * @ORM\JoinColumn(name="accounting_document_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $accounting_document;
+    /**
+     * Many to one ...
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: AccountingDocument::class)]
+    #[ORM\JoinColumn(name: "accounting_document_id", referencedColumnName: "id")]
+    protected $accounting_document;
 
-  /**
-   * Meny ...
-   * @ORM\ManyToOne(targetEntity="Article")
-   * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $article;
+    /**
+     * Many to One ...
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: Article::class)]
+    #[ORM\JoinColumn(name: "article_id", referencedColumnName: "id")]
+    protected $article;
 
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=0)
-   * @var float
-   */
-  protected $pieces;
+    /**
+     * Accounting Document Article pieces.
+     *
+     * @var float
+     */
+    #[ORM\Column(type: "decimal", precision: 11, scale:0)]
+    protected $pieces;
 
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=4)
-   * @var float
-   */
-  protected $price;
+    /**
+     * Accounting Document Article price.
+     *
+     * @var float
+     */
+    #[ORM\Column(type: "decimal", precision: 11, scale: 4)]
+    protected $price;
 
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=2)
-   * @var float
-   */
-  protected $discount;
+    /**
+     * Accounting Document Article discount.
+     *
+     * @var float
+     */
+    #[ORM\Column(type: "decimal", precision: 11, scale: 2)]
+    protected $discount;
 
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=2)
-   * @var float
-   */
-  protected $tax;
+    /**
+     * Accounting Document Article tax.
+     *
+     * @var float
+     */
+    #[ORM\Column(type: "decimal", precision: 11, scale: 2)]
+    protected $tax;
 
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=0)
-   * @var float
-   */
-  protected $weight;
+    /**
+     * Accounting Document Article weight.
+     * @var float
+     */
+    #[ORM\Column(type: "decimal", precision: 11, scale: 0)]
+    protected $weight;
 
-  /**
-   * @ORM\Column(type="text")
-   * @var string
-   */
-  protected $note;
+    /**
+     * Accounting Document Article note.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "text", length: 255)]
+    protected $note;
 
-  public function getId() {
-    return $this->id;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function setAccountingDocument($accounting_document) {
-    $this->accounting_document = $accounting_document;
-  }
+    public function setAccountingDocument($accounting_document) {
+        $this->accounting_document = $accounting_document;
+    }
 
-  public function getAccountingDocument() {
-    return $this->accounting_document;
-  }
+    public function getAccountingDocument() {
+        return $this->accounting_document;
+    }
 
-  public function setArticle($article) {
-    $this->article = $article;
-  }
+    public function setArticle($article) {
+        $this->article = $article;
+    }
 
-  public function getArticle() {
-    return $this->article;
-  }
+    public function getArticle() {
+        return $this->article;
+    }
 
-  public function setPieces($pieces) {
-    $this->pieces = $pieces;
-  }
+    public function setPieces($pieces) {
+        $this->pieces = $pieces;
+    }
 
-  public function getPieces() {
-    return $this->pieces;
-  }
+    public function getPieces() {
+        return $this->pieces;
+    }
 
-  public function setPrice($price) {
-    $this->price = $price;
-  }
+    public function setPrice($price) {
+       $this->price = $price;
+    }
 
-  public function getPrice() {
-    return $this->price;
-  }
+    public function getPrice() {
+        return $this->price;
+    }
 
-  public function setDiscount($discount) {
-    $this->discount = $discount;
-  }
+    public function setDiscount($discount) {
+        $this->discount = $discount;
+    }
 
-  public function getDiscount() {
-    return $this->discount;
-  }
+    public function getDiscount() {
+        return $this->discount;
+    }
 
-  public function setTax($tax) {
-    $this->tax = $tax;
-  }
+    public function setTax($tax) {
+        $this->tax = $tax;
+    }
 
-  public function getTax() {
-    return $this->tax;
-  }
+    public function getTax() {
+        return $this->tax;
+    }
 
-  public function setWeight($weight) {
-    $this->weight = $weight;
-  }
+    public function setWeight($weight) {
+        $this->weight = $weight;
+    }
 
-  public function getWeight() {
-    return $this->weight;
-  }
+    public function getWeight() {
+        return $this->weight;
+    }
 
-  public function setNote($note) {
-    $this->note = $note;
-  }
+    public function setNote($note) {
+        $this->note = $note;
+    }
 
-  public function getNote() {
-    return $this->note;
-  }
+    public function getNote() {
+        return $this->note;
+    }
 
 }

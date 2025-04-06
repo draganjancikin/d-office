@@ -5,35 +5,44 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="v6__preferences")
+ * Preferences entity.
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'v6__preferences')]
 class Preferences {
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
+     * Identifier of the Preferences.
+     *
      * @var int
      */
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
     protected $id;
 
     /**
-     * @ORM\Column(type="decimal", precision=11, scale=4)
+     * Kurs of the currency.
+     *
      * @var float
      */
+    #[ORM\Column(type: "decimal", precision: 11, scale: 4)]
     protected $kurs;
 
     /**
-     * @ORM\Column(type="decimal", precision=11, scale=4)
+     * Tax.
+     *
      * @var float
      */
+    #[ORM\Column(type: "decimal", precision: 11, scale: 4)]
     protected $tax;
 
     /**
-     * @ORM\Column(type="string", length=128)
+     * Local backup folder.
+     *
      * @var string
      */
+    #[ORM\Column(type: "string", length: 128)]
     protected $local_backup_folder;
 
     public function getId() {
