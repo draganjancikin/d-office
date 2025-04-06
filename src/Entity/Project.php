@@ -2,20 +2,16 @@
 
 namespace App\Entity;
 
+use App\Repository\ProjectRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity (repositoryClass="App\Repository\ProjectRepository")
- * @ORM\Table(name="v6__projects")
- */
+#[ORM\Entity (repositoryClass: ProjectRepository::class)]
+#[ORM\Table(name: 'v6__projects')]
 class Project {
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
+  #[ORM\Id]
+  #[ORM\Column(type: "integer")]
+  #[ORM\GeneratedValue]
   protected $id;
 
   /**

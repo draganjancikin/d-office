@@ -2,20 +2,16 @@
 
 namespace App\Entity;
 
+use App\Repository\OrderRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity (repositoryClass="App\Repository\OrderRepository")
- * @ORM\Table(name="v6__orders")
- */
+#[ORM\Entity(repositoryClass: OrderRepository::class)]
+#[ORM\Table(name: 'v6__orders')]
 class Order {
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
+  #[ORM\Id]
+  #[ORM\Column(type: "integer")]
+  #[ORM\GeneratedValue]
   protected $id;
 
   /**

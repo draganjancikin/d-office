@@ -6,8 +6,9 @@ Upgrade:
     - Client, ClientType, Country, City, Street, Contact, ContactType, User, UserRole.
     - AccountingDocument, AccountingDocumentArticle, AccountingDocumentArticleProperty, AccountingDocumentType, 
       Article, ArticleGroup, ArticleProperty, Payment, PaymentType, Preferences, Property, Unit, 
-      AccountingDocumentArticleRepository, AccountingDocumentRepository, ArticleGroupRepository and ArticleRepository.
-
+      AccountingDocumentArticleRepository, AccountingDocumentRepository, ArticleGroupRepository and ArticleRepository
+    - CuttingSheet, CuttingSheetArticle, FenceModel, CuttingSheetArticleRepository,
+      CuttingSheetRepository and list__last.
 # Upgrade to 7.2.0
 Upgrade:
 * #279 - doctrine/cache (1.13.0 => 2.2.0)

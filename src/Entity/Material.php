@@ -2,20 +2,16 @@
 
 namespace App\Entity;
 
+use App\Repository\MaterialRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity (repositoryClass="App\Repository\MaterialRepository")
- * @ORM\Table(name="v6__materials")
- */
+#[ORM\Entity(repositoryClass: MaterialRepository::class)]
+#[ORM\Table(name: 'v6__materials')]
 class Material {
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
+  #[ORM\Id]
+  #[ORM\Column(type: "integer")]
+  #[ORM\GeneratedValue]
   protected $id;
 
   /**
