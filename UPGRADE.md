@@ -4,6 +4,9 @@ Upgrade:
   - Upgrade "doctrine/orm" php package(2.20.0 => 3.3.2)
   - Replace annotation with attributes on entities:
     - Client, ClientType, Country, City, Street, Contact, ContactType, User, UserRole.
+    - AccountingDocument, AccountingDocumentArticle, AccountingDocumentArticleProperty, AccountingDocumentType, 
+      Article, ArticleGroup, ArticleProperty, Payment, PaymentType, Preferences, Property, Unit, 
+      AccountingDocumentArticleRepository, AccountingDocumentRepository, ArticleGroupRepository and ArticleRepository.
 
 # Upgrade to 7.2.0
 Upgrade:
