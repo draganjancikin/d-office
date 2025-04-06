@@ -1,3 +1,7 @@
+# Upgrade to 8.0.0
+Upgrade:
+* #284 - Change Entity metadata from Annotation to Attribute
+
 # Upgrade to 7.2.0
 Upgrade:
 * #279 - doctrine/cache (1.13.0 => 2.2.0)
