@@ -2,96 +2,112 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="v6__cities")
+ * City entity.
  */
-class City {
+#[ORM\Entity]
+#[ORM\Table(name: 'v6__cities')]
+class City
+{
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+    /**
+     * Identifier of the City.
+     *
+     * @var int
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  /**
-   * @ORM\Column(type="string", length=32)
-   * @var string
-   */
-  protected $name;
+    /**
+     * City's name.
+     *
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 32)]
+    protected $name;
 
-  /**
-   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-   * @var DateTime
-   */
-  protected $created_at;
+    /**
+     * Date when the city was created.
+     *
+     * @var DateTime
+     */
+    #[ORM\Column(type: "datetime", options: ["default" => "CURRENT_TIMESTAMP"])]
+    protected $created_at;
 
-  /**
-   * Many Cities has ben created from One User.
-   * @ORM\ManyToOne(targetEntity="User")
-   * @ORM\JoinColumn(name="created_by_user_id", referencedColumnName="id")
-   */
-  protected $created_by_user;
+    /**
+     * Many Cities have been created from One User.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "created_by_user_id", referencedColumnName: "id")]
+    protected $created_by_user;
 
-  /**
-   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-   * @var DateTime
-   */
-  protected $modified_at;
+    /**
+     * Date when the city was modified.
+     *
+     * @var DateTime
+     */
+    #[ORM\Column(type: "datetime", options: ["default" => "CURRENT_TIMESTAMP"])]
+    protected $modified_at;
 
-  /**
-   * Many Cities has ben created from One User.
-   * @ORM\ManyToOne(targetEntity="User")
-   * @ORM\JoinColumn(name="modified_by_user_id", referencedColumnName="id")
-   */
-  protected $modified_by_user;
+    /**
+     * Many Cities have been created from One User.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "modified_by_user_id", referencedColumnName: "id")]
+    protected $modified_by_user;
 
-  public function getId() {
-    return $this->id;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function setName($name) {
-    $this->name = $name;
-  }
+    public function setName($name) {
+        $this->name = $name;
+    }
 
-  public function getName() {
-    return $this->name;
-  }
+    public function getName() {
+        return $this->name;
+    }
 
-  public function setCreatedAt(\DateTime $created_at) {
-    $this->created_at = $created_at;
-  }
-  
-  public function getCreatedAt() {
-    return $this->created_at;
-  }
+    public function setCreatedAt(\DateTime $created_at) {
+        $this->created_at = $created_at;
+    }
 
-  public function setCreatedByUser($created_by_user) {
-    $this->created_by_user = $created_by_user;
-  }
+    public function getCreatedAt() {
+        return $this->created_at;
+    }
 
-  public function getCreatedByUser() {
-    return $this->created_by_user;
-  }
+    public function setCreatedByUser($created_by_user) {
+        $this->created_by_user = $created_by_user;
+    }
 
-  public function setModifiedAt(\DateTime $modified_at) {
-    $this->modified_at = $modified_at;
-  }
+    public function getCreatedByUser() {
+        return $this->created_by_user;
+    }
 
-  public function getModifiedAt() {
-    return $this->modified_at;
-  }
+    public function setModifiedAt(\DateTime $modified_at) {
+        $this->modified_at = $modified_at;
+    }
 
-  public function setModifiedByUser($modified_by_user) {
-    $this->modified_by_user = $modified_by_user;
-  }
+    public function getModifiedAt() {
+        return $this->modified_at;
+    }
 
-  public function getModifiedByUser() {
-    return $this->modified_by_user;
-  }
+    public function setModifiedByUser($modified_by_user) {
+        $this->modified_by_user = $modified_by_user;
+    }
+
+    public function getModifiedByUser() {
+        return $this->modified_by_user;
+    }
 
 }

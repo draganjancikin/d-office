@@ -1,6 +1,9 @@
 # Upgrade to 8.0.0
 Upgrade:
 * #284 - Change Entity metadata from Annotation to Attribute
+  - Upgrade "doctrine/orm" php package(2.20.0 => 3.3.2)
+  - Replace annotation with attributes on entities:
+    - Client, ClientType, Country, City, Street, Contact, ContactType, User, UserRole.
 
 # Upgrade to 7.2.0
 Upgrade:
