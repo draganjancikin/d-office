@@ -9,6 +9,9 @@ Upgrade:
       AccountingDocumentArticleRepository, AccountingDocumentRepository, ArticleGroupRepository and ArticleRepository
     - CuttingSheet, CuttingSheetArticle, FenceModel, CuttingSheetArticleRepository,
       CuttingSheetRepository and list__last.
+    - MaterialController, Material, MaterialProperty, MaterialSupplier, MaterialPropertyRepository, 
+      MaterialRepository and MaterialSupplierRepository
+
 # Upgrade to 7.2.0
 Upgrade:
 * #279 - doctrine/cache (1.13.0 => 2.2.0)
