@@ -1,3 +1,7 @@
+# Upgrade to 7.2.1
+Enhancement:
+* #285 - After add a new material, duplicate material and edit material, back in Order edit mode'
+
 # Upgrade to 7.2.0
 Upgrade:
 * #279 - doctrine/cache (1.13.0 => 2.2.0)
