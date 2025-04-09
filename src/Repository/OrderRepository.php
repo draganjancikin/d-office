@@ -4,7 +4,8 @@ namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class OrderRepository extends EntityRepository {
+class OrderRepository extends EntityRepository
+{
 
     /**
      * Method that return number of Orders.
@@ -12,7 +13,7 @@ class OrderRepository extends EntityRepository {
      * @return int
      */
     public function getNumberOfOrders() {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('count(o.id)')
             ->from('App\Entity\Order','o');
         return $qb->getQuery()->getSingleScalarResult();
@@ -24,7 +25,7 @@ class OrderRepository extends EntityRepository {
      * @return array
      */
     public function getLastOrders($limit = 5) {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('o')
             ->from('App\Entity\Order', 'o')
             ->orderBy('o.id', 'DESC')
@@ -42,7 +43,7 @@ class OrderRepository extends EntityRepository {
      */
     public function getMaterialsOnOrder($order_id) {
         // Create a QueryBuilder instance.
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('om')
             ->from('App\Entity\OrderMaterial', 'om')
             ->join('om.material', 'm', 'om.material = m.id')
@@ -58,7 +59,7 @@ class OrderRepository extends EntityRepository {
      * @return object
      */
     public function getProject($order_id) {
-        $query = $this->_em->createQuery('SELECT p, o '
+        $query = $this->getEntityManager()->createQuery('SELECT p, o '
                                             . 'FROM App\Entity\Project p '
                                             . 'JOIN p.orders o '
                                             . 'WITH o.id = :order_id');
@@ -107,7 +108,7 @@ class OrderRepository extends EntityRepository {
         }
 
         // Update ordinal_number_in_year.
-        $order = $this->_em->find('\App\Entity\Order', $order_id);
+        $order = $this->getEntityManager()->find('\App\Entity\Order', $order_id);
         if ($order === null) {
             echo "Order with ID $order_id does not exist.\n";
             exit(1);
@@ -115,7 +116,7 @@ class OrderRepository extends EntityRepository {
 
         $order->setOrdinalNumInYear($ordinal_number_in_year);
 
-        $this->_em->flush();
+        $this->getEntityManager()->flush();
     }
 
     /**
@@ -124,7 +125,7 @@ class OrderRepository extends EntityRepository {
      * @return object
      */
     public function getLastOrder() {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('o')
             ->from('App\Entity\Order', 'o')
             ->orderBy('o.id', 'DESC')
@@ -139,7 +140,7 @@ class OrderRepository extends EntityRepository {
      * @return object
      */
     public function getOrderBeforeLast() {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('o')
             ->from('App\Entity\Order', 'o')
             ->orderBy('o.id', 'DESC')
@@ -158,7 +159,7 @@ class OrderRepository extends EntityRepository {
      */
     public function search($term) {
         // Create a QueryBuilder instance.
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('o')
             ->from('App\Entity\Order', 'o')
             ->join('o.supplier', 'supl', 'WITH', 'o.supplier = supl.id')
@@ -177,7 +178,7 @@ class OrderRepository extends EntityRepository {
      */
     public function getAllMaterialsInAllOrders() {
         // Create a QueryBuilder instance.
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('om')
             ->from('App\Entity\OrderMaterial', 'om')
             ->orderBy('om.id', 'ASC');

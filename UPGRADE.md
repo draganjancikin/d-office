@@ -9,8 +9,9 @@ Upgrade:
       AccountingDocumentArticleRepository, AccountingDocumentRepository, ArticleGroupRepository and ArticleRepository
     - CuttingSheet, CuttingSheetArticle, FenceModel, CuttingSheetArticleRepository,
       CuttingSheetRepository and list__last.
-    - MaterialController, Material, MaterialProperty, MaterialSupplier, MaterialPropertyRepository, 
+    - Material, MaterialProperty, MaterialSupplier, MaterialPropertyRepository, 
       MaterialRepository and MaterialSupplierRepository
+    - CompanyInfo, Order, OrderMaterial, OrderMaterialProperty, Project, ProjectPriority, ProjectStatus, CompanyInfoRepository, OrderMaterialPropertyRepository, OrderMaterialRepository, OrderRepository, ProjectRepository
 
 # Upgrade to 7.2.0
 Upgrade:
