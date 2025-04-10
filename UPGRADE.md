@@ -12,6 +12,7 @@ Upgrade:
     - Material, MaterialProperty, MaterialSupplier, MaterialPropertyRepository, 
       MaterialRepository and MaterialSupplierRepository
     - CompanyInfo, Order, OrderMaterial, OrderMaterialProperty, Project, ProjectPriority, ProjectStatus, CompanyInfoRepository, OrderMaterialPropertyRepository, OrderMaterialRepository, OrderRepository, ProjectRepository
+    - ArticleGroupRepository, ArticlePropertyRepository and ArticleRepository
 * 285 - After add a new material, duplicate material and edit material, back in Order edit mode
 
 # Upgrade to 7.2.0

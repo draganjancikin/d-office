@@ -4,6 +4,9 @@ namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * Class ArticleGroupRepository
+ */
 class ArticleGroupRepository extends EntityRepository
 {
 
@@ -12,8 +15,9 @@ class ArticleGroupRepository extends EntityRepository
      *
      * @return array
      */
-    public function getArticleGroups() {
-        $qb = $this->_em->createQueryBuilder();
+    public function getArticleGroups(): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('ag')
             ->from('App\Entity\ArticleGroup', 'ag')
             ->where(

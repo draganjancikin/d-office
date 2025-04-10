@@ -4,6 +4,9 @@ namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * Class ArticleRepository
+ */
 class ArticleRepository extends EntityRepository
 {
 
@@ -12,7 +15,8 @@ class ArticleRepository extends EntityRepository
      *
      * @return array
      */
-    public function findAll(): array {
+    public function findAll(): array
+    {
         return $this->findBy(array(), array('name' => 'ASC'));
     }
 
@@ -23,8 +27,9 @@ class ArticleRepository extends EntityRepository
      *
      * @return array
      */
-    public function getLastArticles($limit = 5) {
-        $qb = $this->_em->createQueryBuilder();
+    public function getLastArticles(int $limit = 5): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('a')
             ->from('App\Entity\Article', 'a')
             ->orderBy('a.id', 'DESC')
@@ -41,9 +46,10 @@ class ArticleRepository extends EntityRepository
      *
      * @return array
      */
-    public function getArticlesByGroup($group_id) {
+    public function getArticlesByGroup(int $group_id): array
+    {
         // Create a QueryBuilder instance.
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('a')
             ->from('App\Entity\Article', 'a')
             ->where(
@@ -62,8 +68,9 @@ class ArticleRepository extends EntityRepository
      *
      * @return array
      */
-    public function search($term) {
-        $qb = $this->_em->createQueryBuilder();
+    public function search(string $term): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('a')
             ->from('App\Entity\Article', 'a')
             ->where(
