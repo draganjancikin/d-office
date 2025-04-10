@@ -365,7 +365,7 @@ class OrderController extends BaseController
             $this->entityManager->flush();
         }
 
-        die('<script>location.href = "/order/' . $order_id . '" </script>');
+        die('<script>location.href = "/order/' . $order_id . '/edit" </script>');
     }
 
     /**
@@ -485,7 +485,7 @@ class OrderController extends BaseController
             }
         }
 
-        die('<script>location.href = "/order/' . $order_id . '" </script>');
+        die('<script>location.href = "/order/' . $order_id . '/edit" </script>');
     }
 
     /**
@@ -587,7 +587,7 @@ class OrderController extends BaseController
             $this->entityManager->flush();
         }
 
-        die('<script>location.href = "/order/' . $order_id . '" </script>');
+        die('<script>location.href = "/order/' . $order_id . '/edit" </script>');
     }
 
     /**
