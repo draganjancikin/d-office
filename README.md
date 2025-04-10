@@ -13,7 +13,6 @@ Required:
 * doctrine/orm:^3.3
 * tecnickcom/tcpdf:^6.3
 * symfony/http-foundation:^6.0
-* doctrine/annotations:^2.0.2
 * symfony/cache:^6.0
 * bootstrap 5.1.3
 
