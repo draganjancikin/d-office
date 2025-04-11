@@ -18,6 +18,9 @@ Upgrade:
 
 * 285 - After add a new material, duplicate material and edit material, back in Order edit mode
 
+Bug:
+* #288 - Recreate file name during upload to Project page
+
 # Upgrade to 7.2.0
 Upgrade:
 * #279 - doctrine/cache (1.13.0 => 2.2.0)
