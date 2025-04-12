@@ -14,13 +14,14 @@ use App\Entity\Street;
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class ClientController extends BaseController {
+class ClientController extends BaseController
+{
 
     /**
      * ClientController constructor.
      */
     public function __construct() {
-      parent::__construct();
+        parent::__construct();
     }
 
     /**
