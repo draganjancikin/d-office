@@ -317,7 +317,7 @@ class PidbController extends BaseController
                             ->where('payment_id = :payment')
                             ->setParameter('parent', $parent->getId())
                             ->setParameter('payment', $payment->getId());
-                        $result = $queryBuilder ->execute();
+                        $result = $queryBuilder ->executeStatement();
                     }
 
                     // Set Parent to active
@@ -330,7 +330,6 @@ class PidbController extends BaseController
                         exit();
                     }
                 }
-
             }
 
             // Check if exist Articles in AccountingDocument.
@@ -569,7 +568,7 @@ class PidbController extends BaseController
                 ->where('payment_id = :payment')
                 ->setParameter('dispatch', $last_accounting_document_id)
                 ->setParameter('payment', $payment->getId());
-            $result = $queryBuilder ->execute();
+            $result = $queryBuilder ->executeStatement();
         }
 
         // Get articles from proforma.

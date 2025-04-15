@@ -15,11 +15,11 @@ Upgrade:
     - ArticleGroupRepository, ArticlePropertyRepository and ArticleRepository
     - ProjectNote, ProjectTask, ProjectTaskNote, ProjectTaskStatus, ProjectTaskType and PaymentRepository
   - Remove "doctrine/annotations" php package (2.0.2)
-
 * 285 - After add a new material, duplicate material and edit material, back in Order edit mode
 
 Bug:
 * #288 - Recreate file name during upload to Project page
+* #289 - Creating project from Proforma back Error
 
 # Upgrade to 7.2.0
 Upgrade:

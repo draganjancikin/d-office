@@ -134,30 +134,13 @@ class ProjectController extends BaseController
         if (isset($_POST['acc_doc_id'])) {
             $acc_doc_id = $_POST['acc_doc_id'];
 
-
-            // Insert Project and AccountingDocument to table v6__projects__accounting_documents.
-            // @HOLMES - Dragan: Find better way to connect to db.
-            $conn = \Doctrine\DBAL\DriverManager::getConnection([
-                'dbname' => DB_NAME,
-                'user' => DB_USERNAME,
-                'password' => DB_PASSWORD,
-                'host' => DB_SERVER,
-                'driver' => 'mysqli',
-            ]);
-            $queryBuilder = $conn->createQueryBuilder();
-
-            $queryBuilder
-                ->insert('v6__projects__accounting_documents')
-                ->values([
-                    'project_id' => ':project_id',
-                    'accountingdocument_id' => ':accountingdocument_id'
-                ])
-                ->setParameters([
+            // Insert project_id and accountingdocument_id to table v6__projects__accounting_documents.
+            $this->entityManager
+                ->getConnection()
+                ->insert('v6__projects__accounting_documents', [
                     'project_id' => $new_project_id,
-                    'accountingdocument_id' => $acc_doc_id,
+                    'accountingdocument_id' => $acc_doc_id
                 ]);
-
-            $queryBuilder->execute();
         }
 
         die('<script>location.href = "/project/' . $new_project_id . '" </script>');
