@@ -2,170 +2,185 @@
 
 namespace App\Entity;
 
+use App\Entity\Unit;
+use App\Repository\MaterialRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity (repositoryClass="App\Repository\MaterialRepository")
- * @ORM\Table(name="v6__materials")
- */
-class Material {
+#[ORM\Entity(repositoryClass: MaterialRepository::class)]
+#[ORM\Table(name: 'v6__materials')]
+class Material
+{
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  /**
-   * @ORM\Column(type="string", length=96)
-   * @var string
-   */
-  protected $name;
+    /**
+     * Material name.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: 'string', length: 96)]
+    protected $name;
 
-  /**
-   * Meny Materials have to the One Unit.
-   * @ORM\ManyToOne(targetEntity="Unit")
-   * @ORM\JoinColumn(name="unit_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $unit;
+    /**
+     * Many Materials have to the One Unit.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: Unit::class)]
+    #[ORM\JoinColumn(name: 'unit_id', referencedColumnName: 'id')]
+    protected $unit;
 
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=0)
-   * @var float
-   */
-  protected $weight;
+    /**
+     * Material weight.
+     *
+     * @var float
+     */
+    #[ORM\Column(type: 'decimal', precision: 11, scale: 0)]
+    protected $weight;
 
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=2)
-   * @var float
-   */
-  protected $min_calc_measure;
+    /**
+     * Material minimum calculation measure.
+     *
+     * @var float
+     */
+    #[ORM\Column(type: 'decimal', precision: 11, scale: 2)]
+    protected $min_calc_measure;
 
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=4)
-   * @var float
-   */
-  protected $price;
+    /**
+     * Material price.
+     *
+     * @var float
+     */
+    #[ORM\Column(type: 'decimal', precision: 11, scale: 4)]
+    protected $price;
 
-  /**
-   * @ORM\Column(type="text")
-   * @var string
-   */
-  protected $note;
+    /**
+     * Material note.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: 'text', nullable: true)]
+    protected $note;
 
-  /**
-   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-   * @var DateTime
-   */
-  protected $created_at;
+    /**
+     * Date when material is created.
+     *
+     * @var DateTime
+     */
+    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    protected $created_at;
 
-  /**
-   * Many Clients has ben created from One User.
-   * @ORM\ManyToOne(targetEntity="User")
-   * @ORM\JoinColumn(name="created_by_user_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $created_by_user;
+    /**
+     * User who created this material.
+     *
+     * @var int
+     */
+    #[ORM\JoinColumn(name: 'created_by_user_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    protected $created_by_user;
 
-  /**
-   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-   * @var DateTime
-   */
-  protected $modified_at;
+    /**
+     * User who modified this material.
+     *
+     * @var DateTime
+     */
+    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    protected $modified_at;
 
-  /**
-   * Many Clients has ben updated from One User.
-   * @ORM\ManyToOne(targetEntity="User")
-   * @ORM\JoinColumn(name="modified_by_user_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $modified_by_user;
+    /**
+     * User who modified this material.
+     *
+     * @var int
+     */
+    #[ORM\JoinColumn(name: 'modified_by_user_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    protected $modified_by_user;
 
-  public function getId() {
-    return $this->id;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function setName($name) {
-    $this->name = $name;
-  }
-  
-  public function getName() {
-    return $this->name;
-  }
+    public function setName($name) {
+        $this->name = $name;
+    }
 
-  public function setUnit($unit) {
-    $this->unit = $unit;
-  }
+    public function getName() {
+        return $this->name;
+    }
 
-  public function getUnit() {
-    return $this->unit;
-  }
+    public function setUnit($unit) {
+        $this->unit = $unit;
+    }
 
-  public function setWeight($weight) {
-    $this->weight = $weight;
-  }
+    public function getUnit() {
+        return $this->unit;
+    }
 
-  public function getWeight() {
-    return $this->weight;
-  }
+    public function setWeight($weight) {
+        $this->weight = $weight;
+    }
 
-  public function setMinCalcMeasure($min_calc_measure) {
-    $this->min_calc_measure = $min_calc_measure;
-  }
+    public function getWeight() {
+        return $this->weight;
+    }
 
-  public function getMinCalcMeasure() {
-    return $this->min_calc_measure;
-  }
+    public function setMinCalcMeasure($min_calc_measure) {
+        $this->min_calc_measure = $min_calc_measure;
+    }
 
-  public function setNote($note) {
-    $this->note = $note;
-  }
+    public function getMinCalcMeasure() {
+        return $this->min_calc_measure;
+    }
 
-  public function getNote() {
-    return $this->note;
-  }
+    public function setNote($note) {
+        $this->note = $note;
+    }
 
-  public function setPrice($price) {
-    $this->price = $price;
-  }
+    public function getNote() {
+        return $this->note;
+    }
 
-  public function getPrice() {
-    return $this->price;
-  }
+    public function setPrice($price) {
+        $this->price = $price;
+    }
 
-  public function setCreatedAt(\DateTime $created_at) {
-    $this->created_at = $created_at;
-  }
+    public function getPrice() {
+        return $this->price;
+    }
 
-  public function getCreatedAt() {
-    return $this->created_at;
-  }
+    public function setCreatedAt(\DateTime $created_at) {
+        $this->created_at = $created_at;
+    }
 
-  public function setCreatedByUser($created_by_user) {
-    $this->created_by_user = $created_by_user;
-  }
+    public function getCreatedAt() {
+        return $this->created_at;
+    }
 
-  public function getCreatedByUser() {
-    return $this->created_by_user;
-  }
+    public function setCreatedByUser($created_by_user) {
+        $this->created_by_user = $created_by_user;
+    }
 
-  public function setModifiedAt(\DateTime $modified_at) {
-    $this->modified_at = $modified_at;
-  }
+    public function getCreatedByUser() {
+        return $this->created_by_user;
+    }
 
-  public function getModifiedAt() {
-    return $this->modified_at;
-  }
+    public function setModifiedAt(\DateTime $modified_at) {
+        $this->modified_at = $modified_at;
+    }
 
-  public function setModifiedByUser($modified_by_user) {
-    $this->modified_by_user = $modified_by_user;
-  }
+    public function getModifiedAt() {
+        return $this->modified_at;
+    }
 
-  public function getModifiedByUser() {
-    return $this->modified_by_user;
-  }
+    public function setModifiedByUser($modified_by_user) {
+        $this->modified_by_user = $modified_by_user;
+    }
+
+    public function getModifiedByUser() {
+        return $this->modified_by_user;
+    }
 
 }

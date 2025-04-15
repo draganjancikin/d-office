@@ -243,9 +243,8 @@ class OrderController extends BaseController
 
         $this->entityManager->flush();
 
-        // Update order in project if project exist.
+        // Update order in project if project exist
         if (NULL != $_POST["project_id"]) {
-
             $old_project_id = $_POST["old_project_id"];
             $new_project_id = htmlspecialchars($_POST["project_id"]);
 
@@ -253,7 +252,6 @@ class OrderController extends BaseController
             $old_project = $this->entityManager->find("\App\Entity\Project", $old_project_id);
 
             if ($old_project_id != $new_project_id) {
-
                 if ($old_project_id  != 0) {
                     // Delete order form old project.
                     $old_project->getOrders()->removeElement($order);
@@ -263,7 +261,6 @@ class OrderController extends BaseController
                 $new_project->getOrders()->add($order);
                 $this->entityManager->flush();
             }
-
         }
         die('<script>location.href = "/order/' . $order_id . '" </script>');
     }
@@ -282,25 +279,24 @@ class OrderController extends BaseController
             // Check if exist Materials in Order.
             if ($order_materials = $this->entityManager->getRepository('\App\Entity\OrderMaterial')->getOrderMaterials($order_id)) {
 
-                // Loop through all materials.
+                // Loop trough all materials
                 foreach ($order_materials as $order_material) {
 
-                    // Check if exist Properties in Order Material.
+                    // Check if exist Properties in Order Material
                     if (
                       $order_material_properties = $this->entityManager
                         ->getRepository('\App\Entity\OrderMaterialProperty')
                         ->getOrderMaterialProperties($order_material->getId())
                     ) {
-
                         // Remove Properties.
                         foreach ($order_material_properties as $order_material_property) {
-                          $orderMaterialProperty = $this->entityManager->find("\App\Entity\OrderMaterialProperty", $order_material_property->getId());
-                          $this->entityManager->remove($orderMaterialProperty);
-                          $this->entityManager->flush();
+                            $orderMaterialProperty = $this->entityManager->find("\App\Entity\OrderMaterialProperty", $order_material_property->getId());
+                            $this->entityManager->remove($orderMaterialProperty);
+                            $this->entityManager->flush();
                         }
                     }
 
-                    // Remove Material
+                    // Remove Material.
                     $this->entityManager->remove($order_material);
                     $this->entityManager->flush();
                 }
@@ -310,6 +306,7 @@ class OrderController extends BaseController
             // Remove Order
             $this->entityManager->remove($order);
             $this->entityManager->flush();
+
         }
 
         die('<script>location.href = "/orders/?search=" </script>');
@@ -394,9 +391,9 @@ class OrderController extends BaseController
             if ($old_material_id != $new_material_id){
                 // Remove the Properties of the old Material. (from table v6__order__materials__properties).
                 if (
-                    $order__material__properties = $this->entityManager
-                      ->getRepository('\App\Entity\OrderMaterialProperty')
-                      ->findBy(['order_material' => $order_material_id], [])
+                  $order__material__properties = $this->entityManager
+                    ->getRepository('\App\Entity\OrderMaterialProperty')
+                    ->findBy(['order_material' => $order_material_id], [])
                 ) {
                     foreach ($order__material__properties as $order__material__property) {
                         $orderMaterialProperty = $this->entityManager->find("\App\Entity\OrderMaterialProperty", $order__material__property->getId());
@@ -416,7 +413,7 @@ class OrderController extends BaseController
                 // insert Material properties in table v6__order__materials__properties
                 $material_properties = $this->entityManager->getRepository('\App\Entity\MaterialProperty')->getMaterialProperties($new_material->getId());
                 foreach ($material_properties as $material_property) {
-                    // insert to v6__order__materials__properties
+                    // Insert to v6__order__materials__properties.
                     $newOrderMaterialProperty = new OrderMaterialProperty();
 
                     $newOrderMaterialProperty->setOrderMaterial($order_material);
@@ -429,6 +426,7 @@ class OrderController extends BaseController
             }
         }
         else {
+
             $note = $_POST["note"] ?? $old_material->getNote();
             $note = htmlspecialchars($note, ENT_QUOTES, 'UTF-8');
 
@@ -449,7 +447,7 @@ class OrderController extends BaseController
                 }
             }
             else {
-                $price = $old_material->getPrice();
+               $price = $old_material->getPrice();
             }
 
             if (isset($_POST["discount"])) {
@@ -460,7 +458,7 @@ class OrderController extends BaseController
                 }
             }
             else {
-                $discount = $old_material->getDiscount();
+               $discount = $old_material->getDiscount();
             }
 
             $orderMaterial = $this->entityManager->find("\App\Entity\OrderMaterial", $order_material_id);
@@ -475,7 +473,6 @@ class OrderController extends BaseController
             // Properties update in table v6_orders_materials_properties.
             $order_material_properties = $this->entityManager->getRepository('\App\Entity\OrderMaterialProperty')->getOrderMaterialProperties($order_material_id);
             foreach ($order_material_properties as $order_material_property) {
-
                 // Get property name from $order_material_property.
                 $property_name = $order_material_property->getProperty()->getName();
                 // Get property value from $_POST
@@ -575,11 +572,11 @@ class OrderController extends BaseController
         $this->entityManager->persist($newOrderMaterial);
         $this->entityManager->flush();
 
-        // Get Properties from old OrderMaterial and add to newOrderMaterial
+        // Get Properties from old OrderMaterial and add to newOrderMaterial.
         $material_on_order_properties = $this->entityManager->getRepository('\App\Entity\OrderMaterial')->getProperties($order_material_id);
 
         foreach ($material_on_order_properties as $material_on_order_property) {
-            // insert to table v6__orders__materials__properties
+            // Insert to table v6__orders__materials__properties.
             $newOrderMaterialProperty = new OrderMaterialProperty();
 
             $newOrderMaterialProperty->setOrderMaterial($newOrderMaterial);

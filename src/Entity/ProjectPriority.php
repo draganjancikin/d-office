@@ -5,35 +5,39 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="v6__project__priorities")
+ * Project Priority entity.
  */
-class ProjectPriority {
+#[ORM\Entity]
+#[ORM\Table(name: 'v6__project__priorities')]
+class ProjectPriority
+{
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+    /**
+     * Identifier of the Project Priority.
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  /**
-   * @ORM\Column(type="string", unique=TRUE, length=48)
-   * @var string
-   */
-  protected $name;
+    /**
+     * Project Priority name.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 48,  unique: true)]
+    protected $name;
 
-  public function getId() {
-    return $this->id;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function setName($name) {
-    $this->name = $name;
-  }
-  
-  public function getName() {
-    return $this->name;
-  }
-  
+    public function setName($name) {
+        $this->name = $name;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
 }

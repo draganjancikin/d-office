@@ -5,35 +5,41 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="v6__user__roles")
+ * UserRole entity.
  */
-class UserRole {
-
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+#[ORM\Entity]
+#[ORM\Table(name: 'v6__user__roles')]
+class UserRole
+{
 
     /**
-   * @ORM\Column(type="string", length=16)
-   * @var string
-   */
-  protected $name;
+     * Identifier of the UserRole.
+     *
+     * @var int
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  public function getId() {
-    return $this->id;
-  }
+    /**
+     * UserRole's name.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 16)]
+    protected $name;
 
-  public function setName($name) {
-    $this->name = $name;
-  }
-  
-  public function getName() {
-    return $this->name;
-  }
+    public function getId() {
+        return $this->id;
+    }
+
+    public function setName($name) {
+        $this->name = $name;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
 
 }

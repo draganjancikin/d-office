@@ -2,12 +2,12 @@
 
 <?php include '../src/Views/includes/pageHeader.php' ?>
 
-  <!-- Tools Meni -->
-  <?php include 'includes/tools_menu.php' ?>
-  <!-- End of Tools Meni -->
+<!-- Tools Meni -->
+<?php include 'includes/tools_menu.php' ?>
+<!-- End of Tools Meni -->
 
-  <!-- Main content -->
+<!-- Main content -->
 
-  <!-- Enf of Main content -->
+<!-- Enf of Main content -->
 
 <?php include '../src/Views/includes/pageFooter.php' ?>

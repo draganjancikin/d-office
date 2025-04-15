@@ -5,35 +5,40 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="v6__units")
+ * Unit entity.
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'v6__units')]
 class Unit {
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+    /**
+     * Identifier of the Unit.
+     *
+     * @var int
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  /**
-   * @ORM\Column(type="string", length=48)
-   * @var string
-   */
-  protected $name;
+    /**
+     * Unit's name.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 48)]
+    protected $name;
 
-  public function getId() {
-    return $this->id;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function setName($name) {
-    $this->name = $name;
-  }
-  
-  public function getName() {
-    return $this->name;
-  }
+    public function setName($name) {
+        $this->name = $name;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
 
 }

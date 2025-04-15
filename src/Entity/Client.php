@@ -2,255 +2,300 @@
 
 namespace App\Entity;
 
+use App\Entity\City;
+use App\Entity\ClientType;
+use App\Entity\Contact;
+use App\Entity\Country;
+use App\Entity\Street;
+use App\Entity\User;
+use App\Repository\ClientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity (repositoryClass="App\Repository\ClientRepository")
- * @ORM\Table(name="v6__clients")
+ * Client entity.
  */
-class Client {
+#[ORM\Entity(repositoryClass: ClientRepository::class)]
+#[ORM\Table(name: 'v6__clients')]
+class Client
+{
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+    /**
+     * Identifier of the Client.
+     *
+     * @var int
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  /**
-   * Meny Clients belongs to the One Type.
-   * @ORM\ManyToOne(targetEntity="ClientType")
-   * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $type;
+    /**
+     * Many clients belong to one type.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: ClientType::class)]
+    #[ORM\JoinColumn(name: "type_id", referencedColumnName: "id")]
+    protected $type;
 
-  /**
-   * @ORM\Column(type="string", length=48)
-   * @var string
-   */
-  protected $name;
+    /**
+     * Client name.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 48)]
+    protected $name;
 
-  /**
-   * @ORM\Column(type="string", length=128)
-   * @var string
-   */
-  protected $name_note;
+    /**
+     * Client's name note.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 128)]
+    protected $name_note;
 
-  /**
-   * @ORM\Column(type="string", length=13)
-   * @var string
-   */
-  protected $lb;
+    /**
+     * Client's LB number.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 13)]
+    protected $lb;
 
-  /**
-   * @ORM\Column(type="boolean")
-   * @var boolean
-   */
-  protected $is_supplier;
+    /**
+     * Supplier flag.
+     *
+     * @var boolean
+     */
+    #[ORM\Column(type: "boolean")]
+    protected $is_supplier;
 
-  /**
-   * Meny Clients live in One Country.
-   * @ORM\ManyToOne(targetEntity="Country")
-   * @ORM\JoinColumn(name="country_id", referencedColumnName="id")
-   */
-  protected $country;
+    /**
+     * Many Clients live in One Country.
+     */
+    #[ORM\ManyToOne(targetEntity: Country::class)]
+    #[ORM\JoinColumn(name: "country_id", referencedColumnName: "id")]
+    protected $country;
 
-  /**
-   * Meny Clients live in One City.
-   * @ORM\ManyToOne(targetEntity="City")
-   * @ORM\JoinColumn(name="city_id", referencedColumnName="id")
-   */
-  protected $city;
+    /**
+     * Many Clients live in One City.
+     */
+    #[ORM\ManyToOne(targetEntity: City::class)]
+    #[ORM\JoinColumn(name: "city_id", referencedColumnName: "id")]
+    protected $city;
 
-  /**
-   * Meny Clients live in One Street.
-   * @ORM\ManyToOne(targetEntity="Street")
-   * @ORM\JoinColumn(name="street_id", referencedColumnName="id")
-   */
-  protected $street;
+    /**
+     * Many Clients live in One Street.
+     */
+    #[ORM\ManyToOne(targetEntity: Street::class)]
+    #[ORM\JoinColumn(name: "street_id", referencedColumnName: "id")]
+    protected $street;
 
-  /**
-   * @ORM\Column(type="string", length=8)
-   * @var string
-   */
-  protected $home_number;
+    /**
+     * Client's home number.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 8)]
+    protected $home_number;
 
-  /**
-   * @ORM\Column(type="string", length=128)
-   * @var string
-   */
-  protected $address_note;
+    /**
+     * Client's address note.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 128)]
+    protected $address_note;
 
-  /**
-   * @ORM\Column(type="text")
-   * @var string
-   */
-  protected $note;
+    /**
+     * Client's note.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "text")]
+    protected $note;
 
-  /**
-   * Unidirectional - Many users have many contacts
-   *
-   * @ORM\ManyToMany(targetEntity="Contact")
-   * @ORM\JoinTable(name="v6__clients__contacts")
-   */
-  private $contacts;
+    /**
+     * Unidirectional - Many users have many contacts
+     *
+  //   * @ORM\ManyToMany(targetEntity="Contact")
+  //   * @ORM\JoinTable(name="v6__clients__contacts")
+     */
+    #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'clients')]
+    #[ORM\JoinTable(
+        name: 'v6__clients__contacts',
+        joinColumns: [new ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id')],
+        inverseJoinColumns: [new ORM\JoinColumn(name: 'contact_id', referencedColumnName: 'id')]
+    )]
+    private Collection $contacts;
 
-  /**
-   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-   * @var DateTime
-   */
-  protected $created_at;
+    /**
+     * Date when the client was created.
+     *
+     * @var DateTime
+     */
+    #[ORM\Column(type: "datetime", options: ["default" => "CURRENT_TIMESTAMP"])]
+    protected $created_at;
 
-  /**
-   * Many Clients has ben created from One User.
-   * @ORM\ManyToOne(targetEntity="User")
-   * @ORM\JoinColumn(name="created_by_user_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $created_by_user;
+    /**
+     * Many Clients have been created from One User.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "created_by_user_id", referencedColumnName: "id")]
+    protected $created_by_user;
 
-  /**
-   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-   * @var DateTime
-   */
-  protected $modified_at;
+    /**
+     * Date when the client was modified.
+     *
+     * @var DateTime
+     */
+    #[ORM\Column(type: "datetime", options: ["default" => "CURRENT_TIMESTAMP"])]
+    protected $modified_at;
 
-  /**
-   * Many Clients has ben updated from One User.
-   * @ORM\ManyToOne(targetEntity="User")
-   * @ORM\JoinColumn(name="modified_by_user_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $modified_by_user;
+    /**
+     * Many Clients have been updated from One User.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "modified_by_user_id", referencedColumnName: "id")]
+    protected $modified_by_user;
 
-  public function getId() {
-    return $this->id;
-  }
+    public function __construct()
+    {
+        $this->contacts = new ArrayCollection();
+    }
 
-  public function setType($type) {
-    $this->type = $type;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function getType() {
-    return $this->type;
-  }
+    public function setType($type) {
+        $this->type = $type;
+    }
 
-  public function setName($name) {
-    $this->name = $name;
-  }
-  
-  public function getName() {
-    return $this->name;
-  }
+    public function getType() {
+        return $this->type;
+    }
 
-  public function setNameNote($name_note) {
-    $this->name_note = $name_note;
-  }
+    public function setName($name) {
+        $this->name = $name;
+    }
 
-  public function getNameNote() {
-    return $this->name_note;
-  }
+    public function getName() {
+        return $this->name;
+    }
 
-  public function setLb($lb) {
-    $this->lb = $lb;
-  }
+    public function setNameNote($name_note) {
+        $this->name_note = $name_note;
+    }
 
-  public function getLb() {
-    return $this->lb;
-  }
+    public function getNameNote() {
+        return $this->name_note;
+    }
 
-  public function setIsSupplier($is_supplier) {
-    $this->is_supplier = $is_supplier;
-  }
+    public function setLb($lb) {
+        $this->lb = $lb;
+    }
 
-  public function getIsSupplier() {
-    return $this->is_supplier;
-  }
+    public function getLb() {
+        return $this->lb;
+    }
 
-  public function setCountry($country) {
-    $this->country = $country;
-  }
+    public function setIsSupplier($is_supplier) {
+        $this->is_supplier = $is_supplier;
+    }
 
-  public function getCountry() {
-    return $this->country;
-  }
+    public function getIsSupplier() {
+        return $this->is_supplier;
+    }
 
-  public function setCity($city) {
-    $this->city = $city;
-  }
+    public function setCountry($country) {
+        $this->country = $country;
+    }
 
-  public function getCity() {
-    return $this->city;
-  }
+    public function getCountry() {
+        return $this->country;
+    }
 
-  public function setStreet($street) {
-    $this->street = $street;
-  }
+    public function setCity($city) {
+        $this->city = $city;
+    }
 
-  public function getStreet() {
-    return $this->street;
-  }
+    public function getCity() {
+        return $this->city;
+    }
 
-  public function setHomeNumber($home_number) {
-    $this->home_number = $home_number;
-  }
+    public function setStreet($street) {
+        $this->street = $street;
+    }
 
-  public function getHomeNumber() {
-    return $this->home_number;
-  }
+    public function getStreet() {
+        return $this->street;
+    }
 
-  public function setAddressNote($address_note) {
-    $this->address_note = $address_note;
-  }
+    public function setHomeNumber($home_number) {
+        $this->home_number = $home_number;
+    }
 
-  public function getAddressNote() {
-    return $this->address_note;
-  }
+    public function getHomeNumber() {
+        return $this->home_number;
+    }
 
-  public function setNote($note) {
-    $this->note = $note;
-  }
+    public function setAddressNote($address_note) {
+        $this->address_note = $address_note;
+    }
 
-  public function getNote() {
-    return $this->note;
-  }
+    public function getAddressNote() {
+        return $this->address_note;
+    }
 
-  public function getContacts() {
-    return $this->contacts;
-  }
+    public function setNote($note) {
+        $this->note = $note;
+    }
 
-  public function setCreatedAt(\DateTime $created_at) {
-    $this->created_at = $created_at;
-  }
+    public function getNote() {
+        return $this->note;
+    }
 
-  public function getCreatedAt() {
-    return $this->created_at;
-  }
+    public function getContacts() {
+        return $this->contacts;
+    }
 
-  public function setCreatedByUser($created_by_user) {
-    $this->created_by_user = $created_by_user;
-  }
+    public function setCreatedAt(\DateTime $created_at) {
+        $this->created_at = $created_at;
+    }
 
-  public function getCreatedByUser() {
-    return $this->created_by_user;
-  }
+    public function getCreatedAt() {
+        return $this->created_at;
+    }
 
-  public function setModifiedAt(\DateTime $modified_at) {
-    $this->modified_at = $modified_at;
-  }
+    public function setCreatedByUser($created_by_user) {
+        $this->created_by_user = $created_by_user;
+    }
 
-  public function getModifiedAt() {
-    return $this->modified_at;
-  }
+    public function getCreatedByUser() {
+        return $this->created_by_user;
+    }
 
-  public function setModifiedByUser($modified_by_user) {
-    $this->modified_by_user = $modified_by_user;
-  }
+    public function setModifiedAt(\DateTime $modified_at) {
+        $this->modified_at = $modified_at;
+    }
 
-  public function getModifiedByUser() {
-    return $this->modified_by_user;
-  }
+    public function getModifiedAt() {
+        return $this->modified_at;
+    }
+
+    public function setModifiedByUser($modified_by_user) {
+        $this->modified_by_user = $modified_by_user;
+    }
+
+    public function getModifiedByUser() {
+        return $this->modified_by_user;
+    }
   
 }
