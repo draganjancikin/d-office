@@ -1,3 +1,26 @@
+# Upgrade to 8.0.0
+Upgrade:
+* #284 - Change Entity metadata from Annotation to Attribute
+  - Upgrade "doctrine/orm" php package(2.20.0 => 3.3.2)
+  - Replace annotation with attributes on entities:
+    - Client, ClientType, Country, City, Street, Contact, ContactType, User, UserRole.
+    - AccountingDocument, AccountingDocumentArticle, AccountingDocumentArticleProperty, AccountingDocumentType, 
+      Article, ArticleGroup, ArticleProperty, Payment, PaymentType, Preferences, Property, Unit, 
+      AccountingDocumentArticleRepository, AccountingDocumentRepository, ArticleGroupRepository and ArticleRepository
+    - CuttingSheet, CuttingSheetArticle, FenceModel, CuttingSheetArticleRepository,
+      CuttingSheetRepository and list__last.
+    - Material, MaterialProperty, MaterialSupplier, MaterialPropertyRepository, 
+      MaterialRepository and MaterialSupplierRepository
+    - CompanyInfo, Order, OrderMaterial, OrderMaterialProperty, Project, ProjectPriority, ProjectStatus, CompanyInfoRepository, OrderMaterialPropertyRepository, OrderMaterialRepository, OrderRepository, ProjectRepository
+    - ArticleGroupRepository, ArticlePropertyRepository and ArticleRepository
+    - ProjectNote, ProjectTask, ProjectTaskNote, ProjectTaskStatus, ProjectTaskType and PaymentRepository
+  - Remove "doctrine/annotations" php package (2.0.2)
+* 285 - After add a new material, duplicate material and edit material, back in Order edit mode
+
+Bug:
+* #288 - Recreate file name during upload to Project page
+* #289 - Creating project from Proforma back Error
+
 # Upgrade to 7.2.0
 Upgrade:
 * #279 - doctrine/cache (1.13.0 => 2.2.0)

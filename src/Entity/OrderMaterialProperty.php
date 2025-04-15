@@ -2,70 +2,79 @@
 
 namespace App\Entity;
 
+use App\Entity\OrderMaterial;
+use App\Entity\Property;
+use App\Repository\OrderMaterialPropertyRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity (repositoryClass="App\Repository\OrderMaterialPropertyRepository")
- * @ORM\Table(name="v6__orders__materials__properties")
+ * Order Material Property entity.
  */
-class OrderMaterialProperty {
+#[ORM\Entity(repositoryClass: OrderMaterialPropertyRepository::class)]
+#[ORM\Table(name: 'v6__orders__materials__properties')]
+class OrderMaterialProperty
+{
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+    /**
+     * Identifier of the OrderMaterialProperty.
+     */
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    #[ORM\Id]
+    protected $id;
 
-  /**
-   * Meny ...
-   * @ORM\ManyToOne(targetEntity="OrderMaterial")
-   * @ORM\JoinColumn(name="order_material_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $order_material;
-  
-  /**
-   * Meny ...
-   * @ORM\ManyToOne(targetEntity="Property")
-   * @ORM\JoinColumn(name="property_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $property;
+    /**
+     * Many Order Materials can belong to the One Order.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: OrderMaterial::class)]
+    #[ORM\JoinColumn(name: "order_material_id", referencedColumnName: "id")]
+    protected $order_material;
 
-  /**
-   * @ORM\Column(type="decimal", precision=11, scale=2)
-   * @var float
-   */
-  protected $quantity;
+    /**
+     * Many Order Materials can belong to the One Property.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: Property::class)]
+    #[ORM\JoinColumn(name: "property_id", referencedColumnName: "id")]
+    protected $property;
 
-  public function getId() {
-    return $this->id;
-  }
+    /**
+     * Order Material Property quantity.
+     *
+     * @var float
+     */
+    #[ORM\Column(type: "decimal", precision: 11, scale: 2)]
+    protected $quantity;
 
-  public function setOrderMaterial($order_material) {
-    $this->order_material = $order_material;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function getOrderMaterial() {
-    return $this->order_material;
-  }
+    public function setOrderMaterial($order_material) {
+        $this->order_material = $order_material;
+    }
 
-  public function setProperty($property) {
-    $this->property = $property;
-  }
+    public function getOrderMaterial() {
+        return $this->order_material;
+    }
 
-  public function getProperty() {
-    return $this->property;
-  }
+    public function setProperty($property) {
+        $this->property = $property;
+    }
 
-  public function setQuantity($quantity) {
-    $this->quantity = $quantity;
-  }
+    public function getProperty() {
+        return $this->property;
+    }
 
-  public function getQuantity() {
-    return $this->quantity;
-  }
+    public function setQuantity($quantity) {
+        $this->quantity = $quantity;
+    }
+
+    public function getQuantity() {
+        return $this->quantity;
+    }
 
 }

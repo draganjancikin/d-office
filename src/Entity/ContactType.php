@@ -5,35 +5,41 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="v6__contact__types")
+ * ContactType entity.
  */
-class ContactType {
+#[ORM\Entity]
+#[ORM\Table(name: 'v6__contact__types')]
+class ContactType
+{
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+    /**
+     * Identifier of the ContactType.
+     *
+     * @var int
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  /**
-   * @ORM\Column(type="string", length=48)
-   * @var string
-   */
-  protected $name;
+    /**
+     * ContactType's name.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 48)]
+    protected $name;
 
-  public function getId() {
-    return $this->id;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function setName($name) {
-    $this->name = $name;
-  }
+    public function setName($name) {
+        $this->name = $name;
+    }
 
-  public function getName() {
-    return $this->name;
-  }
+    public function getName() {
+        return $this->name;
+    }
 
 }

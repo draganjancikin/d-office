@@ -2,218 +2,236 @@
 
 namespace App\Entity;
 
+use App\Entity\AccountingDocumentType;
+use App\Entity\Client;
+use App\Entity\Payment;
+use App\Entity\User;
+use App\Repository\AccountingDocumentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity (repositoryClass="App\Repository\AccountingDocumentRepository")
- * @ORM\Table(name="v6__accounting_documents")
- */
-class AccountingDocument {
+#[ORM\Entity(repositoryClass: AccountingDocumentRepository::class)]
+#[ORM\Table(name: 'v6__accounting_documents')]
+class AccountingDocument
+{
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  /**
-   * Ordinal number of the document in the current year (redni broj dokumenta u 
-   * tekućoj godini)
-   * @ORM\Column(type="integer")
-   * @var int
-   */
-  protected $ordinal_num_in_year;
+    /**
+     * Ordinal number of the document in the current year.
+     *
+     * @var int
+     */
+    #[ORM\Column(type: "integer")]
+    protected $ordinal_num_in_year;
 
-  /**
-   * Meny Accounting Documents belongs to the One Accounting Document Type.
-   * @ORM\ManyToOne(targetEntity="AccountingDocumentType")
-   * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $type;
+    /**
+     * Meny Accounting Documents belongs to the One Accounting Document Type.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: AccountingDocumentType::class)]
+    #[ORM\JoinColumn(name: "type_id", referencedColumnName: "id")]
+    protected $type;
 
-  /**
-   * Date of Accounting Document
-   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-   * @var DateTime
-   */
-  protected $date;
+    /**
+     * Date of Accounting Document
+     *
+     * @var DateTime
+     */
+    #[ORM\Column(type: "datetime", options: ["default" => "CURRENT_TIMESTAMP"])]
+    protected $date;
 
-  /**
-   * Meny Accounting Documents belongs to the One Client.
-   * @ORM\ManyToOne(targetEntity="Client")
-   * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $client;
+    /**
+     * Many Accounting Documents belongs to the One Client.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: Client::class)]
+    #[ORM\JoinColumn(name: "client_id", referencedColumnName: "id")]
+    protected $client;
 
-  /**
-   * Many Accounting Document has One parent Accounting Document 
-   * @ORM\ManyToOne(targetEntity="AccountingDocument")
-   * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $parent;
+    /**
+     * Many Accounting Document has One parent Accounting Document.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: AccountingDocument::class)]
+    #[ORM\JoinColumn(name: "parent_id", referencedColumnName: "id")]
+    protected $parent;
 
-  /**
-   * @ORM\Column(type="string", length=64)
-   * @var string
-   */
-  protected $title;
+    /**
+     * Accounting Document title.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "string", length: 64)]
+    protected $title;
 
-  /**
-   * @ORM\Column(type="boolean")
-   * @var boolean
-   */
-  protected $is_archived;
+    /**
+     * Accounting Document is archived flag.
+     *
+     * @var boolean
+     */
+    #[ORM\Column(type: "boolean", options: ["default" => 0])]
+    protected $is_archived;
 
-  /**
-   * Accounting Document note
-   * @ORM\Column(type="text")
-   * @var string
-   */
-  protected $note;
+    /**
+     * Accounting Document note
+     *
+     * @var string
+     */
+    #[ORM\Column(type: "text", nullable: true)]
+    protected $note;
 
-  /**
-   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-   * @var DateTime
-   */
-  protected $created_at;
+    /**
+     * Date of Accounting Document creation.
+     *
+     * @var DateTime
+     */
+    #[ORM\Column(type: "datetime", options: ["default" => "CURRENT_TIMESTAMP"])]
+    protected $created_at;
 
-  /**
-   * Many Clients has ben created from One User.
-   * @ORM\ManyToOne(targetEntity="User")
-   * @ORM\JoinColumn(name="created_by_user_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $created_by_user;
+    /**
+     * Many Clients have been created from One User.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "created_by_user_id", referencedColumnName: "id")]
+    protected $created_by_user;
 
-  /**
-   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-   * @var DateTime
-   */
-  protected $modified_at;
+    /**
+     * Date of Accounting Document modification.
+     *
+     * @var DateTime
+     */
+    #[ORM\Column(type: "datetime", options: ["default" => "CURRENT_TIMESTAMP"])]
+    protected $modified_at;
 
-  /**
-   * Many Clients has ben updated from One User.
-   * @ORM\ManyToOne(targetEntity="User")
-   * @ORM\JoinColumn(name="modified_by_user_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $modified_by_user;
+    /**
+     * Many Clients have been updated from One User.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "modified_by_user_id", referencedColumnName: "id")]
+    protected $modified_by_user;
 
-  /**
-   * Unidirectional - Many Projects have many payments
-   *
-   * @ORM\ManyToMany(targetEntity="Payment")
-   * @ORM\JoinTable(name="v6__accounting_documents__payments")
-   */
-  private $payments;
+    /**
+     * Bidirectional - Many Projects have many payments
+     *
+     */
+    #[ORM\ManyToMany(targetEntity: Payment::class)]
+    #[ORM\JoinTable(name: "v6__accounting_documents__payments")]
+//    #[ORM\JoinColumn(name: "accounting_document_id", referencedColumnName: "id")]
+//    #[ORM\InverseJoinColumn(name: "payment_id", referencedColumnName: "id")]
+    private $payments;
 
-  public function getId() {
-    return $this->id;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function setOrdinalNumInYear($ordinal_num_in_year) {
-    $this->ordinal_num_in_year = $ordinal_num_in_year;
-  }
-  
-  public function getOrdinalNumInYear() {
-    return $this->ordinal_num_in_year;
-  }
+    public function setOrdinalNumInYear($ordinal_num_in_year) {
+        $this->ordinal_num_in_year = $ordinal_num_in_year;
+    }
 
-  public function setType($type) {
-    $this->type = $type;
-  }
+    public function getOrdinalNumInYear() {
+        return $this->ordinal_num_in_year;
+    }
 
-  public function getType() {
-    return $this->type;
-  }
+    public function setType($type) {
+        $this->type = $type;
+    }
 
-  public function setDate($date) {
-    $this->date = $date;
-  }
+    public function getType() {
+        return $this->type;
+    }
 
-  public function getDate() {
-    return $this->date;
-  }
+    public function setDate($date) {
+        $this->date = $date;
+    }
 
-  public function setClient($client) {
-    $this->client = $client;
-  }
+    public function getDate() {
+        return $this->date;
+    }
 
-  public function getClient() {
-    return $this->client;
-  }
+    public function setClient($client) {
+        $this->client = $client;
+    }
 
-  public function setParent($parent) {
-    $this->parent = $parent;
-  }
+    public function getClient() {
+        return $this->client;
+    }
 
-  public function getParent() {
-    return $this->parent;
-  }
+    public function setParent($parent) {
+        $this->parent = $parent;
+    }
 
-  public function setTitle($title) {
-    $this->title = $title;
-  }
-  
-  public function getTitle() {
-    return $this->title;
-  }
+    public function getParent() {
+        return $this->parent;
+    }
 
-  public function setIsArchived($is_archived) {
-    $this->is_archived = $is_archived;
-  }
+    public function setTitle($title) {
+        $this->title = $title;
+    }
 
-  public function getIsArchived() {
-    return $this->is_archived;
-  }
+    public function getTitle() {
+        return $this->title;
+    }
 
-  public function setNote($note) {
-    $this->note = $note;
-  }
+    public function setIsArchived($is_archived) {
+        $this->is_archived = $is_archived;
+    }
 
-  public function getNote() {
-    return $this->note;
-  }
+    public function getIsArchived() {
+        return $this->is_archived;
+    }
 
-  public function setCreatedAt(\DateTime $created_at) {
-    $this->created_at = $created_at;
-  }
+    public function setNote($note) {
+        $this->note = $note;
+    }
 
-  public function getCreatedAt() {
-    return $this->created_at;
-  }
+    public function getNote() {
+        return $this->note;
+    }
 
-  public function setCreatedByUser($created_by_user) {
-    $this->created_by_user = $created_by_user;
-  }
+    public function setCreatedAt(\DateTime $created_at) {
+        $this->created_at = $created_at;
+    }
 
-  public function getCreatedByUser() {
-    return $this->created_by_user;
-  }
+    public function getCreatedAt() {
+        return $this->created_at;
+    }
 
-  public function setModifiedAt(\DateTime $modified_at) {
-    $this->modified_at = $modified_at;
-  }
+    public function setCreatedByUser($created_by_user) {
+        $this->created_by_user = $created_by_user;
+    }
 
-  public function getModifiedAt() {
-    return $this->modified_at;
-  }
+    public function getCreatedByUser() {
+        return $this->created_by_user;
+    }
 
-  public function setModifiedByUser($modified_by_user) {
-    $this->modified_by_user = $modified_by_user;
-  }
+    public function setModifiedAt(\DateTime $modified_at) {
+        $this->modified_at = $modified_at;
+    }
 
-  public function getModifiedByUser() {
-    return $this->modified_by_user;
-  }
+    public function getModifiedAt() {
+        return $this->modified_at;
+    }
 
-  public function getPayments() {
-    return $this->payments;
-  }
-  
+    public function setModifiedByUser($modified_by_user) {
+        $this->modified_by_user = $modified_by_user;
+    }
+
+    public function getModifiedByUser() {
+        return $this->modified_by_user;
+    }
+
+    public function getPayments() {
+        return $this->payments;
+    }
+
 }

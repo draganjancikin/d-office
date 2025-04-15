@@ -5,35 +5,41 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="v6__payment__types")
+ * PaymentType Entity.
  */
-class PaymentType {
+#[ORM\Entity]
+#[ORM\Table(name: 'v6__payment__types')]
+class PaymentType
+{
 
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+    /**
+     * Identifier of the payment type.
+     *
+     * @var int
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  /**
-   * @ORM\Column(type="string", length=48)
-   * @var string
-   */
-  protected $name;
+    /**
+     * Payment type name.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: 'string', length: 48)]
+    protected $name;
 
-  public function getId() {
-    return $this->id;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function setName($name) {
-    $this->name = $name;
-  }
+    public function setName($name) {
+        $this->name = $name;
+    }
 
-  public function getName() {
-    return $this->name;
-  }
+    public function getName() {
+        return $this->name;
+    }
 
 }

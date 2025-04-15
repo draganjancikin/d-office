@@ -4,51 +4,56 @@ namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class ClientRepository extends EntityRepository {
-  
-  /**
-   * Method that return last $limit clients.
-   * 
-   * @return array
-   *   Array of clients.
-   */
-  public function getLastClients($limit = 5) {
-    $qb = $this->_em->createQueryBuilder();
-    $qb->select('c')
-        ->from('App\Entity\Client', 'c')
-        ->orderBy('c.id', 'DESC')
-        ->setMaxResults( $limit );
-    $query = $qb->getQuery();
-    $result = $query->getResult();
-    return $result;
-  }
+/**
+ * ClientRepository class.
+ */
+class ClientRepository extends EntityRepository
+{
 
-  /**
-   * Search method by criteria: name and name note.
-   * 
-   * @param string $term
-   * 
-   * @return array
-   */
-  public function search($term) {
-    // Create a QueryBilder instance
-    $qb = $this->_em->createQueryBuilder();
-    $qb->select('cl')
-      ->from('App\Entity\Client', 'cl')
-      ->leftJoin('cl.street', 's', 'WITH', 'cl.street = s.id')
-      ->leftJoin('cl.city', 'c', 'WITH', 'cl.city = c.id')
-      ->where(
-        $qb->expr()->orX(
-          $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
-          $qb->expr()->like('cl.name_note', $qb->expr()->literal("%$term%"))
-        )
-      )
-      ->orderBy('cl.name', 'ASC');
+    /**
+     * Method that return last $limit clients.
+     *
+     * @return array
+     *   Array of clients.
+     */
+    public function getLastClients($limit = 5)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('c')
+            ->from('App\Entity\Client', 'c')
+            ->orderBy('c.id', 'DESC')
+            ->setMaxResults($limit);
+        $query = $qb->getQuery();
+        $result = $query->getResult();
+        return $result;
+    }
 
-    $query = $qb->getQuery();
-    $clients = $query->getResult();
-    return $clients;
-  }
+    /**
+     * Search method by criteria: name and name note.
+     *
+     * @param string $term
+     *
+     * @return array
+     */
+    public function search($term)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('cl')
+            ->from('App\Entity\Client', 'cl')
+            ->leftJoin('cl.street', 's', 'WITH', 'cl.street = s.id')
+            ->leftJoin('cl.city', 'c', 'WITH', 'cl.city = c.id')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
+                    $qb->expr()->like('cl.name_note', $qb->expr()->literal("%$term%"))
+                )
+            )
+            ->orderBy('cl.name', 'ASC');
+
+        $query = $qb->getQuery();
+        $clients = $query->getResult();
+        return $clients;
+    }
 
     /**
      * Advanced search method that return all client with name or name_note like $term,
@@ -60,42 +65,43 @@ class ClientRepository extends EntityRepository {
      *
      * @return array
      */
-    public function advancedSearch(string $term, string $street, string $city): array {
-      // Create a QueryBuilder instance.
-      $qb = $this->_em->createQueryBuilder();
-      $qb->select('cl')
-        ->from('App\Entity\Client', 'cl')
-        ->where(
-          $qb->expr()->orX(
-            $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
-            $qb->expr()->like('cl.name_note', $qb->expr()->literal("%$term%"))
-          )
-        );
+    public function advancedSearch(string $term, string $street, string $city): array
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('cl')
+            ->from('App\Entity\Client', 'cl')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
+                    $qb->expr()->like('cl.name_note', $qb->expr()->literal("%$term%"))
+                )
+            );
 
-      if ($street <> '') {
-        $qb->join('cl.street', 's', 'WITH', 'cl.street = s.id')
-          ->andWhere(
-            $qb->expr()->like('s.name', $qb->expr()->literal("%$street%"))
-          );
-      }
+            if ($street <> '') {
+                $qb->join('cl.street', 's', 'WITH', 'cl.street = s.id')
+                    ->andWhere(
+                        $qb->expr()->like('s.name', $qb->expr()->literal("%$street%"))
+                    );
+            }
 
-      if ($city <> '') {
-        $qb->join('cl.city', 'c', 'WITH', 'cl.city = c.id')
-          ->andWhere(
-            $qb->expr()->like('c.name', $qb->expr()->literal("%$city%"))
-          );
-      }
+            if ($city <> '') {
+                $qb->join('cl.city', 'c', 'WITH', 'cl.city = c.id')
+                    ->andWhere(
+                        $qb->expr()->like('c.name', $qb->expr()->literal("%$city%"))
+                    );
+            }
 
-      $qb->orderBy('cl.name', 'ASC');
-      $query = $qb->getQuery();
+        $qb->orderBy('cl.name', 'ASC');
+        $query = $qb->getQuery();
 
-      return $query->getResult();
+        return $query->getResult();
     }
 
-    /**
-     *
-     */
-    public function checkGetClient($id = FALSE){
+  /**
+   *
+   */
+    public function checkGetClient($id = FALSE)
+    {
         if ($id) {
             $new = preg_replace('/[^0-9]/', '', $id);
             return $new;
@@ -111,28 +117,35 @@ class ClientRepository extends EntityRepository {
      * @param $client_id
      * @return array
      */
-    public function getClientData($client_id): array {
-        $client_data = $this->_em->find('\App\Entity\Client', $client_id);
-        $client_type = $this->_em->find('\App\Entity\ClientType', $client_data->getType());
+    public function getClientData($client_id): array
+    {
+        $client_data = $this->getEntityManager()->find('\App\Entity\Client', $client_id);
+
+        $client_type = $this->getEntityManager()->find('\App\Entity\ClientType', $client_data->getType());
+
         if ($client_data->getCountry() === null) {
             $client_country = null;
         }
         else {
-            $client_country = $this->_em->find('\App\Entity\Country', $client_data->getCountry());
+            $client_country = $this->getEntityManager()->find('\App\Entity\Country', $client_data->getCountry());
         }
+
         if ($client_data->getCity() === null) {
             $client_city = null;
         }
         else {
-            $client_city = $this->_em->find('\App\Entity\City', $client_data->getCity());
+            $client_city = $this->getEntityManager()->find('\App\Entity\City', $client_data->getCity());
         }
+
         if ($client_data->getStreet() === null) {
             $client_street = null;
         }
         else {
-            $client_street = $this->_em->find('\App\Entity\Street', $client_data->getStreet());
+            $client_street = $this->getEntityManager()->find('\App\Entity\Street', $client_data->getStreet());
         }
-        $client_contacts = $client_data->getContacts();
+
+        $client_contacts = $client_data->getContacts() ?? [];
+
         return [
             'id' => $client_data->getId(),
             'type_id' => $client_type->getId(),

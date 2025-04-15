@@ -5,111 +5,124 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="v6__projects_tasks_notes")
+ * Project task note entity.
  */
-class ProjectTaskNote {
-
-  /**
-   * @ORM\Id
-   * @ORM\Column(type="integer")
-   * @ORM\GeneratedValue
-   * @var int
-   */
-  protected $id;
+#[ORM\Entity]
+#[ORM\Table(name: 'v6__projects_tasks_notes')]
+class ProjectTaskNote
+{
 
     /**
-   * Meny Project Task Notes belongs to the One Project Task.
-   * @ORM\ManyToOne(targetEntity="ProjectTask")
-   * @ORM\JoinColumn(name="project_task_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $project_task;
+     * Identifier of the project task note.
+     *
+     * @var int
+     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
+    protected $id;
 
-  /**
-   * @ORM\Column(type="text")
-   * @var string
-   */
-  protected $note;
+      /**
+     * Many Project Task Notes belongs to the One Project Task.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: ProjectTask::class)]
+    #[ORM\JoinColumn(name: 'project_task_id', referencedColumnName: 'id')]
+    protected $project_task;
 
     /**
-   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-   * @var DateTime
-   */
-  protected $created_at;
+     * Project task note text.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: 'text')]
+    protected $note;
 
-  /**
-   * Many ProjectTaskNotes has ben created from One User.
-   * @ORM\ManyToOne(targetEntity="User")
-   * @ORM\JoinColumn(name="created_by_user_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $created_by_user;
+    /**
+     * Date and time when the project task note was created.
+     *
+     * @var DateTime
+     */
+    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    protected $created_at;
 
-  /**
-   * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
-   * @var DateTime
-   */
-  protected $modified_at;
+    /**
+     * Many ProjectTaskNotes have been created from One User.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'created_by_user_id', referencedColumnName: 'id')]
+    protected $created_by_user;
 
-  /**
-   * Many ProjectTaskNotes has ben updated from One User.
-   * @ORM\ManyToOne(targetEntity="User")
-   * @ORM\JoinColumn(name="modified_by_user_id", referencedColumnName="id")
-   * @var int
-   */
-  protected $modified_by_user;
+    /**
+     * Date and time when the project task note was last modified.
+     *
+     * @var DateTime
+     */
+    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    protected $modified_at;
 
-  public function getId() {
-    return $this->id;
-  }
+    /**
+     * Many ProjectTaskNotes has ben updated from One User.
+     *
+     * @var int
+     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'modified_by_user_id', referencedColumnName: 'id')]
+    protected $modified_by_user;
 
-  public function setProjectTask($project_task) {
-    $this->project_task = $project_task;
-  }
+    public function getId() {
+        return $this->id;
+    }
 
-  public function getProjectTask() {
-    return $this->project_task;
-  }
+    public function setProjectTask($project_task) {
+        $this->project_task = $project_task;
+    }
 
-  public function setNote($note) {
-    $this->note = $note;
-  }
+    public function getProjectTask() {
+        return $this->project_task;
+    }
 
-  public function getNote() {
-    return $this->note;
-  }
+    public function setNote($note) {
+        $this->note = $note;
+    }
 
-  public function setCreatedAt(\DateTime $created_at) {
-    $this->created_at = $created_at;
-  }
+    public function getNote() {
+        return $this->note;
+    }
 
-  public function getCreatedAt() {
-    return $this->created_at;
-  }
+    public function setCreatedAt(\DateTime $created_at) {
+        $this->created_at = $created_at;
+    }
 
-  public function setCreatedByUser($created_by_user) {
-    $this->created_by_user = $created_by_user;
-  }
+    public function getCreatedAt() {
+        return $this->created_at;
+    }
 
-  public function getCreatedByUser() {
-    return $this->created_by_user;
-  }
+    public function setCreatedByUser($created_by_user) {
+        $this->created_by_user = $created_by_user;
+    }
 
-  public function setModifiedAt(\DateTime $modified_at) {
-    $this->modified_at = $modified_at;
-  }
+    public function getCreatedByUser() {
+        return $this->created_by_user;
+    }
 
-  public function getModifiedAt() {
-    return $this->modified_at;
-  }
+    public function setModifiedAt(\DateTime $modified_at) {
+        $this->modified_at = $modified_at;
+    }
 
-  public function setModifiedByUser($modified_by_user) {
-    $this->modified_by_user = $modified_by_user;
-  }
+    public function getModifiedAt() {
+        return $this->modified_at;
+    }
 
-  public function getModifiedByUser() {
-    return $this->modified_by_user;
-  }
+    public function setModifiedByUser($modified_by_user) {
+        $this->modified_by_user = $modified_by_user;
+    }
+
+    public function getModifiedByUser() {
+        return $this->modified_by_user;
+    }
 
 }

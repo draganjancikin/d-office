@@ -1,19 +1,18 @@
-# d-Office 7.2.0
+# d-Office 8.0.0
 
 Web Application
 
 ## Libraries
 
-### Communication with database: Doctrine 2 ORM
+### Communication with database: Doctrine ORM 3
 
 Environment requirements:
 * PHP 8.2
 
 Required:
-* doctrine/orm:^2.15
+* doctrine/orm:^3.3
 * tecnickcom/tcpdf:^6.3
 * symfony/http-foundation:^6.0
-* doctrine/annotations:^2.0.2
 * symfony/cache:^6.0
 * bootstrap 5.1.3
 
