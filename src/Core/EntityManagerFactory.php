@@ -9,14 +9,17 @@ namespace App\Core;
  */
 class EntityManagerFactory {
 
-  private static ?\Doctrine\ORM\EntityManager $entityManager = null;
+    private static ?\Doctrine\ORM\EntityManager $entityManager = null;
 
-  public static function getEntityManager(): \Doctrine\ORM\EntityManager {
-    if (self::$entityManager === null) {
-      self::$entityManager = require __DIR__ . '/../../config/doctrine.php';
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
+    public static function getEntityManager(): \Doctrine\ORM\EntityManager {
+        if (self::$entityManager === null) {
+            self::$entityManager = require __DIR__ . '/../../config/packages/doctrine.php';
+        }
+
+        return self::$entityManager;
     }
-
-    return self::$entityManager;
-  }
 
 }

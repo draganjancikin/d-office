@@ -1,7 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../config/doctrine.php';
-
+require_once __DIR__ . '/../config/appConfig.php';
 use App\Core\Router;
 
 $router = new Router();
@@ -187,10 +186,10 @@ $httpMethod = $_SERVER['REQUEST_METHOD'];
 
 // Dispatch the route.
 try {
-  $router->dispatch($requestUri, $httpMethod);
+    $router->dispatch($requestUri, $httpMethod);
 }
 catch (Exception $e) {
-  // Handle errors (404, 500, etc.).
-  http_response_code(500);
-  echo "Error: " . $e->getMessage();
+    // Handle errors (404, 500, etc.).
+    http_response_code(500);
+    echo "Error: " . $e->getMessage();
 }
