@@ -1,6 +1,6 @@
 <?php
 require_once 'appConfig.php';
-# Check enviroment and include dbConfig file.
+# Check environment and include dbConfig file.
 if (file_exists(__DIR__ . '/dbConfig.live.php')) {
   include __DIR__ . '/dbConfig.live.php';
 } else if (file_exists(__DIR__ . '/dbConfig.dev.php')) {
