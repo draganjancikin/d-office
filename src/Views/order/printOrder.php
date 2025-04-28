@@ -3,7 +3,6 @@ $page = "nabavka";
 
 require_once '../config/appConfig.php';
 require_once '../vendor/autoload.php';
-require_once '../config/bootstrap.php';
 
 // Include the main TCPDF library (search for installation path).
 require_once '../config/tcpdf_include.php';
