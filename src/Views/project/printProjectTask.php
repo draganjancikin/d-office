@@ -1,11 +1,8 @@
 <?php
 $page = "projects";
 
-require_once '../config/appConfig.php';
-require_once '../vendor/autoload.php';
-
-// Include the main TCPDF library (search for installation path).
-require_once '../config/tcpdf_include.php';
+// Include the main TCPDF library.
+require_once '../config/packages/tcpdf_include.php';
 
 // Create new PDF document.
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);

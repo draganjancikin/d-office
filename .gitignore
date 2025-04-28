@@ -3,18 +3,15 @@ RolOffice v4.0.code-workspace
 .vscode/
 .idea/
 
-# Ignore LIVE enviroments files an folders
-/app/config/dbConfig.php
-/config/dbConfig.live.php
-/config/database/
-web/upload/
+# Ignore LOCAL enviroments files an folders
+/config/dbConfig.local.php
 
 # Ignore DEV enviroments files an folders
 /config/dbConfig.dev.php
-web/testing/
 
-# Ignore LOCAL enviroments files an folders
-/config/dbConfig.local.php
+# Ignore LIVE enviroments files an folders
+/config/dbConfig.live.php
+web/upload/
 
 # Ignore enviroments files
 /todos/

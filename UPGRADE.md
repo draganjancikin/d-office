@@ -1,4 +1,11 @@
+# Upgrade to 8.0.2
+Enhancement:
+* #296
+ - Upgrade App configuration files
+ - Update print config and files  
+
 # Upgrade to 8.0.1
+Enhancement:
 * #292 - Delete config/bootstrap.php and remove from code
 
 # Upgrade to 8.0.0
