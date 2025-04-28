@@ -1,3 +1,6 @@
+# Upgrade to 8.0.1
+* #292 - Delete config/bootstrap.php and remove from code
+
 # Upgrade to 8.0.0
 Upgrade:
 * #284 - Change Entity metadata from Annotation to Attribute
