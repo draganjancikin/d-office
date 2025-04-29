@@ -28,18 +28,26 @@ class HomeController extends BaseController
     public function index(): void
     {
         $data = [
+            'app_version' => APP_VERSION,
             'page_title' => 'D-Office 2025',
             'stylesheet' => 'libraries/',
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'page' => 'home',
             'entityManager' => $this->entityManager,
+            'number_of_clients' => $this->entityManager->getRepository('\App\Entity\Client')->count([]),
+            'number_of_accounting_documents' => $this->entityManager->getRepository('\App\Entity\AccountingDocument')->count([]),
+            'number_of_cutting_sheets' => $this->entityManager->getRepository('\App\Entity\CuttingSheet')->count([]),
+            'number_of_materials' => $this->entityManager->getRepository('\App\Entity\Material')->count([]),
+            'number_of_orders' => $this->entityManager->getRepository('\App\Entity\Order')->count([]),
+            'number_of_articles' => $this->entityManager->getRepository('\App\Entity\Article')->count([]),
+            'number_of_projects' => $this->entityManager->getRepository('\App\Entity\Project')->count([]),
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('home', $data);
+        $this->render('home/index.html.twig', $data);
     }
 
     /**
@@ -54,7 +62,8 @@ class HomeController extends BaseController
             'page_title' => APP_VERSION,
             'stylesheet' => 'libraries/',
         ];
-        $this->render('loginForm', $data);
+
+        $this->render('home/login_form.html.twig', $data);
     }
 
     /**
@@ -116,23 +125,6 @@ class HomeController extends BaseController
         unset($_SESSION['username']);
         unset($_SESSION['user_role_id']);
         header("Location: /");
-    }
-
-    /**
-     * A helper method to render views.
-     *
-     * @param $view
-     * @param array $data
-     *
-     * @return void
-     */
-    private function render($view, array $data = []): void
-    {
-        // Extract data array to variables.
-        extract($data);
-
-        // Include the view file.
-        require_once __DIR__ . "/../Views/$view.php";
     }
 
 }
