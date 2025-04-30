@@ -5,9 +5,12 @@ namespace App\Controller;
 use App\Core\BaseController;
 use App\Entity\City;
 use App\Entity\Client;
+use App\Entity\ClientType;
 use App\Entity\Contact;
+use App\Entity\ContactType;
 use App\Entity\Country;
 use App\Entity\Street;
+use App\Entity\User;
 
 /**
  * ClientController class.
@@ -17,11 +20,21 @@ use App\Entity\Street;
 class ClientController extends BaseController
 {
 
+    protected $page_title;
+    protected $countries;
+    protected $cities;
+    protected $streets;
+
     /**
      * ClientController constructor.
      */
     public function __construct() {
         parent::__construct();
+
+        $this->page_title = 'Klijenti';
+        $this->countries = $this->entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
+        $this->cities = $this->entityManager->getRepository(City::class)->findBy([], ['name' => 'ASC']);
+        $this->streets = $this->entityManager->getRepository(Street::class)->findBy([], ['name' => 'ASC']);
     }
 
     /**
@@ -31,20 +44,23 @@ class ClientController extends BaseController
      */
     public function index($search = NULL) {
         $data = [
-            'page_title' => 'Klijenti',
+            'page_title' => $this->page_title,
             'stylesheet' => '../libraries/',
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'page' => 'clients',
-            'entityManager' => $this->entityManager,
             'search' => $search,
+            'tools_menu' => [
+              'client' => FALSE,
+            ],
+            'last_clients' => $this->entityManager->getRepository(Client::class)->getLastClients(10),
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('index', $data);
+        $this->render('client/index.html.twig', $data);
     }
 
     /**
@@ -55,26 +71,28 @@ class ClientController extends BaseController
      * @return void
      */
     public function view($client_id, $contact_id = NULL, $search = NULL) {
-        $client = $this->entityManager->getRepository('\App\Entity\Client')->getClientData($client_id);
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
         $data = [
-            'page_title' => 'Klijenti',
+            'page_title' => $this->page_title,
             'stylesheet' => '../libraries/',
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'page' => 'client',
-            'entityManager' => $this->entityManager,
             'search' => $search,
-            'client_id' => $client_id,
             'client' => $client,
-            'contact_id' => $contact_id,
+            'tools_menu' => [
+                'client' => TRUE,
+                'view' => TRUE,
+            ],
+            'contact_types' => $this->entityManager->getRepository(ContactType::class)->findAll(),
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('view', $data);
+        $this->render('client/view.html.twig', $data);
     }
 
     /**
@@ -85,24 +103,31 @@ class ClientController extends BaseController
      * @return void
      */
     public function editClientForm($client_id) {
-        $client = $this->entityManager->getRepository('\App\Entity\Client')->getClientData($client_id);
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
         $data = [
-            'page_title' => 'Klijenti',
+            'page_title' => $this->page_title,
             'stylesheet' => '/../libraries/',
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'page' => 'client',
-            'entityManager' => $this->entityManager,
-            'client_id' => $client_id,
             'client' => $client,
+            'client_types' => $this->entityManager->getRepository(ClientType::class)->findAll(),
+            'countries' => $this->countries,
+            'cities' => $this->cities,
+            'streets' => $this->streets,
+            'tools_menu' => [
+              'client' => TRUE,
+              'edit' => TRUE,
+            ],
+            'contact_types' => $this->entityManager->getRepository(ContactType::class)->findAll(),
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('edit', $data);
+        $this->render('client/edit.html.twig', $data);
     }
 
     /**
@@ -113,10 +138,10 @@ class ClientController extends BaseController
      * @return void
      */
     public function editClient($client_id): void {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         $type_id = $_POST["type_id"];
-        $type = $this->entityManager->find("\App\Entity\ClientType", $type_id);
+        $type = $this->entityManager->find(ClientType::class, $type_id);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -139,16 +164,16 @@ class ClientController extends BaseController
         }
 
         $country_id = $_POST["country_id"];
-        $country = $this->entityManager->find("\App\Entity\Country", $country_id);
+        $country = $this->entityManager->find(Country::class, $country_id);
         $city_id = $_POST["city_id"];
-        $city = $this->entityManager->find("\App\Entity\City", $city_id);
+        $city = $this->entityManager->find(City::class, $city_id);
         $street_id = $_POST["street_id"];
-        $street = $this->entityManager->find("\App\Entity\Street", $street_id);
+        $street = $this->entityManager->find(Street::class, $street_id);
         $home_number = $this->basicValidation($_POST["home_number"]);
         $address_note = $this->basicValidation($_POST["address_note"]);
         $note = $this->basicValidation($_POST["note"]);
 
-        $client = $this->entityManager->find('\App\Entity\Client', $client_id);
+        $client = $this->entityManager->find(Client::class, $client_id);
 
         if ($client === null) {
             echo "Client with ID $client_id does not exist.\n";
@@ -179,19 +204,23 @@ class ClientController extends BaseController
      */
     public function addClientForm() {
         $data = [
-            'page_title' => 'Klijenti',
+            'page_title' => $this->page_title,
             'stylesheet' => '../libraries/',
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'page' => 'client',
             'entityManager' => $this->entityManager,
+            'client_types' => $this->entityManager->getRepository(ClientType::class)->findAll(),
+            'countries' => $this->countries,
+            'cities' => $this->cities,
+            'streets' => $this->streets,
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('addClientForm', $data);
+        $this->render('client/add.html.twig', $data);
     }
 
     /**
@@ -200,10 +229,10 @@ class ClientController extends BaseController
      * @return void
      */
     public function addClient(): void {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         $type_id = $_POST["type_id"];
-        $type = $this->entityManager->find("\App\Entity\ClientType", $type_id);
+        $type = $this->entityManager->find(ClientType::class, $type_id);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -219,17 +248,17 @@ class ClientController extends BaseController
         $is_supplier = $_POST["is_supplier"] ?? 0;
 
         $country_id = $_POST["country_id"];
-        $country = $this->entityManager->find("\App\Entity\Country", $country_id);
+        $country = $this->entityManager->find(Country::class, $country_id);
         $city_id = $_POST["city_id"];
-        $city = $this->entityManager->find("\App\Entity\City", $city_id);
+        $city = $this->entityManager->find(City::class, $city_id);
         $street_id = $_POST["street_id"];
-        $street = $this->entityManager->find("\App\Entity\Street", $street_id);
+        $street = $this->entityManager->find(Street::class, $street_id);
         $home_number = $this->basicValidation($_POST["home_number"]);
         $address_note = $this->basicValidation($_POST["address_note"]);
         $note = $this->basicValidation($_POST["note"]);
 
         // check if name already exist in database
-        $control_name = $this->entityManager->getRepository('\App\Entity\Client')->findBy( array('name' => $name) );
+        $control_name = $this->entityManager->getRepository(Client::class)->findBy( array('name' => $name) );
         if ($control_name) {
             echo "Username already exist in database. Please choose new username!";
             exit(1);
@@ -270,14 +299,14 @@ class ClientController extends BaseController
      * @return void
      */
     public function editContact($client_id, $contact_id): void {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         $contact_type_id = $_POST["contact_type_id"];
-        $contact_type = $this->entityManager->find("\App\Entity\ContactType", $contact_type_id);
+        $contact_type = $this->entityManager->find(ContactType::class, $contact_type_id);
         $body = $this->basicValidation($_POST["body"]);
         $note = $this->basicValidation($_POST["note"]);
 
-        $contact = $this->entityManager->find('\App\Entity\Contact', $contact_id);
+        $contact = $this->entityManager->find(Contact::class, $contact_id);
 
         if ($contact === null) {
             echo "Contact with ID $contact_id does not exist.\n";
@@ -301,14 +330,14 @@ class ClientController extends BaseController
      * @return void
      */
     public function addContact($client_id): void {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
-        $client = $this->entityManager->find("\App\Entity\Client", $client_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
+        $client = $this->entityManager->find(Client::class, $client_id);
 
         $type_id = $_POST["contact_type_id"];
-        $type = $this->entityManager->find("\App\Entity\ClientType", $type_id);
+        $type = $this->entityManager->find(ClientType::class, $type_id);
 
         $contact_type_id = $_POST["contact_type_id"];
-        $contact_type = $this->entityManager->find("\App\Entity\ContactType", $contact_type_id);
+        $contact_type = $this->entityManager->find(ContactType::class, $contact_type_id);
         $body = $this->basicValidation($_POST["body"]);
         $note = $this->basicValidation($_POST["note"]);
 
@@ -341,8 +370,8 @@ class ClientController extends BaseController
      * @return void
      */
     public function removeContact($client_id, $contact_id): void {
-        $client = $this->entityManager->find("\App\Entity\Client", $client_id);
-        $contact = $this->entityManager->find("\App\Entity\Contact", $contact_id);
+        $client = $this->entityManager->find(Client::class, $client_id);
+        $contact = $this->entityManager->find(Contact::class, $contact_id);
 
         // Remove $contact from table v6_client_contacts.
         $client->getContacts()->removeElement($contact);
@@ -360,7 +389,7 @@ class ClientController extends BaseController
      */
     public function addCountryForm(): void {
         $data = [
-            'page_title' => 'Klijenti',
+            'page_title' => $this->page_title,
             'stylesheet' => '../libraries/',
             'user_id' => $this->user_id,
             'username' => $this->username,
@@ -372,7 +401,7 @@ class ClientController extends BaseController
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('addCountry', $data);
+        $this->render('client/add_country.html.twig', $data);
     }
 
     /**
@@ -381,7 +410,7 @@ class ClientController extends BaseController
      * @return void
      */
     public function addCountry(): void {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -392,7 +421,7 @@ class ClientController extends BaseController
         }
 
         // Check if name already exist in database.
-        $control_country = $this->entityManager->getRepository('\App\Entity\Country')->findBy( array('name' => $name) );
+        $control_country = $this->entityManager->getRepository(Country::class)->findBy( array('name' => $name) );
         if ($control_country) {
             echo 'Country with name: "<strong>'.$name.'</strong>" already exist in database. Please choose new name!';
             exit(1);
@@ -425,7 +454,7 @@ class ClientController extends BaseController
      */
     public function addCityForm(): void {
         $data = [
-            'page_title' => 'Klijenti',
+            'page_title' => $this->page_title,
             'stylesheet' => '../libraries/',
             'user_id' => $this->user_id,
             'username' => $this->username,
@@ -437,7 +466,7 @@ class ClientController extends BaseController
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('addCity', $data);
+      $this->render('client/add_city.html.twig', $data);
     }
 
     /**
@@ -446,7 +475,7 @@ class ClientController extends BaseController
      * @return void
      */
     public function addCity(): void {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -457,7 +486,7 @@ class ClientController extends BaseController
         }
 
         // Check if name already exist in database.
-        $control_name = $this->entityManager->getRepository('\App\Entity\City')->findBy( array('name' => $name) );
+        $control_name = $this->entityManager->getRepository(City::class)->findBy( array('name' => $name) );
         if ($control_name) {
             echo 'City wit name: "<strong>'.$name.'</strong>" already exist in database!';
             exit(1);
@@ -484,7 +513,7 @@ class ClientController extends BaseController
      */
     public function addStreetForm(): void {
         $data = [
-            'page_title' => 'Klijenti',
+            'page_title' => $this->page_title,
             'stylesheet' => '../libraries/',
             'user_id' => $this->user_id,
             'username' => $this->username,
@@ -496,7 +525,7 @@ class ClientController extends BaseController
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('addStreet', $data);
+      $this->render('client/add_street.html.twig', $data);
     }
 
     /**
@@ -505,7 +534,7 @@ class ClientController extends BaseController
      * @return void
      */
     public function addStreet():void {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -516,7 +545,7 @@ class ClientController extends BaseController
         }
 
         // Check if name already exist in database.
-        $control_name = $this->entityManager->getRepository('\App\Entity\Street')->findBy( array('name' => $name) );
+        $control_name = $this->entityManager->getRepository(Street::class)->findBy( array('name' => $name) );
         if ($control_name) {
             echo 'Street wit name: "<strong>'.$name.'</strong>" already exist in database. Please choose new name!';
             exit(1);
@@ -542,20 +571,28 @@ class ClientController extends BaseController
      * @return void
      */
     public function advancedSearch(): void {
+        if (isset($_POST['submit'])) {
+            $term = $_POST["client"];
+            $street = $_POST["street"];
+            $city = $_POST["city"];
+            $clients_data = $this->entityManager->getRepository(Client::class)->advancedSearch($term, $street, $city);
+        }
+
         $data = [
-            'page_title' => 'Klijenti',
+            'page_title' => $this->page_title,
             'stylesheet' => '../libraries/',
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'page' => 'client',
             'entityManager' => $this->entityManager,
+            'clients' => $clients_data ?? NULL,
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('advancedSearch', $data);
+        $this->render('client/advanced_search.html.twig', $data);
     }
 
     /**
@@ -569,19 +606,27 @@ class ClientController extends BaseController
         return trim(htmlspecialchars($str));
     }
 
-    /**
-     * A helper method to render views.
-     *
-     * @param $view
-     * @param $data
-     *
-     * @return void
-     */
-    private function render($view, $data = []) {
-        // Extract data array to variables.
-        extract($data);
-        // Include the view file.
-        require_once __DIR__ . "/../Views/client/$view.php";
-    }
+  /**
+   * Search for clients.
+   *
+   * @param string $term
+   *   Search term.
+   *
+   * @return void
+   */
+    public function search(string $term): void {
+      $clients= $this->entityManager->getRepository(Client::class)->search($term);
 
+      $data = [
+        'clients' => $clients,
+        'page_title' => $this->page_title,
+        'stylesheet' => '/../libraries/',
+        'page' => 'client',
+      ];
+
+      // If the user is not logged in, redirect them to the login page.
+      $this->isUserNotLoggedIn();
+
+      $this->render('client/search.html.twig', $data);
+    }
 }

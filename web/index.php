@@ -26,6 +26,7 @@ $router->add('GET', '/clients/addCity', 'ClientController@addCityForm');
 $router->add('POST', '/clients/addCity', 'ClientController@addCity');
 $router->add('GET', '/clients/addStreet', 'ClientController@addStreetForm');
 $router->add('POST', '/clients/addStreet', 'ClientController@addStreet');
+$router->add('GET', '/clients/search/', 'ClientController@search');
 $router->add('GET', '/clients/advancedSearch', 'ClientController@advancedSearch');
 $router->add('POST', '/clients/advancedSearch', 'ClientController@advancedSearch');
 

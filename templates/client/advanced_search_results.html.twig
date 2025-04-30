@@ -1,0 +1,43 @@
+<div class="card mb-4">
+
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Rezultati detaljne pretrage</h6>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Naziv klijenta</th>
+                    <th>Adresa</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% set count = 0 %}
+                {% for client in clients %}
+                    {% set count = count + 1 %}
+                    <tr>
+                        <td>{{ count }}</td>
+                        <td><a href="/client/{{ client.id }}">{{ client.name }}</a></td>
+                        <td>
+                            {% if client.street.name %}
+                                {{ client.street.name }} {{ client.homenumber }},
+                            {% endif %}
+                            {% if client.city.name %}
+                                {{ client.city.name }},
+                            {% endif %}
+                            {% if client.country.name %}
+                                {{ client.country.name }}
+                            {% endif %}
+
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- End Card Body -->
+</div>

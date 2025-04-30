@@ -6,7 +6,7 @@
     </button>
 
     <!-- Topbar Search -->
-    {% if not page == 'home' %}
+    {% if page != 'home' %}
         {{ include('includes/form_search.html.twig') }}
     {% endif %}
 
@@ -47,9 +47,7 @@
                 </a>
             </div>
         </li>
-
     </ul>
-
 </nav>
 
 <!-- Logout Modal-->
