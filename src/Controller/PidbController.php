@@ -6,7 +6,17 @@ use App\Core\BaseController;
 use App\Entity\AccountingDocument;
 use App\Entity\AccountingDocumentArticle;
 use App\Entity\AccountingDocumentArticleProperty;
+use App\Entity\AccountingDocumentType;
+use App\Entity\Article;
+use App\Entity\ArticleProperty;
+use App\Entity\Client;
+use App\Entity\CompanyInfo;
 use App\Entity\Payment;
+use App\Entity\PaymentType;
+use App\Entity\Preferences;
+use App\Entity\Project;
+use App\Entity\User;
+use TCPDF;
 
 /**
  * PidbController class
@@ -36,6 +46,7 @@ class PidbController extends BaseController
      */
     public function index(string $search = NULL) {
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
@@ -43,12 +54,18 @@ class PidbController extends BaseController
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
             'search' => $search,
+            'tools_menu' => [
+                'pidb' => FALSE,
+            ],
+            'proformas' => $this->entityManager->getRepository(AccountingDocument::class)->getLast(1, 0, 10),
+            'delivery_notes' => $this->entityManager->getRepository(AccountingDocument::class)->getLast(2, 0, 10),
+            'return_receipts' => $this->entityManager->getRepository(AccountingDocument::class)->getLast(4, 0, 10),
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('index', $data);
+        $this->render('pidb/index.html.twig', $data);
     }
 
     /**
@@ -60,20 +77,36 @@ class PidbController extends BaseController
      * @return void
      */
     public function addForm(int $client_id = NULL, int $project_id = NULL) {
+
+        if (isset($_GET['project_id'])) {
+            $project_id = htmlspecialchars($_GET['project_id']);
+        }
+
+        if (isset($_GET['client_id'])) {
+            $client_id = htmlspecialchars($_GET['client_id']);
+            $client = $this->entityManager->find(Client::class, $client_id);
+        }
+
+        $clients_list = $this->entityManager
+            ->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
+
         $data = [
-          'page' => $this->page,
-          'page_title' => $this->page_title,
-          'stylesheet' => $this->stylesheet,
-          'user_id' => $this->user_id,
-          'username' => $this->username,
-          'user_role_id' => $this->user_role_id,
-          'entityManager' => $this->entityManager,
-        ];
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_id' => $this->user_id,
+            'username' => $this->username,
+            'user_role_id' => $this->user_role_id,
+            'entityManager' => $this->entityManager,
+            'project_id' => $project_id,
+            'client' => $client ?? NULL,
+            'clients_list' => $clients_list,
+          ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('add', $data);
+        $this->render('pidb/add.html.twig', $data);
     }
 
     /**
@@ -83,15 +116,15 @@ class PidbController extends BaseController
      */
     public function add(): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         $ordinal_num_in_year = 0;
 
         $client_id = htmlspecialchars($_POST["client_id"]);
-        $client = $this->entityManager->find("\App\Entity\Client", $client_id);
+        $client = $this->entityManager->find(Client::class, $client_id);
 
         $accd_type_id = htmlspecialchars($_POST["pidb_type_id"]);
-        $accd_type = $this->entityManager->find("\App\Entity\AccountingDocumentType", $accd_type_id);
+        $accd_type = $this->entityManager->find(AccountingDocumentType::class, $accd_type_id);
 
         $title = htmlspecialchars($_POST["title"]);
         $note = htmlspecialchars($_POST["note"]);
@@ -119,12 +152,11 @@ class PidbController extends BaseController
         $new_accounting_document_id = $newAccountingDocument->getId();
 
         // Set Ordinal Number In Year.
-        $this->entityManager->getRepository('App\Entity\AccountingDocument')->setOrdinalNumInYear($new_accounting_document_id);
-
+        $this->entityManager->getRepository(AccountingDocument::class)->setOrdinalNumInYear($new_accounting_document_id);
 
         if (isset($_POST["project_id"])) {
             $project_id = htmlspecialchars($_POST["project_id"]);
-            $project = $this->entityManager->find("\App\Entity\Project", $project_id);
+            $project = $this->entityManager->find(Project::class, $project_id);
 
             $project->getAccountingDocuments()->add($newAccountingDocument);
 
@@ -145,15 +177,47 @@ class PidbController extends BaseController
      */
     public function view(int $pidb_id, $search = NULL): void
     {
-        $pidb_data = $this->entityManager->find('\App\Entity\AccountingDocument', $pidb_id);
+        $pidb_data = $this->entityManager->find(AccountingDocument::class, $pidb_id);
 
-        // get client data from $pidb_data
         $client_id = $pidb_data->getClient()->getId();
-        $client = $this->entityManager->getRepository('\App\Entity\Client')->getClientData($client_id);
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
-        $all_articles = $this->entityManager->getRepository('\App\Entity\Article')->findAll();
+        $all_articles = $this->entityManager->getRepository(Article::class)->findAll();
+
+        $pidb_type_id = $pidb_data->getType()->getId();
+
+        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
+            1 => ["Predračun", "P_", 'info'],
+            2 => ["Otpremnica", "O_", 'secondary'],
+            4 => ["Povratnica", "POV_", 'warning'],
+            default => ["_", "_", 'default'],
+        };
+
+        $preferences = $this->entityManager->find(Preferences::class, 1);
+        $kurs = $preferences->getKurs();
+
+        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
+
+        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($pidb_id);
+        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($pidb_id);
+
+        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
+
+        $previous = $this->entityManager
+          ->getRepository(AccountingDocument::class)->getPrevious($pidb_id, $pidb_data->getType()->getId());
+
+        $next = $this->entityManager
+          ->getRepository(AccountingDocument::class)->getNext($pidb_id, $pidb_data->getType()->getId());
+
+        $avans_eur = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($pidb_id);
+        $avans_rsd = $avans_eur * $kurs;
+        $income_eur = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($pidb_id);
+        $income_rsd = $income_eur * $kurs;
+        $remaining_rsd = $total_rsd - $avans_rsd - $income_rsd;
+        $remaining_eur = ($total_rsd / $kurs) - $avans_eur - $income_eur;
 
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
@@ -164,14 +228,38 @@ class PidbController extends BaseController
             'search' => $search,
             'pidb_id' => $pidb_id,
             'pidb_data' => $pidb_data,
+            'pidb_type_id' => $pidb_type_id,
+            'pidb_type' => $pidb_tupe,
+            'pidb_tag' => $pidb_tag,
+            'pidb_style' => $pidb_style,
             'client' => $client,
             'all_articles' => $all_articles,
+            'kurs' => $kurs,
+            'accounting_document_articles_data' => $accounting_document_articles_data,
+            'tools_menu' => [
+                'pidb' => TRUE,
+                'view' => TRUE,
+                'edit' => TRUE,
+                'cash_register' => TRUE,
+            ],
+            'previous' => $previous,
+            'next' => $next,
+            'avans_eur' => $avans_eur,
+            'avans_rsd' => $avans_rsd,
+            'income_eur' => $income_eur,
+            'income_rsd' => $income_rsd,
+            'total_tax_base_rsd' => $total_tax_base_rsd,
+            'total_tax_amount_rsd' => $total_tax_amount_rsd,
+            'total_rsd' => $total_rsd,
+            'total_eur' => $total_rsd / $kurs,
+            'remaining_rsd' => $remaining_rsd,
+            'remaining_eur' => $remaining_eur,
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('view', $data);
+        $this->render('pidb/view.html.twig', $data);
     }
 
     /**
@@ -181,61 +269,87 @@ class PidbController extends BaseController
      */
     public function editForm(int $pidb_id): void
     {
-        $pidb_data = $this->entityManager->find('\App\Entity\AccountingDocument', $pidb_id);
+        $pidb_data = $this->entityManager->find(AccountingDocument::class, $pidb_id);
 
         // get client data from $pidb_data
         $client_id = $pidb_data->getClient()->getId();
-        $client = $this->entityManager->getRepository('\App\Entity\Client')->getClientData($client_id);
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
-        $all_articles = $this->entityManager->getRepository('\App\Entity\Article')->findAll();
+        $all_articles = $this->entityManager->getRepository(Article::class)->findAll();
 
-        switch ($pidb_data->getType()->getId()) {
-            case 1:
-                $vrsta = "Predračun";
-                $oznaka = "P_";
-                $style = 'info';
-                break;
+        $pidb_type_id = $pidb_data->getType()->getId();
+        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
+            1 => ["Predračun", "P_", 'info'],
+            2 => ["Otpremnica", "O_", 'secondary'],
+            4 => ["Povratnica", "POV_", 'warning'],
+            default => ["_", "_", 'default'],
+        };
 
-            case 2:
-                $vrsta = "Otpremnica";
-                $oznaka = "O_";
-                $style = 'secondary';
-                break;
+        $preferences = $this->entityManager->find(Preferences::class, 1);
+        $kurs = $preferences->getKurs();
 
-            case 4:
-                $vrsta = "Povratnica";
-                $oznaka = "POV_";
-                $style = 'warning';
-                break;
+        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
 
-            default:
-                $vrsta = "_";
-                $oznaka = "_";
-                $style = 'default';
-                break;
-        }
+        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($pidb_id);
+        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($pidb_id);
+
+        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
+
+        $previous = $this->entityManager
+            ->getRepository(AccountingDocument::class)->getPrevious($pidb_id, $pidb_data->getType()->getId());
+
+        $next = $this->entityManager
+            ->getRepository(AccountingDocument::class)->getNext($pidb_id, $pidb_data->getType()->getId());
+
+        $avans_eur = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($pidb_id);
+        $avans_rsd = $avans_eur * $kurs;
+        $income_eur = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($pidb_id);
+        $income_rsd = $income_eur * $kurs;
+        $remaining_rsd = $total_rsd - $avans_rsd - $income_rsd;
+        $remaining_eur = ($total_rsd / $kurs) - $avans_eur - $income_eur;
+
+        $clients_list = $this->entityManager->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
 
         $data = [
-          'page' => $this->page,
-          'page_title' => $this->page_title,
-          'stylesheet' => $this->stylesheet,
-          'user_id' => $this->user_id,
-          'username' => $this->username,
-          'user_role_id' => $this->user_role_id,
-          'entityManager' => $this->entityManager,
-          'client' => $client,
-          'pidb_id' => $pidb_id,
-          'pidb_data' => $pidb_data,
-          'all_articles' => $all_articles,
-          'vrsta' => $vrsta,
-          'oznaka' => $oznaka,
-          'style' => $style,
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_id' => $this->user_id,
+            'username' => $this->username,
+            'user_role_id' => $this->user_role_id,
+            'entityManager' => $this->entityManager,
+            'client' => $client,
+            'pidb_id' => $pidb_id,
+            'pidb_data' => $pidb_data,
+            'pidb_type_id' => $pidb_type_id,
+            'pidb_type' => $pidb_tupe,
+            'pidb_style' => $pidb_style,
+            'all_articles' => $all_articles,
+            'tools_menu' => [
+                'pidb' => TRUE,
+                'edit' => TRUE,
+            ],
+            'accounting_document_articles_data' => $accounting_document_articles_data,
+            'previous' => $previous,
+            'next' => $next,
+            'avans_eur' => $avans_eur,
+            'avans_rsd' => $avans_eur * $kurs,
+            'income_eur' => $income_eur,
+            'income_rsd' => $income_rsd,
+            'total_tax_base_rsd' => $total_tax_base_rsd,
+            'total_tax_amount_rsd' => $total_tax_amount_rsd,
+            'total_rsd' => $total_rsd,
+            'total_eur' => $total_rsd / $kurs,
+            'remaining_rsd' => $remaining_rsd,
+            'remaining_eur' => $remaining_eur,
+            'clients_list' => $clients_list,
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('edit', $data);
+        $this->render('pidb/edit.html.twig', $data);
     }
 
     /**
@@ -247,14 +361,14 @@ class PidbController extends BaseController
      */
     public function edit(int $pidb_id): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
-        $accounting_document = $this->entityManager->find("\App\Entity\AccountingDocument", $pidb_id);
+        $accounting_document = $this->entityManager->find(AccountingDocument::class, $pidb_id);
 
         $title = htmlspecialchars($_POST["title"]);
 
         $client_id = htmlspecialchars($_POST["client_id"]);
-        $client = $this->entityManager->find("\App\Entity\Client", $client_id);
+        $client = $this->entityManager->find(Client::class, $client_id);
 
         $is_archived = htmlspecialchars($_POST["archived"]);
         $note = htmlspecialchars($_POST["note"]);
@@ -284,10 +398,10 @@ class PidbController extends BaseController
         $acc_doc_id = $pidb_id;
 
         // Check if exist AccountingDocument.
-        if ($accounting_document = $this->entityManager->find("\App\Entity\AccountingDocument", $acc_doc_id)) {
+        if ($accounting_document = $this->entityManager->find(AccountingDocument::class, $acc_doc_id)) {
 
             // Check if AccountingDocument have Payments, where PaymentType is Income.
-            if ($this->entityManager->getRepository('\App\Entity\AccountingDocument')->getPaymentsByIncome($acc_doc_id)) {
+            if ($this->entityManager->getRepository(AccountingDocument::class)->getPaymentsByIncome($acc_doc_id)) {
                 echo "Brisanje dokumenta nije moguće jer postoje uplate vezane za ovaj dokument!";
                 exit();
             }
@@ -325,34 +439,40 @@ class PidbController extends BaseController
                     $this->entityManager->flush();
                 }
                 else {
-                    if ( $this->entityManager->getRepository('\App\Entity\AccountingDocument')->getPaymentsByAvans($acc_doc_id) ){
-                        echo "Brisanje dokumenta nije moguće jer postoje avansi vezani za ovaj dokument!";
+                    if ( $this->entityManager->getRepository(AccountingDocument::class)->getPaymentsByAvans($acc_doc_id) ){
+                        echo "Brisanje dokumenta nije moguće jer postoje avansi vezani za ovaj dokument!<br>";
+                        echo "<a href='/pidb/{$acc_doc_id}/transactions'>Idi na transakcije dokumenta >></a>";
                         exit();
                     }
                 }
             }
 
             // Check if exist Articles in AccountingDocument.
-            if ($accounting_document__articles = $this->entityManager->getRepository('\App\Entity\AccountingDocumentArticle')->findBy(array('accounting_document' => $acc_doc_id), array())) {
+            if (
+                $accounting_document__articles = $this->entityManager
+                    ->getRepository(AccountingDocumentArticle::class)->findBy(['accounting_document' => $acc_doc_id], [])
+            ) {
 
-              // Loop trough all articles.
-              foreach ($accounting_document__articles as $accounting_document__article) {
+                // Loop through all articles.
+                foreach ($accounting_document__articles as $accounting_document__article) {
 
-                // Check if exist Properties in AccontingDocument Article.
-                if ($accounting_document__article__properties = $this->entityManager->getRepository('\App\Entity\AccountingDocumentArticleProperty')->findBy(array('accounting_document_article' => $accounting_document__article))) {
+                    // Check if exist Properties in AccontingDocument Article.
+                    if (
+                        $accounting_document__article__properties = $this->entityManager
+                            ->getRepository(AccountingDocumentArticleProperty::class)
+                            ->findBy(['accounting_document_article' => $accounting_document__article])
+                    ) {
+                        // Remove AccountingDocument Article Properties.
+                        foreach ($accounting_document__article__properties as $accounting_document__article__property) {
+                            $this->entityManager->remove($accounting_document__article__property);
+                            $this->entityManager->flush();
+                        }
+                    }
 
-                  // Remove AccountingDocument Article Properties.
-                  foreach ($accounting_document__article__properties as $accounting_document__article__property) {
-                    $this->entityManager->remove($accounting_document__article__property);
+                    // Delete Article from AccountingDocument.
+                    $this->entityManager->remove($accounting_document__article);
                     $this->entityManager->flush();
-                  }
-
                 }
-
-                // Delete Article from AccountingDocument.
-                $this->entityManager->remove($accounting_document__article);
-                $this->entityManager->flush();
-              }
 
             }
 
@@ -373,10 +493,10 @@ class PidbController extends BaseController
      */
     public function addArticle(int $pidb_id): void
     {
-        $accounting_document = $this->entityManager->find("\App\Entity\AccountingDocument", $pidb_id);
+        $accounting_document = $this->entityManager->find(AccountingDocument::class, $pidb_id);
 
         $article_id = htmlspecialchars($_POST["article_id"]);
-        $article = $this->entityManager->find("\App\Entity\Article", $article_id);
+        $article = $this->entityManager->find(Article::class, $article_id);
 
         $price = $article->getPrice();
         $discount = 0;
@@ -387,7 +507,7 @@ class PidbController extends BaseController
             $pieces = htmlspecialchars($_POST["pieces"]);
         }
 
-        $preferences = $this->entityManager->find('App\Entity\Preferences', 1);
+        $preferences = $this->entityManager->find(Preferences::class, 1);
         $tax = $preferences->getTax();
 
         $note = htmlspecialchars($_POST["note"]);
@@ -412,7 +532,7 @@ class PidbController extends BaseController
         // Insert Article properties in table v6__accounting_documents__articles__properties.
         $article_properties =
             $this->entityManager
-                ->getRepository('\App\Entity\ArticleProperty')->getArticleProperties($article->getId());
+                ->getRepository(ArticleProperty::class)->getArticleProperties($article->getId());
         foreach ($article_properties as $article_property) {
             // Insert to table v6__accounting_documents__articles__properties.
             $newAccountingDocumentArticleProperty = new AccountingDocumentArticleProperty();
@@ -437,14 +557,103 @@ class PidbController extends BaseController
      */
     public function printAccountingDocument(int $pidb_id): void
     {
-        $data = [
-            'entityManager' => $this->entityManager,
-            'accounting_document__id' => $pidb_id,
-        ];
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('printAccountingDocument', $data);
+        $pidb = $this->entityManager->find(AccountingDocument::class, $pidb_id);
+        $pidb_type = $pidb->getType()->getName();
+        $pidb_type_id = $pidb->getType()->getId();
+        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
+            1 => ["Predračun", "P_", 'info'],
+            2 => ["Otpremnica", "O_", 'secondary'],
+            4 => ["Povratnica", "POV_", 'warning'],
+            default => ["_", "_", 'default'],
+        };
+        $pidb_ordinal_number_in_year = str_pad($pidb->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
+        $pidb_date_month = $pidb->getDate()->format('m');
+
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($pidb->getClient()->getId());
+
+        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+        $preferences = $this->entityManager->find(Preferences::class, 1);
+        $kurs = $preferences->getKurs();
+
+        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
+
+        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($pidb_id);
+        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($pidb_id);
+        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
+
+        $avans_eur = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($pidb_id);
+        $avans_rsd = $avans_eur * $kurs;
+        $income_eur = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($pidb_id);
+        $income_rsd = $income_eur * $kurs;
+        $remaining_rsd = $total_rsd - $avans_rsd - $income_rsd;
+        $remaining_eur = ($total_rsd / $kurs) - $avans_eur - $income_eur;
+
+        $data = [
+            'pidb_id' => $pidb_id,
+            'pidb' => $pidb,
+            'pidb_type' => $pidb_tupe,
+            'company_info' => $company_info,
+            'client' => $client,
+            'accounting_document_articles_data' => $accounting_document_articles_data,
+            'total_tax_base_rsd' => $total_tax_base_rsd,
+            'total_tax_amount_rsd' => $total_tax_amount_rsd,
+            'total_rsd' => $total_rsd,
+            'avans_eur' => $avans_eur,
+            'avans_rsd' => $avans_rsd,
+            'remaining_rsd' => $remaining_rsd,
+            'remaining_eur' => $remaining_eur,
+        ];
+
+        // Render HTML content from a Twig template (or similar)
+        ob_start();
+        $this->render('pidb/print_accounting_document.html.twig', $data);
+        $html = ob_get_clean();
+
+        require_once '../config/packages/tcpdf_include.php';
+
+        // Create a new TCPDF object / PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor($company_info['name']);
+        $pdf->SetTitle($company_info['name'] . ' - Dokument');
+        $pdf->SetSubject($company_info['name']);
+        $pdf->SetKeywords($company_info['name'] . ', PDF, Proforma, Invoice');
+
+        // Remove default header/footer.
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // Set default monospaced font.
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // Set margins.
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+
+        // Set auto page breaks.
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // Set image scale factor.
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // Set font.
+        $pdf->SetFont('dejavusans', '', 10);
+
+        // Add a page.
+        $pdf->AddPage();
+
+        // Write HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Reset pointer to the last page.
+        $pdf->lastPage();
+
+        // Close and output PDF document to browser.
+        $pdf->Output($pidb_type . '_' . $pidb_ordinal_number_in_year . '-' . $pidb_date_month . '.pdf', 'I');
     }
 
     /**
@@ -456,14 +665,89 @@ class PidbController extends BaseController
      */
     public function printAccountingDocumentW(int $pidb_id): void
     {
-        $data = [
-            'entityManager' => $this->entityManager,
-            'accounting_document__id' => $pidb_id,
-        ];
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('printAccountingDocumentW', $data);
+        $pidb = $this->entityManager->find(AccountingDocument::class, $pidb_id);
+        $pidb_type = $pidb->getType()->getName();
+        $pidb_type_id = $pidb->getType()->getId();
+        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
+            1 => ["Predračun", "P_", 'info'],
+            2 => ["Otpremnica", "O_", 'secondary'],
+            4 => ["Povratnica", "POV_", 'warning'],
+            default => ["_", "_", 'default'],
+        };
+        $pidb_ordinal_number_in_year = str_pad($pidb->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
+        $pidb_date_month = $pidb->getDate()->format('m');
+
+        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+        $preferences = $this->entityManager->find(Preferences::class, 1);
+        $kurs = $preferences->getKurs();
+
+        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
+
+        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($pidb_id);
+        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($pidb_id);
+        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
+
+        $data = [
+            'company_info' => $company_info,
+            'pidb' => $pidb,
+            'pidb_type' => $pidb_tupe,
+            'accounting_document_articles_data' => $accounting_document_articles_data,
+            'total_tax_base_rsd' => $total_tax_base_rsd,
+            'total_tax_amount_rsd' => $total_tax_amount_rsd,
+            'total_rsd' => $total_rsd,
+            'total_eur' => $total_rsd / $kurs,
+        ];
+
+        // Render HTML content from a Twig template (or similar)
+        ob_start();
+        $this->render('pidb/print_accounting_document_w.html.twig', $data);
+        $html = ob_get_clean();
+
+        require_once '../config/packages/tcpdf_include.php';
+
+        // Create a new TCPDF object / PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor($company_info['name']);
+        $pdf->SetTitle($company_info['name'] . ' - Dokument');
+        $pdf->SetSubject($company_info['name']);
+        $pdf->SetKeywords($company_info['name'] . ', PDF, Proforma, Invoice');
+
+        // Remove default header/footer.
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // Set default monospaced font.
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // Set margins.
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+
+        // Set auto page breaks.
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // Set image scale factor.
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // Set font.
+        $pdf->SetFont('dejavusans', '', 10);
+
+        // Add a page.
+        $pdf->AddPage();
+
+        // Write HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Reset pointer to the last page.
+        $pdf->lastPage();
+
+        // Close and output PDF document to browser.
+        $pdf->Output($pidb_type . '_' . $pidb_ordinal_number_in_year . '-' . $pidb_date_month . '.pdf', 'I');
     }
 
     /**
@@ -475,14 +759,105 @@ class PidbController extends BaseController
      */
     public function printAccountingDocumentI(int $pidb_id): void
     {
-        $data = [
-            'entityManager' => $this->entityManager,
-            'accounting_document__id' => $pidb_id,
-        ];
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('printAccountingDocumentI', $data);
+        $pidb = $this->entityManager->find(AccountingDocument::class, $pidb_id);
+        $pidb_type = $pidb->getType()->getName();
+        $pidb_type_id = $pidb->getType()->getId();
+
+        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
+            1 => ["Predračun", "P_", 'info'],
+            2 => ["Otpremnica", "O_", 'secondary'],
+            4 => ["Povratnica", "POV_", 'warning'],
+            default => ["_", "_", 'default'],
+        };
+        $pidb_ordinal_number_in_year = str_pad($pidb->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
+        $pidb_date_month = $pidb->getDate()->format('m');
+
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($pidb->getClient()->getId());
+
+        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+
+        $preferences = $this->entityManager->find(Preferences::class, 1);
+        $kurs = $preferences->getKurs();
+
+        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
+        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($pidb_id);
+        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($pidb_id);
+        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
+
+        $avans_eur = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($pidb_id);
+        $avans_rsd = $avans_eur * $kurs;
+        $income_eur = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($pidb_id);
+        $income_rsd = $income_eur * $kurs;
+        $remaining_rsd = $total_rsd - $avans_rsd - $income_rsd;
+        $remaining_eur = ($total_rsd / $kurs) - $avans_eur - $income_eur;
+
+        $data = [
+            'company_info' => $company_info,
+            'pidb' => $pidb,
+            'pidb_type' => $pidb_tupe,
+            'client' => $client,
+            'accounting_document_articles_data' => $accounting_document_articles_data,
+            'total_tax_base_rsd' => $total_tax_base_rsd,
+            'total_tax_amount_rsd' => $total_tax_amount_rsd,
+            'total_rsd' => $total_rsd,
+            'total_eur' => $total_rsd / $kurs,
+            'avans_eur' => $avans_eur,
+            'avans_rsd' => $avans_rsd,
+            'income_rsd' => $income_rsd,
+            'remaining_rsd' => $remaining_rsd,
+            'remaining_eur' => $remaining_eur,
+        ];
+
+        // Render HTML content from a Twig template (or similar)
+        ob_start();
+        $this->render('pidb/print_accounting_document_i.html.twig', $data);
+        $html = ob_get_clean();
+
+        require_once '../config/packages/tcpdf_include.php';
+
+        // Create a new TCPDF object / PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor($company_info['name']);
+        $pdf->SetTitle($company_info['name'] . ' - Dokument');
+        $pdf->SetSubject($company_info['name']);
+        $pdf->SetKeywords($company_info['name'] . ', PDF, Proforma, Invoice');
+
+        // Remove default header/footer.
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // Set default monospaced font.
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // Set margins.
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+
+        // Set auto page breaks.
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // Set image scale factor.
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // Set font.
+        $pdf->SetFont('dejavusans', '', 10);
+
+        // Add a page.
+        $pdf->AddPage();
+
+        // Write HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Reset pointer to the last page.
+        $pdf->lastPage();
+
+        // Close and output PDF document to browser.
+        $pdf->Output($pidb_type . '_' . $pidb_ordinal_number_in_year . '-' . $pidb_date_month . '.pdf', 'I');
     }
 
     /**
@@ -494,14 +869,102 @@ class PidbController extends BaseController
      */
     public function printAccountingDocumentIW(int $pidb_id): void
     {
-        $data = [
-            'entityManager' => $this->entityManager,
-            'accounting_document__id' => $pidb_id,
-        ];
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('printAccountingDocumentIW', $data);
+        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+
+        $pidb = $this->entityManager->find(AccountingDocument::class, $pidb_id);
+        $pidb_type = $pidb->getType()->getName();
+        $pidb_type_id = $pidb->getType()->getId();
+        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
+            1 => ["Predračun", "P_", 'info'],
+            2 => ["Otpremnica", "O_", 'secondary'],
+            4 => ["Povratnica", "POV_", 'warning'],
+            default => ["_", "_", 'default'],
+        };
+
+        $pidb_ordinal_number_in_year = str_pad($pidb->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
+        $pidb_date_month = $pidb->getDate()->format('m');
+
+        $preferences = $this->entityManager->find(Preferences::class, 1);
+        $kurs = $preferences->getKurs();
+
+        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
+        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($pidb_id);
+        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($pidb_id);
+        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
+
+        $avans_eur = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($pidb_id);
+        $avans_rsd = $avans_eur * $kurs;
+        $income_eur = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($pidb_id);
+        $income_rsd = $income_eur * $kurs;
+        $remaining_rsd = $total_rsd - $avans_rsd - $income_rsd;
+        $remaining_eur = ($total_rsd / $kurs) - $avans_eur - $income_eur;
+
+        $data = [
+            'company_info' => $company_info,
+            'pidb' => $pidb,
+            'pidb_type' => $pidb_tupe,
+            'accounting_document_articles_data' => $accounting_document_articles_data,
+            'total_tax_base_rsd' => $total_tax_base_rsd,
+            'total_tax_amount_rsd' => $total_tax_amount_rsd,
+            'total_rsd' => $total_rsd,
+            'total_eur' => $total_rsd / $kurs,
+            'avans_eur' => $avans_eur,
+            'avans_rsd' => $avans_rsd,
+            'income_rsd' => $income_rsd,
+            'remaining_rsd' => $remaining_rsd,
+            'remaining_eur' => $remaining_eur,
+        ];
+
+        // Render HTML content from a Twig template (or similar)
+        ob_start();
+        $this->render('pidb/print_accounting_document_iw.html.twig', $data);
+        $html = ob_get_clean();
+
+        require_once '../config/packages/tcpdf_include.php';
+
+        // Create a new TCPDF object / PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor($company_info['name']);
+        $pdf->SetTitle($company_info['name'] . ' - Dokument');
+        $pdf->SetSubject($company_info['name']);
+        $pdf->SetKeywords($company_info['name'] . ', PDF, Proforma, Invoice');
+
+        // Remove default header/footer.
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // Set default monospaced font.
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // Set margins.
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+
+        // Set auto page breaks.
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // Set image scale factor.
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // Set font.
+        $pdf->SetFont('dejavusans', '', 10);
+
+        // Add a page.
+        $pdf->AddPage();
+
+        // Write HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Reset pointer to the last page.
+        $pdf->lastPage();
+
+        // Close and output PDF document to browser.
+        $pdf->Output($pidb_type . '_' . $pidb_ordinal_number_in_year . '-' . $pidb_date_month . '.pdf', 'I');
     }
 
     /**
@@ -516,21 +979,21 @@ class PidbController extends BaseController
     {
         // Current logged user.
         $user_id = $this->user_id;
-        $user = $this->entityManager->find("\App\Entity\User", $user_id);
+        $user = $this->entityManager->find(User::class, $user_id);
 
         $proforma_id = $pidb_id;
-        $proforma = $this->entityManager->find("\App\Entity\AccountingDocument", $proforma_id);
+        $proforma = $this->entityManager->find(AccountingDocument::class, $proforma_id);
 
         $ordinal_num_in_year = 0;
 
         // Save Proforma data to Dispatch.
-        $newDispatch = new \App\Entity\AccountingDocument();
+        $newDispatch = new AccountingDocument();
 
         $newDispatch->setOrdinalNumInYear($ordinal_num_in_year);
         $newDispatch->setDate(new \DateTime("now"));
         $newDispatch->setIsArchived(0);
 
-        $newDispatch->setType($this->entityManager->find("\App\Entity\AccountingDocumentType", 2));
+        $newDispatch->setType($this->entityManager->find(AccountingDocumentType::class, 2));
         $newDispatch->setTitle($proforma->getTitle());
         $newDispatch->setClient($proforma->getClient());
         $newDispatch->setParent($proforma);
@@ -547,7 +1010,7 @@ class PidbController extends BaseController
         $last_accounting_document_id = $newDispatch->getId();
 
         // Set Ordinal Number In Year.
-        $this->entityManager->getRepository('App\Entity\AccountingDocument')->setOrdinalNumInYear($last_accounting_document_id);
+        $this->entityManager->getRepository(AccountingDocument::class)->setOrdinalNumInYear($last_accounting_document_id);
 
         // Get proforma payments.
         $payments = $proforma->getPayments();
@@ -572,11 +1035,11 @@ class PidbController extends BaseController
         }
 
         // Get articles from proforma.
-        $proforma_articles = $this->entityManager->getRepository('\App\Entity\AccountingDocument')->getArticles($proforma->getId());
+        $proforma_articles = $this->entityManager->getRepository(AccountingDocument::class)->getArticles($proforma->getId());
 
         // Save articles to dispatch.
         foreach ($proforma_articles as $proforma_article) {
-            $newDispatchArticle = new \App\Entity\AccountingDocumentArticle();
+            $newDispatchArticle = new AccountingDocumentArticle();
 
             $newDispatchArticle->setAccountingDocument($newDispatch);
             $newDispatchArticle->setArticle($proforma_article->getArticle());
@@ -593,12 +1056,12 @@ class PidbController extends BaseController
             // Get $proforma_article properies
             $proforma_article_properties =
               $this->entityManager
-                ->getRepository('\App\Entity\AccountingDocumentArticleProperty')
+                ->getRepository(AccountingDocumentArticleProperty::class)
                 ->findBy(array('accounting_document_article' => $proforma_article->getId()), []);
 
             // Save $proforma_article properies to $newDispatchArticle
             foreach ($proforma_article_properties as $article_property) {
-                $newDispatchArticleProperty = new \App\Entity\AccountingDocumentArticleProperty();
+                $newDispatchArticleProperty = new AccountingDocumentArticleProperty();
 
                 $newDispatchArticleProperty->setAccountingDocumentArticle($newDispatchArticle);
                 $newDispatchArticleProperty->setProperty($article_property->getProperty());
@@ -613,7 +1076,8 @@ class PidbController extends BaseController
         $this->entityManager->flush();
 
         // Check if proforma belong to any Project
-        $project = $this->entityManager->getRepository('\App\Entity\AccountingDocument')->getProjectByAccountingDocument($proforma->getId());
+        $project = $this->entityManager->getRepository(AccountingDocument::class)->getProjectByAccountingDocument
+        ($proforma->getId());
 
         if ($project) {
             // Set same project to dispatch.
@@ -647,7 +1111,8 @@ class PidbController extends BaseController
         $discounts_1 = htmlspecialchars($_POST["discounts"]);
         $discounts = str_replace(",", ".", $discounts_1);
 
-        $accountingDocumentArticle = $this->entityManager->find("\App\Entity\AccountingDocumentArticle", $accounting_document__article_id);
+        $accountingDocumentArticle = $this->entityManager->find(AccountingDocumentArticle::class,
+          $accounting_document__article_id);
 
         $accountingDocumentArticle->setNote($note);
         $accountingDocumentArticle->setPieces($pieces);
@@ -656,19 +1121,17 @@ class PidbController extends BaseController
         $this->entityManager->flush();
 
         // Properties update in table v6__accounting_documents__articles__properties.
-        $accounting_document__article__properties =
-            $this->entityManager
-                ->getRepository('\App\Entity\AccountingDocumentArticleProperty')
-                ->findBy(array('accounting_document_article' => $accounting_document__article_id), array());
+        $accounting_document__article__properties = $this->entityManager
+            ->getRepository(AccountingDocumentArticleProperty::class)
+            ->findBy(['accounting_document_article' => $accounting_document__article_id], []);
         foreach ($accounting_document__article__properties as $accounting_document__article__property) {
             // Get property name from $accounting_document__article__property.
             $property_name = $accounting_document__article__property->getProperty()->getName();
             // Get property value from $_POST.
             $property_value = str_replace(",", ".", htmlspecialchars($_POST["$property_name"]));
 
-            $accountingDocumentArticleProperty =
-                $this->entityManager
-                    ->find("\App\Entity\AccountingDocumentArticleProperty", $accounting_document__article__property->getId());
+            $accountingDocumentArticleProperty = $this->entityManager
+                ->find(AccountingDocumentArticleProperty::class, $accounting_document__article__property->getId());
 
             $accountingDocumentArticleProperty->setQuantity($property_value);
             $this->entityManager->flush();
@@ -687,9 +1150,9 @@ class PidbController extends BaseController
      */
     public function changeArticleInAccountingDocumentForm(int $pidb_id, int $pidb_article_id): void
     {
-        $pidb_data = $this->entityManager->find('\App\Entity\AccountingDocument', $pidb_id);
-        $article_data = $this->entityManager->find('\App\Entity\AccountingDocumentArticle', $pidb_article_id);
-        $all_articles = $this->entityManager->getRepository('\App\Entity\Article')->findAll();
+        $pidb_data = $this->entityManager->find(AccountingDocument::class, $pidb_id);
+        $article_data = $this->entityManager->find(AccountingDocumentArticle::class, $pidb_article_id)->getArticle();
+        $all_articles = $this->entityManager->getRepository(Article::class)->findAll();
 
         switch ($pidb_data->getType()->getId()) {
             case '1':
@@ -727,7 +1190,7 @@ class PidbController extends BaseController
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('changeArticleInAccountingDocument', $data);
+        $this->render('pidb/changeArticleInAccountingDocument.html.twig', $data);
     }
 
     /**
@@ -741,13 +1204,13 @@ class PidbController extends BaseController
     public function changeArticleInAccountingDocument(int $pidb_id, int $pidb_article_id): void
     {
         $accounting_document_id = $pidb_id;
-        $pidb_article = $this->entityManager->find('\App\Entity\AccountingDocumentArticle', $pidb_article_id);
+        $pidb_article = $this->entityManager->find(AccountingDocumentArticle::class, $pidb_article_id);
 
-        $old_article = $this->entityManager->find('\App\Entity\Article', $pidb_article->getArticle()->getId());
+        $old_article = $this->entityManager->find(Article::class, $pidb_article->getArticle()->getId());
         $old_article_id = $old_article->getId();
 
         $new_article_id = htmlspecialchars($_POST["article_id"]);
-        $new_article = $this->entityManager->find('\App\Entity\Article', $new_article_id);
+        $new_article = $this->entityManager->find(Article::class, $new_article_id);
 
         // First check if article_id in Accounting Document Article changed.
         if ($old_article_id == $new_article_id){
@@ -761,13 +1224,13 @@ class PidbController extends BaseController
             if (
                 $accounting_document__article__properties =
                     $this->entityManager
-                        ->getRepository('\App\Entity\AccountingDocumentArticleProperty')
+                        ->getRepository(AccountingDocumentArticleProperty::class)
                         ->findBy(array('accounting_document_article' => $pidb_article_id), array())
             ) {
                 foreach ($accounting_document__article__properties as $accounting_document__article__property) {
                     $accountingDocumentArticleProperty =
                         $this->entityManager
-                          ->find("\App\Entity\AccountingDocumentArticleProperty", $accounting_document__article__property->getId());
+                          ->find(AccountingDocumentArticleProperty::class, $accounting_document__article__property->getId());
                     $this->entityManager->remove($accountingDocumentArticleProperty);
                     $this->entityManager->flush();
                 }
@@ -781,10 +1244,11 @@ class PidbController extends BaseController
             $this->entityManager->flush();
 
             // Insert Article properties in table v6__accounting_documents__articles__properties.
-            $article_properties = $this->entityManager->getRepository('\App\Entity\ArticleProperty')->getArticleProperties($new_article->getId());
+            $article_properties = $this->entityManager->getRepository(ArticleProperty::class)->getArticleProperties
+            ($new_article->getId());
             foreach ($article_properties as $article_property) {
                 // Insert to table v6__accounting_documents__articles__properties.
-                $newAccountingDocumentArticleProperty = new \App\Entity\AccountingDocumentArticleProperty();
+                $newAccountingDocumentArticleProperty = new AccountingDocumentArticleProperty();
 
                 $newAccountingDocumentArticleProperty->setAccountingDocumentArticle($pidb_article);
                 $newAccountingDocumentArticleProperty->setProperty($article_property->getProperty());
@@ -812,7 +1276,7 @@ class PidbController extends BaseController
         // sledeća metoda duplicira artikal iz pidb_article i property-e iz pidb_article_property
         $accounting_document__article__properties =
             $this->entityManager
-                ->getRepository('\App\Entity\AccountingDocumentArticle')
+                ->getRepository(AccountingDocumentArticle::class)
                 ->duplicateArticleInAccountingDocument($pidb_article_id);
 
         die('<script>location.href = "/pidb/' . $pidb_id . '/edit" </script>');
@@ -826,18 +1290,18 @@ class PidbController extends BaseController
    */
     public function deleteArticleInAccountingDocument(int $pidb_id, int $pidb_article_id): void
     {
-        $accounting_document__article = $this->entityManager->find("\App\Entity\AccountingDocumentArticle", $pidb_article_id);
+        $accounting_document__article = $this->entityManager->find(AccountingDocumentArticle::class, $pidb_article_id);
 
         // First remove properties from table v6__accounting_documents__articles__properties.
         if (
             $accounting_document__article__properties =
                 $this->entityManager
-                    ->getRepository('\App\Entity\AccountingDocumentArticleProperty')
+                    ->getRepository(AccountingDocumentArticleProperty::class)
                     ->findBy(array('accounting_document_article' => $pidb_article_id), [])
         ) {
             foreach ($accounting_document__article__properties as $accounting_document__article__property) {
                 $accountingDocumentArticleProperty = $this->entityManager
-                    ->find("\App\Entity\AccountingDocumentArticleProperty", $accounting_document__article__property->getId());
+                    ->find(AccountingDocumentArticleProperty::class, $accounting_document__article__property->getId());
                 $this->entityManager->remove($accountingDocumentArticleProperty);
                 $this->entityManager->flush();
             }
@@ -850,6 +1314,32 @@ class PidbController extends BaseController
         die('<script>location.href = "/pidb/' . $pidb_id . '" </script>');
     }
 
+    public function transactions($limit = 10): void{
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $transactions = $this->entityManager->getRepository(AccountingDocument::class)->getLastTransactions($limit);
+
+        $transactions_with_accounting_document = [];
+        foreach ($transactions as $index => $transaction) {
+            $transactions_with_accounting_document[$index] = [
+                'transaction' => $transaction,
+                'accounting_document' => $this->entityManager
+                  ->getRepository(AccountingDocument::class)->getAccountingDocumentByTransaction($transaction->getId()),
+            ];
+        }
+
+        $data = [
+//            'app_version' => APP_VERSION,
+//            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+//            'user_role_id' => $this->user_role_id,
+            'transactions' => $transactions_with_accounting_document,
+        ];
+
+        $this->render('pidb/transactions.html.twig', $data);
+    }
+
     /**
      * Document transactions.
      *
@@ -857,29 +1347,46 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function transactions(int $pidb_id): void
+    public function transactionsByDocument(int $pidb_id): void
     {
-        $pidb_data = $this->entityManager->find('\App\Entity\AccountingDocument', $pidb_id);
-        $transactions = $this->entityManager->getRepository('\App\Entity\AccountingDocument')->getLastTransactions(10);
+        $pidb = $this->entityManager->find(AccountingDocument::class, $pidb_id);
+        $client = $this->entityManager->find(Client::class,$pidb->getClient());
+        $total = $this->entityManager
+            ->getRepository(AccountingDocument::class)
+            ->getTotalAmountsByAccountingDocument($pidb_id);
+
+        // $transactions = $this->entityManager->getRepository('\App\Entity\AccountingDocument')->getLastTransactions(10);
+        $transactions = $pidb->getPayments();
+
+        $avans = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($pidb_id);
+        $income = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($pidb_id);
+        $total_income = $avans + $income;
+        $saldo = $total - $total_income;
+
+        $saldo_class = (round($total, 4) - round($total_income, 4)) <= 0
+          ? "bg-success"
+          : "bg-danger text-white";
 
         $data = [
-            'page' => $this->page,
+            'app_version' => APP_VERSION,
             'page_title' => $this->page_title,
+            'page' => $this->page,
             'stylesheet' => $this->stylesheet,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
             'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
-            'transactions' => $transactions,
             'pidb_id' => $pidb_id,
-            'accounting_document_id' => $pidb_id,
-            'pidb_data' => $pidb_data,
+            'pidb' => $pidb,
+            'client' => $client,
+            'total' => $total,
+            'transactions' => $transactions,
+            'total_income' => $total_income,
+            'saldo' => $saldo,
+            'saldo_class' => $saldo_class,
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('transactions', $data);
+        $this->render('pidb/transactions_by_document.html.twig', $data);
     }
 
     /**
@@ -891,10 +1398,10 @@ class PidbController extends BaseController
      * @return void
      */
     public function formEditTransaction(int $pidb_id, int $transaction_id): void {
-        $pidb_data = $this->entityManager->find('\App\Entity\AccountingDocument', $pidb_id);
-        $transaction = $this->entityManager->find('\App\Entity\Payment', $transaction_id);
-        $client_id = $pidb_data->getClient()->getId();
-        $client_data = $this->entityManager->getRepository('\App\Entity\Client')->getClientData($client_id);
+        $pidb = $this->entityManager->find(AccountingDocument::class, $pidb_id);
+        $transaction = $this->entityManager->find(Payment::class, $transaction_id);
+        $client_id = $pidb->getClient()->getId();
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
@@ -904,15 +1411,15 @@ class PidbController extends BaseController
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
             'pidb_id' => $pidb_id,
-            'pidb_data' => $pidb_data,
+            'pidb' => $pidb,
             'transaction' => $transaction,
-            'client_data' => $client_data,
+            'client' => $client,
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('transaction', $data);
+        $this->render('pidb/transaction.html.twig', $data);
     }
 
     /**
@@ -926,10 +1433,10 @@ class PidbController extends BaseController
      */
     public function editTransaction(int $pidb_id, int $transaction_id): void
     {
-        $transaction = $this->entityManager->find("\App\Entity\Payment", $transaction_id);
+        $transaction = $this->entityManager->find(Payment::class, $transaction_id);
 
         $type_id = htmlspecialchars($_POST["type_id"]);
-        $type = $this->entityManager->find("\App\Entity\PaymentType", $type_id);
+        $type = $this->entityManager->find(PaymentType::class, $type_id);
 
         $date = date('Y-m-d H:i:s', strtotime($_POST["date"]));
         $amount_1 = htmlspecialchars($_POST["amount"]);
@@ -956,7 +1463,7 @@ class PidbController extends BaseController
      */
     public function deleteTransaction(int $pidb_id, int $transaction_id): void
     {
-        $transaction = $this->entityManager->find("\App\Entity\Payment", $transaction_id);
+        $transaction = $this->entityManager->find(Payment::class, $transaction_id);
         $this->entityManager->remove($transaction);
         $this->entityManager->flush();
 
@@ -970,7 +1477,10 @@ class PidbController extends BaseController
      */
     public function editPreferencesForm(): void
     {
-        $preferences = $this->entityManager->find('App\Entity\Preferences', 1);
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $preferences = $this->entityManager->find(Preferences::class, 1);
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
@@ -981,10 +1491,7 @@ class PidbController extends BaseController
             'preferences' => $preferences,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('editPreferences', $data);
+        $this->render('pidb/edit_preferences.html.twig', $data);
     }
 
     /**
@@ -997,7 +1504,7 @@ class PidbController extends BaseController
         $kurs = str_replace(",", ".", htmlspecialchars($_POST["kurs"]));
         $tax = str_replace(",", ".", htmlspecialchars($_POST["tax"]));
 
-        $preferences = $this->entityManager->find('\App\Entity\Preferences', 1);
+        $preferences = $this->entityManager->find(Preferences::class, 1);
 
         $preferences->setKurs($kurs);
         $preferences->setTax($tax);
@@ -1015,19 +1522,19 @@ class PidbController extends BaseController
      */
     public function addPayment(int $pidb_id): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         $payment_type_id = htmlspecialchars($_POST["type_id"]);
-        $payment_type = $this->entityManager->find("\App\Entity\PaymentType", $payment_type_id);
+        $payment_type = $this->entityManager->find(PaymentType::class, $payment_type_id);
 
-        if ($payment_type_id == 5 && $this->entityManager->getRepository('App\Entity\Payment')->ifExistFirstCashInput()) {
-            // TODO Dragan: Create error message
-            ?>
-            <p>Već ste uneli početno stanje!</p>
-            <a href="/pidb/?cashRegister">Povratak na Kasu</a>
-            <?php
-            exit();
-        }
+//        if ($payment_type_id == 5 && $this->entityManager->getRepository(Payment::class)->ifExistFirstCashInput()) {
+//            // TODO Dragan: Create error message
+//            ?>
+<!--            <p>Već ste uneli početno stanje!</p>-->
+<!--            <a href="/pidb/?cashRegister">Povratak na Kasu</a>-->
+<!--            --><?php
+//            exit();
+//        }
 
         // Date from new payment form.
         if (!isset($_POST["date"])) {
@@ -1048,9 +1555,9 @@ class PidbController extends BaseController
 
         $newPayment->setType($payment_type);
 
-        if ($payment_type_id == 6 || $payment_type_id == 7) {
-            $amount = "-".$amount;
-        }
+//        if ($payment_type_id == 6 || $payment_type_id == 7) {
+//            $amount = "-".$amount;
+//        }
 
         $newPayment->setAmount($amount);
         $newPayment->setDate(new \DateTime($date));
@@ -1062,7 +1569,7 @@ class PidbController extends BaseController
         $this->entityManager->flush();
 
         $accounting_document_id = htmlspecialchars($_POST["pidb_id"]);
-        $accounting_document = $this->entityManager->find("\App\Entity\AccountingDocument", $accounting_document_id);
+        $accounting_document = $this->entityManager->find(AccountingDocument::class, $accounting_document_id);
         // Add Payment to AccountingDocument.
         $accounting_document->getPayments()->add($newPayment);
         $this->entityManager->flush();
@@ -1070,19 +1577,291 @@ class PidbController extends BaseController
     }
 
     /**
-     * A helper method to render views.
+     * Search for clients.
      *
-     * @param $view
-     * @param array $data
+     * @param string $term
+     *   Search term.
      *
      * @return void
      */
-    private function render($view, array $data = []): void
-    {
-        // Extract data array to variables.
-        extract($data);
-        // Include the view file.
-        require_once __DIR__ . "/../Views/pidb/$view.php";
+    public function search(string $term): void {
+        $proformas = $this->entityManager
+            ->getRepository(AccountingDocument::class )->search([1, $term, 0]);
+        $proformas_archived = $this->entityManager
+            ->getRepository(AccountingDocument::class)->search([1, $term, 1]);
+        $delivery_notes = $this->entityManager
+            ->getRepository(AccountingDocument::class)->search([2, $term, 0]);
+        $delivery_notes_archived = $this->entityManager
+            ->getRepository(AccountingDocument::class)->search([2, $term, 1]);
+        $return_notes = $this->entityManager
+            ->getRepository(AccountingDocument::class)->search([4, $term, 0]);
+        $return_notes_archived = $this->entityManager
+            ->getRepository(AccountingDocument::class)->search([4, $term, 1]);
+        $last_pidb = $this->entityManager
+            ->getRepository(AccountingDocument::class)->getLastAccountingDocument();
+
+        $data = [
+            'proformas' => $proformas,
+            'proformas_archived' => $proformas_archived,
+            'delivery_notes' => $delivery_notes,
+            'delivery_notes_archived' => $delivery_notes_archived,
+            'return_notes' => $return_notes,
+            'return_notes_archived' => $return_notes_archived,
+            'last_pidb' => $last_pidb,
+            'page_title' => $this->page_title,
+            'stylesheet' => '/../libraries/',
+            'page' => $this->page,
+        ];
+
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $this->render('pidb/search.html.twig', $data);
     }
 
+    private function getAccountingDocumentArticlesData($pidb_id)
+    {
+        $preferences = $this->entityManager->find(Preferences::class, 1);
+        $kurs = $preferences->getKurs();
+
+        $accounting_document_articles = $this->entityManager
+            ->getRepository(AccountingDocument::class)->getArticles($pidb_id);
+        $total_tax_base_rsd = 0;
+        $total_tax_amount_rsd = 0;
+        $accounting_document_articles_data = [];
+
+        foreach ($accounting_document_articles as $index => $accounting_document_article) {
+
+            $accounting_document_article_properties = $this->entityManager
+                ->getRepository(AccountingDocumentArticleProperty::class)
+                ->findBy(['accounting_document_article' => $accounting_document_article->getId()], []);
+
+
+            $accounting_document_articles_data[$index]['article']['id'] = $accounting_document_article->getId();
+            $accounting_document_articles_data[$index]['article']['pieces'] = $accounting_document_article->getPieces();
+            $accounting_document_articles_data[$index]['article']['name'] = $accounting_document_article->getArticle()->getName();
+            foreach ($accounting_document_article_properties as $property_key => $accounting_document_article_property) {
+                $accounting_document_articles_data[$index]['article']['properties'][$property_key]['name']
+                    = $accounting_document_article_property->getProperty()->getName();
+                $accounting_document_articles_data[$index]['article']['properties'][$property_key]['quantity']
+                    = $accounting_document_article_property->getQuantity();
+            }
+            $accounting_document_articles_data[$index]['article']['unit'] = $accounting_document_article->getArticle()
+                ->getUnit()->getName();
+            $accounting_document_articles_data[$index]['article']['quantity'] = $this->entityManager
+                ->getRepository(AccountingDocumentArticle::class)
+                ->getQuantity(
+                    $accounting_document_article->getId(),
+                    $accounting_document_article->getArticle()->getMinCalcMeasure(),
+                    $accounting_document_article->getPieces()
+                );
+            $accounting_document_articles_data[$index]['article']['note'] = $accounting_document_article->getNote();
+            $accounting_document_articles_data[$index]['article']['price'] = $accounting_document_article->getPrice();
+            $accounting_document_articles_data[$index]['article']['discount'] = $accounting_document_article->getDiscount();
+            $accounting_document_articles_data[$index]['article']['tax_base_rsd'] =  $this->entityManager
+                ->getRepository(AccountingDocumentArticle::class)
+                ->getTaxBase(
+                    $accounting_document_article->getPrice(),
+                    $accounting_document_article->getDiscount(),
+                    $accounting_document_articles_data[$index]['article']['quantity']
+                ) * $kurs;
+            $accounting_document_articles_data[$index]['article']['tax'] = $accounting_document_article->getTax();
+            $accounting_document_articles_data[$index]['article']['tax_amount_rsd'] = $this->entityManager
+                ->getRepository(AccountingDocumentArticle::class)
+                ->getTaxAmount(
+                    $accounting_document_articles_data[$index]['article']['tax_base_rsd'],
+                    $accounting_document_articles_data[$index]['article']['tax']
+                );
+            $accounting_document_articles_data[$index]['article']['sub_total_rsd'] = $this->entityManager
+                ->getRepository(AccountingDocumentArticle::class)
+                ->getSubTotal(
+                    $accounting_document_articles_data[$index]['article']['tax_base_rsd'],
+                    $accounting_document_articles_data[$index]['article']['tax_amount_rsd']
+                );
+        }
+        return $accounting_document_articles_data;
+    }
+
+    private function getAccountingDocumentTotalTaxBaseRSD(int $pidb_id): float
+    {
+        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
+        $total_tax_base_rsd = 0;
+        foreach ($accounting_document_articles_data as $index => $accounting_document_article) {
+            $total_tax_base_rsd += $accounting_document_article['article']['tax_base_rsd'];
+        }
+        return $total_tax_base_rsd;
+    }
+
+    private function getAccountingDocumentTotalTaxAmountRSD(int $pidb_id) {
+        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
+        $total_tax_amount_rsd = 0;
+        foreach ($accounting_document_articles_data as $index => $accounting_document_article) {
+            $total_tax_amount_rsd += $accounting_document_article['article']['tax_amount_rsd'];
+        }
+        return $total_tax_amount_rsd;
+    }
+
+    public function cashRegister()
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $daily_transactions = $this->entityManager
+            ->getRepository(Payment::class)->getDailyCashTransactions();
+        $daily_transactions_with_accounting_document = [];
+        foreach ($daily_transactions as $index => $daily_transaction) {
+            $daily_transactions_with_accounting_document[$index] = [
+                'transaction' => $daily_transaction,
+                'accounting_document' => $this->entityManager
+                    ->getRepository(AccountingDocument::class)
+                    ->getAccountingDocumentByTransaction($daily_transaction->getId()),
+            ];
+        }
+
+        $daily_cash_saldo = $this->entityManager->getRepository(Payment::class)->getDailyCashSaldo();
+
+        $data = [
+            'app_version' => APP_VERSION,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'daily_transactions' => $daily_transactions_with_accounting_document,
+            'daily_cash_saldo' => $daily_cash_saldo,
+            'tools_menu' => [
+                'cash_register' => TRUE,
+            ],
+        ];
+
+        $this->render('pidb/cash_register.html.twig', $data);
+    }
+
+    /**
+     * Cache In and Out.
+     *
+     * @return void
+     */
+    public function cacheInOut(): void
+    {
+        $payment_type_id = $_POST["type_id"];
+
+        if ($payment_type_id == 5 && $this->entityManager->getRepository(Payment::class)->ifExistFirstCashInput()) {
+            // @todo Create error message object or something like that, and
+            // display it in the view.
+            ?>
+            <p>Već ste uneli početno stanje!</p>
+            <a href="/pidbs/cashRegister">Povratak na Kasu</a>
+            <?php
+            exit();
+        }
+
+        $user = $this->entityManager->find(User::class, $this->user_id);
+        $payment_type = $this->entityManager->find(PaymentType::class, $payment_type_id);
+
+        $date = date('Y-m-d H:i:s');
+
+        $amount = htmlspecialchars($_POST["amount"]);
+        // Correct decimal separator.
+        $amount = str_replace(",", ".", $amount);
+
+        if ($payment_type_id == 6 || $payment_type_id == 7) {
+            $amount = "-".$amount;
+        }
+
+        $note = htmlspecialchars($_POST["note"]);
+
+        // Create a new Payment.
+        $newPayment = new Payment();
+
+        $newPayment->setType($payment_type);
+
+        $newPayment->setAmount($amount);
+        $newPayment->setDate(new \DateTime($date));
+        $newPayment->setNote($note);
+        $newPayment->setCreatedAt(new \DateTime("now"));
+        $newPayment->setCreatedByUser($user);
+
+        $this->entityManager->persist($newPayment);
+        $this->entityManager->flush();
+
+      die('<script>location.href = "/pidbs/cashRegister" </script>');
+    }
+
+    public function printDailyCacheReport()
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+
+        $date = date('Y-m-d');
+        $daily_transactions = $this->entityManager->getRepository(Payment::class)->getDailyCashTransactions($date);
+
+        $daily_transactions_with_accounting_document = [];
+        foreach ($daily_transactions as $index => $daily_transaction) {
+            $daily_transactions_with_accounting_document[$index] = [
+                'transaction' => $daily_transaction,
+                'accounting_document' => $this->entityManager
+                    ->getRepository(AccountingDocument::class)
+                    ->getAccountingDocumentByTransaction($daily_transaction->getId()),
+            ];
+        }
+
+
+
+        $daily_cash_saldo = $this->entityManager->getRepository('\App\Entity\Payment')->getDailyCashSaldo($date);
+
+        $data = [
+            'company_info' => $company_info,
+            'daily_transactions' => $daily_transactions_with_accounting_document,
+            'daily_cash_saldo' => $daily_cash_saldo,
+            'date' => $date,
+        ];
+
+        // Render HTML content from a Twig template (or similar)
+        ob_start();
+        $this->render('pidb/print_daily_cache_report.html.twig', $data);
+        $html = ob_get_clean();
+
+        require_once '../config/packages/tcpdf_include.php';
+
+        // Create a new TCPDF object / PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor($company_info['name']);
+        $pdf->SetTitle($company_info['name'] . ' - Dokument');
+        $pdf->SetSubject($company_info['name']);
+        $pdf->SetKeywords($company_info['name'] . ', PDF, dnevni izveštaj');
+
+        // Remove default header/footer.
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // Set default monospaced font.
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // Set margins.
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+
+        // Set auto page breaks.
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // Set image scale factor.
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // Set font.
+        $pdf->SetFont('dejavusans', '', 10);
+
+        // Add a page.
+        $pdf->AddPage();
+
+        // Write HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Reset pointer to the last page.
+        $pdf->lastPage();
+
+        // Close and output PDF document to browser.
+        $pdf->Output( 'dnevni izvestaj.pdf', 'I');
+    }
 }

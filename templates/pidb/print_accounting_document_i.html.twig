@@ -1,0 +1,222 @@
+<style type="text/css">
+    table {
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+<table>
+    <tr>
+        <td width="690px" colspan="3"><h1>{{ company_info.name }}</h1></td>
+    </tr>
+    <tr>
+        <td width="340px" colspan="2"><br />
+            {{ company_info.street }} {{ company_info.home_number }}<br />
+            {{ company_info.city }}, {{ company_info.country }}<br />
+            PIB: {{ company_info.pib }}, MB: {{ company_info.mb }}<br />
+            žiro računi:<br />
+            {% if company_info.bank_account_1 %}
+                {{ company_info.bank_account_1 }}<br />
+            {% endif %}
+            {% if company_info.bank_account_2 %}
+                {{ company_info.bank_account_2 }}<br />
+            {% endif %}
+            kontakti:<br />
+            {% if company_info.phone_1 %}{{ company_info.phone_1 }}<br />{% endif %}
+            {% if company_info.phone_2 %}{{ company_info.phone_2 }}<br />{% endif %}
+            {% if company_info.email_1 %}{{ company_info.email_1 }}<br />{% endif %}
+            {% if company_info.email_2 %}{{ company_info.email_2 }}<br />{% endif %}
+            {% if company_info.website_1 %}{{ company_info.website_1 }}<br />{% endif %}
+        </td>
+        <td width="350px">Kupac:<br />
+            {{ client.name }}
+            {% if client.lb %}<br />PIB {{ client.lb }}{% endif %}
+            <br />
+            {% if client.street %}{{ client.street }} {{ client.home_number }}{% endif %}
+            {% if client.street and client.city %}<br />{% endif %}
+            {% if client.city %}{{ client.city }}{% endif %}
+            {% if client.city and client.country %}<br />{% endif %}
+            {% if client.country %}{{ client.country }}{% endif %}
+            <br />
+            {% for client_contact in client.contacts|slice(0, 2) %}
+                {{ client_contact.type.name }}: {{ client_contact.body }}<br />
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <h2>{{ pidb_type }} broj:
+                {{ '%04d'|format(pidb.getOrdinalNumInYear()) }} - {{ pidb.getCreatedAt().format('m') }}
+            </h2>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3"><br />
+            Datum i mesto izdavanja: {{ pidb.getCreatedAt().format('d M Y') }}.g. Bačka Palanka
+        </td>
+    </tr>
+</table>
+
+<table border="1">
+    <tr>
+        <td width="30px" align="center">red.<br />br.</td>
+        <td width="195px" align="center">naziv proizvoda</td>
+        <td width="35px" align="center">jed.<br />mere</td>
+        <td width="53px" align="center">kol.</td>
+        <td width="70px" align="center">cena po<br />jed. mere</td>
+        <td width="37px" align="center">rabat<br />%</td>
+        <td width="80px" align="center">poreska<br />osnovica</td>
+        <td width="37px" align="center">PDV<br />%</td>
+        <td width="70px" align="center">iznos<br />PDV-a</td>
+        <td width="80px" align="center">ukupno</td>
+    </tr>
+</table>
+
+{% set count = 0 %}
+{% for accounting_document_article_data in accounting_document_articles_data %}
+    {% set count = count + 1 %}
+    <table border="0">
+        <tr>
+            <td width="30px" align="center">{{ count }}</td>
+            <td width="195px">
+                {{ accounting_document_article_data.article.name }}
+                <br />
+                <span style="font-size: 8px">{{ accounting_document_article_data.article.note }}</span>
+                <br />
+                {% set property_cout = 0 %}
+                {% for accounting_document_article_property in accounting_document_article_data.article.properties %}
+                    {% set property_cout = property_cout + 1 %}
+                    {% if  property_cout == 2 %}x{% endif %}
+                    {{ accounting_document_article_property.quantity|number_format(2, ',', '.') }}cm
+                    -
+                    {{ accounting_document_article_data.article.pieces }}kom
+                {% endfor %}
+            </td>
+            <td align="center" width="35px">{{ accounting_document_article_data.article.unit }}</td>
+            <td width="53px" align="right">
+                {{ accounting_document_article_data.article.quantity|number_format(2, ',', '.') }}
+            </td>
+            <td width="70px" align="right">
+                {{ accounting_document_article_data.article.price|number_format(4, ',', '.') }}
+            </td>
+            <td width="37px" align="right">
+                {{ accounting_document_article_data.article.discount|number_format(2, ',', '.') }}
+            </td>
+            <td width="80px" align="right">
+                {{ accounting_document_article_data.article.tax_base_rsd|number_format(2, ',', '.') }}
+            </td>
+            <td width="37px" align="right">
+                {{ accounting_document_article_data.article.tax }}
+            </td>
+            <td width="70px" align="right">
+                {{ accounting_document_article_data.article.tax_amount_rsd|number_format(2, ',', '.') }}
+            </td>
+            <td width="80px" align="right">
+                {{ accounting_document_article_data.article.sub_total_rsd|number_format(2, ',', '.') }}
+            </td>
+        </tr>
+    </table>
+{% endfor %}
+
+<table>
+    <tr><td width="690px" colspan="10" style="border-bottom-width: inherit;"></td></tr>
+    <tr>
+        <td colspan="3" width="270px"></td>
+        <td colspan="2" width="135px" style="border-bottom-width: inherit;">ukupno poreska osnovica</td>
+        <td colspan="2" width="100px" align="right" style="border-bottom-width: inherit;">
+            {{ total_tax_base_rsd|number_format(2, ',', '.') }}
+        </td>
+        <td colspan="2" width="105px"></td><td width="80px"></td>
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+        <td colspan="4" style="border-bottom-width: inherit;">ukupno iznos PDV-a</td>
+        <td colspan="2" align="right" style="border-bottom-width: inherit;">
+            {{ total_tax_amount_rsd|number_format(2, ',', '.') }}
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+        <td colspan="5" style="border-bottom-width: inherit;">UKUPNO</td>
+        <td colspan="2" align="right" style="border-bottom-width: inherit;">
+            {{ total_rsd|number_format(2, ',', '.') }}
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+        <td colspan="5" style="border-bottom-width: inherit;">Avans</td>
+        <td colspan="2" align="right" style="border-bottom-width: inherit;">
+            {{ avans_rsd|number_format(2, ',', '.') }}
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+        <td colspan="5" style="border-bottom-width: inherit;">Uplaćeno</td>
+        <td colspan="2" align="right" style="border-bottom-width: inherit;">
+            {{ income_rsd|number_format(2, ',', '.') }}
+        </td>
+        <td></td>
+    </tr>
+    <tr style="font-weight:bold;">
+        <td colspan="3"></td>
+        <td colspan="5" style="border-bottom-width: inherit;">OSTALO ZA UPLATU</td>
+        <td colspan="2" align="right" style="border-bottom-width: inherit;">
+            {{ remaining_rsd|number_format(2, ',', '.') }}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+        <td colspan="5"></td>
+        <td colspan="2" align="right" style="font-size: 11px;">
+            (&#8364; {{ remaining_eur|number_format(4, ',', '.') }})
+        </td>
+    </tr>
+</table>
+
+{% if pidb.type.id == 2 %}
+{% else %}
+    <table>
+        <tr>
+            <td width="105px">Slovima: </td>
+            <td width="585px" style="background-color: #E0E0E0;"></td>
+        </tr>
+        <tr>
+            <td>Način plaćanja: </td>
+            <td style="background-color: #E0E0E0;">Virmanom - nalogom za prenos</td>
+        </tr>
+        <tr>
+            <td>Rok plaćanja: </td>
+            <td style="background-color: #E0E0E0;"></td>
+        </tr>
+        <tr>
+            <td>Poziv na broj: </td>
+            <td style="background-color: #E0E0E0;">
+                {{ '%04d'|format(pidb.getOrdinalNumInYear()) }}-{{ pidb.getCreatedAt().format('m') }}
+            </td>
+        </tr>
+        <tr><td></td></tr>
+    </table>
+{% endif %}
+
+<table border="1" style="padding: 5px">
+    <tr><td width="690px">Napomena:<br />{{ pidb.note }}</td></tr>
+</table>
+
+<table>
+{% if pidb.type.id == 2 %}
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td>______________________</td><td></td><td align="right">______________________</td></tr>
+    <tr><td>robu izdao</td><td></td><td align="right">robu primio</td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td align="center"></td><td></td><td align="center"></td></tr>
+{% else %}
+    <tr><td></td><td></td></tr>
+    <tr><td></td><td></td></tr>
+    <tr><td align="right"></td><td align="center">___________________________<br />odgovorno lice</td></tr>
+{% endif %}
+</table>

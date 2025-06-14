@@ -143,7 +143,7 @@
     <div class="card-footer px-2">
         <p class="h5">Kontakti</p>
         {% for contact in client.contacts %}
-            <form action="/client/<?php echo $client_id ?>/contact/<?php echo $contact->getId() ?>/editContact"
+            <form action="/client/{{ client.id }}/contact/{{ contact.id }}/editContact"
                   method="post">
 
                 <div class="row mb-2">

@@ -1,0 +1,37 @@
+<h1>Dnevni izveštaj</h1>
+<h4>{{ date }}</h4>
+<table>
+    <thead>
+        <tr>
+            <th style="border-bottom: 1px solid black;">vrsta transakcije</th>
+            <th style="border-bottom: 1px solid black;">vezani dokument</th>
+            <th style="border-bottom: 1px solid black;">beleška</th>
+            <th style="border-bottom: 1px solid black;" align="center">iznos</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in daily_transactions %}
+            <tr>
+                <td>{{ transaction.transaction.type.name }}</td>
+                <td><br />
+                    {% if transaction.accounting_document %}
+                        {{ transaction.accounting_document.getType().getName() }}
+                        {{ '%04d'|format(transaction.accounting_document.getOrdinalNumInYear()) }}
+                        -
+                        {{ transaction.accounting_document.getDate().format('m/Y') }}
+                    {% endif %}
+                </td>
+                <td>{{ transaction.transaction.note }}</td>
+                <td align="right">{{ transaction.transaction.amount }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th style="border-top: 1px solid black;"></th>
+            <th style="border-top: 1px solid black;"></th>
+            <th style="border-top: 1px solid black;" align="right">stanje</th>
+            <th style="border-top: 1px solid black;" align="right">{{ daily_cash_saldo }}</th>
+        </tr>
+    </tfoot>
+</table>

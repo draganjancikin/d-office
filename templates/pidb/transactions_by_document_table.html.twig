@@ -1,0 +1,96 @@
+{#<?php#}
+{#//if(isset($_GET['pidb_id'])) :#}
+{#//    $accounting_document_id = $_GET['pidb_id'];#}
+{#  $pidb_data = $entityManager->find('\App\Entity\AccountingDocument', $accounting_document_id);#}
+
+
+{#//else :#}
+{#//    die('<script>location.href = "/pidbs/transactions" </script>');#}
+{#//endif;#}
+{#?>#}
+<div class="row">
+    <div class="col-lg-9 col-md-12">
+        <div class="card mb-4">
+            <div class="card-header p-2">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    Transakcije dokumenta:
+                    <a href="/pidb/{{ pidb_id }}">
+                        {{ pidb.type.name }}
+                        {{ '%04d'|format(pidb.getOrdinalNumInYear()) }} - {{ pidb.getCreatedAt().format('m') }}
+                        {{ client.name }}
+                    </a>
+                </h6>
+            </div>
+            <div class="card-body p-2">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="" width="100%" cellspacing="0">
+                        <thead class="thead-light">
+                        <tr class="text-center">
+                            <th>datum</th>
+                            <th>vrsta</th>
+                            <th>beleška</th>
+                            <th>duguje</th>
+                            <th>potražuje</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr>
+                            <td class="text-center">{{ pidb.getCreatedAt().format('d-m-Y') }}</td>
+                            <td class="text-center"></td>
+                            <td class="text-center"></td>
+                            <td class="text-right">{{ total|number_format(4, ',', '.') }}</td>
+                            <td class="text-right"></td>
+                            <td></td>
+                        </tr>
+                        {% for transaction in transactions %}
+                            <tr>
+                                <td class="text-center">{{ transaction.getCreatedAt().format('d-m-Y') }}</td>
+                                <td class="text-center" title="{{ transaction.note }}">{{ transaction.type.name }}</td>
+                                <td class="text-center">{{ transaction.note }}</td>
+                                <td class="text-right"></td>
+                                <td class="text-right">
+                                    {{ transaction.amount|number_format(4, ',', '.') }}
+                                </td>
+                                <td>
+                                    {% if user_role_id == 1 or user_role_id == 2 %}
+                                        <a href="/pidb/{{ pidb_id }}/transaction/{{ transaction.id }}/edit"
+                                           class="btn btn-success btn-sm" title="Izmeni transakciju!">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a onClick="return confirm('Da li ste sigurni da želite da obrišete transakciju?');"
+                                           href="/pidb/{{ pidb_id }}/transaction/{{ transaction.id }}/delete"
+                                           title="Brisanje transakcije" class="btn btn-danger btn-sm">
+                                            <i class="far fa-trash-alt"></i>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th class="text-right">ukupno</th>
+                            <th class="text-right">{{ total|number_format(4, ',', '.') }}</th>
+                            <th class="text-right">{{ total_income|number_format(4, ',', '.') }}</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th colspan="2" class="text-right">saldo</th>
+                            <th class="text-right {{ saldo_class }}">
+                                {{ saldo|number_format(4, ',', '.') }}
+                            </th>
+                            <th></th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

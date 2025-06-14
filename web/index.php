@@ -44,6 +44,11 @@ $router->add('GET', '/pidbs/preferences', 'PidbController@editPreferencesForm');
 $router->add('POST', '/pidbs/preferences', 'PidbController@editPreferences');
 $router->add('GET', '/pidbs/add', 'PidbController@addForm');
 $router->add('POST', '/pidbs/add', 'PidbController@add');
+$router->add('POST', '/pidbs/cacheInOut', 'PidbController@cacheInOut');
+$router->add('GET', '/pidbs/search/', 'PidbController@search');
+$router->add('GET', '/pidbs/transactions', 'PidbController@transactions');
+$router->add('GET', '/pidbs/cashRegister', 'PidbController@cashRegister');
+$router->add('GET', '/pidbs/printDailyCacheReport', 'PidbController@printDailyCacheReport');
 
 $router->add('GET', '/pidb/{pidb_id}', 'PidbController@view');
 $router->add('GET', '/pidb/{pidb_id}/edit', 'PidbController@editForm');
@@ -64,7 +69,7 @@ $router->add('POST', '/pidb/{pidb_id}/article/{pidb_article_id}/change', 'PidbCo
 $router->add('GET', '/pidb/{pidb_id}/article/{pidb_article_id}/duplicate', 'PidbController@duplicateArticleInAccountingDocument');
 $router->add('GET', '/pidb/{pidb_id}/article/{pidb_article_id}/delete', 'PidbController@deleteArticleInAccountingDocument');
 
-$router->add('GET', '/pidb/{pidb_id}/transactions', 'PidbController@transactions');
+$router->add('GET', '/pidb/{pidb_id}/transactions', 'PidbController@transactionsByDocument');
 $router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@formEditTransaction');
 $router->add('POST', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@editTransaction');
 $router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/delete', 'PidbController@deleteTransaction');
