@@ -76,7 +76,11 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function addForm(int $client_id = NULL, int $project_id = NULL) {
+    public function addForm(int $client_id = NULL, int $project_id = NULL)
+    {
+
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
 
         if (isset($_GET['project_id'])) {
             $project_id = htmlspecialchars($_GET['project_id']);
@@ -101,10 +105,7 @@ class PidbController extends BaseController
             'project_id' => $project_id,
             'client' => $client ?? NULL,
             'clients_list' => $clients_list,
-          ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        ];
 
         $this->render('pidb/add.html.twig', $data);
     }
@@ -177,6 +178,9 @@ class PidbController extends BaseController
      */
     public function view(int $pidb_id, $search = NULL): void
     {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $pidb_data = $this->entityManager->find(AccountingDocument::class, $pidb_id);
 
         $client_id = $pidb_data->getClient()->getId();
@@ -255,9 +259,6 @@ class PidbController extends BaseController
             'remaining_rsd' => $remaining_rsd,
             'remaining_eur' => $remaining_eur,
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('pidb/view.html.twig', $data);
     }

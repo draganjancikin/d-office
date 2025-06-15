@@ -1,0 +1,44 @@
+<style type="text/css">
+    table tr th {
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+    table.fence-field {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 5px;
+        border: 1px solid black;
+    }
+</style>
+<h1>KROJNA LISTA: KL
+    {{ '%04d'|format(cutting_sheet.getOrdinalNumInYear()) }} - {{ cutting_sheet.getCreatedAt().format('m') }}
+</h1>
+<span>{{ cutting_sheet.getCreatedAt().format('d M Y') }}</span>
+<p>U vezi sa:
+    {# @todo Napraviti vezu izmedju krojne liste i projekta ili klijenta ... #}
+    {{ cutting_sheet.getClient().getName() }}
+</p>
+{% for article_data in articles_data %}
+<table class="fence-field">
+    <tr>
+        <td colspan="2"><h3>model: {{ article_data.fence_model }} (letvica {{ article_data.picket_width }}mm)</h3></td>
+        <td><h3>broj polja: {{ article_data.article_field_number }}</h3></td>
+    </tr>
+    <tr>
+      <td>širina polja: <br />{{ article_data.article_width }}mm</td>
+      <td>visina polja: <br />{{ article_data.article_height }}mm</td>
+      <td>razmak među letvicama: <br />{{ article_data.space_between_pickets|number_format(1, ',', '.') }}mm </td>
+    </tr>
+    <tr><th width="60px">red. br.</th><th width="100px">dužina letvice</th><th>količina</th></tr>
+    {% set count = 0 %}
+    {% for picket in article_data.pickets %}
+        {% set count = count + 1 %}
+        <tr>
+            <td width="60px">{{ count }}</td>
+            <td width="100px">{{ picket.height }} mm</td>
+            <td>{{ picket.number }} kom</td>
+        </tr>
+    {% endfor %}
+</table>
+<p></p>
+{% endfor %}

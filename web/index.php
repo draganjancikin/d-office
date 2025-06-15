@@ -78,6 +78,7 @@ $router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/delete', 'Pidb
 $router->add('GET', '/cuttings/', 'CuttingController@index');
 $router->add('GET', '/cuttings/add', 'CuttingController@formAdd');
 $router->add('POST', '/cuttings/add', 'CuttingController@add');
+$router->add('GET', '/cuttings/search/', 'CuttingController@search');
 $router->add('GET', '/cutting/{cutting_id}', 'CuttingController@view');
 $router->add('GET', '/cutting/{cutting_id}/edit', 'CuttingController@edit');
 $router->add('GET', '/cutting/{cutting_id}/print', 'CuttingController@print');

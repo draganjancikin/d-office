@@ -18,23 +18,18 @@
                     </tr>
                 </tfoot>
                 <tbody>
-                    <?php
-                    $cutting_sheets = $entityManager->getRepository('\App\Entity\CuttingSheet')->getLastCuttingSheets(10);
-                    foreach ($cutting_sheets as $cutting_sheet):
-                      ?>
+                {% for cutting in cutting_sheets %}
                     <tr>
                         <td class="centar">
-                            <a href="/cutting/<?php echo $cutting_sheet->getId() ?>">
-                                KL_<?php echo str_pad($cutting_sheet->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT) ?>
+                            <a href="/cutting/{{ cutting.getId() }}" title="Pregled krojne liste">
+                                KL_{{ '%04d'|format(cutting.getOrdinalNumInYear()) }}
                             </a>
                         </td>
                         <td>
-                          <?php echo $cutting_sheet->getClient()->getName() ?>
+                            {{ cutting.getClient().getName() }}
                         </td>
                     </tr>
-                    <?php
-                    endforeach;
-                    ?>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
