@@ -1,0 +1,192 @@
+<!-- Edit Material Data -->
+<div class="card mb-4">
+    <div class="card-header p-2">
+      <h6 class="m-0 text-dark">Izmena materiala: <strong>{{ material.getName() }}</strong></h6>
+    </div>
+    <div class="card-body p-2">
+        <form action="/material/{{ material_id }}/edit' ?>" method="post">
+
+            <div class="row mb-2">
+                <label for="disabledModified" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">
+                    Izmenjen:
+                </label>
+                <div class="col-sm-5 col-sm-4 col-lg-3">
+                    <input class="form-control form-control-sm" id="disabledModified" type="text"
+                           value="{{ material.getModifiedAt|date('d M Y H:i') }}" disabled />
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">
+                    Naziv:
+                </label>
+                <div class="col-sm-9 col-xl-8">
+                    <input class="form-control form-control-sm" id="inputName" type="text" name="name"
+                           value="{{ material.getName() }}" maxlength="96">
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="selectUnit" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Jedinica mere:</label>
+                <div class="col-sm-3 col-lg-2">
+                    <select id="selectUnit" name="unit_id" class="form-select form-select-sm">
+                        <option value="{{ material.getUnit().getId() }}">
+                            {{ material.getUnit().getName() }}
+                        </option>
+                        {%  for unit in units %}
+                            <option value="{{ unit.getId() }}">{{ unit.getName() }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="inputWeight" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">
+                    Težina:
+                </label>
+                <div class="col-sm-3 col-lg-2">
+                    <input class="form-control form-control-sm" id="inputWeight" type="text" name="weight"
+                           value="{{ material.getWeight() }}">
+                </div>
+                <div class="col-sm-2">g</div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="inputPrice" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">
+                    Cena:
+                </label>
+                <div class="col-sm-3 col-lg-2">
+                    <input class="form-control form-control-sm" id="inputPrice" type="text" name="price"
+                           value="{{ material.getPrice() }}">
+                </div>
+                <div class="col-sm-2 text-nowrap">&#8364; bez PDV-a</div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="inputNote" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">Beleška: </label>
+                <div class="col-sm-9 col-xl-8">
+                    <textarea class="form-control form-control-sm" id="inputNote" rows="3" name="note"
+                              placeholder="Beleška uz materijal ...">
+                        {{ material.getNote() }}
+                    </textarea>
+                </div>
+            </div>
+
+          <div class="row mb-2">
+            <div class="col-sm-3 offset-sm-3 offset-lg-2">
+              <button type="submit" class="btn btn-sm btn-success" title="Snimi izmene podataka o klijentu!">
+                <i class="fas fa-save"></i> Snimi
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+    </div>
+    <!-- End card Body -->
+
+</div>
+<!-- End Card -->
+
+<!-- Edit Material Suppliers -->
+<div class="card mb-4">
+
+    <div class="card-header p-2">
+        <h6 class="m-0 text-dark">Izmena dobavljača</h6>
+    </div>
+
+    <div class="card-body p-2">
+        <div class="table-responsive">
+            <table class="table table-hover" >
+                <thead>
+                    <tr class="table-secondary">
+                        <th class="px-1">#</th>
+                        <th class="px-1 text-center">naziv</th>
+                        <th class="px-1 text-center">datum izmene</th>
+                        <th class="px-1 text-center">šifra po dobavljaču</th>
+                        <th class="px-1 text-center">cena</th>
+                        <th class="px-1"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%  set count = 0 %}
+                    {% for material_supplier in material_suppliers %}
+                        {%  set count = count + 1 %}
+                        <form action="/material/{{ material_id }}/supplier/{{ material_supplier.getId() }}/edit"
+                              method="post">
+                            <input class="form-control" type="hidden" name="material_supplier_id"
+                                 value="{{ material_supplier.getId() }}" />
+                            <tr>
+                                <td class="p-1">{{ count }}</td>
+                                <td class="p-1">
+                                    <select class="form-select form-select-sm" name="supplier_id"
+                                            title="{{ material_supplier.getSupplier().getName() }}" required>
+                                        <option value="{{ material_supplier.getSupplier().getId() }}">
+                                            {{ material_supplier.getSupplier().getName() }}
+                                        </option>
+                                        {% for supplier in suppliers %}
+                                          <option value="{{ supplier.getId() }}">{{ supplier.getName() }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td class="p-1">
+                                    <input class="form-control form-control-sm" type="text"
+                                           value="{{ material_supplier.getModifiedAt|date('d M Y') }}" disabled>
+                                </td>
+                                <td class="p-1">
+                                    <input class="form-control form-control-sm" type="text" name="note"
+                                           value="{{ material_supplier.getNote() }}">
+                                </td>
+                                <td class="p-1">
+                                    <input class="form-control form-control-sm" type="text" name="price"
+                                           value="{{ material_supplier.getPrice() }}">
+                                </td>
+                                <td class="p-1">
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="fas fa-save"> </i>
+                                    </button>
+                                    <a href="/material/{{ material_id }}/supplier/{{ material_supplier.getId()}}/delete"
+                                       class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash-alt"> </i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </form>
+                    {%  endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- End Card Body -->
+
+    <div class="card-header p-2">
+        <h6 class="m-0 text-dark">Izmena osobina materijala</h6>
+    </div>
+
+    <div class="card-body p-2">
+        {% for material_property in material_properties %}
+            <form method="post">
+                <div class="row mb-2">
+
+                    <div class="col-sm-4">
+                        <select class="form-select form-select-sm" name="property_id">
+                            <option value="{{ material_property.getProperty().getId() }}">
+                              {{ material_property.getProperty().getName() }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <a href="/material/{{ material_id }}/property/{{ material_property.getId() }}/delete"
+                           class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash-alt"> </i>
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+        {% endfor %}
+    </div>
+    <!-- End Card Body -->
+
+</div>

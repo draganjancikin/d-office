@@ -26,15 +26,19 @@ use TCPDF;
 class PidbController extends BaseController
 {
 
-    private $page = 'pidbs';
-    private $page_title = 'Dokumenti';
-    private $stylesheet = '/../libraries/';
+    private string $page;
+    private string $page_title;
+    private string $stylesheet;
 
     /**
      * PidbController constructor.
      */
     public function __construct() {
         parent::__construct();
+
+        $this->page_title = 'Dokumenti';
+        $this->page = 'pidbs';
+        $this->stylesheet = '/../libraries/';
     }
 
     /**
@@ -95,6 +99,7 @@ class PidbController extends BaseController
             ->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
 
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
@@ -1151,6 +1156,9 @@ class PidbController extends BaseController
      */
     public function changeArticleInAccountingDocumentForm(int $pidb_id, int $pidb_article_id): void
     {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $pidb_data = $this->entityManager->find(AccountingDocument::class, $pidb_id);
         $article_data = $this->entityManager->find(AccountingDocumentArticle::class, $pidb_article_id)->getArticle();
         $all_articles = $this->entityManager->getRepository(Article::class)->findAll();
@@ -1174,22 +1182,21 @@ class PidbController extends BaseController
         }
 
         $data = [
-          'page' => $this->page,
-          'page_title' => $this->page_title,
-          'stylesheet' => $this->stylesheet,
-          'user_id' => $this->user_id,
-          'username' => $this->username,
-          'user_role_id' => $this->user_role_id,
-          'entityManager' => $this->entityManager,
-          'pidb_id' => $pidb_id,
-          'pidb_data' => $pidb_data,
-          'pidb_article_id' => $pidb_article_id,
-          'article_data' => $article_data,
-          'all_articles' => $all_articles,
-          'style' => $style,
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_id' => $this->user_id,
+            'username' => $this->username,
+            'user_role_id' => $this->user_role_id,
+            'entityManager' => $this->entityManager,
+            'pidb_id' => $pidb_id,
+            'pidb_data' => $pidb_data,
+            'pidb_article_id' => $pidb_article_id,
+            'article_data' => $article_data,
+            'all_articles' => $all_articles,
+            'style' => $style,
         ];
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('pidb/changeArticleInAccountingDocument.html.twig', $data);
     }
@@ -1331,10 +1338,11 @@ class PidbController extends BaseController
         }
 
         $data = [
-//            'app_version' => APP_VERSION,
-//            'page_title' => $this->page_title,
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
+            'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
-//            'user_role_id' => $this->user_role_id,
+            // 'user_role_id' => $this->user_role_id,
             'transactions' => $transactions_with_accounting_document,
         ];
 
@@ -1350,13 +1358,15 @@ class PidbController extends BaseController
      */
     public function transactionsByDocument(int $pidb_id): void
     {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $pidb = $this->entityManager->find(AccountingDocument::class, $pidb_id);
         $client = $this->entityManager->find(Client::class,$pidb->getClient());
         $total = $this->entityManager
             ->getRepository(AccountingDocument::class)
             ->getTotalAmountsByAccountingDocument($pidb_id);
 
-        // $transactions = $this->entityManager->getRepository('\App\Entity\AccountingDocument')->getLastTransactions(10);
         $transactions = $pidb->getPayments();
 
         $avans = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($pidb_id);
@@ -1370,8 +1380,8 @@ class PidbController extends BaseController
 
         $data = [
             'app_version' => APP_VERSION,
-            'page_title' => $this->page_title,
             'page' => $this->page,
+            'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $this->user_role_id,
             'pidb_id' => $pidb_id,
@@ -1384,9 +1394,6 @@ class PidbController extends BaseController
             'saldo_class' => $saldo_class,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
         $this->render('pidb/transactions_by_document.html.twig', $data);
     }
 
@@ -1398,12 +1405,14 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function formEditTransaction(int $pidb_id, int $transaction_id): void {
+    public function formEditTransaction(int $pidb_id, int $transaction_id): void
+    {
         $pidb = $this->entityManager->find(AccountingDocument::class, $pidb_id);
         $transaction = $this->entityManager->find(Payment::class, $transaction_id);
         $client_id = $pidb->getClient()->getId();
         $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
@@ -1483,6 +1492,7 @@ class PidbController extends BaseController
 
         $preferences = $this->entityManager->find(Preferences::class, 1);
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
@@ -1585,7 +1595,11 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function search(string $term): void {
+    public function search(string $term): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $proformas = $this->entityManager
             ->getRepository(AccountingDocument::class )->search([1, $term, 0]);
         $proformas_archived = $this->entityManager
@@ -1602,6 +1616,10 @@ class PidbController extends BaseController
             ->getRepository(AccountingDocument::class)->getLastAccountingDocument();
 
         $data = [
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
             'proformas' => $proformas,
             'proformas_archived' => $proformas_archived,
             'delivery_notes' => $delivery_notes,
@@ -1609,13 +1627,7 @@ class PidbController extends BaseController
             'return_notes' => $return_notes,
             'return_notes_archived' => $return_notes_archived,
             'last_pidb' => $last_pidb,
-            'page_title' => $this->page_title,
-            'stylesheet' => '/../libraries/',
-            'page' => $this->page,
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('pidb/search.html.twig', $data);
     }
@@ -1723,6 +1735,7 @@ class PidbController extends BaseController
 
         $data = [
             'app_version' => APP_VERSION,
+            'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
             'daily_transactions' => $daily_transactions_with_accounting_document,

@@ -92,6 +92,7 @@ $router->add('GET', '/cutting/{cutting_id}/delete', 'CuttingController@delete');
 $router->add('GET', '/materials/', 'MaterialController@index');
 $router->add('GET', '/materials/add', 'MaterialController@addForm');
 $router->add('POST', '/materials/add', 'MaterialController@add');
+$router->add('GET', '/materials/search/', 'MaterialController@search');
 
 $router->add('GET', '/material/{material_id}', 'MaterialController@view');
 $router->add('GET', '/material/{material_id}/edit', 'MaterialController@editForm');

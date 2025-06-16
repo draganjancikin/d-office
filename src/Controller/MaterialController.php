@@ -3,9 +3,14 @@
 namespace App\Controller;
 
 use App\Core\BaseController;
+use App\Entity\Client;
 use App\Entity\Material;
 use App\Entity\MaterialSupplier;
 use App\Entity\MaterialProperty;
+use App\Entity\Preferences;
+use App\Entity\Property;
+use App\Entity\Unit;
+use App\Entity\User;
 
 /**
  * MaterialController class
@@ -15,11 +20,19 @@ use App\Entity\MaterialProperty;
 class MaterialController extends BaseController
 {
 
+    private string $page;
+    private string $page_title;
+    private string $stylesheet;
+
     /**
      * MaterialController constructor.
      */
     public function __construct() {
        parent::__construct();
+
+        $this->page = 'materials';
+        $this->page_title = 'Materijali';
+        $this->stylesheet = '/../libraries/';
     }
 
     /**
@@ -27,25 +40,30 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function index($search = NULL) {
-        $materials = $this->entityManager->getRepository('\App\Entity\Material')->getLastMaterials(10);
-        $preferences = $this->entityManager->find('\App\Entity\Preferences', 1);
+    public function index($search = NULL): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $materials = $this->entityManager->getRepository(Material::class)->getLastMaterials(10);
+        $preferences = $this->entityManager->find(Preferences::class, 1);
         $data = [
-            'page_title' => 'Materijali',
-            'stylesheet' => '../libraries/',
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
-            'page' => 'materials',
             'entityManager' => $this->entityManager,
             'search' => $search,
             'materials' => $materials,
             'preferences' => $preferences,
+            'tools_menu' => [
+              'material' => FALSE,
+            ],
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('index', $data);
+        $this->render('material/index.html.twig', $data);
     }
 
     /**
@@ -53,21 +71,22 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function addForm(): void {
-        $units = $this->entityManager->getRepository('\App\Entity\Unit')->findAll();
+    public function addForm(): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+        $units = $this->entityManager->getRepository(Unit::class)->findAll();
+
         $data = [
-            'page_title' => 'Materijali',
-            'stylesheet' => '/../libraries/',
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
-            'page' => 'material',
             'units' => $units,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('add', $data);
+        $this->render('material/add.html.twig', $data);
     }
 
     /**
@@ -76,7 +95,7 @@ class MaterialController extends BaseController
      * @return void
      */
     public function add(){
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -87,14 +106,14 @@ class MaterialController extends BaseController
         }
 
         $unit_id = htmlspecialchars($_POST['unit_id']);
-        $unit = $this->entityManager->find("\App\Entity\Unit", $unit_id);
+        $unit = $this->entityManager->find(Unit::class, $unit_id);
         $weight = $_POST['weight'] ? htmlspecialchars($_POST['weight']) : 0;
         $price = $_POST['price'] ? str_replace(",", ".", htmlspecialchars($_POST['price'])) : 0;
         $min_obrac_mera = 0;
         $note = htmlspecialchars($_POST["note"]);
 
         // Check if name already exist in database.
-        $control_name = $this->entityManager->getRepository('\App\Entity\Material')->findBy( array('name' => $name) );
+        $control_name = $this->entityManager->getRepository(Material::class)->findBy( array('name' => $name) );
 
         if ($control_name) {
             echo "Username already exist in database. Please choose new username!";
@@ -129,31 +148,41 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function view($material_id): void {
-        $material = $this->entityManager->find('\App\Entity\Material', $material_id);
-        $material_suppliers = $this->entityManager->getRepository('\App\Entity\MaterialSupplier')->getMaterialSuppliers($material_id);
-        $material_propertys = $this->entityManager->getRepository('\App\Entity\MaterialProperty')->getMaterialProperties($material_id);
-        $suppliers = $this->entityManager->getRepository('\App\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC') );
-        $property_list = $this->entityManager->getRepository('\App\Entity\Property')->findAll();
-
-        $data = [
-            'page_title' => 'Materijali',
-            'stylesheet' => '/../libraries/',
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'page' => 'material',
-            'material_id' => $material_id,
-            'material' => $material,
-            'material_suppliers' => $material_suppliers,
-            'material_propertys' => $material_propertys,
-            'suppliers' => $suppliers,
-            'property_list' => $property_list,
-        ];
-
+    public function view($material_id): void
+    {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('view', $data);
+        $material = $this->entityManager->find(Material::class, $material_id);
+        $material_suppliers = $this->entityManager->getRepository(MaterialSupplier::class)->getMaterialSuppliers
+        ($material_id);
+        $material_properties = $this->entityManager->getRepository(MaterialProperty::class)->getMaterialProperties
+        ($material_id);
+        $suppliers = $this->entityManager->getRepository(Client::class)->findBy(array('is_supplier' => 1), array('name' =>
+          'ASC') );
+        $property_list = $this->entityManager->getRepository(Property::class)->findAll();
+
+        $data = [
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'username' => $this->username,
+            'user_role_id' => $this->user_role_id,
+            'material_id' => $material_id,
+            'material' => $material,
+            'material_suppliers' => $material_suppliers,
+            'material_properties' => $material_properties,
+            'suppliers' => $suppliers,
+            'property_list' => $property_list,
+            'tools_menu' => [
+                'material' => TRUE,
+                'view' => TRUE,
+                'edit' => FALSE,
+            ],
+        ];
+
+        $this->render('material/view.html.twig', $data);
     }
 
     /**
@@ -163,20 +192,28 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function editForm($material_id): void {
-        $material = $this->entityManager->find('\App\Entity\Material', $material_id);
-        $material_suppliers = $this->entityManager->getRepository('\App\Entity\MaterialSupplier')->getMaterialSuppliers($material_id);
-        $material_properties = $this->entityManager->getRepository('\App\Entity\MaterialProperty')->getMaterialProperties($material_id);
-        $units = $this->entityManager->getRepository('\App\Entity\Unit')->FindAll();
-        $suppliers = $this->entityManager->getRepository('\App\Entity\Client')->findBy(array('is_supplier' => 1), array('name' => 'ASC') );
-        $property_list = $this->entityManager->getRepository('\App\Entity\Property')->findAll();
+    public function editForm($material_id): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $material = $this->entityManager->find(Material::class, $material_id);
+        $material_suppliers = $this->entityManager
+            ->getRepository(MaterialSupplier::class)->getMaterialSuppliers($material_id);
+        $material_properties = $this->entityManager
+            ->getRepository(MaterialProperty::class)->getMaterialProperties($material_id);
+        $units = $this->entityManager->getRepository(Unit::class)->FindAll();
+        $suppliers = $this->entityManager
+            ->getRepository(Client::class)->findBy(['is_supplier' => 1], ['name' => 'ASC']);
+        $property_list = $this->entityManager->getRepository(Property::class)->findAll();
 
         $data = [
-            'page_title' => 'Materijali',
-            'stylesheet' => '/../libraries/',
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
-            'page' => 'material',
             'entityManager' => $this->entityManager,
             'material_id' => $material_id,
             'material' => $material,
@@ -185,12 +222,14 @@ class MaterialController extends BaseController
             'units' => $units,
             'suppliers' => $suppliers,
             'property_list' => $property_list,
+            'tools_menu' => [
+                'material' => TRUE,
+                'view' => FALSE,
+                'edit' => TRUE,
+            ],
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('edit', $data);
+        $this->render('material/edit.html.twig', $data);
     }
 
     /**
@@ -201,7 +240,7 @@ class MaterialController extends BaseController
      * @return void
      */
     public function edit($material_id): void {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -212,13 +251,13 @@ class MaterialController extends BaseController
         }
 
         $unit_id = $_POST["unit_id"];
-        $unit = $this->entityManager->find("\App\Entity\Unit", $unit_id);
+        $unit = $this->entityManager->find(Unit::class, $unit_id);
 
         $weight = htmlspecialchars($_POST['weight']);
         $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
         $note = htmlspecialchars($_POST['note']);
 
-        $material = $this->entityManager->find('\App\Entity\Material', $material_id);
+        $material = $this->entityManager->find(Material::class, $material_id);
 
         if ($material === null) {
             echo "Material with ID: $material_id, does not exist.\n";
@@ -247,14 +286,15 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function addSupplier($material_id) {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+    public function addSupplier($material_id): void
+    {
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
-        $material = $this->entityManager->find("\App\Entity\Material", $material_id);
+        $material = $this->entityManager->find(Material::class, $material_id);
 
         $supplier_id = htmlspecialchars($_POST['supplier_id']);
         if ($supplier_id == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
-        $supplier = $this->entityManager->find("\App\Entity\Client", $supplier_id);
+        $supplier = $this->entityManager->find(Client::class, $supplier_id);
 
         $note = htmlspecialchars($_POST['note']);
 
@@ -287,10 +327,10 @@ class MaterialController extends BaseController
      * @return void
      */
     public function addProperty($material_id) {
-        $material = $this->entityManager->find("\App\Entity\Material", $material_id);
+        $material = $this->entityManager->find(Material::class, $material_id);
 
         $property_item_id = htmlspecialchars($_POST['property_item_id']);
-        $property = $this->entityManager->find("\App\Entity\Property", $property_item_id);
+        $property = $this->entityManager->find(Property::class, $property_item_id);
 
         $min_size = htmlspecialchars($_POST['min_size']);
         $max_size = htmlspecialchars($_POST['max_size']);
@@ -317,18 +357,18 @@ class MaterialController extends BaseController
      * @return void
      */
     public function editSupplier($material_id, $supplier_id) {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
-        $material = $this->entityManager->find('\App\Entity\Material', $material_id);
+        $material = $this->entityManager->find(Material::class, $material_id);
 
         $supplier_id = htmlspecialchars($_POST["supplier_id"]);
-        $supplier = $this->entityManager->find('\App\Entity\Client', $supplier_id);
+        $supplier = $this->entityManager->find(Client::class, $supplier_id);
 
         $note = htmlspecialchars($_POST["note"]);
         $price = $_POST['price'] ? str_replace(",", ".", htmlspecialchars($_POST['price'])) : 0;
 
         $material_supplier_id = htmlspecialchars($_POST["material_supplier_id"]);
-        $material_supplier = $this->entityManager->find('\App\Entity\MaterialSupplier', $material_supplier_id);
+        $material_supplier = $this->entityManager->find(MaterialSupplier::class, $material_supplier_id);
 
         $material_supplier->setMaterial($material);
         $material_supplier->setSupplier($supplier);
@@ -352,7 +392,7 @@ class MaterialController extends BaseController
      * @return void
      */
     public function deleteSupplier($material_id, $supplier_id) {
-        $material_supplier =  $this->entityManager->find("\App\Entity\MaterialSupplier", $supplier_id);
+        $material_supplier =  $this->entityManager->find(MaterialSupplier::class, $supplier_id);
 
         $this->entityManager->remove($material_supplier);
         $this->entityManager->flush();
@@ -369,7 +409,7 @@ class MaterialController extends BaseController
      * @return void
      */
     public function deleteProperty($material_id, $property_id) {
-        $material_property = $this->entityManager->find("\App\Entity\MaterialProperty", $property_id);
+        $material_property = $this->entityManager->find(MaterialProperty::class, $property_id);
 
         $this->entityManager->remove($material_property);
         $this->entityManager->flush();;
@@ -378,18 +418,31 @@ class MaterialController extends BaseController
     }
 
     /**
-     * A helper method to render views.
+     * Search for materials.
      *
-     * @param $view
-     * @param $data
+     * @param string $term
+     *   Search term.
      *
      * @return void
      */
-    private function render($view, $data = []): void {
-        // Extract data array to variables.
-        extract($data);
-        // Include the view file.
-        require_once __DIR__ . "/../Views/material/$view.php";
+    public function search(string $term): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $materials= $this->entityManager->getRepository(Material::class)->search($term);
+        $preferences = $this->entityManager->find(Preferences::class, 1);
+
+        $data = [
+          'app_version' => APP_VERSION,
+          'page' => $this->page,
+          'page_title' => $this->page_title,
+          'stylesheet' => $this->stylesheet,
+          'materials' => $materials,
+          'preferences' => $preferences,
+        ];
+
+        $this->render('material/search.html.twig', $data);
     }
 
 }

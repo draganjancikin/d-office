@@ -20,7 +20,9 @@ use App\Entity\User;
 class ClientController extends BaseController
 {
 
-    protected $page_title;
+    protected string $page_title;
+    protected string $page;
+    private string $stylesheet;
     protected $countries;
     protected $cities;
     protected $streets;
@@ -32,6 +34,8 @@ class ClientController extends BaseController
         parent::__construct();
 
         $this->page_title = 'Klijenti';
+        $this->page = 'clients';
+        $this->stylesheet = '/../libraries/';
         $this->countries = $this->entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
         $this->cities = $this->entityManager->getRepository(City::class)->findBy([], ['name' => 'ASC']);
         $this->streets = $this->entityManager->getRepository(Street::class)->findBy([], ['name' => 'ASC']);
@@ -42,23 +46,25 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function index($search = NULL) {
+    public function index($search = NULL): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $data = [
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => '../libraries/',
+            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
-            'page' => 'clients',
             'search' => $search,
             'tools_menu' => [
-              'client' => FALSE,
+                'client' => FALSE,
             ],
             'last_clients' => $this->entityManager->getRepository(Client::class)->getLastClients(10),
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('client/index.html.twig', $data);
     }
@@ -74,12 +80,13 @@ class ClientController extends BaseController
         $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
         $data = [
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => '../libraries/',
+            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
-            'page' => 'client',
             'search' => $search,
             'client' => $client,
             'tools_menu' => [
@@ -106,12 +113,13 @@ class ClientController extends BaseController
         $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
         $data = [
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => '/../libraries/',
+            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
-            'page' => 'client',
             'client' => $client,
             'client_types' => $this->entityManager->getRepository(ClientType::class)->findAll(),
             'countries' => $this->countries,
@@ -204,12 +212,13 @@ class ClientController extends BaseController
      */
     public function addClientForm() {
         $data = [
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => '../libraries/',
+            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
-            'page' => 'client',
             'entityManager' => $this->entityManager,
             'client_types' => $this->entityManager->getRepository(ClientType::class)->findAll(),
             'countries' => $this->countries,
@@ -389,12 +398,13 @@ class ClientController extends BaseController
      */
     public function addCountryForm(): void {
         $data = [
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => '../libraries/',
+            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
-            'page' => 'client',
             'entityManager' => $this->entityManager,
         ];
 
@@ -454,12 +464,13 @@ class ClientController extends BaseController
      */
     public function addCityForm(): void {
         $data = [
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => '../libraries/',
+            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
-            'page' => 'client',
             'entityManager' => $this->entityManager,
         ];
 
@@ -511,21 +522,23 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function addStreetForm(): void {
-        $data = [
-            'page_title' => $this->page_title,
-            'stylesheet' => '../libraries/',
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'page' => 'client',
-            'entityManager' => $this->entityManager,
-        ];
-
+    public function addStreetForm(): void
+    {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-      $this->render('client/add_street.html.twig', $data);
+        $data = [
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_id' => $this->user_id,
+            'username' => $this->username,
+            'user_role_id' => $this->user_role_id,
+            'entityManager' => $this->entityManager,
+        ];
+
+        $this->render('client/add_street.html.twig', $data);
     }
 
     /**
@@ -579,12 +592,13 @@ class ClientController extends BaseController
         }
 
         $data = [
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => '../libraries/',
+            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
-            'page' => 'client',
             'entityManager' => $this->entityManager,
             'clients' => $clients_data ?? NULL,
         ];
@@ -614,19 +628,21 @@ class ClientController extends BaseController
    *
    * @return void
    */
-    public function search(string $term): void {
-      $clients= $this->entityManager->getRepository(Client::class)->search($term);
+    public function search(string $term): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
 
-      $data = [
-        'clients' => $clients,
-        'page_title' => $this->page_title,
-        'stylesheet' => '/../libraries/',
-        'page' => 'client',
-      ];
+        $clients= $this->entityManager->getRepository(Client::class)->search($term);
 
-      // If the user is not logged in, redirect them to the login page.
-      $this->isUserNotLoggedIn();
+        $data = [
+            'app_version' => APP_VERSION,
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'clients' => $clients,
+        ];
 
-      $this->render('client/search.html.twig', $data);
+        $this->render('client/search.html.twig', $data);
     }
 }
