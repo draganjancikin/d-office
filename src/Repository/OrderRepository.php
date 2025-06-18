@@ -155,16 +155,24 @@ class OrderRepository extends EntityRepository
     /**
      * Search method by criteria: Supplier name.
      *
+     * @param string $term
+     * @param int $is_archived
+     *
+     *
      * @return array
      */
-    public function search($term) {
+    public function search(string $term, int $is_archived = 0): array
+    {
         // Create a QueryBuilder instance.
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('o')
             ->from('App\Entity\Order', 'o')
             ->join('o.supplier', 'supl', 'WITH', 'o.supplier = supl.id')
             ->where(
-                $qb->expr()->like('supl.name', $qb->expr()->literal("%$term%")),
+                $qb->expr()->andX(
+                    $qb->expr()->like('supl.name', $qb->expr()->literal("%$term%")),
+                    $qb->expr()->eq('o.is_archived', $is_archived),
+                )
             )
         ->orderBy('o.id', 'DESC');
         $query = $qb->getQuery();

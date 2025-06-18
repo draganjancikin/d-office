@@ -109,6 +109,7 @@ $router->add('GET', '/material/{material_id}/property/{property_id}/delete', 'Ma
 $router->add('GET', '/orders/', 'OrderController@index');
 $router->add('GET', '/orders/add', 'OrderController@addForm');
 $router->add('POST', '/orders/add', 'OrderController@add');
+$router->add('GET', '/orders/search/', 'OrderController@search');
 
 $router->add('GET', '/order/{order_id}', 'OrderController@view');
 $router->add('GET', '/order/{order_id}/edit', 'OrderController@editForm');

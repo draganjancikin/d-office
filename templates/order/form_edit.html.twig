@@ -1,0 +1,271 @@
+<!-- Edit Procuring Data -->
+<div class="card mb-4 border-secondary">
+    <div class="card-header p-2">
+        <h6 class="m-0 text-dark">
+            Narudžbenica:
+            <strong>
+                {{ '%04d'|format(order_data.getOrdinalNumInYear()) }} - {{ order_data.getCreatedAt().format('m') }}
+                <span class="font-weight-normal">{{ order_data.getDate().format('d-M-Y') }}</span>
+            </strong>
+            {% if project_data %}
+                - za projekat:
+                <a href="/project/{{ project_data.getId() }}">
+                    {{ '%04d'|format(project_data.getOrdinalNumInYear()) }} -
+                    {{ project_data.getClient().getName() }} -
+                    {{ project_data.getTitle() }}
+                </a>
+            {% endif %}
+        </h6>
+    </div>
+    <div class="card-body p-2">
+        <dl class="row mb-0">
+            <dt class="col-sm-3 col-md-2">dobavljać:</dt>
+            <dd class="col-sm-9 col-md-10">{{ supplier_data['name'] }}</dd>
+            <dt class="col-sm-3 col-md-2">adresa:</dt>
+            <dd class="col-sm-9 col-md-10">
+                {{ supplier_data['street'] ?? '' }} {{ supplier_data['home_number'] }}
+                {% if supplier_data['street'] and supplier_data['city'] %}, {% endif %}
+                {{ supplier_data['city'] ?? '' }}
+                {% if supplier_data['city'] and supplier_data['country'] %}, {% endif %}
+                {{ supplier_data['country'] ?? '' }}
+            </dd>
+
+            {% for supplier_contact in supplier_contacts %}
+                <dt class="col-sm-3 col-md-2">{{ supplier_contact.getType().getName() }}:</dt>
+                <dd class="col-sm-9 col-md-10">
+                    {{ supplier_contact.getBody() }}
+                    {% if supplier_contact.getNote() %}
+                        , {{ supplier_contact.getNote() }}
+                    {% endif %}
+                </dd>
+            {% endfor %}
+        </dl>
+        <div class="table-responsive">
+            <table class="table table-hover" >
+                <thead>
+                    <tr class="table-secondary">
+                        <th class="px-1">#</th>
+                        <th class="px-1">naziv materijala</th>
+                        <th class="px-1 text-center">jed.<br />mere</th>
+                        <th class="px-1 text-center">količina</th>
+                        <th class="px-1 text-center">cena</th>
+                        <th class="px-1 text-center">popust<br />%</th>
+                        <th class="px-1 text-center">poreska<br />osnovica</th>
+                        <th class="px-1 text-center">PDV<br />%</th>
+                        <th class="px-1 text-center">iznos PDV-a</th>
+                        <th class="px-1 text-center">ukupno</th>
+                        <th class="px-1"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% set count = 0 %}
+                {% for material_on_order_data in materials_on_order_data %}
+                    {% set count = count + 1 %}
+
+                    <form action="/order/{{ order_id }}/material/{{ material_on_order_data.material.id }}/edit"
+                          method="POST">
+                        <input type="hidden" name="material_id"
+                               value="{{ material_on_order_data.material.material.id }}" />
+                        <tr>
+                            <td class="px-1">{{ count }}</td>
+                            <td class="px-1">
+                                {{ material_on_order_data.material.name }}
+                                <br />
+                                kol.
+                                <input class="input-box-45" type="text" name="pieces"
+                                       value="{{ material_on_order_data.material.pieces }}"
+                                       placeholder="(kol)">
+                                {# Order Material Properties. #}
+                                {% for material_on_order_property in material_on_order_data.material.properties %}
+                                    {{ material_on_order_property.name }}
+                                    <input class="input-box-50" type="text"
+                                           name="{{ material_on_order_property.name }}"
+                                           value="{{ material_on_order_property.quantity|number_format(2, ',', '.') }}"
+                                           placeholder="(cm)" >
+                                {% endfor %}
+                                <br />
+                                <input type="text" class="in-article-note" name="note"
+                                       value="{{ material_on_order_data.material.note }}">
+                            </td>
+                            <td class="px-1 text-center">
+                                {{ material_on_order_data.material.unit }}
+                            </td>
+                            <td class="px-1 input-box-45">
+                                {{ material_on_order_data.material.quantity|number_format(2, ',', '.') }}
+                            </td>
+                            <td class="px-1 text-center">
+                                <input class="input-box-65" type="text" name="price"
+                                       value="{{ material_on_order_data.material.price|number_format(4, ',', '.') }}" >
+                            </td>
+                            <td class="px-1 text-center">
+                                <input class="input-box-45" type="text" name="discounts"
+                                       value="{{ material_on_order_data.material.discount|number_format(2, ',', '.') }}"  >
+                            </td>
+                            <td class="px-1 input-box-65">
+                                {{ material_on_order_data.material.tax_base_rsd|number_format(2, ',', '.') }}
+                            </td>
+                            <td class="px-1 text-center">{{ material_on_order_data.material.tax }}</td>
+                            <td class="px-1 input-box-45">
+                                {{ material_on_order_data.material.tax_amount_rsd|number_format(2, ',', '.') }}
+                            </td>
+                            <td class="px-1 input-box-65">
+                                {{ material_on_order_data.material.sub_total_rsd|number_format(2, ',', '.') }}
+                            </td>
+                            <td class="px-1 text-center">
+                                <button type="submit" class="btn btn-mini btn-outline-success px-1">
+                                    <i class="fas fa-save" title="Snimi izmenu"> </i>
+                                </button>
+                                <a href="/order/{{ order_id }}/material/{{ material_on_order_data.material.id }}/edit"
+                                   class="btn btn-mini btn-outline-info px-1">
+                                    <i class="fas fa-edit" title="Promeni materijal"> </i>
+                                </a>
+                                <a href="/order/{{ order_id }}/material/{{ material_on_order_data.material.id }}/duplicate"
+                                   class="btn btn-mini btn-outline-info px-1">
+                                    <i class="fas fa-plus" title="Dupliciraj materijal"> </i>
+                                </a>
+                                <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete materijal?');"
+                                   href="/order/{{ order_id }}/material/{{ material_on_order_data.material.id }}/delete"
+                                   class="btn btn-mini btn-outline-danger px-1">
+                                    <i class="fas fa-trash-alt"> </i>
+                                </a>
+                            </td>
+                        </tr>
+                    </form>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-secondary">
+                        <td colspan="3" rowspan="4"></td>
+                        <td colspan="3">ukupno poreska osnovica</td>
+                        <td class="text-right">{{ total_tax_base_rsd|number_format(2, ',', '.') }}</td>
+                        <td colspan="5"></td>
+                    </tr>
+                    <tr class="table-secondary">
+                        <td colspan="5">ukupno iznos PDV-a</td>
+                        <td class="text-right">{{ total_tax_amount_rsd|number_format(2, ',', '.') }}</td>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr class="table-secondary">
+                        <td colspan="5"><strong>UKUPNO ZA UPLATU</strong></td>
+                        <td><strong>RSD</strong></td>
+                        <td><strong>{{ total_rsd|number_format(2, ',', '.') }}</strong></td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr class="table-secondary">
+                        <td colspan="5"></td>
+                        <td>(&#8364; </td>
+                        <td>{{ total_eur|number_format(2, ',', '.') }}</td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <form action="/order/{{ order_id }}/edit" method="post">
+                <input type="hidden" name="order_id" value="{{ order_id }}" />
+                <input type="hidden" name="old_project_id"
+                       value="{{ project_data ? project_data.getId() : 0 }}" />
+                <table class="table">
+                    <tbody>
+                        <tr class="table-secondary">
+                            <td width="110">Za projekat:</td>
+                            <td>
+
+                                <select class="form-control" name="project_id">
+                                    {% if project_data %}
+                                        <option value="{{ project_data.getId() }}" selected>
+                                            {{ '%04d'|format(project_data.getOrdinalNumInYear()) }}
+                                            {{ project_data.getClient().getName() }} -
+                                            {{ project_data.getTitle() }}
+                                        </option>
+                                    {% else %}
+                                        <option value="">Izaberi projekat</option>
+                                    {% endif %}
+
+                                    {% for project_item in project_list %}
+                                        <option value="{{ project_item.getId() }}">
+                                            {{ '%04d'|format(project_item.getOrdinalNumInYear()) }}
+                                            {{ project_item.getClient().getName() }} -
+                                            {{ project_item.getTitle() }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+
+                            </td>
+                        </tr>
+                        <tr class="table-secondary">
+                            <td>Naslov:</td>
+                            <td>
+                                <input class="form-control" type="text" name="title" value="{{ order_data.getTitle() }}" >
+                            </td>
+                        </tr>
+                        <tr class="table-secondary">
+                            <td>Status:</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="status"
+                                           id="draft"
+                                           value="0"
+                                           {% if order_data.getStatus() == 0 %}checked{% endif %} >
+                                    <label class="form-check-label" for="draft"> nacrt</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="status"
+                                           id="ordered"
+                                           value="1"
+                                           {% if order_data.getStatus() == 1 %}checked{% endif %} >
+                                    <label class="form-check-label" for="ordered"> poručeno</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="status"
+                                           id="arrived"
+                                           value="2"
+                                           {% if order_data.getStatus() == 2 %}checked{% endif %} >
+                                    <label class="form-check-label" for="arrived"> stiglo</label>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="table-secondary">
+                            <td>Arhivirano: </td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           id="is_archived"
+                                           name="is_archived"
+                                           value="1"
+                                           {% if order_data.getIsArchived() == 1 %}checked{% endif %} >
+                                    <label class="form-check-label" for="is_archived">jeste</label>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="table-secondary">
+                            <td>Napomena:</td>
+                            <td colspan="2">
+                                <textarea class="form-control" rows="3" name="note">{{ order_data.getNote() }}</textarea>
+                            </td>
+                        </tr>
+                        <tr class="table-secondary">
+                            <td></td>
+                            <td colspan="2">
+                                <button type="submit" class="btn btn-sm btn-success my-1">
+                                    <i class="fas fa-save"></i> Snimi
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+      </div><!-- End Card Body -->
+
+</div>

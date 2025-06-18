@@ -1639,8 +1639,7 @@ class PidbController extends BaseController
 
         $accounting_document_articles = $this->entityManager
             ->getRepository(AccountingDocument::class)->getArticles($pidb_id);
-        $total_tax_base_rsd = 0;
-        $total_tax_amount_rsd = 0;
+
         $accounting_document_articles_data = [];
 
         foreach ($accounting_document_articles as $index => $accounting_document_article) {
@@ -1648,7 +1647,6 @@ class PidbController extends BaseController
             $accounting_document_article_properties = $this->entityManager
                 ->getRepository(AccountingDocumentArticleProperty::class)
                 ->findBy(['accounting_document_article' => $accounting_document_article->getId()], []);
-
 
             $accounting_document_articles_data[$index]['article']['id'] = $accounting_document_article->getId();
             $accounting_document_articles_data[$index]['article']['pieces'] = $accounting_document_article->getPieces();
