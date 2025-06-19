@@ -1,9 +1,3 @@
-<?php
-$company = $entityManager->find('\App\Entity\CompanyInfo', '1');
-$company_country = $company->getCountry() ? $entityManager->find('\App\Entity\Country', $company->getCountry()) : null;
-$company_city = $company->getCity() ? $entityManager->find('\App\Entity\City', $company->getCity()) : null;
-$company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Street', $company->getStreet()) : null;
-?>
 <!-- View Company Data -->
 <div class="card mb-4">
     <div class="card-header p-2">
@@ -24,7 +18,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <input class="form-control form-control-sm"
                                id="disabledInputName"
                                type="text"
-                               value="<?php echo $company->getName() ?>"
+                               value="{{ company.getName() }}"
                                disabled />
                     </div>
                 </div>
@@ -38,7 +32,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <input class="form-control form-control-sm"
                                id="disabledInputPIB"
                                type="text"
-                               value="<?php echo $company->getPib() ?>"
+                               value="{{ company.getPib() }}"
                                maxlength="9"
                                disabled>
                     </div>
@@ -53,7 +47,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <input class="form-control form-control-sm"
                                id="disabledInputMb"
                                type="text"
-                               value="<?php echo $company->getMb() ?>"
+                               value="{{ company.getMb() }}"
                                maxlength="9"
                                disabled>
                     </div>
@@ -68,7 +62,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <select id="disabledSelectCountry"
                                 class="form-select form-select-sm">
                            <option>
-                              <?php echo $company_country ? $company_country->getName() : '' ?>
+                               {{ company.getCountry().getName() }}
                            </option>
                         </select>
                     </div>
@@ -83,7 +77,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <select id="disabledSelectCity"
                                 class="form-select form-select-sm">
                             <option>
-                                <?php echo $company_city ? $company_city->getName() : '' ?>
+                                {{ company.getCity().getName() }}
                             </option>
                         </select>
                     </div>
@@ -98,7 +92,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <select id="disabledSelectStreet"
                                 class="form-select form-select-sm">
                             <option>
-                                <?php echo $company_street ? $company_street->getName() : '' ?>
+                                {{ company.getStreet().getName() }}
                             </option>
                         </select>
                     </div>
@@ -113,7 +107,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <input class="form-control form-control-sm"
                                id="disabledInputNum"
                                type="text"
-                               value="<?php echo $company->getHomeNumber() ?>"
+                               value="{{ company.getHomeNumber() }}"
                                disabled />
                     </div>
                 </div>
@@ -127,7 +121,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <input class="form-control form-control-sm"
                                id="disabledInputNum"
                                type="text"
-                               value="<?php echo $company->getBankAccount1() ?>"
+                               value="{{ company.getBankAccount1() }}"
                                disabled />
                     </div>
                 </div>
@@ -141,7 +135,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <input class="form-control form-control-sm"
                                id="disabledInputNum"
                                type="text"
-                               value="<?php echo $company->getBankAccount2() ?>"
+                               value="{{ company.getBankAccount2() }}"
                                disabled />
                     </div>
                 </div>
@@ -154,7 +148,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                     <div class="col-sm-4">
                         <input class="form-control form-control-sm"
                                id="disabledInputPhone1"
-                               type="text" value="<?php echo $company->getPhone1() ?>"
+                               type="text" value="{{ company.getPhone1() }}"
                                disabled />
                     </div>
                 </div>
@@ -168,7 +162,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <input class="form-control form-control-sm"
                                id="disabledInputPhone2"
                                type="text"
-                               value="<?php echo $company->getPhone2() ?>"
+                               value="{{ company.getPhone2() }}"
                                disabled />
                     </div>
                 </div>
@@ -182,7 +176,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <input class="form-control form-control-sm"
                                id="disabledInputEmail1"
                                type="text"
-                               value="<?php echo $company->getEmail1() ?>"
+                               value="{{ company.getEmail1() }}"
                                disabled />
                     </div>
                 </div>
@@ -196,7 +190,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <input class="form-control form-control-sm"
                                id="disabledInputEmail2"
                                type="text"
-                               value="<?php echo $company->getEmail2() ?>"
+                               value="{{ company.getEmail2() }}"
                                disabled />
                     </div>
                 </div>
@@ -210,7 +204,7 @@ $company_street = $company->getStreet() ? $entityManager->find('\App\Entity\Stre
                         <input class="form-control form-control-sm"
                                id="disabledInputWebsite1"
                                type="text"
-                               value="<?php echo $company->getWebsite1() ?>"
+                               value="{{ company.getWebsite1() }}"
                                disabled />
                     </div>
                 </div>

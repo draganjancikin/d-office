@@ -156,6 +156,7 @@ class ArticleController extends BaseController
         $property_list = $this->entityManager->getRepository(Property::class)->findAll();
 
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
@@ -195,6 +196,7 @@ class ArticleController extends BaseController
         $property_list = $this->entityManager->getRepository(Property::class)->findAll();
 
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
@@ -335,6 +337,7 @@ class ArticleController extends BaseController
         $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->findAll();
 
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
@@ -358,6 +361,7 @@ class ArticleController extends BaseController
         $this->isUserNotLoggedIn();
 
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
@@ -404,6 +408,7 @@ class ArticleController extends BaseController
         $article_group_data = $this->entityManager->find(ArticleGroup::class, $group_id);
 
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
@@ -436,6 +441,7 @@ class ArticleController extends BaseController
         $article_group_data = $this->entityManager->find("\App\Entity\ArticleGroup", $group_id);
 
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,
@@ -495,6 +501,7 @@ class ArticleController extends BaseController
         $preferences = $this->entityManager->find(Preferences::class, 1);
 
         $data = [
+            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
             'stylesheet' => $this->stylesheet,

@@ -7,7 +7,7 @@
     </div>
 
     <div class="card-body px-2">
-        <form action="<?php echo '/admin/company-info/edit'?>" method="post">
+        <form action="/admin/company-info/edit" method="post">
 
             <div class="row mb-2">
                 <label for="inputName" class="col-sm-3 col-lg-2 col-form-label text-right">
@@ -18,7 +18,7 @@
                            id="inputName"
                            type="text"
                            name="name"
-                           value="<?php echo $company->getName() ?>" >
+                           value="{{ company.getName() }}" >
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
                            id="inputPIB"
                            type="text"
                            name="pib"
-                           value="<?php echo $company->getPib() ?>"  maxlength="9" >
+                           value="{{ company.getPib() }}"  maxlength="9" >
                 </div>
             </div>
 
@@ -44,7 +44,7 @@
                            id="inputMb"
                            type="text"
                            name="mb"
-                           value="<?php echo $company->getMb() ?>"
+                           value="{{ company.getMb() }}"
                            maxlength="9">
                 </div>
             </div>
@@ -55,25 +55,18 @@
                 </label>
                 <div class="col-sm-4">
                     <select id="selectCountry" class="form-select form-select-sm" name="country_id">
-                        <?php
-                        if ($company_country === null) {
-                            ?>
+                        {% if company.getCountry().getId() %}
+                        <option value="{{ company.getCountry().getId() }}">
+                            {{ company.getCountry().getName() }}
+                        </option>
+                        {% else %}
                             <option>Izaberite drzavu</option>
-                            <?php
-                        }
-                        else {
-                            ?>
-                            <option value="<?php echo $company_country->getId() ?>"><?php echo $company_country->getName() ?></option>
-                            <?php
-                        }
-                        foreach ($states as $state) :
-                            ?>
-                            <option value="<?php echo $state->getId() ?>">
-                                <?php echo $state->getName() ?>
+                        {% endif %}
+                        {% for state in states %}
+                            <option value="{{ state.getId() }}">
+                                {{ state.getName() }}
                             </option>
-                            <?php
-                        endforeach;
-                        ?>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -84,25 +77,18 @@
                 </label>
                 <div class="col-sm-4">
                     <select id="selectCity" class="form-select form-select-sm" name="city_id">
-                        <?php
-                        if ($company_city === null) {
-                            ?>
+                        {% if company.getCity().getId() %}
+                        <option value="{{ company.getCity().getId() }}">
+                            {{ company.getCity().getName() }}
+                        </option>
+                        {% else %}
                             <option>Izaberite naselje</option>
-                            <?php
-                        }
-                        else {
-                            ?>
-                            <option value="<?php echo $company_city->getId() ?>"><?php echo $company_city->getName() ?></option>
-                            <?php
-                        }
-                        foreach ($cities as $city) :
-                            ?>
-                            <option value="<?php echo $city->getId() ?>">
-                                <?php echo $city->getName() ?>
+                        {% endif %}
+                        {% for city in cities %}
+                            <option value="{{ city.getId() }}">
+                                {{ city.getName() }}
                             </option>
-                          <?php
-                        endforeach;
-                        ?>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -111,25 +97,18 @@
                 <label for="selectStreet" class="col-sm-3 col-lg-2 col-form-label text-right">Ulica:</label>
                 <div class="col-sm-4">
                     <select id="selectStreet" class="form-select form-select-sm" name="street_id">>
-                        <?php
-                        if ($company_street === null) {
-                            ?>
-                            <option>Izaberite naselje</option>
-                            <?php
-                        }
-                        else {
-                            ?>
-                            <option value="<?php echo $company_street->getId() ?>"><?php echo $company_street->getName() ?></option>
-                            <?php
-                        }
-                        foreach ($streets as $street) :
-                            ?>
-                            <option value="<?php echo $street->getId() ?>">
-                                <?php echo $street->getName() ?>
+                        {% if company.getStreet().getId() %}
+                            <option value="{{ company.getStreet().getId() }}">
+                                {{ company.getStreet().getName() }}
                             </option>
-                            <?php
-                        endforeach;
-                        ?>
+                        {% else %}
+                            <option>Izaberite ulicu</option>
+                        {% endif %}
+                        {% for street in streets %}
+                            <option value="{{ street.getId() }}">
+                                {{ street.getName() }}
+                            </option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -143,7 +122,7 @@
                            id="inputNum"
                            type="text"
                            name="home_number"
-                           value="<?php echo $company->getHomeNumber() ?>" />
+                           value="{{ company.getHomeNumber() }}" />
                 </div>
             </div>
 
@@ -156,7 +135,7 @@
                            id="inputBankAccount1"
                            type="text"
                            name="bank_account_1"
-                           value="<?php echo $company->getBankAccount1() ?>" />
+                           value="{{ company.getBankAccount1() }}" />
                 </div>
             </div>
 
@@ -169,7 +148,7 @@
                            id="inputBankAccount2"
                            type="text"
                            name="bank_account_2"
-                           value="<?php echo $company->getBankAccount2() ?>" />
+                           value="{{ company.getBankAccount2() }}" />
                 </div>
             </div>
 
@@ -182,7 +161,7 @@
                            id="inputPhone1"
                            type="text"
                            name="phone_1"
-                           value="<?php echo $company->getPhone1() ?>" />
+                           value="{{ company.getPhone1() }}" />
                 </div>
             </div>
 
@@ -195,7 +174,7 @@
                            id="inputPhone2"
                            type="text"
                            name="phone_2"
-                           value="<?php echo $company->getPhone2() ?>" />
+                           value="{{ company.getPhone2() }}" />
                 </div>
             </div>
 
@@ -208,7 +187,7 @@
                            id="inputEmail1"
                            type="email"
                            name="email_1"
-                           value="<?php echo $company->getEmail1() ?>" />
+                           value="{{ company.getEmail1() }}" />
                 </div>
             </div>
 
@@ -221,7 +200,7 @@
                            id="inputEmail2"
                            type="email"
                            name="email_2"
-                           value="<?php echo $company->getEmail2() ?>" />
+                           value="{{ company.getEmail2() }}" />
                 </div>
             </div>
 
@@ -234,7 +213,7 @@
                            id="inputWebsite1"
                            type="text"
                            name="website_1"
-                           value="<?php echo $company->getWebsite1() ?>" />
+                           value="{{ company.getWebsite1() }}" />
                 </div>
             </div>
 

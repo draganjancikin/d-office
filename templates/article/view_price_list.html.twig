@@ -53,13 +53,13 @@
                                     {{ article_data.getName() }}
                                 </a>
                             </td>
-                          <td class="px-1">{{ article_data.getUnit().getName() }}</td>
-                          <td class="px-1">
-                              {{ (article_data.getPrice() * preferences.getKurs() * (preferences.getTax() / 100 + 1))|number_format(2, ',', '.') }}
-                          </td>
-                          <td class="px-1">
-                              {{ (article_data.getPrice * (preferences.getTax() / 100 + 1))|number_format(4, ',', '.') }}
-                          </td>
+                            <td class="px-1">{{ article_data.getUnit().getName() }}</td>
+                            <td class="px-1">
+                                {{ (article_data.getPrice() * preferences.getKurs() * (preferences.getTax() / 100 + 1))|number_format(2, ',', '.') }}
+                            </td>
+                            <td class="px-1">
+                                {{ (article_data.getPrice * (preferences.getTax() / 100 + 1))|number_format(4, ',', '.') }}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

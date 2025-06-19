@@ -28,7 +28,7 @@ class MaterialController extends BaseController
      * MaterialController constructor.
      */
     public function __construct() {
-       parent::__construct();
+        parent::__construct();
 
         $this->page = 'materials';
         $this->page_title = 'Materijali';
