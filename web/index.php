@@ -129,6 +129,7 @@ $router->add('GET', '/articles/', 'ArticleController@index');
 $router->add('GET', '/articles/add', 'ArticleController@addForm');
 $router->add('POST', '/articles/add', 'ArticleController@add');
 $router->add('GET', '/articles/price-list', 'ArticleController@priceList');
+$router->add('GET', '/articles/search/', 'ArticleController@search');
 
 $router->add('GET', '/articles/groups', 'ArticleController@groups');
 $router->add('GET', '/articles/groups/add', 'ArticleController@addGroupForm');
