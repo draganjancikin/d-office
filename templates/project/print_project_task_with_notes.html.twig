@@ -1,0 +1,53 @@
+<style>
+    table {
+        /*padding: 3px 10px 3px 10px;*/
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+<table>
+    <tr>
+        <td width="150px"><h3>RADNI NALOG</h3></td>
+        <td width="400px">za projekat #{{ '%04d'|format(project.getOrdinalNumInYear()) }}</td>
+        <td>{{ project.getCreatedAt().format('d-M-Y') }}</td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <td width="80px">klijent:</td>
+        <td width="auto">{{ client.name }}{% if client.name_note %}, {{ client.name_note }} {% endif %}</td>
+    </tr>
+    <tr>
+        <td>adresa:</td>
+        <td>{{ client.street }} {{ client.home_number }}, {{ client.city }}, {{ client.country }}, {{ client.address_note }}</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            {% for client_contact in client.contacts|slice(0, 2) %}
+                {{ client_contact.type.name }}: {{ client_contact.body }}<br>
+            {% endfor %}
+        </td>
+        <td></td>
+    </tr>
+</table>
+  
+<table border="1">
+      <tr><td width="660px">{{ project.getTitle() }}</td></tr>
+</table>
+<table>
+    {% set date_temp = '' %}
+    {% for note in notes %}
+        <tr>
+            <td width="90px">
+                {% if note.getCreatedAt()|date('d-M-Y') != date_temp %}
+                  {{ note.getCreatedAt()|date('d-M-Y') }}
+                {% endif %}
+            </td>
+            <td width="570px">{{ note.getNote()|nl2br }}</td>
+        </tr>
+        {%  set date_temp = note.getCreatedAt()|date('d-M-Y') %}
+    {% endfor %}
+</table>

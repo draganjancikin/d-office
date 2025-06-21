@@ -1,0 +1,177 @@
+<!-- Advanced search -->
+<div class="card mb-4 w-75">
+
+    <div class="card-header p-2">
+        <h6 class="m-0 text-dark">Detaljna pretraga projekata</h6>
+    </div>
+
+    <div class="card-body p-2">
+        <form action="/projects/advancedSearch" method="post">
+
+            <div class="row mb-2">
+                <label for="inputClient" class="col-sm-3 col-lg-2 col-form-label text-right">Kijent: </label>
+                <div class="col-sm-6">
+                    <input id="inputClient" class="form-control form-control-sm" type="text" name="client" value=""
+                           placeholder=" Unesite naziv klijenta" />
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="inputProjectTitle" class="col-sm-3 col-lg-2 col-form-label text-right">Naslov: </label>
+                <div class="col-sm-6">
+                    <input id="inputProjectTitle" class="form-control form-control-sm" type="text" name="project_title"
+                           value="" placeholder=" Unesite naslov projekta" />
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="inputCity" class="col-sm-3 col-lg-2 col-form-label text-right">Naselje: </label>
+                <div class="col-sm-6">
+                    <input id="inputCity" class="form-control form-control-sm" type="text" name="city" value=""
+                           placeholder=" Unesite naziv naselja" />
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-sm-3 offset-sm-3 offset-lg-2">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary text-nowrap">
+                        <i class="fa fa-search"></i>
+                        Pretaži
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% if project_advanced_search_list_data %}
+    <div class="card mb-4">
+        <div class="card-header p-2">
+            <h6 class="d-inline m-0 text-dark">Rezultati pretrage projekata</h6>
+        </div>
+        <div class="card-body p-2">
+            <div class="table-responsive">
+                <table class="dataTable table table-hover" id="" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th class="px-1">projekat</th>
+                            <th class="px-1 text-center order-status" title="Status projekta">s</th>
+                            <th class="px-1">za realizaciju</th>
+                            <th class="px-1">u realizaciji</th>
+                            <th class="px-1">realizovano</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for project_data in project_advanced_search_list_data %}
+                        <tr>
+                            <td>
+                                <a href="/project/{{ project_data.id }}"
+                                   class="d-block card-link"
+                                   title="{{ project_data.created_at }}">
+                                    #{{ '%04d'|format(project_data.ordinal_num_in_year) }}
+                                    -
+                                    {{ project_data.title }}
+                                </a>
+                                {{ project_data.client }}
+                                {%  if project_data.city %}
+                                    , <span style="font-size: 0.9em;">{{ project_data.city.getName() }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-1 order-status text-center">
+                                {% if project_data.status_id == 1 %}
+                                    <span class="badge badge-pill badge-light">A</span>
+                                {% elseif project_data.status_id == 2 %}
+                                    <span class="badge badge-pill badge-warning">Č</span>
+                                {% elseif project_data.status_id == 3 %}
+                                    <span class="badge badge-pill badge-secondary">Z</span>
+                                {% endif %}
+                            </td>
+
+                            {# tasks for realization ============================ #}
+                            <td>
+                                {% set count_for_realization = 0 %}
+                                {% for task_for_realization in project_data.tasks_for_realization %}
+                                    {% set count_for_realization = count_for_realization + 1 %}
+                                    <a href="/project/{{ project_data.id }}/task/{{ task_for_realization.id }}/edit">
+                                        <span class="badge badge-{{ task_for_realization.class }}">
+                                            {{ task_for_realization.type }}
+                                        </span>
+                                        {{ task_for_realization.title }}
+                                    </a>
+                                    <br />
+                                    {% if count_for_realization == 4 %}
+                                        <a class="" data-toggle="collapse" href="#collapseExample1-{{ project_data.id }}"
+                                           role="button" aria-expanded="false" aria-controls="collapseExample1">
+                                            <i class="fas fa-caret-down"></i>
+                                        </a>
+                                        <div class="collapse" id="collapseExample1-{{ project_data.id }}">
+                                    {% endif %}
+                                {% endfor %}
+                                {% if count_for_realization > 3 %}
+                                    </div>
+                                {% endif %}
+                            </td>
+
+                            {# tasks in realization ============================= #}
+                            <td>
+                                {% set count_in_realization = 0 %}
+                                {% for task_in_realization in project_data.tasks_in_realization %}
+                                    {% set count_in_realization = count_in_realization + 1 %}
+                                    <a href="/project/{{ project_data.id }}/task/{{ task_in_realization.id }}/edit">
+                                        <span class="badge badge-{{ task_in_realization.class }}">
+                                            {{ task_in_realization.type }}
+                                        </span>
+                                        {{ task_in_realization.title }}
+                                    </a>
+                                    <br />
+                                    {% if count_in_realization == 4 %}
+                                        <a class="" data-toggle="collapse" href="#collapseExample2-{{ project_data.id }}"
+                                           role="button" aria-expanded="false" aria-controls="collapseExample2">
+                                            <i class="fas fa-caret-down"></i>
+                                        </a>
+                                        <div class="collapse" id="collapseExample2-{{ project_data.id }}">
+                                    {% endif %}
+                                    {% if count_in_realization > 3 %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+
+                            {# completed tasks ================================== #}
+                            <td>
+                                {% set count_completed = 0 %}
+                                {% for task_completed in project_data.tasks_completed %}
+                                    {% set count_completed = count_completed + 1 %}
+                                    <a href="/project/{{ project_data.id }}/task/{{ task_completed.id }}/edit">
+                                        <span class="badge badge-{{ task_completed.class }}">
+                                            {{ task_completed.type }}
+                                        </span>
+                                       {{ task_completed.title }}
+                                    </a>
+                                    <br />
+                                    {% if count_in_realization == 4 %}
+                                        <a class="" data-toggle="collapse" href="#collapseExample3-{{ project_data.id }}"
+                                           role="button" aria-expanded="false" aria-controls="collapseExample3">
+                                            <i class="fas fa-caret-down"></i>
+                                        </a>
+                                        <div class="collapse" id="collapseExample3-{{ project_data.id }}">
+                                    {% endif %}
+                                    {% if count_completed > 3 %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+              </table>
+
+            </div>
+        </div>
+        <!-- End Card Body -->
+    </div>
+
+{% endif %}

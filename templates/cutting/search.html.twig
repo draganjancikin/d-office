@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block body %}
+    {% include 'cutting/tools_menu.html.twig' %}
+    <div class="col-lg-12 px-2">
+        <div class="card mb-4">
+            <div class="card-header p-2">
+                <h6 class="m-0 font-weight-bold text-primary">Pretraga krojnih lista</h6>
+            </div>
+            <div class="card-body p-2">
+                <div class="table-responsive">
+                    <table class="dataTable table table-hover" id="" width="100%" cellspacing="0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>krojna lista</th>
+                                <th>klijent</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for cutting in cuttings %}
+                            <tr>
+                                <td class="centar">
+                                    <a href="/cutting/{{ cutting.getId() }}">
+                                        KL_{{ '%04d'|format(cutting.getOrdinalNumInYear()) }}
+                                    </a>
+                                </td>
+                                <td>{{ cutting.getClient().getName() }}</td>
+                                <td>
+                                    {% if cutting.id == last_cutting_sheet.id %}
+                                        <a href="/cutting/{{ cutting.getId() }}/delete" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash-alt"> </i>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End Card Body -->
+        </div>
+    </div>
+{% endblock %}

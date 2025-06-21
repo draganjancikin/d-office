@@ -1,0 +1,185 @@
+<!-- Edit Client Data -->
+<div class="card mb-4">
+    <div class="card-header p-2">
+        <h6 class="m-0 text-dark">
+          Izmena podataka o klijentu: <strong>{{ client.name }}</strong>
+        </h6>
+    </div>
+
+    <div class="card-body px-2">
+        <form action="/client/{{ client.id }}/edit " method="post">
+            <input type="hidden" name="client_id" value="<?php echo $client_id ?>">
+            <input type="hidden" name="type_id" value="<?php echo $client['type_id'] ?>">
+
+            <div class="row mb-2">
+                <label for="selectTip" class="col-sm-3 col-form-label text-left text-sm-right">Vrsta klijenta:</label>
+                <div class="col-sm-4">
+                    <select id="selectTip" class="form-select form-select-sm" name="type_id" >
+                        <option value="{{ client.type_id }}">{{ client.type }}</option>
+                        {% for type in client_types %}
+                        <option value="{{ type.id }}">
+                            {{ type.name }}
+                        </option>
+                        {% endfor %}
+                     </select>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="inputName" class="col-sm-3 col-form-label text-left text-sm-right">Naziv:</label>
+                <div class="col-sm-9 mb-2">
+                    <input class="form-control form-control-sm" id="inputName" type="text" name="name"
+                           value="{{ client.name }}" >
+                </div>
+                <div class="col-sm-9 offset-sm-3">
+                    <input class="form-control form-control-sm" id="inputName" type="text" name="name_note"
+                           value="{{ client.name_note }}" title="Beleška uz naziv klijenta">
+                </div>
+            </div>
+
+            {% if client.type_id == 2 %}
+            <div class="row mb-2">
+                <label for="inputPIB" class="col-sm-3 col-form-label text-left text-sm-right">PIB: </label>
+                <div class="col-sm-4">
+                    <input class="form-control form-control-sm" id="inputPIB" type="text" name="lb"
+                           value="{{ client.lb }}" maxlength="9" >
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="row mb-2">
+                <label for="is_supplier" class="col-sm-3 col-form-label text-left text-sm-right">Dobavljač:</label>
+                <div class="col-sm-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="is_supplier" name="is_supplier" value="1"
+                               {% if client.is_supplier %}checked{% endif %} >
+                        <label class="form-check-label" for="is_supplier">Jeste</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="selectCountry" class="col-sm-3 col-form-label text-left text-sm-right">Država:</label>
+                <div class="col-sm-5">
+                    <select id="selectCountry" class="form-select form-select-sm" name="country_id">
+                        {% if not client.country %}
+                            <option>Izaberite drzavu</option>
+                        {% else %}
+                            <option value="{{ client.country_id }}">{{ client.country }}</option>
+                        {% endif %}
+
+                        {% for country in countries %}
+                            <option value="{{ country.id }}">{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="selectCity" class="col-sm-3 col-form-label text-left text-sm-right">Naselje:</label>
+                <div class="col-sm-5">
+                    <select id="selectCity" class="form-select form-select-sm" name="city_id">
+                        {% if not client.city %}
+                            <option>Izaberite naselje</option>
+                        {% else %}
+                            <option value="{{ client.city_id }}">{{ client.city }}</option>
+                        {% endif %}
+
+                        {% for city in cities %}
+                            <option value="{{ city.id }}">{{ city.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="selectStreet" class="col-sm-3 col-form-label text-left text-sm-right">Ulica:</label>
+                <div class="col-sm-5">
+                    <select id="selectStreet" class="form-select form-select-sm" name="street_id">>
+                        {% if not client.street %}
+                            <option>Izaberite ulicu</option>
+                        {% else %}
+                            <option value="{{ client.street_id }}">{{ client.street }}</option>
+                        {% endif %}
+
+                        {% for street in streets %}
+                            <option value="{{ street.id }}">{{ street.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="inputNum" class="col-sm-3 col-form-label text-left text-sm-right">Broj:</label>
+                <div class="col-sm-2 mb-2">
+                    <input class="form-control form-control-sm" id="inputNum" type="text" name="home_number"
+                           value="{{ client.home_number }}" >
+                </div>
+                <div class="col-sm-7">
+                    <input class="form-control form-control-sm" id="inputNum" type="text" name="address_note"
+                           value="{{ cllient.address_note }}"
+                         title="Beleška uz adresu klijenta">
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="inputNote" class="col-sm-3 col-form-label text-left text-sm-right">Beleška: </label>
+                <div class="col-sm-9">
+                  <textarea class="form-control form-control-sm" id="inputNote" rows="3" name="note">{{ client.note }}</textarea>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-sm-3 offset-sm-3">
+                    <button type="submit" class="btn btn-sm btn-success" title="Snimi izmene podataka o klijentu!">
+                      <i class="fas fa-save"></i> Snimi
+                    </button>
+                </div>
+            </div>
+
+      </form>
+    </div> <!-- End of Card Body -->
+
+    <div class="card-footer px-2">
+        <p class="h5">Kontakti</p>
+        {% for contact in client.contacts %}
+            <form action="/client/{{ client.id }}/contact/{{ contact.id }}/editContact"
+                  method="post">
+
+                <div class="row mb-2">
+                    <div class="col-sm-3">
+                        <select class="form-select form-select-sm" name="contact_type_id">>
+                            <option value="{{ contact.type.id }}">{{ contact.type.name }}</option>
+                            {% for type in contact_types %}
+                                <option value="{{ type.id }}">{{ type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="body" value="{{ contact.body }}"
+                               placeholder="Unesi kontakt" >
+                    </div>
+
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control form-control-sm" name="note" value="{{ contact.note }}"
+                               placeholder="Unesi belešku" >
+                    </div>
+
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-success btn-sm " title="Snimi izmenu kontakta!">
+                          <i class="fas fa-save"></i>
+                        </button>
+                        <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete kontakt?');"
+                           href="/client/{{ client.id }}/contact/{{ contact.id }}/removeContact"
+                           class="btn btn-danger btn-sm "
+                           title="Obriši kontakt!">
+                          <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        {% endfor %}
+    </div><!-- End of Card Body -->
+
+</div><!-- End of Card -->

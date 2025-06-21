@@ -3,10 +3,20 @@
 namespace App\Controller;
 
 use App\Core\BaseController;
+use App\Entity\City;
+use App\Entity\Client;
+use App\Entity\CompanyInfo;
+use App\Entity\Employee;
 use App\Entity\Project;
 use App\Entity\ProjectNote;
+use App\Entity\ProjectPriority;
+use App\Entity\ProjectStatus;
 use App\Entity\ProjectTask;
 use App\Entity\ProjectTaskNote;
+use App\Entity\ProjectTaskType;
+use App\Entity\ProjectTaskStatus;
+use App\Entity\User;
+use TCPDF;
 
 /**
  * ProjectController class
@@ -16,15 +26,17 @@ use App\Entity\ProjectTaskNote;
 class ProjectController extends BaseController
 {
 
-    private $page = 'project';
-    private $page_title = 'Projekti';
-    private $stylesheet = '/../libraries/';
+    private $page;
+    private $page_title;
 
     /**
      * ArticleController constructor.
      */
     public function __construct() {
         parent::__construct();
+
+        $this->page = 'project';
+        $this->page_title = 'Projekti';
     }
 
     /**
@@ -36,23 +48,126 @@ class ProjectController extends BaseController
      */
     public function index($search = NULL): void
     {
-        $cities = $this->entityManager->getRepository('\App\Entity\Project')->getCitiesByActiveProject();
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $cities = $this->entityManager->getRepository(Project::class)->getCitiesByActiveProject();
+
+        $active_projects = $this->entityManager->getRepository(Project::class)->projectTracking('1');
+        $active_projects_data = [];
+        foreach ($active_projects as $active_project) {
+            $project_tasks = $this->entityManager->getRepository(Project::class)->projectTasks($active_project->getId());
+            $tasks_for_realization = [];
+            $tasks_in_realization = [];
+            $tasks_completed = [];
+            foreach ($project_tasks as $project_task) {
+                if ($project_task->getStatus()->getId() == 1){
+                    $tasks_for_realization[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+
+                    ];
+                }
+
+                if ($project_task->getStatus()->getId() == 2){
+                    $tasks_in_realization[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+                    ];
+                }
+
+                if ($project_task->getStatus()->getId() == 3){
+                    $tasks_completed[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+                    ];
+                }
+            }
+            $active_projects_data[] = [
+                'id' => $active_project->getId(),
+                'ordinal_num_in_year' => $active_project->getOrdinalNumInYear(),
+                'title' => $active_project->getTitle(),
+                'client' => $active_project->getClient()->getName(),
+                'created_at' => $active_project->getCreatedAt()->format('Y-m-d H:i:s'),
+                'city' => $active_project->getClient()->getCity(),
+                'tasks_for_realization' => $tasks_for_realization,
+                'tasks_in_realization' => $tasks_in_realization,
+                'tasks_completed' => $tasks_completed,
+            ];
+        }
+
+        $inactive_projects = $this->entityManager->getRepository(Project::class)->projectTracking('2');
+        $inactive_projects_data = [];
+
+        foreach ($inactive_projects as $inactive_project) {
+            $project_tasks = $this->entityManager->getRepository(Project::class)->projectTasks($inactive_project->getId());
+            $tasks_for_realization = [];
+            $tasks_in_realization = [];
+            $tasks_completed = [];
+            foreach ($project_tasks as $project_task) {
+                if ($project_task->getStatus()->getId() == 1){
+                    $tasks_for_realization[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+                    ];
+                }
+
+                if ($project_task->getStatus()->getId() == 2){
+                    $tasks_in_realization[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+                    ];
+                }
+
+                if ($project_task->getStatus()->getId() == 3){
+                    $tasks_completed[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+                    ];
+                }
+
+            }
+            $inactive_projects_data[] = [
+                'id' => $inactive_project->getId(),
+                'ordinal_num_in_year' => $inactive_project->getOrdinalNumInYear(),
+                'title' => $inactive_project->getTitle(),
+                'client' => $inactive_project->getClient()->getName(),
+                'created_at' => $inactive_project->getCreatedAt()->format('Y-m-d H:i:s'),
+                'city' => $inactive_project->getClient()->getCity(),
+                'tasks_for_realization' => $tasks_for_realization,
+                'tasks_in_realization' => $tasks_in_realization,
+                'tasks_completed' => $tasks_completed,
+            ];
+        }
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
             'search' => $search,
             'cities' => $cities,
+            'tools_menu' => [
+                'project' => FALSE,
+            ],
+            'active_projects_data' => $active_projects_data,
+            'inactive_projects_data' => $inactive_projects_data,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('index', $data);
+        $this->render('project/index.html.twig', $data);
     }
 
     /**
@@ -65,22 +180,29 @@ class ProjectController extends BaseController
      */
     public function addForm(int $client_id = NULL, int $acc_doc_id = NULL): void
     {
-        $clients_list = $this->entityManager->getRepository('\App\Entity\Client')->findBy(array(), array('name' => "ASC"));
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $clients_list = $this->entityManager->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
             'clients_list' => $clients_list,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        if ($acc_doc_id) {
+            $data['acc_doc_id'] = $acc_doc_id;
+        }
 
-        $this->render('add', $data);
+        if ($client_id) {
+            $data['client'] = $this->entityManager->find(Client::class, $client_id);
+        }
+
+        $this->render('project/add.html.twig', $data);
     }
 
     /**
@@ -89,23 +211,24 @@ class ProjectController extends BaseController
      * @return void
      * @throws \Doctrine\DBAL\Exception
      */
-    public function add() {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+    public function add(): void
+    {
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         $ordinal_num_in_year = 0;
 
         $client_id = htmlspecialchars($_POST["client_id"]);
-        $client = $this->entityManager->find("\App\Entity\Client", $client_id);
+        $client = $this->entityManager->find(Client::class, $client_id);
 
         $title = htmlspecialchars($_POST['title']);
 
         $project_priority_id = htmlspecialchars($_POST['project_priority_id']);
-        $project_priority = $this->entityManager->find("\App\Entity\ProjectPriority", $project_priority_id);
+        $project_priority = $this->entityManager->find(ProjectPriority::class, $project_priority_id);
 
         // $note = htmlspecialchars($_POST['note']);
         $note = "";
 
-        $project_status = $this->entityManager->find("\App\Entity\ProjectStatus", 1);
+        $project_status = $this->entityManager->find(ProjectStatus::class, 1);
 
         // Save a new Project.
         $newProject = new Project();
@@ -129,7 +252,7 @@ class ProjectController extends BaseController
         $new_project_id = $newProject->getId();
 
         // Set Ordinal Number In Year.
-        $this->entityManager->getRepository('App\Entity\Project')->setOrdinalNumInYear($new_project_id);
+        $this->entityManager->getRepository(Project::class)->setOrdinalNumInYear($new_project_id);
 
         if (isset($_POST['acc_doc_id'])) {
             $acc_doc_id = $_POST['acc_doc_id'];
@@ -155,24 +278,156 @@ class ProjectController extends BaseController
      */
     public function view(int $project_id): void
     {
-        $project_data = $this->entityManager->find('\App\Entity\Project', $project_id);
-        $notes = $this->entityManager->getRepository('\App\Entity\Project')->getNotesByProject($project_id);
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $project_data = $this->entityManager->find(Project::class, $project_id);
+        $notes = $this->entityManager->getRepository(Project::class)->getNotesByProject($project_id);
+
+        $client = $this->entityManager->getRepository(Client::class)
+            ->getClientData($project_data->getClient()->getId());
+
+        $orders = $this->entityManager->find(Project::class, $project_id)->getOrders();
+
+        $order_status_classes = [
+            0 => [
+                'class' => 'badge-light',
+                'icon' => 'N',
+                'title' => 'Nacrt',
+            ],
+            1 => [
+                'class' => 'badge-warning',
+                'icon' => 'P',
+                'title' => 'Poručeno',
+            ],
+            2 => [
+                'class' => 'badge-success',
+                'icon' => 'S',
+                'title' => 'Stiglo',
+            ],
+        ];
+
+        $orders_data = [];
+        if ($orders) {
+            foreach ($orders as $order) {
+                $orders_data[] = [
+                    'id' => $order->getId(),
+                    'ordinal_num_in_year' => $order->getOrdinalNumInYear(),
+                    'title' => $order->getTitle(),
+                    'created_at' => $order->getCreatedAt()->format('m_Y'),
+                    'status' => $order->getStatus(),
+                    'is_archived' => $order->getIsArchived(),
+                    'supplier_name' => $order->getSupplier() ? $order->getSupplier()->getName() : '',
+                ];
+            }
+        }
+
+        $accounting_documents = $this->entityManager->find(Project::class, $project_id)->getAccountingDocuments();
+        $accounting_documents_data = [];
+        foreach ($accounting_documents as $accounting_document) {
+            $accounting_documents_data[] = [
+                'id' => $accounting_document->getId(),
+                'ordinal_num_in_year' => $accounting_document->getOrdinalNumInYear(),
+                'title' => $accounting_document->getTitle(),
+                'created_at' => $accounting_document->getCreatedAt()->format('m_Y'),
+                'client_name' => $accounting_document->getClient() ? $accounting_document->getClient()->getName() : '',
+                'type' => $accounting_document->getType(),
+            ];
+        }
+
+        $project_tasks = $this->entityManager->getRepository(Project::class)->projectTasks($project_id);
+        $tasks_for_realization = [];
+        $tasks_in_realization = [];
+        $tasks_completed = [];
+        foreach ($project_tasks as $project_task) {
+
+            if ($project_task->getStatus()->getId() == 1){
+                $task_notes = $this->entityManager
+                  ->getRepository(ProjectTaskNote::class)->findBy(array('project_task' => $project_task));
+                $tasks_for_realization[] = [
+                    'id' => $project_task->getId(),
+                    'title' => $project_task->getTitle(),
+                    'type' => $project_task->getType()->getName(),
+                    'class' => $project_task->getType()->getClass(),
+                    'created_by_user' => $project_task->getCreatedByUser()->getUsername(),
+                    'start_date' => $project_task->getStartDate()->format('Y-m-d H:i:s'),
+                    'end_date' => $project_task->getEndDate()->format('Y-m-d H:i:s'),
+                    'employee' => $project_task->getEmployee() ? $project_task->getEmployee()->getName() : '',
+                    'task_notes' => $task_notes,
+                ];
+            }
+
+            if ($project_task->getStatus()->getId() == 2){
+                $task_notes = $this->entityManager
+                    ->getRepository(ProjectTaskNote::class)->findBy(array('project_task' => $project_task));
+                $tasks_in_realization[] = [
+                    'id' => $project_task->getId(),
+                    'title' => $project_task->getTitle(),
+                    'type' => $project_task->getType()->getName(),
+                    'class' => $project_task->getType()->getClass(),
+                    'created_by_user' => $project_task->getCreatedByUser()->getUsername(),
+                    'start_date' => $project_task->getStartDate()->format('Y-m-d H:i:s'),
+                    'end_date' => $project_task->getEndDate()->format('Y-m-d H:i:s'),
+                    'employee' => $project_task->getEmployee() ? $project_task->getEmployee()->getName() : '',
+                    'task_notes' => $task_notes,
+                ];
+            }
+
+            if ($project_task->getStatus()->getId() == 3){
+                $task_notes = $this->entityManager
+                    ->getRepository(ProjectTaskNote::class)->findBy(array('project_task' => $project_task));
+                $tasks_completed[] = [
+                    'id' => $project_task->getId(),
+                    'title' => $project_task->getTitle(),
+                    'type' => $project_task->getType()->getName(),
+                    'class' => $project_task->getType()->getClass(),
+                    'created_by_user' => $project_task->getCreatedByUser()->getUsername(),
+                    'start_date' => $project_task->getStartDate()->format('Y-m-d H:i:s'),
+                    'end_date' => $project_task->getEndDate()->format('Y-m-d H:i:s'),
+                    'employee' => $project_task->getEmployee() ? $project_task->getEmployee()->getName() : '',
+                    'task_notes' => $task_notes,
+                ];
+            }
+        }
+
+        $dir = $_SERVER["DOCUMENT_ROOT"] . '/upload/projects/project_id_'.$project_id;
+        $files = [];
+        if (is_dir($dir)) {
+            if ($handle = opendir($dir)) {
+                while (false !== ($entry = readdir($handle))){
+                    if ($entry != "." && $entry != ".." && $entry != "Thumbs.db"){
+                        $files[] = $entry;
+                    }
+                }
+            }
+        }
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
             'project_id' => $project_id,
             'project_data' => $project_data,
+            'client' => $client,
+            'orders_data' => $orders_data,
             'notes' => $notes,
+            'order_status_classes' => $order_status_classes,
+            'accounting_documents_data' => $accounting_documents_data,
+            'project_tasks' => $project_tasks,
+            'tasks_for_realization' => $tasks_for_realization,
+            'tasks_in_realization' => $tasks_in_realization,
+            'tasks_completed' => $tasks_completed,
+            'files' => $files,
+            'tools_menu' => [
+                'project' => TRUE,
+                'view' => TRUE,
+                'edit' => FALSE,
+            ],
         ];
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
-        $this->render('view', $data);
+        $this->render('project/view.html.twig', $data);
     }
 
     /**
@@ -184,15 +439,17 @@ class ProjectController extends BaseController
      */
     public function editForm(int $project_id): void
     {
-        $project_data = $this->entityManager->find('\App\Entity\Project', $project_id);
-        $client = $this->entityManager->getRepository('\App\Entity\Client')->getClientData($project_data->getClient()->getId());
-        $priority_list = $this->entityManager->getRepository('\App\Entity\ProjectPriority')->findBy(array(), array('id' => "ASC"));
-        $clients_list = $this->entityManager->getRepository('\App\Entity\Client')->findBy(array(), array('name' => "ASC"));
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $project_data = $this->entityManager->find(Project::class, $project_id);
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($project_data->getClient()->getId());
+        $priority_list = $this->entityManager->getRepository(ProjectPriority::class)->findBy(array(), array('id' => "ASC"));
+        $clients_list = $this->entityManager->getRepository(Client::class)->findBy(array(), array('name' => "ASC"));
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -201,12 +458,14 @@ class ProjectController extends BaseController
             'client' => $client,
             'priority_list' => $priority_list,
             'clients_list' => $clients_list,
+            'tools_menu' => [
+                'project' => TRUE,
+                'view' => FALSE,
+                'edit' => TRUE,
+          ],
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('edit', $data);
+        $this->render('project/edit.html.twig', $data);
     }
 
     /**
@@ -217,20 +476,20 @@ class ProjectController extends BaseController
      */
     public function edit(int $project_id): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
-        $project = $this->entityManager->find("\App\Entity\Project", $project_id);
+        $project = $this->entityManager->find(Project::class, $project_id);
 
         $project_priority_id = htmlspecialchars($_POST["project_priority_id"]);
-        $project_priority = $this->entityManager->find("\App\Entity\ProjectPriority", $project_priority_id);
+        $project_priority = $this->entityManager->find(ProjectPriority::class, $project_priority_id);
 
         $client_id = htmlspecialchars($_POST["client_id"]);
-        $client = $this->entityManager->find("\App\Entity\Client", $client_id);
+        $client = $this->entityManager->find(Client::class, $client_id);
 
         $title = htmlspecialchars($_POST["title"]);
 
         $status_id = htmlspecialchars($_POST["status_id"]);
-        $status = $this->entityManager->find("\App\Entity\ProjectStatus", $status_id);
+        $status = $this->entityManager->find(ProjectStatus::class, $status_id);
 
         // $note = htmlspecialchars($_POST["note"]);
 
@@ -254,15 +513,15 @@ class ProjectController extends BaseController
      */
     public function addTask(int $project_id): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
-        $project = $this->entityManager->find("\App\Entity\Project", $project_id);
+        $project = $this->entityManager->find(Project::class, $project_id);
 
         $type_id = $_POST["type_id"];
-        $type = $this->entityManager->find("\App\Entity\ProjectTaskType", $type_id);
+        $type = $this->entityManager->find(ProjectTaskType::class, $type_id);
 
         $status_id = $_POST["status_id"];
-        $status = $this->entityManager->find("\App\Entity\ProjectTaskStatus", $status_id);
+        $status = $this->entityManager->find(ProjectTaskStatus::class, $status_id);
 
         $title = htmlspecialchars($_POST['title']);
 
@@ -297,9 +556,9 @@ class ProjectController extends BaseController
      */
     public function editTaskForm(int $project_id, int $task_id): void
     {
-        $task = $this->entityManager->find("\App\Entity\ProjectTask", $task_id);
-        $project = $this->entityManager->find("\App\Entity\Project", $project_id);
-        $project_data = $this->entityManager->find('\App\Entity\Project', $project_id);
+        $task = $this->entityManager->find(ProjectTask::class, $task_id);
+        $project = $this->entityManager->find(Project::class, $project_id);
+        $project_data = $this->entityManager->find(Project::class, $project_id);
 
         $task_data['class'] = match($task->getType()->getId()) {
             1 => 'info',
@@ -314,10 +573,13 @@ class ProjectController extends BaseController
             default => 'default',
         };
 
+        $employees_list = $this->entityManager->getRepository(Employee::class)->findBy([], ['name' => "ASC"]);
+        $task_notes = $this->entityManager
+            ->getRepository(ProjectTaskNote::class)->findBy(['project_task' => $task_id], []);
+
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -327,12 +589,14 @@ class ProjectController extends BaseController
             'project_id' => $project_id,
             'project' => $project,
             'project_data' => $project_data,
+            'employees_list' => $employees_list,
+            'task_notes' => $task_notes,
         ];
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('editTask', $data);
+        $this->render('project/editTask.html.twig', $data);
     }
 
     /**
@@ -345,15 +609,17 @@ class ProjectController extends BaseController
      */
     public function editTask(int $project_id, int $task_id): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
-        $project = $this->entityManager->find("\App\Entity\Project", $project_id);
+        $alertEnd = NULL;
+
+        $user = $this->entityManager->find(User::class, $this->user_id);
+        $project = $this->entityManager->find(Project::class, $project_id);
 
         $title = htmlspecialchars($_POST["title"]);
 
         $employee_id = htmlspecialchars($_POST["employee_id"]);
-        $employee = $this->entityManager->find("\App\Entity\Employee", $employee_id);
+        $employee = $this->entityManager->find(Employee::class, $employee_id);
 
-        $task = $this->entityManager->find("\App\Entity\ProjectTask", $task_id);
+        $task = $this->entityManager->find(ProjectTask::class, $task_id);
 
         $start = htmlspecialchars($_POST["start"]);
         $end = htmlspecialchars($_POST["end"]);
@@ -435,7 +701,7 @@ class ProjectController extends BaseController
             $status_id = 1;
         }
 
-        $status = $this->entityManager->find("\App\Entity\ProjectTaskStatus", $status_id);
+        $status = $this->entityManager->find(ProjectTaskStatus::class, $status_id);
 
         $task->setProject($project);
         $task->setTitle($title);
@@ -447,10 +713,6 @@ class ProjectController extends BaseController
         $task->setModifiedAt(new \DateTime("now"));
 
         $task->setModifiedByUser($user);
-
-        // echo "editing in progress ...";
-        // exit();
-        // --------------------------------------------------------------------------
 
         $this->entityManager->flush();
 
@@ -470,12 +732,14 @@ class ProjectController extends BaseController
      */
     public function deleteTask(int $project_id, int $task_id): void
     {
-        $task = $this->entityManager->find("\App\Entity\ProjectTask", $task_id);
+        $task = $this->entityManager->find(ProjectTask::class, $task_id);
 
         // First deleting task notes.
-        $task_notes = $this->entityManager->getRepository('\App\Entity\ProjectTaskNote')->findBy(array('project_task' => $task_id), array('id' => "ASC"));
+        $task_notes = $this->entityManager
+            ->getRepository(ProjectTaskNote::class)->findBy(['project_task' => $task_id], ['id' => "ASC"]);
+
         foreach ($task_notes as $task_note) {
-            $task_note = $this->entityManager->find("\App\Entity\ProjectTaskNote", $task_note->getId());
+            $task_note = $this->entityManager->find(ProjectTaskNote::class, $task_note->getId());
             $this->entityManager->remove($task_note);
             $this->entityManager->flush();
         }
@@ -497,10 +761,10 @@ class ProjectController extends BaseController
      */
     public function setStartDate(int $project_id, int $task_id): void
     {
-        $task = $this->entityManager->find("\App\Entity\ProjectTask", $task_id);
+        $task = $this->entityManager->find(ProjectTask::class, $task_id);
 
         $status_id = 2;
-        $status = $this->entityManager->find("\App\Entity\ProjectTaskStatus", $status_id);
+        $status = $this->entityManager->find(ProjectTaskStatus::class, $status_id);
 
         $task->setStartDate(new \DateTime("now"));
         $task->setStatus($status);
@@ -520,7 +784,7 @@ class ProjectController extends BaseController
      */
     public function setEndDate(int $project_id, int $task_id): void
     {
-        $task = $this->entityManager->find("\App\Entity\ProjectTask", $task_id);
+        $task = $this->entityManager->find(ProjectTask::class, $task_id);
         $start = $task->getStartDate()->format('Y-m-d H:i:s');
 
         if ($start == '1970-01-01 00:00:00') {
@@ -529,7 +793,7 @@ class ProjectController extends BaseController
             die('<script>location.href = "/project/' . $project_id . '/task/' . $task_id . '/edit" </script>');
         }
         $status_id = 3;
-        $status = $this->entityManager->find("\App\Entity\ProjectTaskStatus", $status_id);
+        $status = $this->entityManager->find(ProjectTaskStatus::class, $status_id);
 
         $task->setEndDate(new \DateTime("now"));
         $task->setStatus($status);
@@ -549,8 +813,8 @@ class ProjectController extends BaseController
      */
     public function addTaskNote(int $project_id, int $task_id): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
-        $task = $this->entityManager->find("\App\Entity\ProjectTask", $task_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
+        $task = $this->entityManager->find(ProjectTask::class, $task_id);
 
         $note = htmlspecialchars($_POST['note']);
 
@@ -582,7 +846,7 @@ class ProjectController extends BaseController
      */
     public function deleteTaskNote(int $project_id, int $task_id, int $note_id): void
     {
-        $task_note = $this->entityManager->find("\App\Entity\ProjectTaskNote", $note_id);
+        $task_note = $this->entityManager->find(ProjectTaskNote::class, $note_id);
 
         $this->entityManager->remove($task_note);
         $this->entityManager->flush();
@@ -599,25 +863,88 @@ class ProjectController extends BaseController
      */
     public function viewByCity(int $city_id): void
     {
-        $city = $this->entityManager->find("\App\Entity\City", $city_id);
-        $cities = $this->entityManager->getRepository('\App\Entity\Project')->getCitiesByActiveProject();
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $city = $this->entityManager->find(City::class, $city_id);
+        $cities = $this->entityManager->getRepository(Project::class)->getCitiesByActiveProject();
+
+        $alert = NULL;
+        $city_name = '';
+        if (!$city){
+            $alert = 'Traženo mesto ne postoji!';
+        }
+        else {
+            $city_name = $city->getName();
+        }
+
+//        $active_projects = $this->entityManager->getRepository(Project::class)->projectTracking('1');
+
+        $active_projects = $this->entityManager->getRepository(Project::class)->projectTrackingByCity('1', $city_id);
+
+        $active_projects_data = [];
+        foreach ($active_projects as $active_project) {
+            $project_tasks = $this->entityManager->getRepository(Project::class)->projectTasks($active_project->getId());
+            $tasks_for_realization = [];
+            $tasks_in_realization = [];
+            $tasks_completed = [];
+            foreach ($project_tasks as $project_task) {
+                if ($project_task->getStatus()->getId() == 1){
+                    $tasks_for_realization[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+
+                    ];
+                }
+
+                if ($project_task->getStatus()->getId() == 2){
+                    $tasks_in_realization[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+                    ];
+                }
+
+                if ($project_task->getStatus()->getId() == 3){
+                    $tasks_completed[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+                    ];
+                }
+            }
+            $active_projects_data[] = [
+                'id' => $active_project->getId(),
+                'ordinal_num_in_year' => $active_project->getOrdinalNumInYear(),
+                'title' => $active_project->getTitle(),
+                'client' => $active_project->getClient()->getName(),
+                'created_at' => $active_project->getCreatedAt()->format('Y-m-d H:i:s'),
+                'city' => $active_project->getClient()->getCity(),
+                'tasks_for_realization' => $tasks_for_realization,
+                'tasks_in_realization' => $tasks_in_realization,
+                'tasks_completed' => $tasks_completed,
+            ];
+        }
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
             'city_id' => $city_id,
             'city' => $city,
             'cities' => $cities,
+            'city_name' => $city_name,
+            'alert' => $alert,
+            'active_projects_data' => $active_projects_data,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('viewByCity', $data);
+        $this->render('project/view_by_city.html.twig', $data);
     }
 
     /**
@@ -629,8 +956,8 @@ class ProjectController extends BaseController
      */
     public function addNote(int $project_id): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
-        $project = $this->entityManager->find("\App\Entity\Project", $project_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
+        $project = $this->entityManager->find(Project::class, $project_id);
         $note = htmlspecialchars($_POST['note']);
 
         // Save a new Task note.
@@ -661,7 +988,7 @@ class ProjectController extends BaseController
      */
     public function deleteNote(int $project_id, int $note_id): void
     {
-        $note = $this->entityManager->find("\App\Entity\ProjectNote", $note_id);
+        $note = $this->entityManager->find(ProjectNote::class, $note_id);
 
         $this->entityManager->remove($note);
         $this->entityManager->flush();
@@ -678,16 +1005,72 @@ class ProjectController extends BaseController
      */
     public function printProjectTaskWithNotes(int $project_id): void
     {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+        $project = $this->entityManager->find(Project::class, $project_id);
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($project->getClient()->getId());
+        $notes = $this->entityManager->getRepository(Project::class)->getNotesByProject($project_id);
+
+
         $data = [
             'page' => $this->page,
             'entityManager' => $this->entityManager,
             'project_id' => $project_id,
+            'project' => $project,
+            'company_info' => $company_info,
+            'client' => $client,
+            'notes' => $notes,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        // Render HTML content from a Twig template (or similar)
+        ob_start();
+        $this->render('project/print_project_task_with_notes.html.twig', $data);
+        $html = ob_get_clean();
 
-        $this->render('printProjectTaskWithNotes', $data);
+        require_once '../config/packages/tcpdf_include.php';
+
+        // Create a new TCPDF object / PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor($company_info['name']);
+        $pdf->SetTitle($company_info['name'] . ' - Radni nalog');
+        $pdf->SetSubject($company_info['name']);
+        $pdf->SetKeywords($company_info['name'] . ', PDF,radni nalog');
+
+        // Remove default header/footer.
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // Set default monospaced font.
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // Set margins.
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+
+        // Set auto page breaks.
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // Set image scale factor.
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // Set font.
+        $pdf->SetFont('dejavusans', '', 10);
+
+        // Add a page.
+        $pdf->AddPage();
+
+        // Write HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Reset pointer to the last page.
+        $pdf->lastPage();
+
+        // Close and output PDF document to browser.
+        $pdf->Output('radni_nalog_' .$client['name']. '.pdf', 'I');
     }
 
     /**
@@ -699,16 +1082,69 @@ class ProjectController extends BaseController
      */
     public function printProjectTask(int $project_id): void
     {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+        $project = $this->entityManager->find(Project::class, $project_id);
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($project->getClient()->getId());
+
         $data = [
             'page' => $this->page,
             'entityManager' => $this->entityManager,
             'project_id' => $project_id,
+            'company_info' => $company_info,
+            'project' => $project,
+            'client' => $client,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        // Render HTML content from a Twig template (or similar)
+        ob_start();
+        $this->render('project/print_project_task.html.twig', $data);
+        $html = ob_get_clean();
 
-        $this->render('printProjectTask', $data);
+        require_once '../config/packages/tcpdf_include.php';
+
+        // Create a new TCPDF object / PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor($company_info['name']);
+        $pdf->SetTitle($company_info['name'] . ' - Radni nalog');
+        $pdf->SetSubject($company_info['name']);
+        $pdf->SetKeywords($company_info['name'] . ', PDF,radni nalog');
+
+        // Remove default header/footer.
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // Set default monospaced font.
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // Set margins.
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+
+        // Set auto page breaks.
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // Set image scale factor.
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // Set font.
+        $pdf->SetFont('dejavusans', '', 10);
+
+        // Add a page.
+        $pdf->AddPage();
+
+        // Write HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Reset pointer to the last page.
+        $pdf->lastPage();
+
+        // Close and output PDF document to browser.
+        $pdf->Output('nalog_' . $client['name'] . '.pdf', 'I');
     }
 
     /**
@@ -720,16 +1156,69 @@ class ProjectController extends BaseController
      */
     public function printInstallationRecord(int $project_id):void
     {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+        $project = $this->entityManager->find(Project::class, $project_id);
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($project->getClient()->getId());
+
         $data = [
             'page' => $this->page,
             'entityManager' => $this->entityManager,
             'project_id' => $project_id,
+            'company_info' => $company_info,
+            'client' => $client,
+            'project' => $project,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        // Render HTML content from a Twig template (or similar)
+        ob_start();
+        $this->render('project/print_installation_record.html.twig', $data);
+        $html = ob_get_clean();
 
-        $this->render('printInstallationRecord', $data);
+        require_once '../config/packages/tcpdf_include.php';
+
+        // Create a new TCPDF object / PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor($company_info['name']);
+        $pdf->SetTitle('Zapisnik o ugradnji (montaži)');
+        $pdf->SetSubject($company_info['name']);
+        $pdf->SetKeywords($company_info['name'] . ', PDF, zapisnik');
+
+        // Remove default header/footer.
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // Set default monospaced font.
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // Set margins.
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+
+        // Set auto page breaks.
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // Set image scale factor.
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // Set font.
+        $pdf->SetFont('dejavusans', '', 10);
+
+        // Add a page.
+        $pdf->AddPage();
+
+        // Write HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Reset pointer to the last page.
+        $pdf->lastPage();
+
+        // Close and output PDF document to browser.
+        $pdf->Output('test_name.pdf', 'I');
     }
 
     /**
@@ -778,41 +1267,206 @@ class ProjectController extends BaseController
     }
 
     /**
+     * Search for projects.
+     *
+     * @param string $term
+     *   Search term.
+     *
+     * @return void
+     */
+    public function search(string $term): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $project_list = $this->entityManager->getRepository(Project::class)->search($term);
+        $active_projects_data = [];
+        foreach ($project_list as $project_item) {
+            if ($project_item->getStatus()->getId() == 1 || $project_item->getStatus()->getId() == 2){
+                $project_tasks = $this->entityManager->getRepository(Project::class)->projectTasks($project_item->getId());
+                $tasks_for_realization = [];
+                $tasks_in_realization = [];
+                $tasks_completed = [];
+                foreach ($project_tasks as $project_task) {
+                    if ($project_task->getStatus()->getId() == 1){
+                        $tasks_for_realization[] = [
+                            'id' => $project_task->getId(),
+                            'title' => $project_task->getTitle(),
+                            'type' => $project_task->getType()->getName(),
+                            'class' => $project_task->getType()->getClass(),
+                              ];
+                    }
+
+                    if ($project_task->getStatus()->getId() == 2){
+                        $tasks_in_realization[] = [
+                            'id' => $project_task->getId(),
+                            'title' => $project_task->getTitle(),
+                            'type' => $project_task->getType()->getName(),
+                            'class' => $project_task->getType()->getClass(),
+                        ];
+                    }
+
+                    if ($project_task->getStatus()->getId() == 3){
+                        $tasks_completed[] = [
+                            'id' => $project_task->getId(),
+                            'title' => $project_task->getTitle(),
+                            'type' => $project_task->getType()->getName(),
+                            'class' => $project_task->getType()->getClass(),
+                        ];
+                    }
+                }
+
+                $active_projects_data[] = [
+                    'id' => $project_item->getId(),
+                    'ordinal_num_in_year' => $project_item->getOrdinalNumInYear(),
+                    'title' => $project_item->getTitle(),
+                    'client' => $project_item->getClient()->getName(),
+                    'created_at' => $project_item->getCreatedAt()->format('d M Y'),
+                    'city' => $project_item->getClient()->getCity(),
+                    'tasks_for_realization' => $tasks_for_realization,
+                    'tasks_in_realization' => $tasks_in_realization,
+                    'tasks_completed' => $tasks_completed,
+                ];
+            }
+        }
+
+        $inactive_projects_data = [];
+        foreach ($project_list as $project_item) {
+            if ($project_item->getStatus()->getId() == 3){
+                $project_tasks = $this->entityManager->getRepository(Project::class)->projectTasks($project_item->getId());
+                $tasks_for_realization = [];
+                $tasks_in_realization = [];
+                $tasks_completed = [];
+                foreach ($project_tasks as $project_task) {
+                    if ($project_task->getStatus()->getId() == 1){
+                        $tasks_for_realization[] = [
+                            'id' => $project_task->getId(),
+                            'title' => $project_task->getTitle(),
+                            'type' => $project_task->getType()->getName(),
+                            'class' => $project_task->getType()->getClass(),
+                        ];
+                    }
+
+                    if ($project_task->getStatus()->getId() == 2){
+                        $tasks_in_realization[] = [
+                            'id' => $project_task->getId(),
+                            'title' => $project_task->getTitle(),
+                            'type' => $project_task->getType()->getName(),
+                            'class' => $project_task->getType()->getClass(),
+                        ];
+                    }
+
+                    if ($project_task->getStatus()->getId() == 3){
+                        $tasks_completed[] = [
+                            'id' => $project_task->getId(),
+                            'title' => $project_task->getTitle(),
+                            'type' => $project_task->getType()->getName(),
+                            'class' => $project_task->getType()->getClass(),
+                        ];
+                    }
+                }
+
+                $inactive_projects_data[] = [
+                    'id' => $project_item->getId(),
+                    'ordinal_num_in_year' => $project_item->getOrdinalNumInYear(),
+                    'title' => $project_item->getTitle(),
+                    'client' => $project_item->getClient()->getName(),
+                    'created_at' => $project_item->getCreatedAt()->format('d M Y'),
+                    'city' => $project_item->getClient()->getCity(),
+                    'tasks_for_realization' => $tasks_for_realization,
+                    'tasks_in_realization' => $tasks_in_realization,
+                    'tasks_completed' => $tasks_completed,
+                ];
+            }
+        }
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'active_projects_data' => $active_projects_data,
+            'inactive_projects_data' => $inactive_projects_data,
+        ];
+
+        $this->render('project/search.html.twig', $data);
+    }
+
+    /**
      * Advanced project search.
      *
      * @return void
      */
     public function advancedSearch(): void
     {
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
-        ];
-
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('advancedSearch', $data);
-    }
+        $client = $_POST["client"] ?? '';
+        $project_title = $_POST["project_title"] ?? '';
+        $city = $_POST["city"] ?? '';
 
-    /**
-     * A helper method to render views.
-     *
-     * @param $view
-     * @param array $data
-     *
-     * @return void
-     */
-    private function render($view, array $data = []): void
-    {
-        // Extract data array to variables.
-        extract($data);
-        // Include the view file.
-        require_once __DIR__ . "/../Views/$page/$view.php";
+        $project_advanced_search_list = $this->entityManager
+            ->getRepository(Project::class)->advancedSearch($client, $project_title, $city);
+
+        $project_advanced_search_list_data = [];
+        foreach ($project_advanced_search_list as $project_item) {
+            $project_tasks = $this->entityManager->getRepository(Project::class)->projectTasks($project_item->getId());
+            $tasks_for_realization = [];
+            $tasks_in_realization = [];
+            $tasks_completed = [];
+            foreach ($project_tasks as $project_task) {
+                if ($project_task->getStatus()->getId() == 1){
+                    $tasks_for_realization[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+                    ];
+                }
+
+                if ($project_task->getStatus()->getId() == 2){
+                    $tasks_in_realization[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+                    ];
+                }
+
+                if ($project_task->getStatus()->getId() == 3){
+                    $tasks_completed[] = [
+                        'id' => $project_task->getId(),
+                        'title' => $project_task->getTitle(),
+                        'type' => $project_task->getType()->getName(),
+                        'class' => $project_task->getType()->getClass(),
+                    ];
+                }
+            }
+
+            $project_advanced_search_list_data[] = [
+                'id' => $project_item->getId(),
+                'ordinal_num_in_year' => $project_item->getOrdinalNumInYear(),
+                'title' => $project_item->getTitle(),
+                'client' => $project_item->getClient()->getName(),
+                'created_at' => $project_item->getCreatedAt()->format('d M Y'),
+                'city' => $project_item->getClient()->getCity(),
+                'tasks_for_realization' => $tasks_for_realization,
+                'tasks_in_realization' => $tasks_in_realization,
+                'tasks_completed' => $tasks_completed,
+                'status_id' => $project_item->getStatus()->getId(),
+            ];
+        }
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'username' => $this->username,
+            'user_role_id' => $this->user_role_id,
+            'entityManager' => $this->entityManager,
+//            'project_advanced_search_list' =>$project_advanced_search_list,
+            'project_advanced_search_list_data' => $project_advanced_search_list_data,
+        ];
+
+        $this->render('project/advanced_search.html.twig', $data);
     }
 
 }

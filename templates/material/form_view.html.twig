@@ -1,0 +1,181 @@
+<!-- View Material Data -->
+<div class="card mb-4">
+    <div class="card-header p-2">
+      <h6 class="m-0 text-dark">Pregled materiala: <strong>{{ material.getName() }}</strong></h6>
+    </div>
+    <div class="card-body p-2">
+   
+        <form>
+            <fieldset disabled>
+
+                <div class="row mb-2">
+                    <label for="disabledModified" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">
+                        Izmenjen:
+                    </label>
+                    <div class="col-sm-5 col-sm-4 col-lg-3">
+                        <input class="form-control form-control-sm" id="disabledModified" type="text"
+                               value="{{ material.getModifiedAt|date('d M Y H:i') }}" disabled />
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <label for="disabledInputName" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">
+                        Naziv:
+                    </label>
+                    <div class="col-sm-9 col-xl-8">
+                        <input class="form-control form-control-sm" id="disabledInputName" type="text" name="name"
+                               value="{{ material.getName() }}" disabled />
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <label for="disabledSelectUnit" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">
+                        Jedinica mere:
+                    </label>
+                    <div class="col-sm-3 col-lg-2">
+                        <select id="disabledSelectUnit" name="unit_id" class="form-select form-select-sm">
+                            <option value="{{ material.getUnit().getId() }}">
+                                {{ material.getUnit().getName() }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+        
+                <div class="row mb-2">
+                    <label for="disabledInputWeight" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">
+                        Težina:
+                    </label>
+                    <div class="col-sm-3 col-lg-2">
+                        <input class="form-control form-control-sm" id="disabledInputWeight" type="text" name="weight"
+                               value="{{ material.getWeight() }}" disabled />
+                    </div>
+                    <div class="col-sm-2">g</div>
+                </div>
+            
+                <div class="row mb-2">
+                    <label for="disabledInputPrice" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">
+                        Cena:
+                    </label>
+                    <div class="col-sm-3 col-lg-2">
+                        <input class="form-control form-control-sm" id="disabledInputPrice" type="text" name="price"
+                               value="{{ material.getPrice() }}" disabled />
+                    </div>
+                    <div class="col-sm-3">&#8364; bez PDV-a</div>
+                </div>
+
+                <div class="row mb-2">
+                    <label for="disabledInputNote" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">
+                        Beleška:
+                    </label>
+                    <div class="col-sm-9 col-xl-8">
+                        <textarea class="form-control form-control-sm" id="disabledInputNote" rows="3" name="note"
+                                  placeholder="Beleška uz materijal ..." disabled>{{ material.getNote() }}</textarea>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-sm-3 offset-sm-3 offset-lg-2"><button type="submit" class="btn btn-sm btn-secondary" title="Snimi izmene podataka o klijentu!" disabled><i class="fas fa-save"></i> Snimi</button></div>
+                </div>
+
+            </fieldset>
+        </form>
+
+    </div>
+    <!-- End Card Body -->
+</div>
+<!-- End Card -->
+
+<div class="card mb-4">
+
+    <div class="card-header p-2">
+        <h6 class="m-0 text-dark">Pregled dobavljača</h6>
+    </div>
+
+    <div class="card-body p-2">
+        <div class="table-responsive">
+            <table class="table table-hover" >
+                <thead>
+                    <tr class="table-secondary">
+                        <th class="px-1">#</th>
+                        <th class="px-1 text-center">naziv</th>
+                        <th class="px-1 text-center">datum izmene</th>
+                        <th class="px-1 text-center">šifra po dobavljaču</th>
+                        <th class="px-1 text-center">cena</th>
+                        <th class="px-1"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {%  set count = 0 %}
+                {% for material_supplier in material_suppliers %}
+                    {%  set count = count + 1 %}
+                    <form method="post">
+                        <fieldset disabled>
+                            <tr>
+                                <td class="px-1">{{ count }}</td>
+                                <td class="p-1">
+                                    <select class="form-select form-select-sm" name="supplier_id"
+                                            title="{{ material_supplier.getSupplier().getName() }}" disabled>
+                                        <option value="{{ material_supplier.getSupplier().getId() }}">
+                                            {{ material_supplier.getSupplier().getName() }}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td class="p-1">
+                                    <input class="form-control form-control-sm" type="text"
+                                           value="{{ material_supplier.getModifiedAt|date('d M Y') }}" disabled>
+                                </td>
+                                <td class="p-1">
+                                    <input class="form-control form-control-sm" type="text" name="code"
+                                           value="{{ material_supplier.getNote() }}" disabled>
+                                </td>
+                                <td class="p-1">
+                                    <input class="form-control form-control-sm" type="text" name="price"
+                                           value="{{ material_supplier.getPrice() }}" disabled>
+                                </td>
+                                <td class="p-1">
+                                    <button type="submit" class="btn btn-sm btn-secondary" disabled>
+                                        <i class="fas fa-save"> </i>
+                                    </button>
+                                    <a href="#" class="btn btn-sm btn-secondary disabled"><i class="fas fa-trash-alt"> </i> </a>
+                                </td>
+                            </tr>
+                        </fieldset>
+                    </form>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-header p-2">
+        <h6 class="m-0 text-dark">Pregled osobina materijala</h6>
+    </div>
+
+    <div class="card-body p-2">
+        {% for material_property in material_properties %}
+            <form method="post">
+                <fieldset disabled>
+                    <div class="row mb-2">
+
+                        <div class="col-sm-4">
+                            <select class="form-select form-select-sm" name="property_id">
+                                <option value="{{ material_property.getProperty().getId() }}">
+                                    {{ material_property.getProperty().getName() }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <a href="#" class="btn btn-sm btn-secondary disabled">
+                                <i class="fas fa-trash-alt"> </i>
+                            </a>
+                        </div>
+
+                    </div>
+                </fieldset>
+            </form>
+        {% endfor %}
+    </div>
+    <!-- End Card Body -->
+
+</div>

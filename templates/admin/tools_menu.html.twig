@@ -1,0 +1,28 @@
+<div class="col-lg-12 col-xl-10 px-2" id="topMeni">
+    <div class="card mb-2">
+        <div class="card-body p-1">
+            {% if tools_menu.admin %}
+
+                {% if tools_menu.view %}
+                    <a href="/admin/company-info/edit">
+                        <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o klijentu!">
+                            <i class="fas fa-edit"> </i> Izmena
+                        </button>
+                    </a>
+                {% endif  %}
+
+                {% if tools_menu.edit %}
+                    <a href="/admin/company-info">
+                        <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o klijentu">
+                            <i class="fas fa-eye"> </i> Pregled
+                        </button>
+                    </a>
+                {% endif  %}
+
+            {% endif %}
+
+        </div>
+        <!-- End of Card Body. -->
+    </div>
+    <!-- End of Card. -->
+</div>
