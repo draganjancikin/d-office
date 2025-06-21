@@ -22,7 +22,6 @@ class MaterialController extends BaseController
 
     private string $page;
     private string $page_title;
-    private string $stylesheet;
 
     /**
      * MaterialController constructor.
@@ -32,7 +31,6 @@ class MaterialController extends BaseController
 
         $this->page = 'materials';
         $this->page_title = 'Materijali';
-        $this->stylesheet = '/../libraries/';
     }
 
     /**
@@ -48,10 +46,8 @@ class MaterialController extends BaseController
         $materials = $this->entityManager->getRepository(Material::class)->getLastMaterials(10);
         $preferences = $this->entityManager->find(Preferences::class, 1);
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -80,7 +76,6 @@ class MaterialController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'units' => $units,
@@ -163,10 +158,8 @@ class MaterialController extends BaseController
         $property_list = $this->entityManager->getRepository(Property::class)->findAll();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'material_id' => $material_id,
@@ -208,10 +201,8 @@ class MaterialController extends BaseController
         $property_list = $this->entityManager->getRepository(Property::class)->findAll();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -434,12 +425,10 @@ class MaterialController extends BaseController
         $preferences = $this->entityManager->find(Preferences::class, 1);
 
         $data = [
-          'app_version' => APP_VERSION,
-          'page' => $this->page,
-          'page_title' => $this->page_title,
-          'stylesheet' => $this->stylesheet,
-          'materials' => $materials,
-          'preferences' => $preferences,
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'materials' => $materials,
+            'preferences' => $preferences,
         ];
 
         $this->render('material/search.html.twig', $data);

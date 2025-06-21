@@ -28,7 +28,6 @@ class PidbController extends BaseController
 
     private string $page;
     private string $page_title;
-    private string $stylesheet;
 
     /**
      * PidbController constructor.
@@ -38,7 +37,6 @@ class PidbController extends BaseController
 
         $this->page_title = 'Dokumenti';
         $this->page = 'pidbs';
-        $this->stylesheet = '/../libraries/';
     }
 
     /**
@@ -50,10 +48,8 @@ class PidbController extends BaseController
      */
     public function index(string $search = NULL) {
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -99,10 +95,8 @@ class PidbController extends BaseController
             ->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -226,10 +220,8 @@ class PidbController extends BaseController
         $remaining_eur = ($total_rsd / $kurs) - $avans_eur - $income_eur;
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -317,10 +309,8 @@ class PidbController extends BaseController
         $clients_list = $this->entityManager->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -626,7 +616,7 @@ class PidbController extends BaseController
         // Set document information
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor($company_info['name']);
-        $pdf->SetTitle($company_info['name'] . ' - Dokument');
+        $pdf->SetTitle($company_info['name'] . ' - Radni nalog');
         $pdf->SetSubject($company_info['name']);
         $pdf->SetKeywords($company_info['name'] . ', PDF, Proforma, Invoice');
 
@@ -1182,10 +1172,8 @@ class PidbController extends BaseController
         }
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -1338,10 +1326,8 @@ class PidbController extends BaseController
         }
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             // 'user_role_id' => $this->user_role_id,
             'transactions' => $transactions_with_accounting_document,
         ];
@@ -1379,10 +1365,8 @@ class PidbController extends BaseController
           : "bg-danger text-white";
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $this->user_role_id,
             'pidb_id' => $pidb_id,
             'pidb' => $pidb,
@@ -1412,10 +1396,8 @@ class PidbController extends BaseController
         $client_id = $pidb->getClient()->getId();
         $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -1492,10 +1474,8 @@ class PidbController extends BaseController
 
         $preferences = $this->entityManager->find(Preferences::class, 1);
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -1616,10 +1596,8 @@ class PidbController extends BaseController
             ->getRepository(AccountingDocument::class)->getLastAccountingDocument();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'proformas' => $proformas,
             'proformas_archived' => $proformas_archived,
             'delivery_notes' => $delivery_notes,
@@ -1732,10 +1710,8 @@ class PidbController extends BaseController
         $daily_cash_saldo = $this->entityManager->getRepository(Payment::class)->getDailyCashSaldo();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'daily_transactions' => $daily_transactions_with_accounting_document,
             'daily_cash_saldo' => $daily_cash_saldo,
             'tools_menu' => [

@@ -22,7 +22,6 @@ class ClientController extends BaseController
 
     protected string $page_title;
     protected string $page;
-    private string $stylesheet;
     protected $countries;
     protected $cities;
     protected $streets;
@@ -35,7 +34,6 @@ class ClientController extends BaseController
 
         $this->page_title = 'Klijenti';
         $this->page = 'clients';
-        $this->stylesheet = '/../libraries/';
         $this->countries = $this->entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
         $this->cities = $this->entityManager->getRepository(City::class)->findBy([], ['name' => 'ASC']);
         $this->streets = $this->entityManager->getRepository(Street::class)->findBy([], ['name' => 'ASC']);
@@ -52,10 +50,8 @@ class ClientController extends BaseController
         $this->isUserNotLoggedIn();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -80,10 +76,8 @@ class ClientController extends BaseController
         $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -113,10 +107,8 @@ class ClientController extends BaseController
         $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -212,10 +204,8 @@ class ClientController extends BaseController
      */
     public function addClientForm() {
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -398,10 +388,8 @@ class ClientController extends BaseController
      */
     public function addCountryForm(): void {
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -464,10 +452,8 @@ class ClientController extends BaseController
      */
     public function addCityForm(): void {
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -528,10 +514,8 @@ class ClientController extends BaseController
         $this->isUserNotLoggedIn();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -592,10 +576,8 @@ class ClientController extends BaseController
         }
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_id' => $this->user_id,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
@@ -636,10 +618,8 @@ class ClientController extends BaseController
         $clients= $this->entityManager->getRepository(Client::class)->search($term);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'clients' => $clients,
         ];
 

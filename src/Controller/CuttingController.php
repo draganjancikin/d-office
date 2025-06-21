@@ -28,7 +28,6 @@ class CuttingController extends BaseController
 
     private $page = 'cuttings';
     private $page_title = 'Krojne liste';
-    private $stylesheet = '/../libraries/';
 
     /**
      * Cutting home page.
@@ -45,10 +44,8 @@ class CuttingController extends BaseController
         $cutting_sheets = $this->entityManager->getRepository(CuttingSheet::class)->getLastCuttingSheets(10);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'tools_menu' => [
                 'cutting' => FALSE,
             ],
@@ -83,10 +80,8 @@ class CuttingController extends BaseController
         }
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'clients_list' => $clients_list,
@@ -172,10 +167,8 @@ class CuttingController extends BaseController
         $fence_models = $this->entityManager->getRepository(FenceModel::class)->findBy([], ['name' => 'ASC']);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -232,10 +225,8 @@ class CuttingController extends BaseController
         $fence_models = $this->entityManager->getRepository(FenceModel::class)->findBy([], ['name' => 'ASC']);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'client' => $client,
@@ -838,10 +829,8 @@ class CuttingController extends BaseController
         $last_cutting_sheet = $this->entityManager->getRepository(CuttingSheet::class)->getLastCuttingSheet();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'cuttings' => $cuttings,
             'last_cutting_sheet' => $last_cutting_sheet,
         ];

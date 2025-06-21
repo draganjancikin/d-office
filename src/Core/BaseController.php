@@ -17,6 +17,8 @@ class BaseController {
     public $user_role_id;
     public $entityManager;
     protected $twig;
+    private $app_version;
+    private $stylesheet;
 
     /**
      * BaseController constructor.
@@ -26,6 +28,8 @@ class BaseController {
         if (isset($_SESSION['username'])) $this->username = $_SESSION['username'];
         if (isset($_SESSION['user_role_id'])) $this->user_role_id = $_SESSION['user_role_id'];
         $this->entityManager = EntityManagerFactory::getEntityManager();
+        $this->app_version = APP_VERSION;
+        $this->stylesheet = '/../libraries/';
 
         // Set up Twig.
         $loader = new FilesystemLoader(__DIR__ . '/../../templates'); // adjust to your actual path
@@ -44,6 +48,9 @@ class BaseController {
      *   Associative array of variables to pass
      */
     public function render(string $template, array $context = []) {
+        $context['app_version'] = $this->app_version;
+        $context['stylesheet'] = $this->stylesheet;
+
         echo $this->twig->render($template, $context);
     }
 

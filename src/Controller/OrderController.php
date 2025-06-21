@@ -25,7 +25,6 @@ class OrderController extends BaseController
 
     private $page;
     private $page_title;
-    private $stylesheet;
 
     /**
      * OrderController constructor.
@@ -35,7 +34,6 @@ class OrderController extends BaseController
 
         $this->page = 'order';
         $this->page_title = 'Narudžbenice';
-        $this->stylesheet = '/../libraries/';
     }
 
     /**
@@ -90,10 +88,8 @@ class OrderController extends BaseController
         ];
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -131,10 +127,8 @@ class OrderController extends BaseController
         }
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'suppliers' => $suppliers,
@@ -226,10 +220,8 @@ class OrderController extends BaseController
         $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -289,7 +281,6 @@ class OrderController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -621,7 +612,6 @@ class OrderController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'material_on_order_id' => $material_on_order_id,
@@ -988,10 +978,8 @@ class OrderController extends BaseController
         ];
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'orders_data' => $orders_data,
             'orders_archived_data' => $orders_archived_data,
             'order_status_classes' => $order_status_classes,

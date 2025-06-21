@@ -21,7 +21,6 @@ class ArticleController extends BaseController
 
     private $page;
     private $page_title;
-    private $stylesheet;
 
     /**
      * ArticleController constructor.
@@ -31,7 +30,6 @@ class ArticleController extends BaseController
 
         $this->page = 'article';
         $this->page_title = 'Proizvodi';
-        $this->stylesheet = '/../libraries/';
     }
 
     /**
@@ -51,7 +49,6 @@ class ArticleController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -84,7 +81,6 @@ class ArticleController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'article_groups' => $article_groups,
@@ -156,10 +152,8 @@ class ArticleController extends BaseController
         $property_list = $this->entityManager->getRepository(Property::class)->findAll();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -196,10 +190,8 @@ class ArticleController extends BaseController
         $property_list = $this->entityManager->getRepository(Property::class)->findAll();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -337,10 +329,8 @@ class ArticleController extends BaseController
         $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->findAll();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -361,10 +351,8 @@ class ArticleController extends BaseController
         $this->isUserNotLoggedIn();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
         ];
@@ -408,10 +396,8 @@ class ArticleController extends BaseController
         $article_group_data = $this->entityManager->find(ArticleGroup::class, $group_id);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'group_id' => $group_id,
@@ -441,10 +427,8 @@ class ArticleController extends BaseController
         $article_group_data = $this->entityManager->find("\App\Entity\ArticleGroup", $group_id);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'group_id' => $group_id,
@@ -501,10 +485,8 @@ class ArticleController extends BaseController
         $preferences = $this->entityManager->find(Preferences::class, 1);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -537,10 +519,8 @@ class ArticleController extends BaseController
         $preferences = $this->entityManager->find(Preferences::class, 1);
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'article_groups' => $article_groups,
             'articles' => $articles,
             'preferences' => $preferences,

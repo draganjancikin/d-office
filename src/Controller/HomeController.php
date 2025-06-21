@@ -28,9 +28,7 @@ class HomeController extends BaseController
     public function index(): void
     {
         $data = [
-            'app_version' => APP_VERSION,
             'page_title' => 'D-Office 2025',
-            'stylesheet' => 'libraries/',
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'page' => 'home',
@@ -60,7 +58,6 @@ class HomeController extends BaseController
     {
         $data = [
             'page_title' => APP_VERSION,
-            'stylesheet' => 'libraries/',
         ];
 
         $this->render('home/login_form.html.twig', $data);

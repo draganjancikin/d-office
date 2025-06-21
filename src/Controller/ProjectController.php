@@ -28,7 +28,6 @@ class ProjectController extends BaseController
 
     private $page;
     private $page_title;
-    private $stylesheet;
 
     /**
      * ArticleController constructor.
@@ -38,7 +37,6 @@ class ProjectController extends BaseController
 
         $this->page = 'project';
         $this->page_title = 'Projekti';
-        $this->stylesheet = '/../libraries/';
     }
 
     /**
@@ -157,7 +155,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -191,7 +188,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -409,7 +405,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -455,7 +450,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -586,7 +580,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -940,7 +933,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -1391,7 +1383,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'active_projects_data' => $active_projects_data,
             'inactive_projects_data' => $inactive_projects_data,
         ];
@@ -1468,7 +1459,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,

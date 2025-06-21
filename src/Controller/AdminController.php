@@ -21,7 +21,6 @@ class AdminController extends BaseController
 
     private $page;
     private $page_title;
-    private $stylesheet;
 
     /**
      * AdminController constructor.
@@ -31,7 +30,6 @@ class AdminController extends BaseController
 
         $this->page = 'admin';
         $this->page_title = 'Admin';
-        $this->stylesheet = '/../libraries/';
     }
 
     /**
@@ -45,10 +43,8 @@ class AdminController extends BaseController
         $this->isUserNotLoggedIn();
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'tools_menu' => [
@@ -72,10 +68,8 @@ class AdminController extends BaseController
         $company = $this->entityManager->find(CompanyInfo::class, '1');
 
         $data = [
-            'app_version' => APP_VERSION,
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
@@ -110,7 +104,6 @@ class AdminController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'username' => $this->username,
             'user_role_id' => $this->user_role_id,
             'entityManager' => $this->entityManager,
