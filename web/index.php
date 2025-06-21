@@ -181,6 +181,7 @@ $router->add('GET', '/project/{project_id}/task/{task_id}/setEndDate', 'ProjectC
 $router->add('POST', '/project/{project_id}/task/{task_id}/addNote', 'ProjectController@addTaskNote');
 $router->add('GET', '/project/{project_id}/task/{task_id}/note/{note_id}/delete', 'ProjectController@deleteTaskNote');
 
+$router->add('GET', '/projects/search/', 'ProjectController@search');
 $router->add('GET', '/projects/advancedSearch', 'ProjectController@advancedSearch');
 $router->add('POST', '/projects/advancedSearch', 'ProjectController@advancedSearch');
 
