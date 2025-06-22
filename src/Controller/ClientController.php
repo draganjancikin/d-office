@@ -52,9 +52,6 @@ class ClientController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'search' => $search,
             'tools_menu' => [
                 'client' => FALSE,
@@ -72,15 +69,15 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function view($client_id, $contact_id = NULL, $search = NULL) {
+    public function view($client_id, $contact_id = NULL, $search = NULL): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
         $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'search' => $search,
             'client' => $client,
             'tools_menu' => [
@@ -89,9 +86,6 @@ class ClientController extends BaseController
             ],
             'contact_types' => $this->entityManager->getRepository(ContactType::class)->findAll(),
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('client/view.html.twig', $data);
     }
@@ -103,15 +97,16 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function editClientForm($client_id) {
+    public function editClientForm($client_id):void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'client' => $client,
             'client_types' => $this->entityManager->getRepository(ClientType::class)->findAll(),
             'countries' => $this->countries,
@@ -124,9 +119,6 @@ class ClientController extends BaseController
             'contact_types' => $this->entityManager->getRepository(ContactType::class)->findAll(),
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
         $this->render('client/edit.html.twig', $data);
     }
 
@@ -137,7 +129,8 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function editClient($client_id): void {
+    public function editClient($client_id): void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
         $type_id = $_POST["type_id"];
@@ -202,22 +195,19 @@ class ClientController extends BaseController
     /**
      * @return void
      */
-    public function addClientForm() {
+    public function addClientForm(): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'client_types' => $this->entityManager->getRepository(ClientType::class)->findAll(),
             'countries' => $this->countries,
             'cities' => $this->cities,
             'streets' => $this->streets,
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('client/add.html.twig', $data);
     }
@@ -227,7 +217,8 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function addClient(): void {
+    public function addClient(): void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
         $type_id = $_POST["type_id"];
@@ -297,7 +288,8 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function editContact($client_id, $contact_id): void {
+    public function editContact($client_id, $contact_id): void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
         $contact_type_id = $_POST["contact_type_id"];
@@ -328,7 +320,8 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function addContact($client_id): void {
+    public function addContact($client_id): void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
         $client = $this->entityManager->find(Client::class, $client_id);
 
@@ -368,7 +361,8 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function removeContact($client_id, $contact_id): void {
+    public function removeContact($client_id, $contact_id): void
+    {
         $client = $this->entityManager->find(Client::class, $client_id);
         $contact = $this->entityManager->find(Contact::class, $contact_id);
 
@@ -386,18 +380,15 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function addCountryForm(): void {
+    public function addCountryForm(): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('client/add_country.html.twig', $data);
     }
@@ -407,7 +398,8 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function addCountry(): void {
+    public function addCountry(): void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
         if (empty($_POST['name'])) {
@@ -450,20 +442,17 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function addCityForm(): void {
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
-        ];
-
+    public function addCityForm(): void
+    {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-      $this->render('client/add_city.html.twig', $data);
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+        ];
+
+        $this->render('client/add_city.html.twig', $data);
     }
 
     /**
@@ -471,7 +460,8 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function addCity(): void {
+    public function addCity(): void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
         if (empty($_POST['name'])) {
@@ -516,10 +506,6 @@ class ClientController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
         ];
 
         $this->render('client/add_street.html.twig', $data);
@@ -530,7 +516,8 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function addStreet():void {
+    public function addStreet():void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
         if (empty($_POST['name'])) {
@@ -567,7 +554,11 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function advancedSearch(): void {
+    public function advancedSearch(): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         if (isset($_POST['submit'])) {
             $term = $_POST["client"];
             $street = $_POST["street"];
@@ -578,15 +569,8 @@ class ClientController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'clients' => $clients_data ?? NULL,
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('client/advanced_search.html.twig', $data);
     }
@@ -598,7 +582,8 @@ class ClientController extends BaseController
      *
      * @return string
      */
-    public function basicValidation($str): string {
+    public function basicValidation($str): string
+    {
         return trim(htmlspecialchars($str));
     }
 

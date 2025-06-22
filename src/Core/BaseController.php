@@ -17,8 +17,8 @@ class BaseController {
     public $user_role_id;
     public $entityManager;
     protected $twig;
-    private $app_version;
-    private $stylesheet;
+    protected $app_version;
+    protected $stylesheet;
 
     /**
      * BaseController constructor.
