@@ -155,9 +155,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'search' => $search,
             'cities' => $cities,
             'tools_menu' => [
@@ -188,9 +185,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'clients_list' => $clients_list,
         ];
 
@@ -405,9 +399,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'project_id' => $project_id,
             'project_data' => $project_data,
             'client' => $client,
@@ -450,9 +441,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'project_id' => $project_id,
             'project_data' => $project_data,
             'client' => $client,
@@ -556,6 +544,9 @@ class ProjectController extends BaseController
      */
     public function editTaskForm(int $project_id, int $task_id): void
     {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $task = $this->entityManager->find(ProjectTask::class, $task_id);
         $project = $this->entityManager->find(Project::class, $project_id);
         $project_data = $this->entityManager->find(Project::class, $project_id);
@@ -580,9 +571,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'task_id' => $task_id,
             'task' => $task,
             'task_data' => $task_data,
@@ -592,9 +580,6 @@ class ProjectController extends BaseController
             'employees_list' => $employees_list,
             'task_notes' => $task_notes,
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('project/editTask.html.twig', $data);
     }
@@ -878,8 +863,6 @@ class ProjectController extends BaseController
             $city_name = $city->getName();
         }
 
-//        $active_projects = $this->entityManager->getRepository(Project::class)->projectTracking('1');
-
         $active_projects = $this->entityManager->getRepository(Project::class)->projectTrackingByCity('1', $city_id);
 
         $active_projects_data = [];
@@ -933,9 +916,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'city_id' => $city_id,
             'city' => $city,
             'cities' => $cities,
@@ -1016,7 +996,6 @@ class ProjectController extends BaseController
 
         $data = [
             'page' => $this->page,
-            'entityManager' => $this->entityManager,
             'project_id' => $project_id,
             'project' => $project,
             'company_info' => $company_info,
@@ -1091,7 +1070,6 @@ class ProjectController extends BaseController
 
         $data = [
             'page' => $this->page,
-            'entityManager' => $this->entityManager,
             'project_id' => $project_id,
             'company_info' => $company_info,
             'project' => $project,
@@ -1165,7 +1143,6 @@ class ProjectController extends BaseController
 
         $data = [
             'page' => $this->page,
-            'entityManager' => $this->entityManager,
             'project_id' => $project_id,
             'company_info' => $company_info,
             'client' => $client,
@@ -1459,10 +1436,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
-//            'project_advanced_search_list' =>$project_advanced_search_list,
             'project_advanced_search_list_data' => $project_advanced_search_list_data,
         ];
 

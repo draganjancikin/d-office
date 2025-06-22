@@ -48,9 +48,6 @@ class MaterialController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'search' => $search,
             'materials' => $materials,
             'preferences' => $preferences,
@@ -76,8 +73,6 @@ class MaterialController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'units' => $units,
         ];
 
@@ -89,7 +84,8 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function add(){
+    public function add(): void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
         if (empty($_POST['name'])) {
@@ -160,8 +156,6 @@ class MaterialController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'material_id' => $material_id,
             'material' => $material,
             'material_suppliers' => $material_suppliers,
@@ -203,9 +197,6 @@ class MaterialController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'material_id' => $material_id,
             'material' => $material,
             'material_suppliers' => $material_suppliers,
@@ -230,7 +221,8 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function edit($material_id): void {
+    public function edit($material_id): void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
         if (empty($_POST['name'])) {
@@ -317,7 +309,8 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function addProperty($material_id) {
+    public function addProperty($material_id): void
+    {
         $material = $this->entityManager->find(Material::class, $material_id);
 
         $property_item_id = htmlspecialchars($_POST['property_item_id']);
@@ -347,7 +340,8 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function editSupplier($material_id, $supplier_id) {
+    public function editSupplier($material_id, $supplier_id): void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
         $material = $this->entityManager->find(Material::class, $material_id);
@@ -382,7 +376,8 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function deleteSupplier($material_id, $supplier_id) {
+    public function deleteSupplier($material_id, $supplier_id): void
+    {
         $material_supplier =  $this->entityManager->find(MaterialSupplier::class, $supplier_id);
 
         $this->entityManager->remove($material_supplier);

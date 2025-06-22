@@ -90,9 +90,6 @@ class OrderController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'search' => $search,
             'materials' => $materials,
             'preferences' => $preferences,
@@ -129,8 +126,6 @@ class OrderController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'suppliers' => $suppliers,
             'projects' => $projects,
             'project_data' => $project_data,
@@ -144,7 +139,8 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function add(): void {
+    public function add(): void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
         $ordinal_num_in_year = 0;
@@ -222,9 +218,6 @@ class OrderController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'order_id' => $order_id,
             'order_data' => $order_data,
             'project_data' => $project_data,
@@ -281,9 +274,6 @@ class OrderController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'order_id' => $order_id,
             'order_data' => $order_data,
             'supplier_data' => $supplier_data,
@@ -314,7 +304,8 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function edit($order_id): void {
+    public function edit($order_id): void
+    {
         $user = $this->entityManager->find(User::class, $this->user_id);
         $order = $this->entityManager->find(Order::class, $order_id);
 
@@ -367,7 +358,8 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function delete($order_id) {
+    public function delete($order_id): void
+    {
         // Check if exist Order.
         if ($order = $this->entityManager->find(Order::class, $order_id)) {
 
@@ -415,7 +407,8 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function addMaterial($order_id): void {
+    public function addMaterial($order_id): void
+    {
         $order = $this->entityManager->find(Order::class, $order_id);
 
         $material_id = htmlspecialchars($_POST["material_id"]);
@@ -472,7 +465,8 @@ class OrderController extends BaseController
      * @param $order_material_id
      * @return void
      */
-    public function editMaterial($order_id, $order_material_id): void {
+    public function editMaterial($order_id, $order_material_id): void
+    {
         // Old material on Order.
         $old_material = $this->entityManager->find(OrderMaterial::class, $order_material_id);
         $old_material_id = $old_material->getMaterial()->getId();
@@ -612,8 +606,6 @@ class OrderController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'material_on_order_id' => $material_on_order_id,
             'material_data' => $material_data,
             'materials_by_supplier' => $materials_by_supplier,
@@ -632,7 +624,8 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function deleteMaterial($order_id, $order_material_id) {
+    public function deleteMaterial($order_id, $order_material_id): void
+    {
         $order_material = $this->entityManager->find(OrderMaterial::class, $order_material_id);
 
         // First remove properties from table v6_orders_materials_properties.
@@ -662,7 +655,8 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function duplicateMaterial($order_id, $order_material_id): void {
+    public function duplicateMaterial($order_id, $order_material_id): void
+    {
         $orderMaterial = $this->entityManager->find(OrderMaterial::class, $order_material_id);
 
         $newOrderMaterial = new OrderMaterial();
@@ -716,13 +710,10 @@ class OrderController extends BaseController
         $supplier_data = $this->entityManager
             ->getRepository(Client::class)->getClientData($order_data->getSupplier());
 
-//        $materials_on_order = $this->entityManager->getRepository(Order::class)->getMaterialsOnOrder($order_id);
-
-      $materials_on_order_data = $this->getOrderMaterialsData($order_id);
+        $materials_on_order_data = $this->getOrderMaterialsData($order_id);
 
         $data = [
             'order_id' => $order_id,
-//            'entityManager' => $this->entityManager,
             'order_data' => $order_data,
             'supplier_data' => $supplier_data,
             'company_info' => $company_info,
@@ -830,6 +821,10 @@ class OrderController extends BaseController
         }
     }
 
+    /**
+     * @param $order_id
+     * @return array
+     */
     protected function getOrderMaterialsData($order_id): array
     {
         $preferences = $this->entityManager->find(Preferences::class, 1);
@@ -891,6 +886,10 @@ class OrderController extends BaseController
         return $materials_on_order_data;
     }
 
+    /**
+     * @param int $order_id
+     * @return float
+     */
     private function getOrderTotalTaxBaseRSD(int $order_id): float
     {
         $order_materials_data = $this->getOrderMaterialsData($order_id);
@@ -901,7 +900,12 @@ class OrderController extends BaseController
         return $total_tax_base_rsd;
     }
 
-    private function getOrderTotalTaxAmountRSD(int $order_id) {
+    /**
+     * @param int $order_id
+     * @return float
+     */
+    private function getOrderTotalTaxAmountRSD(int $order_id): float
+    {
         $order_materials_data = $this->getOrderMaterialsData($order_id);
         $total_tax_amount_rsd = 0;
         foreach ($order_materials_data as $index => $order_material_data) {

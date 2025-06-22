@@ -82,8 +82,6 @@ class CuttingController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'clients_list' => $clients_list,
             'client_id' => $client_id,
             'client' => $client ?? NULL,
@@ -169,9 +167,6 @@ class CuttingController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'cutting_id' => $cutting_id,
             'cutting' => $cutting,
             'client' => $client,
@@ -227,8 +222,6 @@ class CuttingController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'client' => $client,
             'cutting_id' => $cutting_id,
             'cutting' => $cutting,
@@ -312,11 +305,9 @@ class CuttingController extends BaseController
         }
 
         $data = [
-          'company_info' => $company_info,
-          'cutting_sheet' => $cutting_sheet,
-          'articles_data' => $articles_data,
-//            'entityManager' => $this->entityManager,
-//            'cutting_id' => $cutting_id,
+            'company_info' => $company_info,
+            'cutting_sheet' => $cutting_sheet,
+            'articles_data' => $articles_data,
         ];
 
         // Render HTML content from a Twig template (or similar)
@@ -640,22 +631,22 @@ class CuttingController extends BaseController
         // Check if exist CuttingSheet.
         if ($cs = $this->entityManager->find(CuttingSheet::class, $cutting_id)) {
 
-          // Check if exist Article in CuttingSheet.
-          if ($cs_articles = $this->entityManager->getRepository(CuttingSheetArticle::class)->getCuttingSheetArticles
-          ($cutting_id)) {
+            // Check if exist Article in CuttingSheet.
+            if ($cs_articles = $this->entityManager->getRepository(CuttingSheetArticle::class)->getCuttingSheetArticles
+            ($cutting_id)) {
 
-            // Loop through all Articles of CuttingSheet.
-            foreach ($cs_articles as $cs_article) {
-              // Remove Article.
-              $this->entityManager->remove($cs_article);
-              $this->entityManager->flush();
+                // Loop through all Articles of CuttingSheet.
+                foreach ($cs_articles as $cs_article) {
+                    // Remove Article.
+                    $this->entityManager->remove($cs_article);
+                    $this->entityManager->flush();
+                }
+
             }
 
-          }
-
-          // Remove CuttingSheet.
-          $this->entityManager->remove($cs);
-          $this->entityManager->flush();
+            // Remove CuttingSheet.
+            $this->entityManager->remove($cs);
+            $this->entityManager->flush();
         }
 
         die('<script>location.href = "/cuttings/?search=" </script>');
