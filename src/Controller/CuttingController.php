@@ -32,11 +32,9 @@ class CuttingController extends BaseController
     /**
      * Cutting home page.
      *
-     * @param string|null $search
-     *
      * @return void
      */
-    public function index(string $search = NULL): void
+    public function index(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -50,10 +48,6 @@ class CuttingController extends BaseController
                 'cutting' => FALSE,
             ],
             'cutting_sheets' => $cutting_sheets,
-            // 'username' => $this->username,
-            // 'user_role_id' => $this->user_role_id,
-            // 'entityManager' => $this->entityManager,
-            // 'search' => $search,
         ];
 
         $this->render('cutting/index.html.twig', $data);
@@ -488,8 +482,8 @@ class CuttingController extends BaseController
         $note = "ROLOSTIL szr je PDV obveznik.";
 
         $accounting_document__type_id = 1;
-        $accounting_document__type = $this->entityManager->find(AccountingDocumentType::class,
-          $accounting_document__type_id);
+        $accounting_document__type = $this->entityManager
+            ->find(AccountingDocumentType::class, $accounting_document__type_id);
 
         // Create a new AccountingDocument (Proforma).
         $newProforma = new AccountingDocument();

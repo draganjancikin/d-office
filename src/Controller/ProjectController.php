@@ -42,11 +42,9 @@ class ProjectController extends BaseController
     /**
      * Index action.
      *
-     * @param string|null $search
-     *
      * @return void
      */
-    public function index($search = NULL): void
+    public function index(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -155,7 +153,6 @@ class ProjectController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'search' => $search,
             'cities' => $cities,
             'tools_menu' => [
                 'project' => FALSE,
@@ -460,6 +457,7 @@ class ProjectController extends BaseController
      * Edit project.
      *
      * @param int $project_id
+     *
      * @return void
      */
     public function edit(int $project_id): void
@@ -1231,8 +1229,8 @@ class ProjectController extends BaseController
             $file_name = preg_replace('/[^a-zA-Z0-9-_\.]/', '_', $_FILES["file"]["name"]);
 
             if (file_exists($path . $file_name)) {
-              // Add date on the end of the file name.
-              $file_name = preg_replace('/\.[^.]+$/', '_' . date('Y-m-d_H-i-s') . '$0', $file_name);
+                // Add date on the end of the file name.
+                $file_name = preg_replace('/\.[^.]+$/', '_' . date('Y-m-d_H-i-s') . '$0', $file_name);
             }
 
             if (move_uploaded_file($_FILES["file"]["tmp_name"], $path . $file_name)) {

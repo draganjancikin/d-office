@@ -41,7 +41,7 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function index($search = NULL): void
+    public function index(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -90,7 +90,6 @@ class OrderController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'search' => $search,
             'materials' => $materials,
             'preferences' => $preferences,
             'orders_data' => $orders_data,
@@ -106,11 +105,11 @@ class OrderController extends BaseController
     /**
      * Form for adding a new order.
      *
-     * @param $project_id
+     * @param int $project_id
      *
      * @return void
      */
-    public function addForm($project_id = NULL): void
+    public function addForm(int $project_id = NULL): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -190,11 +189,11 @@ class OrderController extends BaseController
     /**
      * View order form.
      *
-     * @param $order_id
+     * @param int $order_id
      *
      * @return void
      */
-    public function view($order_id): void
+    public function view(int $order_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -243,11 +242,11 @@ class OrderController extends BaseController
     /**
      * Edit Order form.
      *
-     * @param $order_id
+     * @param int $order_id
      *
      * @return void
      */
-    public function editForm($order_id): void
+    public function editForm(int $order_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -300,11 +299,11 @@ class OrderController extends BaseController
     /**
      * Edit Order.
      *
-     * @param $order_id
+     * @param int $order_id
      *
      * @return void
      */
-    public function edit($order_id): void
+    public function edit(int $order_id): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
         $order = $this->entityManager->find(Order::class, $order_id);
@@ -354,11 +353,11 @@ class OrderController extends BaseController
     /**
      * Delete Order.
      *
-     * @param $order_id
+     * @param int $order_id
      *
      * @return void
      */
-    public function delete($order_id): void
+    public function delete(int $order_id): void
     {
         // Check if exist Order.
         if ($order = $this->entityManager->find(Order::class, $order_id)) {
@@ -377,8 +376,8 @@ class OrderController extends BaseController
                     ) {
                         // Remove Properties.
                         foreach ($order_material_properties as $order_material_property) {
-                            $orderMaterialProperty = $this->entityManager->find(OrderMaterialProperty::class,
-                              $order_material_property->getId());
+                            $orderMaterialProperty = $this->entityManager
+                                ->find(OrderMaterialProperty::class, $order_material_property->getId());
                             $this->entityManager->remove($orderMaterialProperty);
                             $this->entityManager->flush();
                         }
@@ -403,11 +402,11 @@ class OrderController extends BaseController
     /**
      * Add Material to Order.
      *
-     * @param $order_id
+     * @param int $order_id
      *
      * @return void
      */
-    public function addMaterial($order_id): void
+    public function addMaterial(int $order_id): void
     {
         $order = $this->entityManager->find(Order::class, $order_id);
 
@@ -461,11 +460,11 @@ class OrderController extends BaseController
     /**
      * Edit Material in Order.
      *
-     * @param $order_id
-     * @param $order_material_id
+     * @param int $order_id
+     * @param int $order_material_id
      * @return void
      */
-    public function editMaterial($order_id, $order_material_id): void
+    public function editMaterial(int $order_id, int $order_material_id): void
     {
         // Old material on Order.
         $old_material = $this->entityManager->find(OrderMaterial::class, $order_material_id);
@@ -587,12 +586,12 @@ class OrderController extends BaseController
     /**
      * Edit Material form.
      *
-     * @param $order_id
-     * @param $order_material_id
+     * @param int $order_id
+     * @param int $order_material_id
      *
      * @return void
      */
-    public function editMaterialForm($order_id, $order_material_id): void
+    public function editMaterialForm(int $order_id, int $order_material_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -619,12 +618,12 @@ class OrderController extends BaseController
     /**
      * Delete Material from Order.
      *
-     * @param $order_id
-     * @param $order_material_id
+     * @param int $order_id
+     * @param int $order_material_id
      *
      * @return void
      */
-    public function deleteMaterial($order_id, $order_material_id): void
+    public function deleteMaterial(int $order_id, int $order_material_id): void
     {
         $order_material = $this->entityManager->find(OrderMaterial::class, $order_material_id);
 
@@ -650,12 +649,12 @@ class OrderController extends BaseController
     /**
      * Duplicate Material on Order.
      *
-     * @param $order_id
-     * @param $order_material_id
+     * @param int $order_id
+     * @param int $order_material_id
      *
      * @return void
      */
-    public function duplicateMaterial($order_id, $order_material_id): void
+    public function duplicateMaterial(int $order_id, int $order_material_id): void
     {
         $orderMaterial = $this->entityManager->find(OrderMaterial::class, $order_material_id);
 
@@ -695,11 +694,11 @@ class OrderController extends BaseController
     /**
      * Print Order.
      *
-     * @param $order_id
+     * @param int $order_id
      *
      * @return void
      */
-    public function print($order_id): void
+    public function print(int $order_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -822,10 +821,13 @@ class OrderController extends BaseController
     }
 
     /**
-     * @param $order_id
+     * Get materials data for the order.
+     *
+     * @param int $order_id
+     *
      * @return array
      */
-    protected function getOrderMaterialsData($order_id): array
+    protected function getOrderMaterialsData(int $order_id): array
     {
         $preferences = $this->entityManager->find(Preferences::class, 1);
         $kurs = $preferences->getKurs();
@@ -888,6 +890,7 @@ class OrderController extends BaseController
 
     /**
      * @param int $order_id
+     *
      * @return float
      */
     private function getOrderTotalTaxBaseRSD(int $order_id): float
@@ -902,6 +905,7 @@ class OrderController extends BaseController
 
     /**
      * @param int $order_id
+     *
      * @return float
      */
     private function getOrderTotalTaxAmountRSD(int $order_id): float

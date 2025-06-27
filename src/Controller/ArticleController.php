@@ -37,7 +37,7 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function index($search = NULL): void
+    public function index(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -49,7 +49,6 @@ class ArticleController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'search' => $search,
             'article_groups' => $article_groups,
             'last_articles' => $last_articles,
             'preferences' => $preferences,
@@ -73,7 +72,7 @@ class ArticleController extends BaseController
         $this->isUserNotLoggedIn();
 
         $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->getArticleGroups();
-        $units = $this->entityManager->getRepository(Unit::class)->findBy(array(), array('name' => 'ASC'));
+        $units = $this->entityManager->getRepository(Unit::class)->findBy([], ['name' => 'ASC']);
 
         $data = [
             'page' => $this->page,
@@ -368,11 +367,11 @@ class ArticleController extends BaseController
     /**
      * Group view.
      *
-     * @param $group_id
+     * @param int $group_id
      *
      * @return void
      */
-    public function viewGroup($group_id): void
+    public function viewGroup(int $group_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -406,7 +405,7 @@ class ArticleController extends BaseController
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $article_group_data = $this->entityManager->find("\App\Entity\ArticleGroup", $group_id);
+        $article_group_data = $this->entityManager->find(ArticleGroup::class, $group_id);
 
         $data = [
             'page' => $this->page,

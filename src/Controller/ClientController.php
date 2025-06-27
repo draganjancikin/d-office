@@ -44,7 +44,7 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function index($search = NULL): void
+    public function index(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -52,7 +52,6 @@ class ClientController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'search' => $search,
             'tools_menu' => [
                 'client' => FALSE,
             ],
@@ -69,7 +68,7 @@ class ClientController extends BaseController
      *
      * @return void
      */
-    public function view($client_id, $contact_id = NULL, $search = NULL): void
+    public function view($client_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -78,7 +77,6 @@ class ClientController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'search' => $search,
             'client' => $client,
             'tools_menu' => [
                 'client' => TRUE,
@@ -283,12 +281,12 @@ class ClientController extends BaseController
     /**
      * Edit contact.
      *
-     * @param $client_id
-     * @param $contact_id
+     * @param int $client_id
+     * @param int $contact_id
      *
      * @return void
      */
-    public function editContact($client_id, $contact_id): void
+    public function editContact(int $client_id, int $contact_id): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
@@ -318,9 +316,11 @@ class ClientController extends BaseController
     /**
      * Add contact to client.
      *
+     * @param int $client_id
+     *
      * @return void
      */
-    public function addContact($client_id): void
+    public function addContact(int $client_id): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
         $client = $this->entityManager->find(Client::class, $client_id);
@@ -356,12 +356,12 @@ class ClientController extends BaseController
     /**
      * Remove contact from client.
      *
-     * @param $client_id
-     * @param $contact_id
+     * @param int $client_id
+     * @param int $contact_id
      *
      * @return void
      */
-    public function removeContact($client_id, $contact_id): void
+    public function removeContact(int $client_id, int $contact_id): void
     {
         $client = $this->entityManager->find(Client::class, $client_id);
         $contact = $this->entityManager->find(Contact::class, $contact_id);

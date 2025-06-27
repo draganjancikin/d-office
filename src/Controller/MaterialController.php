@@ -38,7 +38,7 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function index($search = NULL): void
+    public function index(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -48,7 +48,6 @@ class MaterialController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'search' => $search,
             'materials' => $materials,
             'preferences' => $preferences,
             'tools_menu' => [
@@ -145,12 +144,12 @@ class MaterialController extends BaseController
         $this->isUserNotLoggedIn();
 
         $material = $this->entityManager->find(Material::class, $material_id);
-        $material_suppliers = $this->entityManager->getRepository(MaterialSupplier::class)->getMaterialSuppliers
-        ($material_id);
-        $material_properties = $this->entityManager->getRepository(MaterialProperty::class)->getMaterialProperties
-        ($material_id);
-        $suppliers = $this->entityManager->getRepository(Client::class)->findBy(array('is_supplier' => 1), array('name' =>
-          'ASC') );
+        $material_suppliers = $this->entityManager
+            ->getRepository(MaterialSupplier::class)->getMaterialSuppliers($material_id);
+        $material_properties = $this->entityManager
+            ->getRepository(MaterialProperty::class)->getMaterialProperties($material_id);
+        $suppliers = $this->entityManager
+            ->getRepository(Client::class)->findBy(['is_supplier' => 1], ['name' => 'ASC']);
         $property_list = $this->entityManager->getRepository(Property::class)->findAll();
 
         $data = [
@@ -283,7 +282,7 @@ class MaterialController extends BaseController
 
         $price = 0;
         if ($_POST['price']) {
-          $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
+            $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
         }
 
         $newMaterialSupplier = new MaterialSupplier();
@@ -305,11 +304,11 @@ class MaterialController extends BaseController
     /**
      * Add property to material.
      *
-     * @param $material_id
+     * @param int $material_id
      *
      * @return void
      */
-    public function addProperty($material_id): void
+    public function addProperty(int $material_id): void
     {
         $material = $this->entityManager->find(Material::class, $material_id);
 
@@ -335,12 +334,12 @@ class MaterialController extends BaseController
     /**
      * Edit supplier.
      *
-     * @param $material_id
-     * @param $supplier_id
+     * @param int $material_id
+     * @param int $supplier_id
      *
      * @return void
      */
-    public function editSupplier($material_id, $supplier_id): void
+    public function editSupplier(int $material_id, int $supplier_id): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
@@ -371,12 +370,12 @@ class MaterialController extends BaseController
     /**
      * Delete supplier.
      *
-     * @param $material_id
-     * @param $supplier_id
+     * @param int $material_id
+     * @param int $supplier_id
      *
      * @return void
      */
-    public function deleteSupplier($material_id, $supplier_id): void
+    public function deleteSupplier(int $material_id, int $supplier_id): void
     {
         $material_supplier =  $this->entityManager->find(MaterialSupplier::class, $supplier_id);
 
@@ -389,12 +388,13 @@ class MaterialController extends BaseController
     /**
      * Delete property from material.
      *
-     * @param $material_id
-     * @param $property_id
+     * @param int $material_id
+     * @param int $property_id
      *
      * @return void
      */
-    public function deleteProperty($material_id, $property_id) {
+    public function deleteProperty(int $material_id, int $property_id): void
+    {
         $material_property = $this->entityManager->find(MaterialProperty::class, $property_id);
 
         $this->entityManager->remove($material_property);
