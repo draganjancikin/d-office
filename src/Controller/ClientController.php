@@ -558,11 +558,23 @@ class ClientController extends BaseController
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
+        $client_name = $street_name = $city_name = NULL;
 
         if (isset($_POST['submit'])) {
             $term = $_POST["client"];
+            if ($term) {
+                $client_name = $this->basicValidation($term);
+            }
+
             $street = $_POST["street"];
+            if ($street) {
+                $street_name = $this->basicValidation($street);
+            }
+
             $city = $_POST["city"];
+            if ($city) {
+                $city_name = $this->basicValidation($city);
+            }
             $clients_data = $this->entityManager->getRepository(Client::class)->advancedSearch($term, $street, $city);
         }
 
@@ -570,6 +582,9 @@ class ClientController extends BaseController
             'page' => $this->page,
             'page_title' => $this->page_title,
             'clients' => $clients_data ?? NULL,
+            'client_name' => $client_name,
+            'street_name' => $street_name,
+            'city_name' => $city_name,
         ];
 
         $this->render('client/advanced_search.html.twig', $data);
