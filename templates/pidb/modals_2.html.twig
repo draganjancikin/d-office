@@ -79,7 +79,9 @@
                     <div class="row mb-2">
                         <label for="amount" class="col-sm-3 col-form-label">Iznos:</label>
                         <div class="col-sm-5">
-                            <input type="text" class="form-control form-control-sm" name="amount" id="amount" value="" placeholder="Unesite iznos" />
+                            <input type="number" class="form-control form-control-sm" name="amount" id="amount"
+                                   value="" step="0.0001" min="0" max="9999.9999"
+                                   placeholder="Unesite iznos" />
                         </div>
                     </div>
 

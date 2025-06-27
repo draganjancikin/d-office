@@ -74,9 +74,8 @@
                     {% set property_cout = property_cout + 1 %}
                     {% if  property_cout == 2 %}x{% endif %}
                     {{ accounting_document_article_property.quantity|number_format(2, ',', '.') }}cm
-                    -
-                    {{ accounting_document_article_data.article.pieces }}kom
                 {% endfor %}
+                - {{ accounting_document_article_data.article.pieces }}kom
             </td>
             <td align="center" width="35px">{{ accounting_document_article_data.article.unit }}</td>
             <td width="53px" align="right">
