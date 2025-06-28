@@ -1,0 +1,70 @@
+<form method="get" action="/articles/price-list">
+    <div class="form-group row">
+        <div class="col-sm-5">
+            <select class="form-select form-select-sm" name="group_id">
+                {% for article_group in article_groups %}
+                  <option value="{{ article_group.getId() }}">
+                    {{ article_group.getName() }}
+                  </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-sm-5">
+            <button type="submit" class="btn btn-sm btn-outline-secondary">Prikaži cenovnik</button>
+        </div>
+    </div>
+</form>
+<!-- *********** End OLD CODE ********* -->
+
+<div class="card mb-4">
+    <div class="card-header py-2">
+        <h6 class="m-0 font-weight-bold text-primary"><?php echo $title ?></h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class=" table table-bordered table-hover" id="" width="100%" cellspacing="0">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="px-1">#</th>
+                        <th class="px-1">Naziv</th>
+                        <th class="px-1">jed. mere</th>
+                        <th class="px-1">cena <br />(RSD sa PDV-om)</th>
+                        <th class="px-1">cena <br />(EUR sa PDV-om)</th>
+                    </tr>
+                </thead>
+                <tfoot class="thead-light">
+                    <tr>
+                        <th class="px-1">#</th>
+                        <th class="px-1">Naziv</th>
+                        <th class="px-1">jed. mere</th>
+                        <th class="px-1">cena <br />(RSD sa PDV-om)</th>
+                        <th class="px-1">cena <br />(EUR sa PDV-om)</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% set count = 0 %}
+                    {% for article_data in articles_by_group  %}
+                        {% set count = count + 1 %}
+                        <tr>
+                            <td class="px-1">{{ count }}</td>
+                            <td class="px-1">
+                                <a href="/article/{{ article_data.getId() }}">
+                                    {{ article_data.getName() }}
+                                </a>
+                            </td>
+                            <td class="px-1">{{ article_data.getUnit().getName() }}</td>
+                            <td class="px-1">
+                                {{ (article_data.getPrice() * preferences.getKurs() * (preferences.getTax() / 100 + 1))|number_format(2, ',', '.') }}
+                            </td>
+                            <td class="px-1">
+                                {{ (article_data.getPrice * (preferences.getTax() / 100 + 1))|number_format(4, ',', '.') }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- End Card Body -->
+</div>

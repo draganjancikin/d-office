@@ -6,8 +6,17 @@ use App\Core\BaseController;
 use App\Entity\AccountingDocument;
 use App\Entity\AccountingDocumentArticle;
 use App\Entity\AccountingDocumentArticleProperty;
+use App\Entity\AccountingDocumentType;
+use App\Entity\Article;
+use App\Entity\ArticleProperty;
+use App\Entity\Client;
+use App\Entity\CompanyInfo;
 use App\Entity\CuttingSheet;
 use App\Entity\CuttingSheetArticle;
+use App\Entity\FenceModel;
+use App\Entity\Preferences;
+use App\Entity\User;
+use TCPDF;
 
 /**
  * CuttingController class
@@ -17,30 +26,31 @@ use App\Entity\CuttingSheetArticle;
 class CuttingController extends BaseController
 {
 
+    private $page = 'cuttings';
+    private $page_title = 'Krojne liste';
+
     /**
      * Cutting home page.
      *
-     * @param string|null $search
-     *
      * @return void
      */
-    public function index(string $search = NULL): void
+    public function index(): void
     {
-        $data = [
-            'page_title' => 'Krojne liste',
-            'stylesheet' => '../libraries/',
-            // 'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'page' => 'cuttings',
-            'entityManager' => $this->entityManager,
-            'search' => $search,
-        ];
-
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('index', $data);
+        $cutting_sheets = $this->entityManager->getRepository(CuttingSheet::class)->getLastCuttingSheets(10);
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'tools_menu' => [
+                'cutting' => FALSE,
+            ],
+            'cutting_sheets' => $cutting_sheets,
+        ];
+
+        $this->render('cutting/index.html.twig', $data);
     }
 
     /**
@@ -53,26 +63,25 @@ class CuttingController extends BaseController
      */
     public function formAdd(int $project_id = NULL, int $client_id = NULL): void
     {
-        $clients_list = $this->entityManager->getRepository('\App\Entity\Client')->findBy(array(), array('name' => "ASC"));
-        if ($client_id) {
-            $client_data = $this->entityManager->find('\App\Entity\Client', $client_id);
-        }
-
-        $data = [
-            'page_title' => 'Krojne liste',
-            'stylesheet' => '/../libraries/',
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'page' => 'cutting',
-            'clients_list' => $clients_list,
-            'client_id' => $client_id,
-            'client_data' => $client_data ?? NULL,
-        ];
-
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('add', $data);
+        $clients_list = $this->entityManager->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
+
+        if (isset($_GET['client_id'])) {
+            $client_id = htmlspecialchars($_GET['client_id']);
+            $client = $this->entityManager->find(Client::class, $client_id);
+        }
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'clients_list' => $clients_list,
+            'client_id' => $client_id,
+            'client' => $client ?? NULL,
+        ];
+
+        $this->render('cutting/add.html.twig', $data);
     }
 
     /**
@@ -85,14 +94,14 @@ class CuttingController extends BaseController
      */
     public function add(int $project_id = NULL, int $client_id = NULL): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         $ordinal_num_in_year = 0;
 
         if (!$client_id) {
             $client_id = htmlspecialchars($_POST['client_id']);
         }
-        $client = $this->entityManager->find("\App\Entity\Client", $client_id);
+        $client = $this->entityManager->find(Client::class, $client_id);
 
         $newCuttingSheet = new CuttingSheet();
 
@@ -109,7 +118,7 @@ class CuttingController extends BaseController
         $new__cutting_sheet__id = $newCuttingSheet->getId();
 
         // Set Ordinal Number In Year.
-        $this->entityManager->getRepository('App\Entity\CuttingSheet')->setOrdinalNumInYear($new__cutting_sheet__id);
+        $this->entityManager->getRepository(CuttingSheet::class)->setOrdinalNumInYear($new__cutting_sheet__id);
 
         die('<script>location.href = "/cutting/'.$new__cutting_sheet__id.'" </script>');
     }
@@ -123,28 +132,50 @@ class CuttingController extends BaseController
      */
     public function view(int $cutting_id): void
     {
-        $cutting_data = $this->entityManager->find('\App\Entity\CuttingSheet', $cutting_id);
-        $client = $this->entityManager->getRepository('\App\Entity\Client')->getClientData($cutting_data->getClient()->getId());
-
-        $fence_models = $this->entityManager->getRepository('\App\Entity\FenceModel')->findBy(array(), array('name' => 'ASC'));
-
-        $data = [
-            'page_title' => 'Krojne liste',
-            'stylesheet' => '/../libraries/',
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'page' => 'cutting',
-            'entityManager' => $this->entityManager,
-            'cutting_id' => $cutting_id,
-            'cutting_data' => $cutting_data,
-            'client' => $client,
-            'fence_models' => $fence_models,
-        ];
-
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('view', $data);
+        $cutting = $this->entityManager->find(CuttingSheet::class, $cutting_id);
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($cutting->getClient()->getId());
+
+        $cutting_sheet_articles = $this->entityManager->getRepository(CuttingSheet::class)
+          ->getArticlesOnCuttingSheet($cutting_id);
+
+        $total_picket_lenght = 0;
+        $total_cap = 0;
+        foreach ($cutting_sheet_articles as $cutting_sheet_article) {
+            $cutting_sheet__article__picket_number = $this->entityManager
+                ->getRepository(CuttingSheetArticle::class)
+                ->getPicketsNumber($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
+
+            $cutting_sheet__article__picket_lenght = $this->entityManager
+                ->getRepository(CuttingSheetArticle::class)
+                ->getPicketsLength($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
+
+            $total_picket_lenght = $total_picket_lenght + $cutting_sheet__article__picket_lenght;
+            $total_cap = $total_cap + $cutting_sheet__article__picket_number;
+        }
+
+        $fence_models = $this->entityManager->getRepository(FenceModel::class)->findBy([], ['name' => 'ASC']);
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'cutting_id' => $cutting_id,
+            'cutting' => $cutting,
+            'client' => $client,
+            'fence_models' => $fence_models,
+            'tools_menu' => [
+                'cutting' => TRUE,
+                'view' => TRUE,
+                'edit' => FALSE,
+            ],
+            'cutting_sheet_articles' => $cutting_sheet_articles,
+            'total_picket_lenght' => $total_picket_lenght / 1000,
+            'total_cap' => $total_cap,
+        ];
+
+      $this->render('cutting/view.html.twig', $data);
     }
 
     /**
@@ -156,28 +187,50 @@ class CuttingController extends BaseController
      */
     public function edit(int $cutting_id): void
     {
-        $cutting_data = $this->entityManager->find('\App\Entity\CuttingSheet', $cutting_id);
-        $client = $this->entityManager->getRepository('\App\Entity\Client')->getClientData($cutting_data->getClient()->getId());
-
-        $fence_models = $this->entityManager->getRepository('\App\Entity\FenceModel')->findBy(array(), array('name' => 'ASC'));
-
-        $data = [
-            'page_title' => 'Krojne liste',
-            'stylesheet' => '/../libraries/',
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'page' => 'cutting',
-            'entityManager' => $this->entityManager,
-            'client' => $client,
-            'cutting_id' => $cutting_id,
-            'cutting_data' => $cutting_data,
-            'fence_models' => $fence_models,
-        ];
-
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('edit', $data);
+        $cutting = $this->entityManager->find(CuttingSheet::class, $cutting_id);
+        $client = $this->entityManager->getRepository(Client::class)->getClientData($cutting->getClient()->getId());
+
+        $cutting_sheet_articles = $this->entityManager->getRepository(CuttingSheet::class)
+            ->getArticlesOnCuttingSheet($cutting_id);
+
+        $total_picket_lenght = 0;
+        $total_cap = 0;
+        foreach ($cutting_sheet_articles as $cutting_sheet_article) {
+            $cutting_sheet__article__picket_number = $this->entityManager
+                ->getRepository(CuttingSheetArticle::class)
+                ->getPicketsNumber($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
+
+            $cutting_sheet__article__picket_lenght = $this->entityManager
+                ->getRepository(CuttingSheetArticle::class)
+                ->getPicketsLength($cutting_sheet_article->getId()) * $cutting_sheet_article->getNumberOfFields();
+
+            $total_picket_lenght = $total_picket_lenght + $cutting_sheet__article__picket_lenght;
+            $total_cap = $total_cap + $cutting_sheet__article__picket_number;
+        }
+
+        $fence_models = $this->entityManager->getRepository(FenceModel::class)->findBy([], ['name' => 'ASC']);
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'client' => $client,
+            'cutting_id' => $cutting_id,
+            'cutting' => $cutting,
+            'fence_models' => $fence_models,
+            'tools_menu' => [
+                'cutting' => TRUE,
+                'view' => FALSE,
+                'edit' => TRUE,
+            ],
+            'cutting_sheet_articles' => $cutting_sheet_articles,
+            'total_picket_lenght' => $total_picket_lenght / 1000,
+            'total_cap' => $total_cap,
+        ];
+
+        $this->render('cutting/edit.html.twig', $data);
     }
 
     /**
@@ -189,14 +242,115 @@ class CuttingController extends BaseController
      */
     public function print(int $cutting_id): void
     {
-        $data = [
-            'entityManager' => $this->entityManager,
-            'cutting_id' => $cutting_id,
-        ];
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('printCutting', $data);
+        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+
+        $cutting_sheet = $this->entityManager->find(CuttingSheet::class, $cutting_id);
+
+        $articles = $this->entityManager->getRepository(CuttingSheet::class)->getArticlesOnCuttingSheet($cutting_id);
+        $article_repo = $this->entityManager->getRepository(CuttingSheetArticle::class);
+
+        $articles_data = [];
+        foreach ($articles as $key => $article) {
+            $fence_model_id = $article->getFenceModel()->getId();
+            $fence_model = $article->getFenceModel()->getName();
+            $article_width = $article->getWidth();
+            $article_height = $article->getHeight();
+            $article_mid_height = $article->getMidHeight();
+
+            $picket_width = $article->getPicketWidth();
+            $article_space = $article->getSpace();
+            $article_field_number = $article->getNumberOfFields();
+
+            // Izracunavanje broja letvica u zavisnosti od sirine polja.
+            $pickets_number = $article_repo->getPicketsNumber($article->getId());
+
+            // Real space between pickets.
+            $space_between_pickets = $article_repo->getSpaceBetweenPickets($article_width, $pickets_number, $picket_width);
+
+            // Legs of triangle for angle calculation.
+            $heigth_leg = $article_repo->getDiffMinMax($article_height, $article_mid_height);
+            $width_leg = $article_repo->getWidthForAngleCalc(
+                $article_repo->isEven($pickets_number),
+                $article_width,
+                $space_between_pickets,
+                $picket_width
+            );
+
+            $articles_data[$key]['fence_model'] = $fence_model;
+            $articles_data[$key]['picket_width'] = $picket_width;
+            $articles_data[$key]['article_field_number'] = $article_field_number;
+            $articles_data[$key]['article_width'] = $article_width;
+            $articles_data[$key]['article_height'] = $article_height;
+            $articles_data[$key]['space_between_pickets'] = $space_between_pickets;
+            $articles_data[$key]['pickets_number'] = $pickets_number;
+            $articles_data[$key]['pickets'] = $this->getPickets(
+                $fence_model_id,
+                $article_height,
+                $pickets_number,
+                $heigth_leg,
+                $width_leg,
+                $picket_width,
+                $space_between_pickets,
+                $article_width,
+            );
+        }
+
+        $data = [
+            'company_info' => $company_info,
+            'cutting_sheet' => $cutting_sheet,
+            'articles_data' => $articles_data,
+        ];
+
+        // Render HTML content from a Twig template (or similar)
+        ob_start();
+        $this->render('cutting/print_cutting.html.twig', $data);
+        $html = ob_get_clean();
+
+        require_once '../config/packages/tcpdf_include.php';
+
+        // Create a new TCPDF object / PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // Set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor($company_info['name']);
+        $pdf->SetTitle($company_info['name'] . ' - Krojna lista');
+        $pdf->SetSubject($company_info['name']);
+        $pdf->SetKeywords($company_info['name'] . ', PDF, Proforma, Invoice');
+
+        // Remove default header/footer.
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+
+        // Set default monospaced font.
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // Set margins.
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+
+        // Set auto page breaks.
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // Set image scale factor.
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // Set font.
+        $pdf->SetFont('dejavusans', '', 10);
+
+        // Add a page.
+        $pdf->AddPage();
+
+        // Write HTML content
+        $pdf->writeHTML($html, true, false, true, false, '');
+
+        // Reset pointer to the last page.
+        $pdf->lastPage();
+
+        // Close and output PDF document to browser.
+        $pdf->Output('rolostil_krojna_lista.pdf', 'I');
     }
 
     /**
@@ -208,10 +362,10 @@ class CuttingController extends BaseController
      */
     public function addArticle(int $cutting_id): void
     {
-        $cutting_sheet = $this->entityManager->find("\App\Entity\CuttingSheet", $cutting_id);
+        $cutting_sheet = $this->entityManager->find(CuttingSheet::class, $cutting_id);
 
         $fence_model_id = htmlspecialchars($_POST['fence_model_id']);
-        $fence_model = $this->entityManager->find("\App\Entity\FenceModel", $fence_model_id);
+        $fence_model = $this->entityManager->find(FenceModel::class, $fence_model_id);
 
         $picket_width = htmlspecialchars($_POST['picket_width']);
         $width = htmlspecialchars($_POST['width']);
@@ -252,10 +406,10 @@ class CuttingController extends BaseController
      */
     public function editArticle(int $cutting_id, int $article_id): void
     {
-        $cutting_sheet__article = $this->entityManager->find("\App\Entity\CuttingSheetArticle", $article_id);
+        $cutting_sheet__article = $this->entityManager->find(CuttingSheetArticle::class, $article_id);
 
         $fence_model_id = htmlspecialchars($_POST['fence_model_id']);
-        $fence_model = $this->entityManager->find("\App\Entity\FenceModel", $fence_model_id);
+        $fence_model = $this->entityManager->find(FenceModel::class, $fence_model_id);
 
         $picket_width = htmlspecialchars($_POST['picket_width']);
         $width = htmlspecialchars($_POST['width']);
@@ -292,7 +446,7 @@ class CuttingController extends BaseController
      */
     public function deleteArticle(int $cutting_id, int $article_id): void
     {
-        $cutting_sheet__article = $this->entityManager->find("\App\Entity\CuttingSheetArticle", $article_id);
+        $cutting_sheet__article = $this->entityManager->find(CuttingSheetArticle::class, $article_id);
 
         $this->entityManager->remove($cutting_sheet__article);
         $this->entityManager->flush();
@@ -316,9 +470,9 @@ class CuttingController extends BaseController
       $total_kap,
       $picket_width): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
-        $cutting = $this->entityManager->find("\App\Entity\CuttingSheet", $cutting_id);
+        $cutting = $this->entityManager->find(CuttingSheet::class, $cutting_id);
 
         // Total length of pickets in cm.
         $total_picket_lenght = $total_picket_lenght / 10;
@@ -328,7 +482,8 @@ class CuttingController extends BaseController
         $note = "ROLOSTIL szr je PDV obveznik.";
 
         $accounting_document__type_id = 1;
-        $accounting_document__type = $this->entityManager->find("\App\Entity\AccountingDocumentType", $accounting_document__type_id);
+        $accounting_document__type = $this->entityManager
+            ->find(AccountingDocumentType::class, $accounting_document__type_id);
 
         // Create a new AccountingDocument (Proforma).
         $newProforma = new AccountingDocument();
@@ -351,7 +506,7 @@ class CuttingController extends BaseController
         $newProforma_id = $newProforma->getId();
 
         // Set Ordinal Number In Year.
-        $this->entityManager->getRepository('App\Entity\AccountingDocument')->setOrdinalNumInYear($newProforma_id);
+        $this->entityManager->getRepository(AccountingDocument::class)->setOrdinalNumInYear($newProforma_id);
 
         // Add Article to the Proforma.
         // First add picket.
@@ -377,10 +532,10 @@ class CuttingController extends BaseController
                 break;
         }
 
-        $article_picket = $this->entityManager->find("\App\Entity\Article", $article_id);
+        $article_picket = $this->entityManager->find(Article::class, $article_id);
         $note = "";
         $pieces = 1;
-        $preferences = $this->entityManager->find('App\Entity\Preferences', 1);
+        $preferences = $this->entityManager->find(Preferences::class, 1);
         $tax = $preferences->getTax();
 
         // Add article to proforma.
@@ -401,7 +556,8 @@ class CuttingController extends BaseController
         $last__accounting_document__article_id = $newProformaArticle->getId();
 
         // Add article properties to AccountingDocumentArticle.
-        $article_properties = $this->entityManager->getRepository('\App\Entity\ArticleProperty')->getArticleProperties($article_picket->getId());
+        $article_properties = $this->entityManager->getRepository(ArticleProperty::class)->getArticleProperties
+        ($article_picket->getId());
         foreach ($article_properties as $article_property) {
             $newProformaArticleProperty = new AccountingDocumentArticleProperty();
 
@@ -438,7 +594,7 @@ class CuttingController extends BaseController
 
         $note = "";
         $cap_pieces = $total_kap;
-        $article_cap = $this->entityManager->find("\App\Entity\Article", $cap_article_id);
+        $article_cap = $this->entityManager->find(Article::class, $cap_article_id);
 
         // Add article to proforma invoice.
         $newProformaArticle = new AccountingDocumentArticle();
@@ -467,42 +623,204 @@ class CuttingController extends BaseController
     public function delete(int $cutting_id): void
     {
         // Check if exist CuttingSheet.
-        if ($cs = $this->entityManager->find("\App\Entity\CuttingSheet", $cutting_id)) {
+        if ($cs = $this->entityManager->find(CuttingSheet::class, $cutting_id)) {
 
-          // Check if exist Article in CuttingSheet.
-          if ($cs_articles = $this->entityManager->getRepository('\App\Entity\CuttingSheetArticle')->getCuttingSheetArticles($cutting_id)) {
+            // Check if exist Article in CuttingSheet.
+            if ($cs_articles = $this->entityManager->getRepository(CuttingSheetArticle::class)->getCuttingSheetArticles
+            ($cutting_id)) {
 
-            // Loop through all Articles of CuttingSheet.
-            foreach ($cs_articles as $cs_article) {
-              // Remove Article.
-              $this->entityManager->remove($cs_article);
-              $this->entityManager->flush();
+                // Loop through all Articles of CuttingSheet.
+                foreach ($cs_articles as $cs_article) {
+                    // Remove Article.
+                    $this->entityManager->remove($cs_article);
+                    $this->entityManager->flush();
+                }
+
             }
 
-          }
-
-          // Remove CuttingSheet.
-          $this->entityManager->remove($cs);
-          $this->entityManager->flush();
+            // Remove CuttingSheet.
+            $this->entityManager->remove($cs);
+            $this->entityManager->flush();
         }
 
         die('<script>location.href = "/cuttings/?search=" </script>');
     }
 
-    /**
-     * A helper method to render views.
-     *
-     * @param $view
-     * @param array $data
-     *
-     * @return void
-     */
-    private function render($view, array $data = []): void
+  /**
+   * @param $fence_model_id
+   * @param $article_height
+   * @param $pickets_number
+   * @param $heigth_leg
+   * @param $width_leg
+   * @param $picket_width
+   * @param $space_between_pickets
+   * @param $article_width
+   *
+   * @return array
+   */
+    protected  function getPickets(
+        $fence_model_id,
+        $article_height,
+        $pickets_number,
+        $heigth_leg,
+        $width_leg,
+        $picket_width,
+        $space_between_pickets,
+        $article_width
+    ): array
     {
-        // Extract data array to variables.
-        extract($data);
-        // Include the view file.
-        require_once __DIR__ . "/../Views/cutting/$view.php";
+        $article_repo = $this->entityManager->getRepository(CuttingSheetArticle::class);
+        $pickets = [];
+
+        // Classic fence model.
+        if ($fence_model_id == 1) {
+            $pickets[] = [
+                'height' => number_format($article_height, 0, ',', '.'),
+                'number' => $pickets_number,
+            ];
+        }
+
+        // Alpine fence model.
+        if ($fence_model_id == 2) {
+            $alpha_angle = rad2deg(atan($heigth_leg / $width_leg));
+            for ( $i=1; $i <= ceil($pickets_number/2); $i++ ) {
+                $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1);
+                $picket_height_over_post = tan(deg2rad($alpha_angle)) * $picket_x_position;
+                $picket_height = $article_height + $picket_height_over_post;
+
+                if ( $i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0 ) {
+                    $pieces = 1;
+                }
+                else {
+                    $pieces = 2;
+                }
+
+                $pickets[] = [
+                    'height' => number_format($picket_height, 0, ',', '.'),
+                    'number' => $pieces,
+                ];
+            }
+        }
+
+        // Arizona fence model.
+        if ($fence_model_id == 3) {
+            // Tendon of circle.
+            $tendon = $article_repo->getTendon($article_width, $space_between_pickets, $heigth_leg);
+
+            $alpha_angle = rad2deg(atan( ($heigth_leg * 2) / ($article_width - $space_between_pickets * 2)));
+            $beta_angle = 90 - $alpha_angle;
+            $radius = $tendon / (2*cos(deg2rad($beta_angle)));
+
+            for ( $i = 1; $i <= ceil($pickets_number/2); $i++ ) {
+                $corective_factor = 0;
+                if ($i > 1 ) {
+                    $corective_factor = ($space_between_pickets / 2) / ceil($pickets_number/2);
+                }
+                if ($i > 1 && $article_repo->isEven($pickets_number)) {
+                    $corective_factor = ($picket_width + $space_between_pickets / 2) / ceil($pickets_number/2);
+                }
+                $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1) + $corective_factor * $i;
+                $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
+                $picket_height_over_post = $y - ($radius - $heigth_leg);
+                $picket_height = $article_height + $picket_height_over_post;
+                if ( $i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0 ) {
+                    $pieces = 1;
+                }
+                else {
+                    $pieces = 2;
+                }
+
+                $pickets[] = [
+                    'height' => number_format($picket_height, 0, ',', '.'),
+                    'number' => $pieces,
+                ];
+            }
+        }
+
+        // Pacific fence model.
+        if ($fence_model_id == 4) {
+            $tendon = $article_repo->getTendon($article_width, $space_between_pickets, $heigth_leg);
+
+            $alpha_angle = rad2deg(atan(($heigth_leg * 2)/($article_width-$space_between_pickets * 2)));
+            $beta_angle = 90 - $alpha_angle;
+            $radius = $tendon / (2*cos(deg2rad($beta_angle)));
+
+            for ($i=1; $i<=ceil($pickets_number/2); $i++) {
+                $corective_factor = 0;
+                if ($i > 1 ) {
+                    $corective_factor = ($space_between_pickets / 2) / ceil($pickets_number/2);
+                }
+                if ($i > 1 && $article_repo->isEven($pickets_number)) {
+                    $corective_factor = ($picket_width + $space_between_pickets / 2) / ceil($pickets_number/2);
+                }
+                $picket_x_position = $picket_width*($i-1) + $space_between_pickets*($i-1) + $corective_factor * $i;;
+                $y = sqrt( $radius ** 2 - ((($article_width - $space_between_pickets * 2) / 2 - $picket_x_position) ** 2 ) );
+                $picket_height_over_post = $y - ($radius - $heigth_leg);
+                $picket_height = $article_height - $picket_height_over_post;
+
+                if ( $i==ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2))>0 ) {
+                    $pieces = 1;
+                }
+                else {
+                    $pieces = 2;
+                }
+
+                $pickets[] = [
+                    'height' => number_format($picket_height, 0, ',', '.'),
+                    'number' => $pieces,
+                ];
+            }
+        }
+
+        // Panonka fence model.
+        if ($fence_model_id == 5) {
+            // Ugaona brzina.
+            $omega = 360 / $article_width;
+            // Fazno pomeranje za 90 stepeni.
+            $teta = 90;
+            for ($i = 1; $i <= ceil($pickets_number/2); $i++) {
+                $picket_x_position = $space_between_pickets + $picket_width*($i-1) + $space_between_pickets*($i-1);
+                $y = sin(deg2rad($omega*$picket_x_position - $teta));
+                $picket_height = $article_height + ($heigth_leg / 2) + ($y * $heigth_leg )/2;
+
+                if ($i == ceil($pickets_number/2) AND (ceil($pickets_number/2)-($pickets_number/2)) > 0) {
+                    $pieces = 1;
+                }
+                else {
+                    $pieces = 2;
+                }
+
+                $pickets[] = [
+                    'height' => number_format($picket_height, 0, ',', '.'),
+                    'number' => $pieces,
+                ];
+            }
+        }
+
+        return $pickets;
+    }
+
+  /**
+   * @param string $term
+   * @return void
+   */
+    public function search(string $term): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $cuttings = $this->entityManager->getRepository(CuttingSheet::class)->search($term);
+
+        $last_cutting_sheet = $this->entityManager->getRepository(CuttingSheet::class)->getLastCuttingSheet();
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'cuttings' => $cuttings,
+            'last_cutting_sheet' => $last_cutting_sheet,
+        ];
+
+        $this->render('cutting/search.html.twig', $data);
     }
 
 }

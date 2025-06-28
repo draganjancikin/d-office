@@ -1,0 +1,51 @@
+<div class="card mb-4">
+    <div class="card-header p-2">
+        <h6 class="m-0 font-weight-bold text-primary">Zadnje narudžbenice</h6>
+    </div>
+    <div class="card-body p-2">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="px-1 order-number">narudžbenica</th>
+                        <th class="px-1 text-center order-status" title="Status narudžbenice">s</th>
+                        <th class="px-1 order-supplier">dobavljač</th>
+                        <th class="px-1">naslov</th>
+                        <th class="px-1">za projekat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders_data %}
+                        <tr>
+                            <td class="px-1">
+                                <a href="/order/{{ order.id }}">
+                                    {{ '%04d'|format(order.ordinal_num_in_year) }} - {{ order.date }}
+                                </a>
+                            </td>
+                            <td class="px-1 order-status text-center">
+                                <span class="badge badge-pill {{ order_status_classes[order.status].class }}"
+                                      title="{{ order_status_classes[order.status].title }}">
+                                    {{ order_status_classes[order.status].icon }}
+                                </span>
+                                {% if order.is_archived %}
+                                    <span class="badge badge-pill badge-secondary" title="Arhivirano">
+                                        A
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-1">{{ order.supplier_name }}</td>
+                            <td class="px-1">{{ order.title }}</td>
+                            <td class="px-1">
+                                {% if order.project %}
+                                    <a href="/project/{{ order.project.getId() }}">
+                                        {{ order.project.getOrdinalNumInYear() }} - {{ order.project.getClient().getName() }} - {{ order.project.getTitle() }}
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

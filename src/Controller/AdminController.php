@@ -4,6 +4,11 @@ namespace App\Controller;
 
 use App\Core\BaseController;
 
+use App\Entity\City;
+use App\Entity\CompanyInfo;
+use App\Entity\Country;
+use App\Entity\Street;
+
 require_once __DIR__ . '/../../config/dbConfig.php';
 
 /**
@@ -14,15 +19,17 @@ require_once __DIR__ . '/../../config/dbConfig.php';
 class AdminController extends BaseController
 {
 
-    private $page = 'admin';
-    private $page_title = 'Admin';
-    private $stylesheet = '/../libraries/';
+    private $page;
+    private $page_title;
 
     /**
      * AdminController constructor.
      */
     public function __construct() {
-      parent::__construct();
+        parent::__construct();
+
+        $this->page = 'admin';
+        $this->page_title = 'Admin';
     }
 
     /**
@@ -30,19 +37,22 @@ class AdminController extends BaseController
      *
      * @return void
      */
-    public function index($search = NULL) {
-      $data = [
-        'page' => $this->page,
-        'page_title' => $this->page_title,
-        'stylesheet' => $this->stylesheet,
-        'username' => $this->username,
-        'user_role_id' => $this->user_role_id,
-      ];
+    public function index($search = NULL):void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
 
-      // If the user is not logged in, redirect them to the login page.
-      $this->isUserNotLoggedIn();
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'username' => $this->username,
+            'user_role_id' => $this->user_role_id,
+            'tools_menu' => [
+                'admin' => FALSE,
+            ],
+        ];
 
-      $this->render('index', $data);
+        $this->render('admin/index.html.twig', $data);
     }
 
     /**
@@ -50,20 +60,28 @@ class AdminController extends BaseController
      *
      * @return void
      */
-    public function viewCompanyInfo(): void {
-      $data = [
-        'page' => $this->page,
-        'page_title' => $this->page_title,
-        'stylesheet' => $this->stylesheet,
-        'username' => $this->username,
-        'user_role_id' => $this->user_role_id,
-        'entityManager' => $this->entityManager,
-      ];
+    public function viewCompanyInfo(): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
 
-      // If the user is not logged in, redirect them to the login page.
-      $this->isUserNotLoggedIn();
+        $company = $this->entityManager->find(CompanyInfo::class, '1');
 
-      $this->render('viewCompanyInfo', $data);
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'username' => $this->username,
+            'user_role_id' => $this->user_role_id,
+            'entityManager' => $this->entityManager,
+            'company' => $company,
+            'tools_menu' => [
+                'admin' => TRUE,
+                'view' => TRUE,
+                'edit' => FALSE,
+            ],
+        ];
+
+        $this->render('admin/viewCompanyInfo.html.twig', $data);
     }
 
     /**
@@ -71,36 +89,36 @@ class AdminController extends BaseController
      *
      * @return void
      */
-    public function editCompanyInfoForm(): void {
-        $company = $this->entityManager->find('\App\Entity\CompanyInfo', '1');
-        $company_country = $company->getCountry() ? $this->entityManager->find('\App\Entity\Country', $company->getCountry()) : null;
-        $company_city = $company->getCity() ? $this->entityManager->find('\App\Entity\City', $company->getCity()) : null;
-        $company_street = $company->getStreet() ? $this->entityManager->find('\App\Entity\Street', $company->getStreet()) : null;
-
-        $states = $this->entityManager->getRepository('\App\Entity\Country')->findBy(array(), array('name' => 'ASC'));
-        $cities = $this->entityManager->getRepository('\App\Entity\City')->findBy(array(), array('name' => 'ASC'));
-        $streets = $this->entityManager->getRepository('\App\Entity\Street')->findBy(array(), array('name' => 'ASC'));
-
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
-            'company' => $company,
-            'company_country' => $company_country,
-            'company_city' => $company_city,
-            'company_street' => $company_street,
-            'states' => $states,
-            'cities' => $cities,
-            'streets' => $streets,
-        ];
+    public function editCompanyInfoForm(): void
+    {
 
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('editCompanyInfo', $data);
+        $company = $this->entityManager->find(CompanyInfo::class, '1');
+
+        $states = $this->entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
+        $cities = $this->entityManager->getRepository(City::class)->findBy([], ['name' => 'ASC']);
+        $streets = $this->entityManager->getRepository(Street::class)->findBy([], ['name' => 'ASC']);
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'username' => $this->username,
+            'user_role_id' => $this->user_role_id,
+            'entityManager' => $this->entityManager,
+            'company' => $company,
+            'states' => $states,
+            'cities' => $cities,
+            'streets' => $streets,
+            'tools_menu' => [
+                'admin' => TRUE,
+                'view' => FALSE,
+                'edit' => TRUE,
+            ],
+        ];
+
+        $this->render('admin/editCompanyInfo.html.twig', $data);
     }
 
     /**
@@ -115,11 +133,11 @@ class AdminController extends BaseController
         $mb = $_POST["mb"] ?? "";
 
         $country_id = $_POST["country_id"] ?? null;
-        $country = $this->entityManager->find("\App\Entity\Country", $country_id);
+        $country = $this->entityManager->find(Country::class, $country_id);
         $city_id = $_POST["city_id"] ?? null;
-        $city = $this->entityManager->find("\App\Entity\City", $city_id);
+        $city = $this->entityManager->find(City::class, $city_id);
         $street_id = $_POST["street_id"] ?? null;
-        $street = $this->entityManager->find("\App\Entity\Street", $street_id);
+        $street = $this->entityManager->find(Street::class, $street_id);
 
         $home_number = $_POST["home_number"] ?? "";
         $bank_account_1 = $_POST["bank_account_1"] ?? "";
@@ -130,7 +148,7 @@ class AdminController extends BaseController
         $email_2 = $_POST["email_2"] ?? "";
         $website_1 = $_POST["website_1"] ?? "";
 
-        $company_info = $this->entityManager->find('\App\Entity\CompanyInfo', 1);
+        $company_info = $this->entityManager->find(CompanyInfo::class, 1);
 
         $company_info->setName($name);
         $company_info->setPib($pib);
@@ -149,22 +167,6 @@ class AdminController extends BaseController
         $this->entityManager->flush();
 
         die('<script>location.href = "/admin/company-info" </script>');
-    }
-
-    /**
-     * A helper method to render views.
-     *
-     * @param $view
-     * @param array $data
-     *
-     * @return void
-     */
-    private function render($view, array $data = []): void
-    {
-        // Extract data array to variables.
-        extract($data);
-        // Include the view file.
-        require_once __DIR__ . "/../Views/$page/$view.php";
     }
 
     /**

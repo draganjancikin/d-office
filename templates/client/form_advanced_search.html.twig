@@ -1,0 +1,51 @@
+<div class="card mb-4">
+    <div class="card-header p-2">
+        <h6 class="m-0 font-weight-bold text-primary">Detaljna pretraga</h6>
+    </div>
+
+    <div class="card-body">
+        <form action="/clients/advancedSearch" method="post">
+
+            <div class="row mb-2">
+                <label for="inputName" class="col-sm-3 col-form-label text-left text-sm-right" >Kijent: </label>
+                <div class="col-sm-9">
+                    <input class="form-control form-control-sm" type="text" id="inputName" name="client"
+                           value="{{ client_name is defined ? client_name : '' }}" placeholder=" Unesite naziv klijenta" >
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="inputStreet" class="col-sm-3 col-form-label text-left text-sm-right">Ulica: </label>
+                <div class="col-sm-9">
+                    <input id="inputStreet" class="form-control form-control-sm" type="text" name="street"
+                           value="{{ street_name is defined ? street_name : '' }}" placeholder=" Unesite naziv ulice" >
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <label for="inputCity" class="col-sm-3 col-form-label text-left text-sm-right">Naselje: </label>
+                <div class="col-sm-9">
+                    <input id="inputCity" class="form-control form-control-sm" type="text" name="city"
+                           value="{{ city_name is defined ? city_name : '' }}" placeholder=" Unesite naziv naselja" />
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-sm-4 offset-sm-3">
+                    <button type="submit" class="btn btn-sm btn-secondary" title="Snimi izmene podataka o klijentu!"
+                            name="submit" value="1">
+                        <i class="fa fa-search"></i> Pretaži
+                    </button>
+                    <a href="/clients/advancedSearch" class="btn btn-sm btn-secondary" title="Poništi pretragu">
+                        <i class="fa fa-undo "></i> Poništi pretragu
+                    </a>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <!-- End Card Body -->
+
+</div>
+

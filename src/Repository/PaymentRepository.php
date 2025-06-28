@@ -34,7 +34,7 @@ class PaymentRepository extends EntityRepository
     /**
      *
      */
-    public function getDailyCashTransactions($date)
+    public function getDailyCashTransactions($date = '')
     {
         if (!$date) {
           $date = date('Y-m-d');
@@ -139,7 +139,7 @@ class PaymentRepository extends EntityRepository
     /**
      *
      */
-    public function getDailyCashSaldo($date) {
+    public function getDailyCashSaldo($date = '') {
         if (!$date) {
             $date = date('Y-m-d');
         }

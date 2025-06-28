@@ -1,0 +1,542 @@
+<div class="row">
+
+    <div class="col-sm-5 pr-0">
+        <div class="card mb-4">
+            <div class="card-header p-2">
+                <h6 class="m-0 text-dark">
+                    <i class="fa fa-folder"> </i>
+                    # {{ '%04d'|format(project_data.getOrdinalNumInYear()) }}
+                    -
+                    {{ project_data.getTitle() }}
+                </h6>
+            </div>
+            <div class="card-body p-2 client-data">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4 col-md-3">datum</dt>
+                    <dd class="col-sm-8 col-md-9">{{ project_data.getCreatedAt()|date('d-M-Y') }}</dd>
+                    <dt class="col-sm-4 col-md-3">klijent</dt>
+                    <dd class="col-sm-8 col-md-9">
+                        <a href="/client/{{ client.id }}">{{ client.name }}</a>
+                    </dd>
+                    <dt class="col-sm-4 col-md-3">adresa</dt>
+                    <dd class="col-sm-8 col-md-9">
+                        {{ client.street ?? '' }} {{ client.home_number }}
+                        {% if client.street and client.city %}, {% endif %}
+                        {{ client.city ?? '' }}
+                        {% if client.city and client.country %}, {% endif %}
+                        {{ client.country ?? '' }}
+                    </dd>
+
+                    {% for client_contact in client.contacts %}
+                        <dt class="col-sm-3 col-md-2">{{ client_contact.type.name }}:</dt>
+                        <dd class="col-sm-9 col-md-10">
+                            {{ client_contact.body }}
+                            {% if client_contact.note %}
+                                ({{ client_contact.note }})
+                            {% endif %}
+                        </dd>
+                    {% endfor %}
+                </dl>
+            </div>
+            <!-- End Card Body -->
+        </div>
+        <!-- End Card -->
+    </div>
+
+    <div class="col-sm-7">
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="note-tab" data-toggle="tab" href="#note" role="tab" aria-controls="note" aria-selected="true">
+                    <i class="fas fa-pencil-alt"> </i> Beleške
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="document-tab" data-toggle="tab" href="#document" role="tab" aria-controls="document" aria-selected="false">
+                    Dokumenti
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+
+            <div class="tab-pane fade show active" id="note" role="tabpanel" aria-labelledby="note-tab">
+                <div class="card mb-4">
+                    <div class="card-header p-2">
+                        <div class="card-header-menu">
+                            <!-- dugme, okidač za modal addNote -->
+                            <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal"
+                                    data-target="#addNote" title="Dodavanje beleške uz projekat!">
+                                <i class="fa fa-plus"></i> <i class="fas fa-pencil-alt"> </i>
+                            </button>
+                            <!-- Pregled i štampanje radnog naloga sa beleškama uz projekat -->
+                            <a href="/project/{{ project_id }}/printProjectTaskWithNotes"
+                               title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank">
+                                <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
+                                    <i class="fa fa-print"></i> Beleške
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body p-2 tasks-note-scroll">
+                        <table class="table table-hover">
+                            {% set date_temp = '' %}
+                            {% for note in notes %}
+                                <tr>
+                                    <td class="px-1 width-95">
+                                        {# when we have several notes in same day print date only for first note #}
+                                        {% if note.getCreatedAt()|date('d-M-Y') != date_temp %}
+                                            {{ note.getCreatedAt()|date('d-M-Y') }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-1"
+                                        title="{% if user_role_id == 1 %}{{ note.getCreatedByUser().getUsername()}} {%
+                                          endif %}" >
+                                        {{ note.getNote()|nl2br }}
+                                    </td>
+                                    <td class="px-1">
+                                        <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete belešku?');"
+                                           href="/project/{{ project_id }}/note/{{ note.getId() }}/delete"
+                                           title="Brisanje beleške">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                              {% set date_temp = note.getCreatedAt()|date('d-M-Y') %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <!-- End Card Body -->
+                </div>
+                <!-- End Card -->
+            </div>
+
+            <div class="tab-pane fade" id="document" role="tabpanel" aria-labelledby="document-tab">
+                <div class="card mb-4">
+                    <div class="card-body p-2 tasks-note-scroll">
+                        {% if orders_data %}
+                            <h5>Narudžbenice:</h5>
+                            {% for order_data in orders_data %}
+                                <a href="/order/{{ order_data.id }}">
+                                    {{ '%04d'|format(order_data.ordinal_num_in_year) }}
+                                    _
+                                    {{ order_data.created_at }}
+                                </a>
+                                <span style="display: inline-block; width: 50px; text-align: center;">
+                                    <span class="badge badge-pill {{ order_status_classes[order_data.status].class }}">
+                                        {{ order_status_classes[order_data.status].icon }}
+                                    </span>
+                                    {% if order_data.is_archived %}
+                                        <span class="badge badge-pill badge-secondary" title="Arhivirano">
+                                            A
+                                        </span>
+                                    {% endif %}
+                                </span>
+                                {{ order_data.supplier_name }}-
+                                {{ order_data.title }}
+                                <br>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if accounting_documents_data %}
+                            <h5>Dokumenti:</h5>
+                            {% for accounting_document_data in accounting_documents_data %}
+                                <a href="/pidb/{{ accounting_document_data.id }}">
+                                    {% if accounting_document_data.type.id == 1 %}P{% endif %}
+                                    {% if accounting_document_data.type.id == 2 %}O{% endif %}
+                                    {{ '%04d'|format(accounting_document_data.ordinal_num_in_year) }}
+                                    _
+                                    {{ accounting_document_data.created_at }}
+                                </a>
+                                {{ accounting_document_data.client_name }}-
+                                {{ accounting_document_data.title }}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-sm-12">
+        <div class="card mb-4">
+            <div class="card-header p-2">
+                <h6 class="d-inline m-0 text-dark">
+                    <i class="fas fa-tasks"></i> Zadaci
+                </h6>
+                <div class="card-header-menu">
+                    <!-- dugme, okidač za modal addTask -->
+                    <a href="#">
+                        <button type="button" class="btn btn-sm btn-outline-secondary mr-1" data-toggle="modal" data-target="#createTask" title="Dodavanje novog zadatka!">
+                            <i class="fas fa-plus"></i> <i class="fa fa-tasks"> </i>
+                        </button>
+                    </a>
+                    <!-- card body collapse link -->
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseCard" aria-expanded="true" aria-controls="collapseOne">
+                        <i class="fas fa-angle-down"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse show" id="collapseCard">
+                <div class="card-body p-2">
+                    {% set count = 0 %}
+                    <div class="row row-cols-1 row-cols-md-3">
+                        {# Tasks for realization ==================================================================== #}
+                        <div class="col-sm-4">
+                            <p class="text-center"><strong>ZA REALIZACIJU</strong></p>
+                            {% for task_for_realization in tasks_for_realization %}
+                                {% set count = count + 1 %}
+                                <div class="card border-{{ task_for_realization.class }} mb-2">
+                                    <div class="card-header bg-{{ task_for_realization.class }} p-2">
+                                        <h6 class="d-inline m-0"
+                                            title="{% if user_role_id == 1 %}{{ task_for_realization.created_by_user }}{% endif %}">
+                                            {{ task_for_realization.type }}: {{ task_for_realization.title }}
+                                        </h6>
+                                        <div class="float-right">
+                                            <button class="btn btn-link" data-toggle="collapse"
+                                                    data-target="#collapse-{{ count }}"
+                                                    aria-expanded="true" aria-controls="collapseOne">
+                                                <i class="fas fa-angle-down"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div id="collapse-{{ count }}" class="collapse" >
+                                        <div class="card-body p-2">
+                                            <table>
+                                                <tr>
+                                                    <td>start: </td>
+                                                    <td>
+                                                        {%  if task_for_realization.start_date ==  '1970-01-01 00:00:00' %}
+                                                            _____
+                                                        {% else %}
+                                                            {{ task_for_realization.start_date }}
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>izvršilac: </td>
+                                                    <td>
+                                                        {{ task_for_realization.employee }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>end: </td>
+                                                    <td>
+                                                        {%  if task_for_realization.end_date ==  '1970-01-01 00:00:00' %}
+                                                            _____
+                                                        {% else %}
+                                                            {{ task_for_realization.end_date }}
+                                                        {% endif %}
+                                                </tr>
+                                                <tr>
+                                                    <td>beleške: </td>
+                                                    <td></td>
+                                                </tr>
+                                                {% set task_for_realization_date_temp = '' %}
+                                                {% for task_note in task_for_realization.task_notes %}
+                                                    <tr>
+                                                        <td>
+                                                            <span>
+                                                                {# when we have several notes in same day print date only for first note #}
+                                                                {% if task_note.getCreatedAt()|date('d-M-Y') != task_for_realization_date_temp %}
+                                                                    {{ task_note.getCreatedAt()|date('d-M-Y') }}
+                                                                {% endif %}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="direct-chat-name">
+                                                                {{ task_note.getNote()|nl2br }}
+                                                            </span>
+                                                            {% if user_role_id == 1 %}
+                                                                <small class="label bg-gray">
+                                                                    ({{ task_note.getCreatedByUser().getUsername() }})
+                                                                </small>
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    {% set task_for_realization_date_temp = task_note.getCreatedAt()|date('d-M-Y') %}
+                                                {% endfor %}
+                                            </table>
+                                        </div>
+                                        <!--  End Card Body -->
+
+                                        <div class="card-footer p-2">
+                                            <!-- dugme koje briše zadatka -->
+                                            <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete zadatak?');"
+                                               href="/project/{{ project_id }}/task/{{ task_for_realization.id }}/delete">
+                                                <button type="button" class="btn btn-default btn-xs btn pull-left" title="Obriši zadatak!">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </a>
+                                            <!-- dugme koje otvara formu za izmenu zadatka -->
+                                            <a href="/project/{{ project_id }}/task/{{ task_for_realization.id }}/edit">
+                                                <button type="button" class="btn btn-default btn-xs pull-right" title="Idi na izmenu zadatka!">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                            </a>
+                                        </div>
+                                        <!-- End Card Footer -->
+
+                                    </div>
+                                    <!-- /#collapseOne -->
+
+                                </div>
+                                <!-- End Card -->
+                            {% endfor %}
+                        </div>
+
+                        {# Tasks in realization ===================================================================== #}
+                        <div class="col-sm-4">
+                            <p class="text-center"><strong>U REALIZACIJI</strong></p>
+                            {% for task_in_realization in tasks_in_realization %}
+                                {% set count = count + 1 %}
+                                <div class="card border-{{ task_in_realization.class }} mb-2">
+                                    <div class="card-header bg-{{ task_in_realization.class }} p-2">
+                                        <h6 class="d-inline m-0"
+                                            title="{% if user_role_id == 1 %}{{ task_in_realization.created_by_user }}{% endif %}">
+                                            {{ task_in_realization.type }}: {{ task_in_realization.title }}
+                                        </h6>
+                                        <div class="float-right">
+                                            <button class="btn btn-link" data-toggle="collapse"
+                                                    data-target="#collapse-{{ count }}"
+                                                    aria-expanded="true" aria-controls="collapseOne">
+                                                <i class="fas fa-angle-down"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="collapse-{{ count }}" class="collapse" >
+                                        <div class="card-body p-2">
+                                            <table>
+                                                <tr>
+                                                    <td>start: </td>
+                                                    <td>
+                                                        {%  if task_in_realization.start_date ==  '1970-01-01 00:00:00' %}
+                                                            _____
+                                                        {% else %}
+                                                            {{ task_in_realization.start_date }}
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>izvršilac: </td>
+                                                    <td>
+                                                        {{ task_in_realization.employee }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>end: </td>
+                                                    <td>
+                                                        {%  if task_in_realization.end_date ==  '1970-01-01 00:00:00' %}
+                                                            _____
+                                                        {% else %}
+                                                            {{ task_in_realization.end_date }}
+                                                        {% endif %}
+                                                </tr>
+                                                <tr>
+                                                    <td>beleške: </td>
+                                                    <td></td>
+                                                </tr>
+                                                {% set task_in_realization_date_temp = '' %}
+                                                {% for task_note in task_in_realization.task_notes %}
+                                                    <tr>
+                                                        <td>
+                                                            <span>
+                                                                {# when we have several notes in same day print date only for first note #}
+                                                                {% if task_note.getCreatedAt()|date('d-M-Y') != task_in_realization_date_temp %}
+                                                                    {{ task_note.getCreatedAt()|date('d-M-Y') }}
+                                                                {% endif %}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="direct-chat-name">
+                                                                {{ task_note.getNote()|nl2br }}
+                                                            </span>
+                                                            {% if user_role_id == 1 %}
+                                                                <small class="label bg-gray">
+                                                                    ({{ task_note.getCreatedByUser().getUsername() }})
+                                                                </small>
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    {% set task_in_realization_date_temp = task_note.getCreatedAt()
+                                                        |date('d-M-Y') %}
+                                                {% endfor %}
+                                            </table>
+                                        </div>
+                                        <!--  End Card Body -->
+
+                                        <div class="card-footer p-2">
+                                            <!-- dugme koje briše zadatka -->
+                                            <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete zadatak?');"
+                                               href="/project/{{ project_id }}/task/{{ task_in_realization.id }}/delete">
+                                                <button type="button" class="btn btn-default btn-xs btn pull-left" title="Obriši zadatak!">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </a>
+                                            <!-- dugme koje otvara formu za izmenu zadatka -->
+                                            <a href="/project/{{ project_id }}/task/{{ task_in_realization.id }}/edit">
+                                                <button type="button" class="btn btn-default btn-xs pull-right" title="Idi na izmenu zadatka!">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                            </a>
+                                        </div>
+                                        <!-- End Card Footer -->
+
+                                    </div>
+                                    <!-- /#collapseOne -->
+
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {# Completed tasks ========================================================================== #}
+                        <div class="col-sm-4">
+                            <p class="text-center"><strong>REALIZOVANI</strong></p>
+
+                            {% for task_completed in tasks_completed %}
+                                {% set count = count + 1 %}
+                                <div class="card border-{{ task_completed.class }} mb-2">
+                                    <div class="card-header bg-{{ task_completed.class }} p-2">
+                                        <h6 class="d-inline m-0"
+                                            title="{% if user_role_id == 1 %}{{ task_completed.created_by_user }}{% endif %}">
+                                            {{ task_completed.type }}: {{ task_completed.title }}
+                                        </h6>
+                                        <div class="float-right">
+                                            <button class="btn btn-link" data-toggle="collapse"
+                                                    data-target="#collapse-{{ count }}"
+                                                    aria-expanded="true" aria-controls="collapseOne">
+                                                <i class="fas fa-angle-down"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div id="collapse-{{ count }}" class="collapse" >
+                                        <div class="card-body p-2">
+                                            <table>
+                                                <tr>
+                                                    <td>start: </td>
+                                                    <td>
+                                                        {{ task_completed.start_date }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>izvršilac: </td>
+                                                    <td>
+                                                        {{ task_completed.employee }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>end: </td>
+                                                    <td>
+                                                        {{ task_completed.end_date }}
+                                                </tr>
+                                                <tr>
+                                                    <td>beleške: </td>
+                                                    <td></td>
+                                                </tr>
+                                                {% set task_completed_date_temp = '' %}
+                                                {% for task_note in task_completed.task_notes %}
+                                                    <tr>
+                                                        <td>
+                                                            <span>
+                                                                {# when we have several notes in same day print date only for first note #}
+                                                                {% if task_note.getCreatedAt()|date('d-M-Y') != task_completed_date_temp %}
+                                                                    {{ task_note.getCreatedAt()|date('d-M-Y') }}
+                                                                {% endif %}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="direct-chat-name">
+                                                                {{ task_note.getNote()|nl2br }}
+                                                            </span>
+                                                            {% if user_role_id == 1 %}
+                                                                <small class="label bg-gray">
+                                                                    ({{ task_note.getCreatedByUser().getUsername() }})
+                                                                </small>
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    {% set task_completed_date_temp = task_note.getCreatedAt()|date('d-M-Y') %}
+                                                {% endfor %}
+                                            </table>
+                                        </div>
+                                        <!--  End Card Body -->
+
+                                        <div class="card-footer p-2">
+                                            <!-- dugme koje briše zadatka -->
+                                            <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete zadatak?');"
+                                               href="/project/{{ project_id }}/task/{{ task_completed.id }}/delete">
+                                                <button type="button" class="btn btn-default btn-xs btn pull-left"
+                                                        title="Obriši zadatak!">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </a>
+                                            <!-- dugme koje otvara formu za izmenu zadatka -->
+                                            <a href="/project/{{ project_id }}/task/{{ task_completed.id }}/edit">
+                                                <button type="button" class="btn btn-default btn-xs pull-right"
+                                                        title="Idi na izmenu zadatka!">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                            </a>
+                                        </div>
+                                        <!-- End Card Footer -->
+
+                                    </div>
+                                    <!-- /#collapseOne -->
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                    <!-- /.row row-cols-1 row-cols-md-3 -->
+
+                </div>
+                <!-- End Card Body -->
+            </div>
+
+        </div>
+        <!-- End Card -->
+    </div>
+
+    <!-- Files -->
+    <div class="col-sm-12">
+
+        <div class="card mb-4">
+            <div class="card-header p-2">
+                <h6 class="d-inline m-0 text-dark">
+                    <i class="fas fa-file"> </i> Fajlovi
+                </h6>
+            </div>
+            <div class="card-body p-2">
+                <div class="row">
+                    {% for file in files %}
+                        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+                            <div class="card">
+                                <a href="/upload/projects/project_id_{{ project_id }}/{{ file }}"
+                                   target="_blank" class="p-1">
+                                    <img class="card-img-top" src="/upload/projects/project_id_{{ project_id }}/{{ file }}"
+                                         alt="Attachment">
+                                </a>
+                                <div class="card-body">
+                                    <p class="card-text"><?php echo $entry; ?></p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+            <!-- End Card Body -->
+        </div>
+        <!-- End Card -->
+    </div>
+    <!-- /.col-sm-12 -->
+
+</div>
+<!-- /.row -->

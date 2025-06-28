@@ -1,0 +1,238 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block body %}
+    {% include 'project/tools_menu.html.twig' %}
+    <div class="col-lg-12 px-2">
+        <h3>Rezultati pretrage projekata</h3>
+        <div class="card mb-4">
+            <div class="card-header p-2">
+                <h6 class="d-inline m-0 text-dark">Aktivni projekti</h6>
+            </div>
+            <div class="card-body p-2">
+                <div class="table-responsive">
+                    <table class="dataTable table table-hover" id="" width="100%" cellspacing="0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="w-25 text-center">projekti</th>
+                                <!--<th class="px-1 text-center order-status" title="Status projekta">s</th>-->
+                                <th class="w-25 text-center">za realizaciju</th>
+                                <th class="w-25 text-center">u realizaciji</th>
+                                <th class="w-25 text-center">realizovano</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for active_project_data in active_projects_data %}
+                            <tr>
+                                <td>
+                                    <a href="/project/{{ active_project_data.id }}"
+                                       class="d-block card-link"
+                                       title="{{ active_project_data.created_at }}">
+                                        #{{ '%04d'|format(active_project_data.ordinal_num_in_year) }}
+                                        -
+                                        {{ active_project_data.title }}
+                                    </a>
+                                    {{ active_project_data.client }}
+                                    {%  if active_project_data.city %}
+                                        , <span style="font-size: 0.9em;">{{ active_project_data.city.getName() }}</span>
+                                    {% endif %}
+                                </td>
+                                {# tasks for realization ============================ #}
+                                <td>
+                                    {% set count_for_realization = 0 %}
+                                    {% for task_for_realization in active_project_data.tasks_for_realization %}
+                                    {% set count_for_realization = count_for_realization + 1 %}
+                                    <a href="/project/{{ active_project_data.id }}/task/{{ task_for_realization.id }}/edit">
+                                            <span class="badge badge-{{ task_for_realization.class }}">
+                                                {{ task_for_realization.type }}
+                                            </span>
+                                        {{ task_for_realization.title }}
+                                    </a>
+                                <br />
+                                    {% if count_for_realization == 4 %}
+                                    <a class="" data-toggle="collapse" href="#collapseExample1-{{ project_data.id }}"
+                                       role="button" aria-expanded="false" aria-controls="collapseExample1">
+                                        <i class="fas fa-caret-down"></i>
+                                    </a>
+                                    <div class="collapse" id="collapseExample1-{{ project_data.id }}">
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% if count_for_realization > 3 %}
+                                    </div>
+                                    {% endif %}
+                                </td>
+
+                                {# tasks in realization ============================= #}
+                                <td>
+                                    {% set count_in_realization = 0 %}
+                                    {% for task_in_realization in active_project_data.tasks_in_realization %}
+                                        {% set count_in_realization = count_in_realization + 1 %}
+                                        <a href="/project/{{ active_project_data.id }}/task/{{ task_in_realization.id }}/edit">
+                                            <span class="badge badge-{{ task_in_realization.class }}">
+                                                {{ task_in_realization.type }}
+                                            </span>
+                                            {{ task_in_realization.title }}
+                                        </a>
+                                        <br />
+                                        {% if count_in_realization == 4 %}
+                                            <a class="" data-toggle="collapse" href="#collapseExample2-{{ project_data.id }}"
+                                               role="button" aria-expanded="false" aria-controls="collapseExample2">
+                                                <i class="fas fa-caret-down"></i>
+                                            </a>
+                                            <div class="collapse" id="collapseExample2-{{ project_data.id }}">
+                                        {% endif %}
+                                        {% if count_in_realization > 3 %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+
+                                {# completed tasks ================================== #}
+                                <td>
+                                    {% set count_completed = 0 %}
+                                    {% for task_completed in active_project_data.tasks_completed %}
+                                        {% set count_completed = count_completed + 1 %}
+                                        <a href="/project/{{ active_project_data.id }}/task/{{ task_completed.id }}/edit">
+                                            <span class="badge badge-{{ task_completed.class }}">
+                                                {{ task_completed.type }}
+                                            </span>
+                                            {{ task_completed.title }}
+                                        </a>
+                                        <br />
+                                        {% if count_in_realization == 4 %}
+                                            <a class="" data-toggle="collapse" href="#collapseExample3-{{ project_data.id }}"
+                                               role="button" aria-expanded="false" aria-controls="collapseExample3">
+                                                <i class="fas fa-caret-down"></i>
+                                            </a>
+                                            <div class="collapse" id="collapseExample3-{{ project_data.id }}">
+                                        {% endif %}
+                                        {% if count_completed > 3 %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End Card Body -->
+
+            <div class="card-header p-2">
+                <h6 class="d-inline m-0 text-dark">Arhivirani projekti</h6>
+            </div>
+            <div class="card-body p-2">
+                <div class="table-responsive">
+                    <table class="dataTable table table-hover" id="" width="100%" cellspacing="0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="w-25 text-center">projekti</th>
+                                <th class="w-25 text-center">za realizaciju</th>
+                                <th class="w-25 text-center">u realizaciji</th>
+                                <th class="w-25 text-center">realizovano</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for inactive_project_data in inactive_projects_data %}
+                            <tr>
+                                <td>
+                                    <a href="/project/{{ inactive_project_data.id }}"
+                                       class="d-block card-link"
+                                       title="{{ inactive_project_data.created_at }}">
+                                        #{{ '%04d'|format(inactive_project_data.ordinal_num_in_year) }}
+                                        -
+                                        {{ inactive_project_data.title }}
+                                    </a>
+                                    {{ inactive_project_data.client }}
+                                    {%  if inactive_project_data.city %}
+                                        , <span style="font-size: 0.9em;">{{ inactive_project_data.city.getName() }}</span>
+                                    {% endif %}
+                                </td>
+
+                                {# tasks for realization ============================ #}
+                                <td>
+                                    {% set count_for_realization = 0 %}
+                                    {% for task_for_realization in inactive_project_data.tasks_for_realization %}
+                                    {% set count_for_realization = count_for_realization + 1 %}
+                                    <a href="/project/{{ inactive_project_data.id }}/task/{{ task_for_realization.id }}/edit">
+                                            <span class="badge badge-{{ task_for_realization.class }}">
+                                                {{ task_for_realization.type }}
+                                            </span>
+                                        {{ task_for_realization.title }}
+                                    </a>
+                                <br />
+                                    {% if count_for_realization == 4 %}
+                                    <a class="" data-toggle="collapse" href="#collapseExample1-{{ project_data.id }}"
+                                       role="button" aria-expanded="false" aria-controls="collapseExample1">
+                                        <i class="fas fa-caret-down"></i>
+                                    </a>
+                                    <div class="collapse" id="collapseExample1-{{ project_data.id }}">
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% if count_for_realization >= 4 %}
+                                    </div>
+                                    {% endif %}
+                                </td>
+
+                                {# tasks in realization ============================= #}
+                                <td>
+                                    {% set count_in_realization = 0 %}
+                                    {% for task_in_realization in inactive_project_data.tasks_in_realization %}
+                                        {% set count_in_realization = count_in_realization + 1 %}
+                                        <a href="/project/{{ inactive_project_data.id }}/task/{{ task_in_realization.id }}/edit">
+                                            <span class="badge badge-{{ task_in_realization.class }}">
+                                                {{ task_in_realization.type }}
+                                            </span>
+                                            {{ task_in_realization.title }}
+                                        </a>
+                                        <br />
+                                        {% if count_in_realization == 4 %}
+                                            <a class="" data-toggle="collapse" href="#collapseExample2-{{ project_data.id }}"
+                                               role="button" aria-expanded="false" aria-controls="collapseExample2">
+                                                <i class="fas fa-caret-down"></i>
+                                            </a>
+                                            <div class="collapse" id="collapseExample2-{{ project_data.id }}">
+                                        {% endif %}
+                                        {% if count_in_realization >= 4 %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+
+                                {# completed tasks ================================== #}
+                                <td>
+                                    {% set count_completed = 0 %}
+                                    {% for task_completed in inactive_project_data.tasks_completed %}
+                                        {% set count_completed = count_completed + 1 %}
+                                        <a href="/project/{{ inactive_project_data.id }}/task/{{ task_completed.id }}/edit">
+                                            <span class="badge badge-{{ task_completed.class }}">
+                                                {{ task_completed.type }}
+                                            </span>
+                                            {{ task_completed.title }}
+                                        </a>
+                                        <br />
+                                        {% if count_in_realization == 4 %}
+                                            <a class="" data-toggle="collapse" href="#collapseExample3-{{ project_data.id }}"
+                                               role="button" aria-expanded="false" aria-controls="collapseExample3">
+                                                <i class="fas fa-caret-down"></i>
+                                            </a>
+                                            <div class="collapse" id="collapseExample3-{{ project_data.id }}">
+                                        {% endif %}
+                                        {% if count_completed > 3 %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

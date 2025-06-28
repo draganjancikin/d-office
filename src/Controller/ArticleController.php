@@ -4,7 +4,12 @@ namespace App\Controller;
 
 use App\Core\BaseController;
 use App\Entity\Article;
+use App\Entity\ArticleGroup;
 use App\Entity\ArticleProperty;
+use App\Entity\Preferences;
+use App\Entity\Property;
+use App\Entity\Unit;
+use App\Entity\User;
 
 /**
  * ArticleController class
@@ -14,15 +19,17 @@ use App\Entity\ArticleProperty;
 class ArticleController extends BaseController
 {
 
-    private $page = 'article';
-    private $page_title = 'Proizvodi';
-    private $stylesheet = '/../libraries/';
+    private $page;
+    private $page_title;
 
     /**
      * ArticleController constructor.
      */
     public function __construct() {
         parent::__construct();
+
+        $this->page = 'article';
+        $this->page_title = 'Proizvodi';
     }
 
     /**
@@ -30,28 +37,28 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function index($search = NULL): void
+    public function index(): void
     {
-        $article_groups = $this->entityManager->getRepository('\App\Entity\ArticleGroup')->findAll();
-        $last_articles = $this->entityManager->getRepository('\App\Entity\Article')->getLastArticles(15);
-        $preferences = $this->entityManager->find('\App\Entity\Preferences', 1);
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
-            'search' => $search,
-            'article_groups' => $article_groups,
-            'last_articles' => $last_articles,
-            'preferences' => $preferences,
-        ];
-
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('index', $data);
+        $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->findAll();
+
+        $last_articles = $this->entityManager->getRepository(Article::class)->getLastArticles(15);
+        $preferences = $this->entityManager->find(Preferences::class, 1);
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'article_groups' => $article_groups,
+            'last_articles' => $last_articles,
+            'preferences' => $preferences,
+            'tools_menu' => [
+                'article' => FALSE,
+                'group' => FALSE,
+            ],
+        ];
+
+        $this->render('article/index.html.twig', $data);
     }
 
     /**
@@ -61,23 +68,20 @@ class ArticleController extends BaseController
      */
     public function addForm(): void
     {
-        $article_groups = $this->entityManager->getRepository('\App\Entity\ArticleGroup')->getArticleGroups();
-        $units = $this->entityManager->getRepository('\App\Entity\Unit')->findBy(array(), array('name' => 'ASC'));
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->getArticleGroups();
+        $units = $this->entityManager->getRepository(Unit::class)->findBy([], ['name' => 'ASC']);
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'article_groups' => $article_groups,
             'units' => $units,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('add', $data);
+        $this->render('article/add.html.twig', $data);
     }
 
     /**
@@ -87,16 +91,16 @@ class ArticleController extends BaseController
      */
     public function add(): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         $group_id = htmlspecialchars($_POST['group_id']);
-        $group = $this->entityManager->find("\App\Entity\ArticleGroup", $group_id);
+        $group = $this->entityManager->find(ArticleGroup::class, $group_id);
 
         $name = htmlspecialchars($_POST['name']);
         if ($name == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
 
         $unit_id = htmlspecialchars($_POST['unit_id']);
-        $unit = $this->entityManager->find("\App\Entity\Unit", $unit_id);
+        $unit = $this->entityManager->find(Unit::class, $unit_id);
 
         $weight = $_POST['weight'] ? htmlspecialchars($_POST['weight']) : 0;
         $min_calc_measure = str_replace(",", ".", htmlspecialchars($_POST['min_calc_measure']));
@@ -134,25 +138,28 @@ class ArticleController extends BaseController
      */
     public function view(int $article_id): void
     {
-        $article_data = $this->entityManager->find("\App\Entity\Article", $article_id);
-        $article_properties = $this->entityManager->getRepository('\App\Entity\ArticleProperty')->getArticleProperties($article_id);
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $article_data = $this->entityManager->find(Article::class, $article_id);
+        $article_properties = $this->entityManager->getRepository(ArticleProperty::class)->getArticleProperties($article_id);
+        $property_list = $this->entityManager->getRepository(Property::class)->findAll();
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'article_id' => $article_id,
             'article_data' => $article_data,
             'article_properties' => $article_properties,
+            'property_list' => $property_list,
+            'tools_menu' => [
+                'article' => TRUE,
+                'view' => TRUE,
+                'edit' => FALSE,
+            ],
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('view', $data);
+        $this->render('article/view.html.twig', $data);
     }
 
     /**
@@ -164,29 +171,32 @@ class ArticleController extends BaseController
      */
     public function editForm(int $article_id): void
     {
-        $article_data = $this->entityManager->find("\App\Entity\Article", $article_id);
-        $article_properties = $this->entityManager->getRepository('\App\Entity\ArticleProperty')->getArticleProperties($article_id);
-        $article_groups = $this->entityManager->getRepository('\App\Entity\ArticleGroup')->getArticleGroups();
-        $units = $this->entityManager->getRepository('\App\Entity\Unit')->findBy([], ['name' => 'ASC']);
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $article_data = $this->entityManager->find(Article::class, $article_id);
+        $article_properties = $this->entityManager->getRepository(ArticleProperty::class)->getArticleProperties($article_id);
+        $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->getArticleGroups();
+        $units = $this->entityManager->getRepository(Unit::class)->findBy([], ['name' => 'ASC']);
+        $property_list = $this->entityManager->getRepository(Property::class)->findAll();
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'article_id' => $article_id,
             'article_data' => $article_data,
             'article_properties' => $article_properties,
             'article_groups' => $article_groups,
             'units' => $units,
+            'property_list' => $property_list,
+            'tools_menu' => [
+                'article' => TRUE,
+                'view' => FALSE,
+                'edit' => TRUE,
+            ],
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('edit', $data);
+        $this->render('article/edit.html.twig', $data);
     }
 
     /**
@@ -198,15 +208,15 @@ class ArticleController extends BaseController
      */
     public function edit(int $article_id): void
     {
-        $user = $this->entityManager->find("\App\Entity\User", $this->user_id);
+        $user = $this->entityManager->find(User::class, $this->user_id);
 
         $group_id = htmlspecialchars($_POST['group_id']);
-        $group = $this->entityManager->find("\App\Entity\ArticleGroup", $group_id);
+        $group = $this->entityManager->find(ArticleGroup::class, $group_id);
 
         $name = htmlspecialchars($_POST["name"]);
 
         $unit_id = htmlspecialchars($_POST["unit_id"]);
-        $unit = $this->entityManager->find("\App\Entity\Unit", $unit_id);
+        $unit = $this->entityManager->find(Unit::class, $unit_id);
 
         $weight = 0;
         if ($_POST['weight']){
@@ -217,7 +227,7 @@ class ArticleController extends BaseController
         $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
         $note = htmlspecialchars($_POST["note"]);
 
-        $article = $this->entityManager->find('\App\Entity\Article', $article_id);
+        $article = $this->entityManager->find(Article::class, $article_id);
 
         if ($article === null) {
             echo "Article with ID $article_id does not exist.\n";
@@ -248,10 +258,10 @@ class ArticleController extends BaseController
      */
     public function addProperty(int $article_id): void
     {
-        $article = $this->entityManager->find("\App\Entity\Article", $article_id);
+        $article = $this->entityManager->find(Article::class, $article_id);
 
         $property_id = htmlspecialchars($_POST['property_id']);
-        $property = $this->entityManager->find("\App\Entity\Property", $property_id);
+        $property = $this->entityManager->find(Property::class, $property_id);
 
         $min_size = 0;
         if (isset($_POST['min'])) {
@@ -286,7 +296,7 @@ class ArticleController extends BaseController
      */
     public function deleteProperty(int $article_id, int $property_id): void
     {
-        $article_property = $this->entityManager->find("\App\Entity\ArticleProperty", $property_id);
+        $article_property = $this->entityManager->find(ArticleProperty::class, $property_id);
 
         $this->entityManager->remove($article_property);
         $this->entityManager->flush();
@@ -301,22 +311,18 @@ class ArticleController extends BaseController
      */
     public function groups(): void
     {
-        $article_groups = $this->entityManager->getRepository('\App\Entity\ArticleGroup')->findAll();
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->findAll();
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'article_groups' => $article_groups,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('groups', $data);
+        $this->render('article/groups.html.twig', $data);
     }
 
     /**
@@ -326,18 +332,15 @@ class ArticleController extends BaseController
      */
     public function addGroupForm(): void
     {
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-        ];
-
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
-        $this->render('add_group', $data);
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+        ];
+
+        $this->render('article/add_group.html.twig', $data);
     }
 
     /**
@@ -364,28 +367,30 @@ class ArticleController extends BaseController
     /**
      * Group view.
      *
-     * @param $group_id
+     * @param int $group_id
      *
      * @return void
      */
-    public function viewGroup($group_id): void
+    public function viewGroup(int $group_id): void
     {
-        $article_group_data = $this->entityManager->find("\App\Entity\ArticleGroup", $group_id);
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $article_group_data = $this->entityManager->find(ArticleGroup::class, $group_id);
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'group_id' => $group_id,
             'article_group_data' => $article_group_data,
+            'tools_menu' => [
+                'group' => TRUE,
+                'view' => TRUE,
+                'edit' => FALSE,
+            ],
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('view_group', $data);
+        $this->render('article/view_group.html.twig', $data);
     }
 
     /**
@@ -397,22 +402,24 @@ class ArticleController extends BaseController
      */
     public function editGroupForm(int $group_id): void
     {
-        $article_group_data = $this->entityManager->find("\App\Entity\ArticleGroup", $group_id);
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $article_group_data = $this->entityManager->find(ArticleGroup::class, $group_id);
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'group_id' => $group_id,
             'article_group_data' => $article_group_data,
+            'tools_menu' => [
+                'group' => TRUE,
+                'view' => FALSE,
+                'edit' => TRUE,
+            ],
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('edit_group', $data);
+      $this->render('article/edit_group.html.twig', $data);
     }
 
     /**
@@ -425,7 +432,7 @@ class ArticleController extends BaseController
     public function editGroup(int $group_id): void
     {
         $name = htmlspecialchars($_POST["name"]);
-        $article_group = $this->entityManager->find('\App\Entity\ArticleGroup', $group_id);
+        $article_group = $this->entityManager->find(ArticleGroup::class, $group_id);
 
         if ($article_group === null) {
             echo "Article Group with ID $group_id does not exist.\n";
@@ -447,41 +454,55 @@ class ArticleController extends BaseController
      */
     public function priceList(int $group_id): void
     {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $group_id = htmlspecialchars($_GET['group_id']);
-        $group = $this->entityManager->find("\App\Entity\ArticleGroup", $group_id);
-        $articles_by_group =  $this->entityManager->getRepository('\App\Entity\Article')->getArticlesByGroup($group_id);
+        $group = $this->entityManager->find(ArticleGroup::class, $group_id);
+        $articles_by_group =  $this->entityManager->getRepository(Article::class)->getArticlesByGroup($group_id);
+        $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->findAll();
+        $preferences = $this->entityManager->find(Preferences::class, 1);
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'group' => $group,
             'articles_by_group' => $articles_by_group,
+            'article_groups' => $article_groups,
+            'preferences' => $preferences,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('price_list', $data);
+        $this->render('article/price_list.html.twig', $data);
     }
 
     /**
-     * A helper method to render views.
+     * Search for articles.
      *
-     * @param string $view
-     * @param array $data
+     * @param string $term
+     *   Search term.
      *
      * @return void
      */
-    private function render(string $view, array $data = []): void
+    public function search(string $term): void
     {
-        // Extract data array to variables.
-        extract($data);
-        // Include the view file.
-        require_once __DIR__ . "/../Views/$page/$view.php";
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->findAll();
+
+        $articles = $this->entityManager->getRepository(Article::class)->search($term);
+
+        $preferences = $this->entityManager->find(Preferences::class, 1);
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'article_groups' => $article_groups,
+            'articles' => $articles,
+            'preferences' => $preferences,
+        ];
+
+        $this->render('article/search.html.twig', $data);
     }
 
 }

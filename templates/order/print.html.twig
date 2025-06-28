@@ -1,0 +1,118 @@
+<style>
+    table {
+        padding: 0;
+        margin: 0;
+        border-collapse: collapse;
+    }
+    table tr th {
+      border: 1px solid black;
+      text-align: center;
+    }
+    .ordinal_num {
+      width: 35px;
+    }
+    .article_name {
+      width: 440px;
+    }
+</style>
+
+<table>
+    <tr>
+        <td width="690px" colspan="3"><h1>{{ company_info.name }}</h1></td>
+    </tr>
+    <tr>
+        <td width="340px" colspan="2"><br />
+            {{ company_info.street }} {{ company_info.home_number }}<br />
+            {{ company_info.city }}, {{ company_info.country }}<br />
+            PIB: {{ company_info.pib }}, MB: {{ company_info.mb }}<br />
+            žiro računi:<br />
+            {% if company_info.bank_account_1 %}
+                {{ company_info.bank_account_1 }}<br />
+            {% endif %}
+            {% if company_info.bank_account_2 %}
+                {{ company_info.bank_account_2 }}<br />
+            {% endif %}
+            kontakti:<br />
+            {% if company_info.phone_1 %}{{ company_info.phone_1 }}<br />{% endif %}
+            {% if company_info.phone_2 %}{{ company_info.phone_2 }}<br />{% endif %}
+            {% if company_info.email_1 %}{{ company_info.email_1 }}<br />{% endif %}
+            {% if company_info.email_2 %}{{ company_info.email_2 }}<br />{% endif %}
+            {% if company_info.website_1 %}{{ company_info.website_1 }}<br />{% endif %}
+        </td>
+        <td width="350px">Dobavljač:<br />
+            {{ supplier_data.name }}
+            {% if supplier_data.lb %}<br />PIB {{ supplier_data.lb }}{% endif %}
+            <br />
+            {% if supplier_data.street %}{{ supplier_data.street }} {{ supplier_data.home_number }}{% endif %}
+            {% if supplier_data.street and supplier_data.city %}<br />{% endif %}
+            {% if supplier_data.city %}{{ supplier_data.city }}{% endif %}
+            {% if supplier_data.city and supplier_data.country %}<br />{% endif %}
+            {% if supplier_data.country %}{{ supplier_data.country }}{% endif %}
+            <br />
+            {% for supplier_contact in supplier_data.contacts|slice(0, 2) %}
+                {{ supplier_contact.type.name }}: {{ supplier_contact.body }}<br />
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <h2>Narudžbenica:
+                {{ '%03d'|format(order_data.getOrdinalNumInYear()) }} - {{ order_data.getDate().format('Y') }}
+            </h2>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3"><br />
+            Datum i mesto: {{ order_data.getDate().format('Y') }}.g. Bačka Palanka
+        </td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th class="ordinal_num">red.<br />broj</th>
+        <th width="100px">šifra</th>
+        <th class="article_name">naziv proizvoda</th>
+        <th width="45px">jed.<br />mere</th>
+        <th width="65px">količina</th>
+    </tr>
+</table>
+
+{% set count = 0 %}
+{% for material_on_order_data in materials_on_order_data %}
+    {% set count = count + 1 %}
+<table border="0" style="font-size:14px">
+    <tr>
+        <td width="35px" align="center">{{ count }}</td>
+        <td width="100px" class="center"></td>
+        <td width="440px">{{ material_on_order_data.material.name }}
+            {% if material_on_order_data.material.note %}
+                ({{ material_on_order_data.material.note }})
+            {% endif %}
+            <br />
+            {% set property_count = 0 %}
+            {% for order_material_property in material_on_order_data.material.properties %}
+                {% set property_count = property_count + 1 %}
+                {% if property_count == 2 %}x{% endif %}
+                {{ order_material_property.quantity|number_format(2, ',', '.') }}cm
+            {% endfor %}
+            - {{ material_on_order_data.material.pieces }}
+            {% if material_on_order_data.material.unit == "set" or material_on_order_data.material.unit == "par" %}
+                {{ material_on_order_data.material.unit }}
+            {% else %}
+                kom
+            {% endif %}
+        </td>
+        <td align="center" width="45px">{{ material_on_order_data.material.unit }}</td>
+        <td width="65px" align="right">
+            {{ material_on_order_data.material.quantity|number_format(2, ',', '.') }}
+        </td>
+    </tr>
+</table>
+{% endfor %}
+
+<table border="1">
+    <tr>
+        <td width="690px">Napomena:<br />{{ order_data.note|nl2br }}</td>
+    </tr>
+</table>

@@ -26,6 +26,7 @@ $router->add('GET', '/clients/addCity', 'ClientController@addCityForm');
 $router->add('POST', '/clients/addCity', 'ClientController@addCity');
 $router->add('GET', '/clients/addStreet', 'ClientController@addStreetForm');
 $router->add('POST', '/clients/addStreet', 'ClientController@addStreet');
+$router->add('GET', '/clients/search/', 'ClientController@search');
 $router->add('GET', '/clients/advancedSearch', 'ClientController@advancedSearch');
 $router->add('POST', '/clients/advancedSearch', 'ClientController@advancedSearch');
 
@@ -43,6 +44,11 @@ $router->add('GET', '/pidbs/preferences', 'PidbController@editPreferencesForm');
 $router->add('POST', '/pidbs/preferences', 'PidbController@editPreferences');
 $router->add('GET', '/pidbs/add', 'PidbController@addForm');
 $router->add('POST', '/pidbs/add', 'PidbController@add');
+$router->add('POST', '/pidbs/cacheInOut', 'PidbController@cacheInOut');
+$router->add('GET', '/pidbs/search/', 'PidbController@search');
+$router->add('GET', '/pidbs/transactions', 'PidbController@transactions');
+$router->add('GET', '/pidbs/cashRegister', 'PidbController@cashRegister');
+$router->add('GET', '/pidbs/printDailyCacheReport', 'PidbController@printDailyCacheReport');
 
 $router->add('GET', '/pidb/{pidb_id}', 'PidbController@view');
 $router->add('GET', '/pidb/{pidb_id}/edit', 'PidbController@editForm');
@@ -63,7 +69,7 @@ $router->add('POST', '/pidb/{pidb_id}/article/{pidb_article_id}/change', 'PidbCo
 $router->add('GET', '/pidb/{pidb_id}/article/{pidb_article_id}/duplicate', 'PidbController@duplicateArticleInAccountingDocument');
 $router->add('GET', '/pidb/{pidb_id}/article/{pidb_article_id}/delete', 'PidbController@deleteArticleInAccountingDocument');
 
-$router->add('GET', '/pidb/{pidb_id}/transactions', 'PidbController@transactions');
+$router->add('GET', '/pidb/{pidb_id}/transactions', 'PidbController@transactionsByDocument');
 $router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@formEditTransaction');
 $router->add('POST', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@editTransaction');
 $router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/delete', 'PidbController@deleteTransaction');
@@ -72,6 +78,7 @@ $router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/delete', 'Pidb
 $router->add('GET', '/cuttings/', 'CuttingController@index');
 $router->add('GET', '/cuttings/add', 'CuttingController@formAdd');
 $router->add('POST', '/cuttings/add', 'CuttingController@add');
+$router->add('GET', '/cuttings/search/', 'CuttingController@search');
 $router->add('GET', '/cutting/{cutting_id}', 'CuttingController@view');
 $router->add('GET', '/cutting/{cutting_id}/edit', 'CuttingController@edit');
 $router->add('GET', '/cutting/{cutting_id}/print', 'CuttingController@print');
@@ -85,6 +92,7 @@ $router->add('GET', '/cutting/{cutting_id}/delete', 'CuttingController@delete');
 $router->add('GET', '/materials/', 'MaterialController@index');
 $router->add('GET', '/materials/add', 'MaterialController@addForm');
 $router->add('POST', '/materials/add', 'MaterialController@add');
+$router->add('GET', '/materials/search/', 'MaterialController@search');
 
 $router->add('GET', '/material/{material_id}', 'MaterialController@view');
 $router->add('GET', '/material/{material_id}/edit', 'MaterialController@editForm');
@@ -101,6 +109,7 @@ $router->add('GET', '/material/{material_id}/property/{property_id}/delete', 'Ma
 $router->add('GET', '/orders/', 'OrderController@index');
 $router->add('GET', '/orders/add', 'OrderController@addForm');
 $router->add('POST', '/orders/add', 'OrderController@add');
+$router->add('GET', '/orders/search/', 'OrderController@search');
 
 $router->add('GET', '/order/{order_id}', 'OrderController@view');
 $router->add('GET', '/order/{order_id}/edit', 'OrderController@editForm');
@@ -120,6 +129,7 @@ $router->add('GET', '/articles/', 'ArticleController@index');
 $router->add('GET', '/articles/add', 'ArticleController@addForm');
 $router->add('POST', '/articles/add', 'ArticleController@add');
 $router->add('GET', '/articles/price-list', 'ArticleController@priceList');
+$router->add('GET', '/articles/search/', 'ArticleController@search');
 
 $router->add('GET', '/articles/groups', 'ArticleController@groups');
 $router->add('GET', '/articles/groups/add', 'ArticleController@addGroupForm');
@@ -171,6 +181,7 @@ $router->add('GET', '/project/{project_id}/task/{task_id}/setEndDate', 'ProjectC
 $router->add('POST', '/project/{project_id}/task/{task_id}/addNote', 'ProjectController@addTaskNote');
 $router->add('GET', '/project/{project_id}/task/{task_id}/note/{note_id}/delete', 'ProjectController@deleteTaskNote');
 
+$router->add('GET', '/projects/search/', 'ProjectController@search');
 $router->add('GET', '/projects/advancedSearch', 'ProjectController@advancedSearch');
 $router->add('POST', '/projects/advancedSearch', 'ProjectController@advancedSearch');
 

@@ -1,3 +1,7 @@
+# Upgrade to 8.1.0
+Enhancement:
+* #297 - Install "twig" package (3.20.0)
+
 # Upgrade to 8.0.2
 Enhancement:
 * #296

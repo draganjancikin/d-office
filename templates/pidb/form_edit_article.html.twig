@@ -1,0 +1,36 @@
+<div class="card border-{{ style }} mb-4">
+    <div class="card-header bg-{{ style}} p-2">
+        <h6 class="m-0 font-weight-bold text-white">Promena proizvoda</h6>
+    </div>
+    <div class="card-body p-2">
+
+        <form action="/pidb/{{ pidb_id }}/article/{{ pidb_article_id }}/change"
+              class="form-horizontal" role="form" method="post">
+
+            <div class="row mb-2">
+
+                <label for="article_id" class="col-sm-3 col-lg-2 col-form-label text-right">
+                    Izaberite proizvod:
+                </label>
+                <div class="col-sm-9 col-lg-10">
+                    <select name="article_id" id="article_id" class="form-select form-select-sm">
+                        <option value="{{ article_data.id }}">{{ article_data.name }}</option>
+                        {% for article in all_articles %}
+                            <option value="{{ article.id }}">{{ article.name }}</option>
+                        {%  endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-sm-3 offset-sm-3 offset-lg-2">
+                    <button type="submit" class="btn btn-sm btn-success"
+                            title="Snimi podatake o klijentu!">
+                        <i class="fas fa-save" title="Snimi izmenu"> </i> Snimi izmenu
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
