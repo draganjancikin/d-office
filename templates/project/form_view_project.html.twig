@@ -28,8 +28,8 @@
                     </dd>
 
                     {% for client_contact in client.contacts %}
-                        <dt class="col-sm-3 col-md-2">{{ client_contact.type.name }}:</dt>
-                        <dd class="col-sm-9 col-md-10">
+                        <dt class="col-sm-4 col-md-3">{{ client_contact.type.name }}:</dt>
+                        <dd class="col-sm-8 col-md-9">
                             {{ client_contact.body }}
                             {% if client_contact.note %}
                                 ({{ client_contact.note }})
