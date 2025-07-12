@@ -747,7 +747,7 @@ class PidbController extends BaseController
 
         [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
             1 => ["Predračun", "P_", 'info'],
-            2 => ["Otpremnica", "O_", 'secondary'],
+            2 => ["Otpremnica - račun", "O_", 'secondary'],
             4 => ["Povratnica", "POV_", 'warning'],
             default => ["_", "_", 'default'],
         };
@@ -858,7 +858,7 @@ class PidbController extends BaseController
         $pidb_type_id = $pidb->getType()->getId();
         [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
             1 => ["Predračun", "P_", 'info'],
-            2 => ["Otpremnica", "O_", 'secondary'],
+            2 => ["Otpremnica - račun", "O_", 'secondary'],
             4 => ["Povratnica", "POV_", 'warning'],
             default => ["_", "_", 'default'],
         };
@@ -1620,6 +1620,7 @@ class PidbController extends BaseController
                 );
             $accounting_document_articles_data[$index]['article']['note'] = $accounting_document_article->getNote();
             $accounting_document_articles_data[$index]['article']['price'] = $accounting_document_article->getPrice();
+            $accounting_document_articles_data[$index]['article']['price_rsd'] = $accounting_document_article->getPrice() * $kurs;
             $accounting_document_articles_data[$index]['article']['discount'] = $accounting_document_article->getDiscount();
             $accounting_document_articles_data[$index]['article']['tax_base_rsd'] =  $this->entityManager
                 ->getRepository(AccountingDocumentArticle::class)
