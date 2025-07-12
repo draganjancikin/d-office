@@ -46,7 +46,7 @@
                         </tr>
                         {% for transaction in transactions %}
                             <tr>
-                                <td class="text-center">{{ transaction.getCreatedAt().format('d-m-Y') }}</td>
+                                <td class="text-center">{{ transaction.getDate().format('d-m-Y') }}</td>
                                 <td class="text-center" title="{{ transaction.note }}">{{ transaction.type.name }}</td>
                                 <td class="text-center">{{ transaction.note }}</td>
                                 <td class="text-right"></td>

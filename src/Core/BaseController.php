@@ -17,8 +17,8 @@ class BaseController {
     public $user_role_id;
     public $entityManager;
     protected $twig;
-    private $app_version;
-    private $stylesheet;
+    protected $app_version;
+    protected $stylesheet;
 
     /**
      * BaseController constructor.
@@ -50,6 +50,7 @@ class BaseController {
     public function render(string $template, array $context = []) {
         $context['app_version'] = $this->app_version;
         $context['stylesheet'] = $this->stylesheet;
+        $context['user_role_id'] = $this->user_role_id;
 
         echo $this->twig->render($template, $context);
     }

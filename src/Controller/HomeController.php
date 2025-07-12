@@ -12,11 +12,17 @@ use App\Core\BaseController;
 class HomeController extends BaseController
 {
 
+    protected string $page_title;
+    protected string $page;
+
     /**
      * HomeController constructor.
      */
     public function __construct() {
         parent::__construct();
+
+        $this->page_title = 'd-Office 2025';
+        $this->page = 'home';
     }
 
     /**
@@ -28,10 +34,8 @@ class HomeController extends BaseController
     public function index(): void
     {
         $data = [
-            'page_title' => 'D-Office 2025',
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'page' => 'home',
+            'page_title' => $this->page_title,
+            'page' => $this->page,
             'entityManager' => $this->entityManager,
             'number_of_clients' => $this->entityManager->getRepository('\App\Entity\Client')->count([]),
             'number_of_accounting_documents' => $this->entityManager->getRepository('\App\Entity\AccountingDocument')->count([]),
@@ -57,7 +61,8 @@ class HomeController extends BaseController
     public function loginForm(): void
     {
         $data = [
-            'page_title' => APP_VERSION,
+            'page_title' => $this->page_title,
+            'page' => $this->page,
         ];
 
         $this->render('home/login_form.html.twig', $data);

@@ -28,8 +28,8 @@
                     </dd>
 
                     {% for client_contact in client.contacts %}
-                        <dt class="col-sm-3 col-md-2">{{ client_contact.type.name }}:</dt>
-                        <dd class="col-sm-9 col-md-10">
+                        <dt class="col-sm-4 col-md-3">{{ client_contact.type.name }}:</dt>
+                        <dd class="col-sm-8 col-md-9">
                             {{ client_contact.body }}
                             {% if client_contact.note %}
                                 ({{ client_contact.note }})
@@ -238,31 +238,6 @@
                                                     <td>beleške: </td>
                                                     <td></td>
                                                 </tr>
-                                                {% set task_for_realization_date_temp = '' %}
-                                                {% for task_note in task_for_realization.task_notes %}
-                                                    <tr>
-                                                        <td>
-                                                            <span>
-                                                                {# when we have several notes in same day print date only for first note #}
-                                                                {% if task_note.getCreatedAt()|date('d-M-Y') != task_for_realization_date_temp %}
-                                                                    {{ task_note.getCreatedAt()|date('d-M-Y') }}
-                                                                {% endif %}
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            <span class="direct-chat-name">
-                                                                {{ task_note.getNote()|nl2br }}
-                                                            </span>
-                                                            {% if user_role_id == 1 %}
-                                                                <small class="label bg-gray">
-                                                                    ({{ task_note.getCreatedByUser().getUsername() }})
-                                                                </small>
-                                                            {% endif %}
-                                                        </td>
-                                                    </tr>
-                                                    {% set task_for_realization_date_temp = task_note.getCreatedAt()|date('d-M-Y') %}
-                                                {% endfor %}
-
                                                 {% set task_for_realization_date_temp = '' %}
                                                 {% for task_note in task_for_realization.task_notes %}
                                                     <tr>

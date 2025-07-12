@@ -42,18 +42,17 @@ class PidbController extends BaseController
     /**
      * Index action.
      *
-     * @param string|null $search
-     *
      * @return void
      */
-    public function index(string $search = NULL) {
+    public function index(): void
+    {
+
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
-            'search' => $search,
             'tools_menu' => [
                 'pidb' => FALSE,
             ],
@@ -61,9 +60,6 @@ class PidbController extends BaseController
             'delivery_notes' => $this->entityManager->getRepository(AccountingDocument::class)->getLast(2, 0, 10),
             'return_receipts' => $this->entityManager->getRepository(AccountingDocument::class)->getLast(4, 0, 10),
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('pidb/index.html.twig', $data);
     }
@@ -76,7 +72,7 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function addForm(int $client_id = NULL, int $project_id = NULL)
+    public function addForm(int $client_id = NULL, int $project_id = NULL): void
     {
 
         // If the user is not logged in, redirect them to the login page.
@@ -97,10 +93,6 @@ class PidbController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'project_id' => $project_id,
             'client' => $client ?? NULL,
             'clients_list' => $clients_list,
@@ -171,11 +163,10 @@ class PidbController extends BaseController
 
     /**
      * @param int $pidb_id
-     * @param $search
      *
      * @return void
      */
-    public function view(int $pidb_id, $search = NULL): void
+    public function view(int $pidb_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -222,11 +213,6 @@ class PidbController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
-            'search' => $search,
             'pidb_id' => $pidb_id,
             'pidb_data' => $pidb_data,
             'pidb_type_id' => $pidb_type_id,
@@ -240,7 +226,7 @@ class PidbController extends BaseController
             'tools_menu' => [
                 'pidb' => TRUE,
                 'view' => TRUE,
-                'edit' => TRUE,
+                'edit' => FALSE,
                 'cash_register' => TRUE,
             ],
             'previous' => $previous,
@@ -267,9 +253,11 @@ class PidbController extends BaseController
      */
     public function editForm(int $pidb_id): void
     {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $pidb_data = $this->entityManager->find(AccountingDocument::class, $pidb_id);
 
-        // get client data from $pidb_data
         $client_id = $pidb_data->getClient()->getId();
         $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
@@ -311,10 +299,6 @@ class PidbController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'client' => $client,
             'pidb_id' => $pidb_id,
             'pidb_data' => $pidb_data,
@@ -325,6 +309,7 @@ class PidbController extends BaseController
             'tools_menu' => [
                 'pidb' => TRUE,
                 'edit' => TRUE,
+                'view' => FALSE,
             ],
             'accounting_document_articles_data' => $accounting_document_articles_data,
             'previous' => $previous,
@@ -341,9 +326,6 @@ class PidbController extends BaseController
             'remaining_eur' => $remaining_eur,
             'clients_list' => $clients_list,
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('pidb/edit.html.twig', $data);
     }
@@ -399,6 +381,7 @@ class PidbController extends BaseController
             // Check if AccountingDocument have Payments, where PaymentType is Income.
             if ($this->entityManager->getRepository(AccountingDocument::class)->getPaymentsByIncome($acc_doc_id)) {
                 echo "Brisanje dokumenta nije moguće jer postoje uplate vezane za ovaj dokument!";
+                echo "<br><a href='/pidb/{$acc_doc_id}/transactions'>Idi na transakcije dokumenta >></a>";
                 exit();
             }
             else {
@@ -1107,8 +1090,8 @@ class PidbController extends BaseController
         $discounts_1 = htmlspecialchars($_POST["discounts"]);
         $discounts = str_replace(",", ".", $discounts_1);
 
-        $accountingDocumentArticle = $this->entityManager->find(AccountingDocumentArticle::class,
-          $accounting_document__article_id);
+        $accountingDocumentArticle = $this->entityManager
+            ->find(AccountingDocumentArticle::class, $accounting_document__article_id);
 
         $accountingDocumentArticle->setNote($note);
         $accountingDocumentArticle->setPieces($pieces);
@@ -1174,10 +1157,6 @@ class PidbController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'pidb_id' => $pidb_id,
             'pidb_data' => $pidb_data,
             'pidb_article_id' => $pidb_article_id,
@@ -1269,7 +1248,6 @@ class PidbController extends BaseController
      */
     public function duplicateArticleInAccountingDocument(int $pidb_id, int $pidb_article_id): void
     {
-        // sledeća metoda duplicira artikal iz pidb_article i property-e iz pidb_article_property
         $accounting_document__article__properties =
             $this->entityManager
                 ->getRepository(AccountingDocumentArticle::class)
@@ -1293,7 +1271,7 @@ class PidbController extends BaseController
             $accounting_document__article__properties =
                 $this->entityManager
                     ->getRepository(AccountingDocumentArticleProperty::class)
-                    ->findBy(array('accounting_document_article' => $pidb_article_id), [])
+                    ->findBy(['accounting_document_article' => $pidb_article_id], [])
         ) {
             foreach ($accounting_document__article__properties as $accounting_document__article__property) {
                 $accountingDocumentArticleProperty = $this->entityManager
@@ -1328,7 +1306,6 @@ class PidbController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            // 'user_role_id' => $this->user_role_id,
             'transactions' => $transactions_with_accounting_document,
         ];
 
@@ -1367,7 +1344,6 @@ class PidbController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_role_id' => $this->user_role_id,
             'pidb_id' => $pidb_id,
             'pidb' => $pidb,
             'client' => $client,
@@ -1391,6 +1367,9 @@ class PidbController extends BaseController
      */
     public function formEditTransaction(int $pidb_id, int $transaction_id): void
     {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
         $pidb = $this->entityManager->find(AccountingDocument::class, $pidb_id);
         $transaction = $this->entityManager->find(Payment::class, $transaction_id);
         $client_id = $pidb->getClient()->getId();
@@ -1398,18 +1377,11 @@ class PidbController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'pidb_id' => $pidb_id,
             'pidb' => $pidb,
             'transaction' => $transaction,
             'client' => $client,
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
 
         $this->render('pidb/transaction.html.twig', $data);
     }
@@ -1476,9 +1448,6 @@ class PidbController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'user_id' => $this->user_id,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'preferences' => $preferences,
         ];
 
@@ -1610,7 +1579,12 @@ class PidbController extends BaseController
         $this->render('pidb/search.html.twig', $data);
     }
 
-    private function getAccountingDocumentArticlesData($pidb_id)
+    /**
+     * @param int $pidb_id
+     *
+     * @return array
+     */
+    private function getAccountingDocumentArticlesData(int $pidb_id): array
     {
         $preferences = $this->entityManager->find(Preferences::class, 1);
         $kurs = $preferences->getKurs();
@@ -1672,6 +1646,11 @@ class PidbController extends BaseController
         return $accounting_document_articles_data;
     }
 
+    /**
+     * @param int $pidb_id
+     *
+     * @return float
+     */
     private function getAccountingDocumentTotalTaxBaseRSD(int $pidb_id): float
     {
         $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
@@ -1682,7 +1661,13 @@ class PidbController extends BaseController
         return $total_tax_base_rsd;
     }
 
-    private function getAccountingDocumentTotalTaxAmountRSD(int $pidb_id) {
+    /**
+     * @param int $pidb_id
+     *
+     * @return int|mixed
+     */
+    private function getAccountingDocumentTotalTaxAmountRSD(int $pidb_id)
+    {
         $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
         $total_tax_amount_rsd = 0;
         foreach ($accounting_document_articles_data as $index => $accounting_document_article) {
@@ -1691,6 +1676,9 @@ class PidbController extends BaseController
         return $total_tax_amount_rsd;
     }
 
+    /**
+     * @return void
+     */
     public function cashRegister()
     {
         // If the user is not logged in, redirect them to the login page.
@@ -1774,7 +1762,12 @@ class PidbController extends BaseController
       die('<script>location.href = "/pidbs/cashRegister" </script>');
     }
 
-    public function printDailyCacheReport()
+    /**
+     * Print Daily Cache Report.
+     *
+     * @return void
+     */
+    public function printDailyCacheReport(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
