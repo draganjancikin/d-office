@@ -69,15 +69,16 @@
                                 <input class="input-box-pieces" type="text" name="pieces"
                                        value="{{ accounting_document_article_data.article.pieces }}"
                                        placeholder="(kom)" />
+                                <br />
                                 {# AccountingDocument Article Properties. #}
                                 {% for accounting_document_article_property in accounting_document_article_data.article.properties %}
                                     {{ accounting_document_article_property.name }}
-                                    <input class="input-box-55" type="text"
+                                    <input class="input-box-65 my-1" type="text"
                                            name="{{ accounting_document_article_property.name }}"
                                            value="{{ accounting_document_article_property.quantity|number_format(2, ',', '.') }}"
-                                           title="(cm)">
+                                           title="(cm)"> cm
+                                    <br />
                                 {% endfor %}
-                                <br />
                                 <input class="in-article-note" type="text" name="note" value="{{ accounting_document_article_data.article.note }}" />
                             </td>
                             <td class="px-1 text-center">{{ accounting_document_article_data.article.unit }}</td>

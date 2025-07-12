@@ -60,21 +60,24 @@
                         <tr>
                             <td class="px-1 text-center">{{ count }}</td>
                             <td class="px-1">
+                                <span class="text-decoration-underline">
                                 {{ accounting_document_article_data.article.name }}
+                                </span>
                                 <br />
                                 kom
                                 <input class="input-box-pieces" type="text" name="pieces"
                                        value="{{ accounting_document_article_data.article.pieces }}"
                                        placeholder="(kom)" disabled >
+                                <br />
                                 {# AccountingDocument Article Properties. #}
                                 {% for accounting_document_article_property in accounting_document_article_data.article.properties %}
                                     {{ accounting_document_article_property.name }}
-                                    <input class="input-box-55" type="text"
+                                    <input class="input-box-65 my-1" type="text"
                                            name="{{ accounting_document_article_property.name }}"
                                            value="{{ accounting_document_article_property.quantity|number_format(2, ',', '.') }}"
-                                           title="(cm)" disabled >
+                                           title="(cm)" disabled > cm
+                                    <br />
                                 {% endfor %}
-                                <br />
                                 {{ accounting_document_article_data.article.note }}
                                 <?php
                             </td>
