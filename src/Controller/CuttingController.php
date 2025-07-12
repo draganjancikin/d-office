@@ -490,7 +490,7 @@ class CuttingController extends BaseController
         $cutting = $this->entityManager->find(CuttingSheet::class, $cutting_id);
 
         // Total length of pickets in cm.
-        $total_picket_lenght = $total_picket_lenght / 10;
+        $total_picket_lenght = $total_picket_lenght * 100;
 
         $ordinal_num_in_year = 0;
         $title = "PVC letvice";

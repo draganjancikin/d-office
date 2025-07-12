@@ -44,11 +44,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="3">
-            <h2>{{ pidb_type }} broj:
-                {{ '%04d'|format(pidb.getOrdinalNumInYear()) }} - {{ pidb.getCreatedAt().format('m') }}
-            </h2>
-        </td>
+        <td colspan="3"><h2>{{ pidb_type }} broj: {{ '%04d'|format(pidb.getOrdinalNumInYear()) }} - {{ pidb.getCreatedAt().format('m') }}</h2></td>
     </tr>
     <tr>
         <td colspan="3"><br />
@@ -75,29 +71,41 @@
 {% set count = 0 %}
 {% for accounting_document_article_data in accounting_document_articles_data %}
     {% set count = count + 1 %}
-    <table border="0">
+    <table border="0" style="font-size: 10px">
+        <tr><td></td></tr>
         <tr>
             <td width="30px" align="center">{{ count }}</td>
             <td width="195px">
-                {{ accounting_document_article_data.article.name }}
-                <br />
-                <span style="font-size: 8px">{{ accounting_document_article_data.article.note }}</span>
-                <br />
-                {% set property_cout = 0 %}
-                {% for accounting_document_article_property in accounting_document_article_data.article.properties %}
-                    {% set property_cout = property_cout + 1 %}
-                    {% if  property_cout == 2 %}x{% endif %}
-                    {{ accounting_document_article_property.quantity|number_format(2, ',', '.') }}cm
-                    -
-                    {{ accounting_document_article_data.article.pieces }}kom
-                {% endfor %}
+                <table>
+                    <tr>
+                        <td>{{ accounting_document_article_data.article.name }}</td>
+                    </tr>
+                    {% if accounting_document_article_data.article.properties %}
+                        <tr>
+                            <td>
+                                {% set property_cout = 0 %}
+                                {% for accounting_document_article_property in accounting_document_article_data.article.properties %}
+                                    {% set property_cout = property_cout + 1 %}
+                                    {% if  property_cout == 2 %}x{% endif %}
+                                    {{ accounting_document_article_property.quantity|number_format(2, ',', '.') }}cm
+                                {% endfor %}
+                                - {{ accounting_document_article_data.article.pieces }}kom
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if accounting_document_article_data.article.note %}
+                        <tr>
+                            <td><span style="font-size: 8px">{{ accounting_document_article_data.article.note }}</span></td>
+                        </tr>
+                    {% endif %}
+                </table>
             </td>
             <td align="center" width="35px">{{ accounting_document_article_data.article.unit }}</td>
             <td width="53px" align="right">
                 {{ accounting_document_article_data.article.quantity|number_format(2, ',', '.') }}
             </td>
             <td width="70px" align="right">
-                {{ accounting_document_article_data.article.price|number_format(4, ',', '.') }}
+                {{ accounting_document_article_data.article.price_rsd|number_format(2, ',', '.') }}
             </td>
             <td width="37px" align="right">
                 {{ accounting_document_article_data.article.discount|number_format(2, ',', '.') }}
