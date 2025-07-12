@@ -1,4 +1,8 @@
 # Upgrade to 8.1.1
+Bug: #306 - Wrong listing direction of accounting documents on project page
+
+# Upgrade to 8.1.1
+Bug: #302 - Resolve picket length on Accounting document
 
 # Upgrade to 8.1.0
 Enhancement:
