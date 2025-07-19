@@ -7,6 +7,7 @@ use App\Core\BaseController;
 use App\Entity\City;
 use App\Entity\CompanyInfo;
 use App\Entity\Country;
+use App\Entity\Employee;
 use App\Entity\Street;
 
 require_once __DIR__ . '/../../config/dbConfig.php';
@@ -45,8 +46,6 @@ class AdminController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
             'tools_menu' => [
                 'admin' => FALSE,
             ],
@@ -70,14 +69,13 @@ class AdminController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'company' => $company,
             'tools_menu' => [
                 'admin' => TRUE,
-                'view' => TRUE,
-                'edit' => FALSE,
+                'company_info' => [
+                    'view' => TRUE,
+                    'edit' => FALSE,
+                ],
             ],
         ];
 
@@ -104,17 +102,16 @@ class AdminController extends BaseController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'username' => $this->username,
-            'user_role_id' => $this->user_role_id,
-            'entityManager' => $this->entityManager,
             'company' => $company,
             'states' => $states,
             'cities' => $cities,
             'streets' => $streets,
             'tools_menu' => [
                 'admin' => TRUE,
-                'view' => FALSE,
-                'edit' => TRUE,
+                'company_info' => [
+                    'view' => FALSE,
+                    'edit' => TRUE,
+                ],
             ],
         ];
 
@@ -211,6 +208,142 @@ class AdminController extends BaseController
             ';
 
         passthru("tail -1 $dumpfile");
+    }
+
+    /**
+     * Employees action.
+     *
+     * @return void
+     */
+    public function employees():void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $data = [
+            'page' => $this->page . '/employees',
+            'page_title' => $this->page_title,
+            'last_employees' => $this->entityManager->getRepository(Employee::class)->getLastEmployees(10),
+            'tools_menu' => [
+                'employees' => TRUE,
+            ],
+        ];
+
+        $this->render('admin/employees.html.twig', $data);
+    }
+
+  /**
+   * View employee details.
+   *
+   * @param int $employee_id
+   *
+   * @return void
+   */
+    public function employeeView(int $employee_id): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $employee_data = $this->entityManager->find(Employee::class, $employee_id);
+
+        $data = [
+            'page' => $this->page . '/employee',
+            'page_title' => $this->page_title . ' | Employee -' . $employee_data->getName(),
+            'employee' => $employee_data,
+            'tools_menu' => [
+                'admin' => TRUE,
+                'employee' => [
+                    'view' => TRUE,
+                    'edit' => FALSE,
+                ],
+            ],
+        ];
+
+        $this->render('admin/viewEmployee.html.twig', $data);
+    }
+
+  /**
+   * Employee edit form.
+   *
+   * @param int $employee_id
+   *
+   * @return void
+   */
+    public function employeeEditForm(int $employee_id): void
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $employee_data = $this->entityManager->find(Employee::class, $employee_id);
+
+        $data = [
+            'page' => $this->page . '/employee',
+            'page_title' => $this->page_title . ' | Employee -' . $employee_data->getName(),
+            'employee' => $employee_data,
+            'tools_menu' => [
+                'admin' => TRUE,
+                'employee' => [
+                    'view' => FALSE,
+                    'edit' => TRUE,
+                ],
+            ],
+        ];
+
+        $this->render('admin/editEmployee.html.twig', $data);
+    }
+
+  /**
+   * Edit employee.
+   *
+   * @param int $employee_id
+   *
+   * @return void
+   */
+    public function employeeEdit(int $employee_id):void
+    {
+        if (empty($_POST['name'])) {
+            $nameError = 'Ime mora biti upisano';
+            die('<script>location.href = "?new&name_error" </script>');
+        }
+        else {
+            $name = $this->basicValidation($_POST['name']);
+        }
+
+        $employee = $this->entityManager->find(Employee::class, $employee_id);
+
+        $employee->setName($name);
+
+        $this->entityManager->flush();
+
+        die('<script>location.href = "/admin/employee/' . $employee_id . '" </script>');
+    }
+
+    /**
+     * Basic validation method.
+     *
+     * @param string $str
+     *
+     * @return string
+     */
+    public function basicValidation(string $str): string
+    {
+        return trim(htmlspecialchars($str));
+    }
+
+    public function employeesSearch(string $term)
+    {
+        // If the user is not logged in, redirect them to the login page.
+        $this->isUserNotLoggedIn();
+
+        $employees= $this->entityManager->getRepository(Employee::class)->search($term);
+
+        $data = [
+          'page' => $this->page . '/employees',
+          'page_title' => $this->page_title,
+          'employees' => $employees,
+        ];
+
+        $this->render('admin/search_employees.html.twig', $data);
     }
 
 }
