@@ -36,7 +36,6 @@ class HomeController extends BaseController
         $data = [
             'page_title' => $this->page_title,
             'page' => $this->page,
-            'entityManager' => $this->entityManager,
             'number_of_clients' => $this->entityManager->getRepository('\App\Entity\Client')->count([]),
             'number_of_accounting_documents' => $this->entityManager->getRepository('\App\Entity\AccountingDocument')->count([]),
             'number_of_cutting_sheets' => $this->entityManager->getRepository('\App\Entity\CuttingSheet')->count([]),

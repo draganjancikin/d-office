@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use App\Repository\EmployeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Employee entity.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 #[ORM\Table(name: 'v6__employees')]
 class Employee {
 

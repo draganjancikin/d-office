@@ -1,0 +1,36 @@
+<!-- View Employee Data -->
+<div class="card mb-4">
+    <div class="card-header p-2">
+        <h6 class="m-0 text-dark">
+            Pregled podataka o zaposlenom:
+        </h6>
+    </div>
+    <div class="card-body px-2">
+        <form>
+            <fieldset disabled>
+                <div class="row mb-2">
+                    <label for="disabledInputName"
+                           class="col-sm-3 col-lg-2 col-form-label text-right">
+                        Naziv:
+                    </label>
+                    <div class="col-sm-6">
+                        <input class="form-control form-control-sm"
+                               id="disabledInputName"
+                               type="text"
+                               value="{{ employee.getName() }}"
+                               disabled />
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-sm-3 offset-sm-2">
+                        <button type="submit" class="btn btn-sm btn-secondary disabled"
+                                title="Snimi izmene podataka o zaposlenom!">
+                            <i class="fas fa-save"></i> Snimi
+                        </button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
