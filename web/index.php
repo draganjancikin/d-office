@@ -148,9 +148,9 @@ $router->add('GET', '/article/{article_id}/property/{property_id}/delete', 'Arti
 // ========== Admins routes ====================================================
 $router->add('GET', '/admin/', 'AdminController@index');
 $router->add('GET', '/admin/base-backup', 'AdminController@baseBackup');
-$router->add('GET', '/admin/company-info', 'AdminController@viewCompanyInfo');
-$router->add('GET', '/admin/company-info/edit', 'AdminController@editCompanyInfoForm');
-$router->add('POST', '/admin/company-info/edit', 'AdminController@editCompanyInfo');
+$router->add('GET', '/admin/company-info', 'AdminController@companyInfoViewForm');
+$router->add('GET', '/admin/company-info/edit', 'AdminController@companyInfoEditForm');
+$router->add('POST', '/admin/company-info/edit', 'AdminController@companyInfoEdit');
 $router->add('GET', '/admin/employees', 'AdminController@employees');
 $router->add('GET', '/admin/employees/search/', 'AdminController@employeesSearch');
 $router->add('GET', '/admin/employee/{employee_id}', 'AdminController@employeeView');
