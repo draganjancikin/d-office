@@ -51,6 +51,7 @@ class BaseController {
         $context['app_version'] = $this->app_version;
         $context['stylesheet'] = $this->stylesheet;
         $context['user_role_id'] = $this->user_role_id;
+        $context['username'] = $this->username;
 
         echo $this->twig->render($template, $context);
     }
