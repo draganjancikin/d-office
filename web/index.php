@@ -151,9 +151,9 @@ $router->add('GET', '/admin/base-backup', 'AdminController@baseBackup');
 $router->add('GET', '/admin/company-info', 'AdminController@companyInfoViewForm');
 $router->add('GET', '/admin/company-info/edit', 'AdminController@companyInfoEditForm');
 $router->add('POST', '/admin/company-info/edit', 'AdminController@companyInfoEdit');
-$router->add('GET', '/admin/employees', 'AdminController@employees');
+$router->add('GET', '/admin/employees', 'AdminController@employeesList');
 $router->add('GET', '/admin/employees/search/', 'AdminController@employeesSearch');
-$router->add('GET', '/admin/employee/{employee_id}', 'AdminController@employeeView');
+$router->add('GET', '/admin/employee/{employee_id}', 'AdminController@employeeViewForm');
 $router->add('GET', '/admin/employee/{employee_id}/edit', 'AdminController@employeeEditForm');
 $router->add('POST', '/admin/employee/{employee_id}/edit', 'AdminController@employeeEdit');
 
