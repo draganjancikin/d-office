@@ -17,7 +17,7 @@
                                 {{ article_data.getGroup().getName() }}
                             </option>
                         {% else %}
-                           <option >Izaberite grupu</option>
+                            <option >Izaberite grupu</option>
                         {% endif %}
                         {% for article_group in article_groups %}
                             <option value="{{ article_group.getId() }}">{{ article_group.getName() }}</option>
