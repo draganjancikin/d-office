@@ -1,3 +1,11 @@
+# Upgrade to 8.1.4
+Bugs:
+#312 - Add "nl2br" into Accounting documents note
+#315 - Remove a thousand dot from property value before saving
+
+Enhancement:
+#318 - Limit client contacts to 3 on project view page
+
 # Upgrade to 8.1.3
 Enhancement:
 #236 - Create employee view/edit page
