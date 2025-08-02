@@ -258,7 +258,7 @@ class CuttingController extends BaseController
             $fence_model = $article->getFenceModel()->getName();
             $article_width = $article->getWidth();
             $article_height = $article->getHeight();
-            $article_mid_height = $article->getMidHeight();
+            $article_middle_height = $article->getMidHeight();
 
             $picket_width = $article->getPicketWidth();
             $article_space = $article->getSpace();
@@ -271,7 +271,7 @@ class CuttingController extends BaseController
             $space_between_pickets = $article_repo->getSpaceBetweenPickets($article_width, $pickets_number, $picket_width);
 
             // Legs of triangle for angle calculation.
-            $heigth_leg = $article_repo->getDiffMinMax($article_height, $article_mid_height);
+            $height_leg = $article_repo->getDiffMinMax($article_height, $article_middle_height);
             $width_leg = $article_repo->getWidthForAngleCalc(
                 $article_repo->isEven($pickets_number),
                 $article_width,
@@ -284,13 +284,14 @@ class CuttingController extends BaseController
             $articles_data[$key]['article_field_number'] = $article_field_number;
             $articles_data[$key]['article_width'] = $article_width;
             $articles_data[$key]['article_height'] = $article_height;
+            $articles_data[$key]['article_middle_height'] = $article_middle_height;
             $articles_data[$key]['space_between_pickets'] = $space_between_pickets;
             $articles_data[$key]['pickets_number'] = $pickets_number;
             $articles_data[$key]['pickets'] = $this->getPickets(
                 $fence_model_id,
                 $article_height,
                 $pickets_number,
-                $heigth_leg,
+                $height_leg,
                 $width_leg,
                 $picket_width,
                 $space_between_pickets,

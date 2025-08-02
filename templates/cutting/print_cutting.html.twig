@@ -21,15 +21,16 @@
 {% for article_data in articles_data %}
 <table class="fence-field">
     <tr>
-        <td colspan="2"><h3>model: {{ article_data.fence_model }} (letvica {{ article_data.picket_width }}mm)</h3></td>
+        <td colspan="3"><h3>model: {{ article_data.fence_model }} (letvica {{ article_data.picket_width }}mm)</h3></td>
         <td><h3>broj polja: {{ article_data.article_field_number }}</h3></td>
     </tr>
     <tr>
       <td>širina polja: <br />{{ article_data.article_width }}mm</td>
       <td>visina polja: <br />{{ article_data.article_height }}mm</td>
+      <td>srednja visina polja: <br />{{ article_data.article_middle_height }}mm</td>
       <td>razmak među letvicama: <br />{{ article_data.space_between_pickets|number_format(1, ',', '.') }}mm </td>
     </tr>
-    <tr><th width="60px">red. br.</th><th width="100px">dužina letvice</th><th>količina</th></tr>
+    <tr><th width="60px">red. br.</th><th width="100px">dužina letvice</th><th>količina</th><th></th><th></th></tr>
     {% set count = 0 %}
     {% for picket in article_data.pickets %}
         {% set count = count + 1 %}
