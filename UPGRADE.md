@@ -1,3 +1,7 @@
+# Upgrade to 8.1.4
+Bugs:
+#312 - Add "nl2br" into Accounting documents note
+
 # Upgrade to 8.1.3
 Enhancement:
 #236 - Create employee view/edit page
