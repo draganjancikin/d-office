@@ -1107,7 +1107,8 @@ class PidbController extends BaseController
             // Get property name from $accounting_document__article__property.
             $property_name = $accounting_document__article__property->getProperty()->getName();
             // Get property value from $_POST.
-            $property_value = str_replace(",", ".", htmlspecialchars($_POST["$property_name"]));
+            $property_value = str_replace(".", "", htmlspecialchars($_POST["$property_name"]));
+            $property_value = str_replace(",", ".", htmlspecialchars($property_value));
 
             $accountingDocumentArticleProperty = $this->entityManager
                 ->find(AccountingDocumentArticleProperty::class, $accounting_document__article__property->getId());
