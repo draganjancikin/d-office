@@ -1,22 +1,23 @@
 # Upgrade to 8.1.4
-Bugs:
-#312 - Add "nl2br" into Accounting documents note
-#315 - Remove a thousand dot from property value before saving
+Bug:
+* #312 - Add "nl2br" into Accounting documents note
+* #315 - Remove a thousand dot from property value before saving
 
 Enhancement:
-#318 - Limit client contacts to 3 on project view page
+* #318 - Limit client contacts to 3 on project view page
+* #321 - Add "article_middle_height" to Cutting pdf
 
 # Upgrade to 8.1.3
 Enhancement:
-#236 - Create employee view/edit page
+* #236 - Create employee view/edit page
 
 # Upgrade to 8.1.2
 Bug:
-#306 - Wrong listing direction of accounting documents on project page
+* #306 - Wrong listing direction of accounting documents on project page
 
 # Upgrade to 8.1.1
 Bug:
-#302 - Resolve picket length on Accounting document
+* #302 - Resolve picket length on Accounting document
 
 # Upgrade to 8.1.0
 Enhancement:
@@ -110,7 +111,7 @@ Environment requirements:
 * PHP 8.2
 
 # Upgrade to 6.7.3
-Resolved issues and bugfixes:
+Bug:
 * #249 - Fatal error: Uncaught Error: Call to a member function getName() on null
 
 Enhancement:
@@ -119,7 +120,7 @@ Enhancement:
 * Update "DoctrineORM" package (2.14.3 => 2.20.0)
 
 # Upgrade to 6.7.2
-Resolved issues and bugfixes:
+Bug:
 * #237 - Resolved issue with button "Create a new task" on project view page
 * #240 - Add a new suppliers to the PrintOrder document
 
@@ -131,7 +132,7 @@ Enhancement:
 * Fixing typo errors
  
 # Upgrade to 6.7.1
-Resolved issues and bugfixes:
+Bug:
 * #230 - Print Installation Record Issue
 
 # Upgrade to 6.7.0
@@ -139,25 +140,32 @@ Enhancement:
 * #227 - Update PHP to version 8.0 in project settings and on the Production environment 
 
 # Upgrade to 6.6.3
-Resolved issues and bugfixes:
+Bug:
 * #208 - Add possibility to delete order
 * #215 - Table head for material suppliers
 
 # Upgrade to 6.6.2
+Enhancement:
 * #139 - Table head for material suppliers
 * #162 - Create a form for create and edit Article group
+
+Bug:
 * #203 - Warning: Undefined variable $client_street_name in .../form_advanced_search.php on line 102
 
 # Upgrade to 6.6.1
+Bug:
 * #186 - Advanced search on Client section issue
+
+Enhancement:
 * #190 - Transaction note don't display in transactions listing
 
 # Upgrade to 6.6.0
+Enhancement:
 * #198 - Add edit feature to Material on Order page
 
 # Upgrade to 6.5.2
 
-Resolved issues and bugfixes:
+Bug:
 * #194 - Error on Projects page'
 * #197 - Update Deprecated Doctrine\ORM\Tools\Setup
 
@@ -168,7 +176,7 @@ Enhancement:
 
 # Upgrade to 6.5.1
 
-Resolved issues and bugfixes:
+Bug:
 * #178 - php 7.3 compatibility issue
 * #179 - Issue on search on Client page
 * #180 - Make a phone number call-able on client page
@@ -185,7 +193,7 @@ Enhancement:
 
 # Upgrade to 6.4.2
 
-Resolved issues and bugfixes:
+Bug:
 * #169 - Error on page create a new Project
 * #170 - Error on Project page
 * #171 - Error on page printProjectTask
@@ -197,7 +205,7 @@ Enhancement:
 
 # Upgrade to 6.4.1
 
-Resolved issues and bugfixes:
+Bug:
 * #159 - Issue with print on Accounting Document page
 * #160 - Create an article issue
 * #161 - Issue on edit article page
@@ -215,7 +223,7 @@ Enhancement:
 
 # Upgrade to 6.3.1
 
-Resolved issues and bugfixes:
+Bug:
 * #154 - PHP issue
 
 # Upgrade to 6.3.0
@@ -225,7 +233,7 @@ Enhancement:
   * Fix typo
   * Remove value from default select option
 
-Resolved issues and bugfixes:
+Bug:
 * #146 - Client view page bug
 * #147 - Client search don't work
 * #148 - Create Accounting document issue
@@ -266,17 +274,17 @@ Enhancement:
 * Move printOrder to order
 * Remove TCPDF from code base
 
-New features:
+Feature:
 * Add edit/delete form for AccountingDocument Transaction (payment)
 
 # Upgrade to 6.0.4
 
-Resolved issues and bugfixes:
+Bug:
 * #135 - On Order search, link to archived order is broken
 
 # Upgrade to 6.0.3
 
-Resolved issues and bugfixes:
+Bug:
 * #133 - Broken link from Project to Order
 
 Enhancement:
@@ -284,7 +292,7 @@ Enhancement:
 
 # Upgrade to 6.0.2
 
-Resolved issues and bugfixes:
+Bug:
 * #125 - Material view and edit of non-existent id give an error
 * #127 - Accounting Document view and edit of non-existent id give an error
 * #129 - Material view on mobile and small display
@@ -299,7 +307,7 @@ Enhancement:
 Enhancement:
 * Resolved issue #104: Add confirmation step to delete Accounting Document
 
-Bug fixes:
+Bug:
 * #106 - Adding file to project dont work
 * #108 - Search for archived project dont work
 * #110 - Order material print error
@@ -312,13 +320,12 @@ Bug fixes:
 
 # Upgrade to 6.0.0
 
-Bug fixes:
+Bug:
 
 * #101 - AccountingDocument Delete dont work
 * #102 - Create AccDoc from Project page
 
 Updates:
-
 * Update "Doctrine/ORM" (2.8.4 => 2.8.5)
 
 # Upgrade to 6.0.0-beta1
