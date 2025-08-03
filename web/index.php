@@ -14,18 +14,18 @@ $router->add('GET', '/logout', 'HomeController@logout');
 // ========== Clients routes ===================================================
 
 $router->add('GET', '/clients/', 'ClientController@index');
-$router->add('GET', '/clients/add', 'ClientController@addClientForm');
-$router->add('POST', '/clients/add', 'ClientController@addClient');
-$router->add('GET', '/client/{client_id}', 'ClientController@view');
-$router->add('GET', '/client/{client_id}/edit', 'ClientController@editClientForm');
-$router->add('POST', '/client/{client_id}/edit', 'ClientController@editClient');
+$router->add('GET', '/client/new', 'ClientController@clientNewForm');
+$router->add('POST', '/client/add', 'ClientController@clientAdd');
+$router->add('GET', '/client/{client_id}', 'ClientController@clientView');
+$router->add('GET', '/client/{client_id}/edit', 'ClientController@clientEditForm');
+$router->add('POST', '/client/{client_id}/edit', 'ClientController@clientEdit');
 
-$router->add('GET', '/clients/addCountry', 'ClientController@addCountryForm');
-$router->add('POST', '/clients/addCountry', 'ClientController@addCountry');
-$router->add('GET', '/clients/addCity', 'ClientController@addCityForm');
-$router->add('POST', '/clients/addCity', 'ClientController@addCity');
-$router->add('GET', '/clients/addStreet', 'ClientController@addStreetForm');
-$router->add('POST', '/clients/addStreet', 'ClientController@addStreet');
+$router->add('GET', '/clients/newCountry', 'ClientController@countryNewForm');
+$router->add('POST', '/clients/addCountry', 'ClientController@countryAdd');
+$router->add('GET', '/clients/newCity', 'ClientController@cityNewForm');
+$router->add('POST', '/clients/addCity', 'ClientController@cityAdd');
+$router->add('GET', '/clients/newStreet', 'ClientController@streetNewForm');
+$router->add('POST', '/clients/addStreet', 'ClientController@streetAdd');
 $router->add('GET', '/clients/search/', 'ClientController@search');
 $router->add('GET', '/clients/advancedSearch', 'ClientController@advancedSearch');
 $router->add('POST', '/clients/advancedSearch', 'ClientController@advancedSearch');
