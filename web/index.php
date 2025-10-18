@@ -90,13 +90,13 @@ $router->add('GET', '/cutting/{cutting_id}/delete', 'CuttingController@delete');
 
 // ========== Materials routes =================================================
 $router->add('GET', '/materials/', 'MaterialController@index');
-$router->add('GET', '/materials/add', 'MaterialController@addForm');
-$router->add('POST', '/materials/add', 'MaterialController@add');
+$router->add('GET', '/materials/new', 'MaterialController@materialNewForm');
+$router->add('POST', '/materials/add', 'MaterialController@materialAdd');
 $router->add('GET', '/materials/search/', 'MaterialController@search');
 
-$router->add('GET', '/material/{material_id}', 'MaterialController@view');
-$router->add('GET', '/material/{material_id}/edit', 'MaterialController@editForm');
-$router->add('POST', '/material/{material_id}/edit', 'MaterialController@edit');
+$router->add('GET', '/material/{material_id}', 'MaterialController@materialViewForm');
+$router->add('GET', '/material/{material_id}/edit', 'MaterialController@materialEditForm');
+$router->add('POST', '/material/{material_id}/edit', 'MaterialController@materialEdit');
 
 $router->add('POST', '/material/{material_id}/addSupplier', 'MaterialController@addSupplier');
 $router->add('POST', '/material/{material_id}/supplier/{supplier_id}/edit', 'MaterialController@editSupplier');
