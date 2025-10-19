@@ -160,22 +160,22 @@ $router->add('POST', '/admin/employee/{employee_id}/edit', 'AdminController@empl
 
 // ========== Projects routes ====================================================
 $router->add('GET', '/projects/', 'ProjectController@index');
-$router->add('GET', '/projects/by-city', 'ProjectController@viewByCity');
-$router->add('GET', '/projects/add', 'ProjectController@addForm');
+$router->add('GET', '/projects/by-city', 'ProjectController@projectByCityView');
+$router->add('GET', '/projects/new', 'ProjectController@projectNewForm');
 $router->add('POST', '/projects/add', 'ProjectController@add');
 
-$router->add('GET', '/project/{project_id}', 'ProjectController@view');
-$router->add('GET', '/project/{project_id}/edit', 'ProjectController@editForm');
-$router->add('POST', '/project/{project_id}/edit', 'ProjectController@edit');
+$router->add('GET', '/project/{project_id}', 'ProjectController@projectViewForm');
+$router->add('GET', '/project/{project_id}/edit', 'ProjectController@projectEditForm');
+$router->add('POST', '/project/{project_id}/edit', 'ProjectController@projectEdit');
 $router->add('GET', '/project/{project_id}/printProjectTaskWithNotes', 'ProjectController@printProjectTaskWithNotes');
 $router->add('GET', '/project/{project_id}/printProjectTask', 'ProjectController@printProjectTask');
 $router->add('GET', '/project/{project_id}/printInstallationRecord', 'ProjectController@printInstallationRecord');
 $router->add('POST', '/project/{project_id}/addFile', 'ProjectController@addFileToProject');
 
-$router->add('POST', '/project/{project_id}/task/add', 'ProjectController@addTask');
-$router->add('GET', '/project/{project_id}/task/{task_id}/edit', 'ProjectController@editTaskForm');
-$router->add('POST', '/project/{project_id}/task/{task_id}/edit', 'ProjectController@editTask');
-$router->add('GET', '/project/{project_id}/task/{task_id}/delete', 'ProjectController@deleteTask');
+$router->add('POST', '/project/{project_id}/task/add', 'ProjectController@taskAdd');
+$router->add('GET', '/project/{project_id}/task/{task_id}/edit', 'ProjectController@taskEditForm');
+$router->add('POST', '/project/{project_id}/task/{task_id}/edit', 'ProjectController@taskEdit');
+$router->add('GET', '/project/{project_id}/task/{task_id}/delete', 'ProjectController@taskDelete');
 
 $router->add('POST', '/project/{project_id}/note/add', 'ProjectController@addNote');
 $router->add('GET', '/project/{project_id}/note/{note_id}/delete', 'ProjectController@deleteNote');
