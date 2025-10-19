@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block body %}
+    {% include 'admin/tools_menu.html.twig' %}
+    {% include 'admin/table/employees_list.html.twig' %}
+{% endblock %}
