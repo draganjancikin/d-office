@@ -40,20 +40,20 @@ $router->add('GET', '/client/{client_id}/contact/{contact_id}/removeContact', 'C
 // ========== Documents routes =================================================
 
 $router->add('GET', '/pidbs/', 'PidbController@index');
-$router->add('GET', '/pidbs/preferences', 'PidbController@editPreferencesForm');
-$router->add('POST', '/pidbs/preferences', 'PidbController@editPreferences');
-$router->add('GET', '/pidbs/add', 'PidbController@addForm');
-$router->add('POST', '/pidbs/add', 'PidbController@add');
+$router->add('GET', '/pidbs/preferences', 'PidbController@preferencesEditForm');
+$router->add('POST', '/pidbs/preferences', 'PidbController@preferencesEdit');
+$router->add('GET', '/pidbs/new', 'PidbController@pidbNewForm');
+$router->add('POST', '/pidbs/add', 'PidbController@pidbAdd');
 $router->add('POST', '/pidbs/cacheInOut', 'PidbController@cacheInOut');
 $router->add('GET', '/pidbs/search/', 'PidbController@search');
-$router->add('GET', '/pidbs/transactions', 'PidbController@transactions');
+$router->add('GET', '/pidbs/transactions', 'PidbController@transactionsView');
 $router->add('GET', '/pidbs/cashRegister', 'PidbController@cashRegister');
 $router->add('GET', '/pidbs/printDailyCacheReport', 'PidbController@printDailyCacheReport');
 
-$router->add('GET', '/pidb/{pidb_id}', 'PidbController@view');
-$router->add('GET', '/pidb/{pidb_id}/edit', 'PidbController@editForm');
-$router->add('POST', '/pidb/{pidb_id}/edit', 'PidbController@edit');
-$router->add('GET', '/pidb/{pidb_id}/delete', 'PidbController@delete');
+$router->add('GET', '/pidb/{pidb_id}', 'PidbController@pidbViewForm');
+$router->add('GET', '/pidb/{pidb_id}/edit', 'PidbController@pidbEditForm');
+$router->add('POST', '/pidb/{pidb_id}/edit', 'PidbController@pidbEdit');
+$router->add('GET', '/pidb/{pidb_id}/delete', 'PidbController@pidbDelete');
 
 $router->add('POST', '/pidb/{pidb_id}/addArticle', 'PidbController@addArticle');
 
@@ -64,15 +64,15 @@ $router->add('GET', '/pidb/{pidb_id}/printIW', 'PidbController@printAccountingDo
 $router->add('GET', '/pidb/{pidb_id}/exportProformaToDispatch', 'PidbController@exportProformaToDispatch');
 $router->add('POST', '/pidb/{pidb_id}/addPayment', 'PidbController@addPayment');
 $router->add('POST', '/pidb/{pidb_id}/article/{pidb_article_id}/edit', 'PidbController@editArticleInAccountingDocument');
-$router->add('GET', '/pidb/{pidb_id}/article/{pidb_article_id}/change', 'PidbController@changeArticleInAccountingDocumentForm');
+$router->add('GET', '/pidb/{pidb_id}/article/{pidb_article_id}/change', 'PidbController@ArticleInPidbChangeForm');
 $router->add('POST', '/pidb/{pidb_id}/article/{pidb_article_id}/change', 'PidbController@changeArticleInAccountingDocument');
 $router->add('GET', '/pidb/{pidb_id}/article/{pidb_article_id}/duplicate', 'PidbController@duplicateArticleInAccountingDocument');
 $router->add('GET', '/pidb/{pidb_id}/article/{pidb_article_id}/delete', 'PidbController@deleteArticleInAccountingDocument');
 
 $router->add('GET', '/pidb/{pidb_id}/transactions', 'PidbController@transactionsByDocument');
-$router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@formEditTransaction');
-$router->add('POST', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@editTransaction');
-$router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/delete', 'PidbController@deleteTransaction');
+$router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@transactionEditForm');
+$router->add('POST', '/pidb/{pidb_id}/transaction/{transaction_id}/edit', 'PidbController@transactionEdit');
+$router->add('GET', '/pidb/{pidb_id}/transaction/{transaction_id}/delete', 'PidbController@transactionDelete');
 
 // ========== Cuttings routes ==================================================
 $router->add('GET', '/cuttings/', 'CuttingController@index');

@@ -72,7 +72,7 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function addForm(int $client_id = NULL, int $project_id = NULL): void
+    public function pidbNewForm(?int $client_id = NULL, ?int $project_id = NULL): void
     {
 
         // If the user is not logged in, redirect them to the login page.
@@ -98,7 +98,7 @@ class PidbController extends BaseController
             'clients_list' => $clients_list,
         ];
 
-        $this->render('pidb/add.html.twig', $data);
+        $this->render('pidb/pidb_new.html.twig', $data);
     }
 
     /**
@@ -106,7 +106,7 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function add(): void
+    public function pidbAdd(): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
@@ -166,7 +166,7 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function view(int $pidb_id): void
+    public function pidbViewForm(int $pidb_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -243,7 +243,7 @@ class PidbController extends BaseController
             'remaining_eur' => $remaining_eur,
         ];
 
-        $this->render('pidb/view.html.twig', $data);
+        $this->render('pidb/pidb_view.html.twig', $data);
     }
 
     /**
@@ -251,7 +251,7 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function editForm(int $pidb_id): void
+    public function pidbEditForm(int $pidb_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -327,7 +327,7 @@ class PidbController extends BaseController
             'clients_list' => $clients_list,
         ];
 
-        $this->render('pidb/edit.html.twig', $data);
+        $this->render('pidb/pidb_edit.html.twig', $data);
     }
 
     /**
@@ -337,7 +337,7 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function edit(int $pidb_id): void
+    public function pidbEdit(int $pidb_id): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
@@ -371,7 +371,7 @@ class PidbController extends BaseController
      * @return void
      * @throws \Doctrine\DBAL\Exception
      */
-    public function delete(int $pidb_id): void
+    public function pidbDelete(int $pidb_id): void
     {
         $acc_doc_id = $pidb_id;
 
@@ -460,7 +460,7 @@ class PidbController extends BaseController
             $this->entityManager->flush();
         }
 
-        die('<script>location.href = "/pidbs/?search=" </script>');
+        die('<script>location.href = "/pidbs/search/?term=" </script>');
     }
 
     /**
@@ -1128,7 +1128,7 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function changeArticleInAccountingDocumentForm(int $pidb_id, int $pidb_article_id): void
+    public function articleInPidbChangeForm(int $pidb_id, int $pidb_article_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -1166,7 +1166,7 @@ class PidbController extends BaseController
             'style' => $style,
         ];
 
-        $this->render('pidb/changeArticleInAccountingDocument.html.twig', $data);
+        $this->render('pidb/article_in_pidb_change.html.twig', $data);
     }
 
     /**
@@ -1289,7 +1289,7 @@ class PidbController extends BaseController
         die('<script>location.href = "/pidb/' . $pidb_id . '" </script>');
     }
 
-    public function transactions($limit = 10): void{
+    public function transactionsView($limit = 10): void{
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
 
@@ -1310,7 +1310,7 @@ class PidbController extends BaseController
             'transactions' => $transactions_with_accounting_document,
         ];
 
-        $this->render('pidb/transactions.html.twig', $data);
+        $this->render('pidb/transactions_view.html.twig', $data);
     }
 
     /**
@@ -1366,7 +1366,7 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function formEditTransaction(int $pidb_id, int $transaction_id): void
+    public function transactionEditForm(int $pidb_id, int $transaction_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -1384,7 +1384,7 @@ class PidbController extends BaseController
             'client' => $client,
         ];
 
-        $this->render('pidb/transaction.html.twig', $data);
+        $this->render('pidb/transaction_edit.html.twig', $data);
     }
 
     /**
@@ -1396,7 +1396,7 @@ class PidbController extends BaseController
      * @return void
      * @throws \DateMalformedStringException
      */
-    public function editTransaction(int $pidb_id, int $transaction_id): void
+    public function transactionEdit(int $pidb_id, int $transaction_id): void
     {
         $transaction = $this->entityManager->find(Payment::class, $transaction_id);
 
@@ -1426,7 +1426,7 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function deleteTransaction(int $pidb_id, int $transaction_id): void
+    public function transactionDelete(int $pidb_id, int $transaction_id): void
     {
         $transaction = $this->entityManager->find(Payment::class, $transaction_id);
         $this->entityManager->remove($transaction);
@@ -1440,7 +1440,7 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function editPreferencesForm(): void
+    public function preferencesEditForm(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -1452,7 +1452,7 @@ class PidbController extends BaseController
             'preferences' => $preferences,
         ];
 
-        $this->render('pidb/edit_preferences.html.twig', $data);
+        $this->render('pidb/preferences_edit.html.twig', $data);
     }
 
     /**
@@ -1460,7 +1460,7 @@ class PidbController extends BaseController
      *
      * @return void
      */
-    public function editPreferences(): void
+    public function preferencesEdit(): void
     {
         $kurs = str_replace(",", ".", htmlspecialchars($_POST["kurs"]));
         $tax = str_replace(",", ".", htmlspecialchars($_POST["tax"]));
