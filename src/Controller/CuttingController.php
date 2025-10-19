@@ -61,7 +61,7 @@ class CuttingController extends BaseController
      *
      * @return void
      */
-    public function formAdd(int $project_id = NULL, int $client_id = NULL): void
+    public function cuttingNewForm(int $project_id = NULL, int $client_id = NULL): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -81,7 +81,7 @@ class CuttingController extends BaseController
             'client' => $client ?? NULL,
         ];
 
-        $this->render('cutting/add.html.twig', $data);
+        $this->render('cutting/cutting_new.html.twig', $data);
     }
 
     /**
@@ -92,7 +92,7 @@ class CuttingController extends BaseController
      *
      * @return void
      */
-    public function add(int $project_id = NULL, int $client_id = NULL): void
+    public function cuttingAdd(int $project_id = NULL, int $client_id = NULL): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
@@ -130,7 +130,7 @@ class CuttingController extends BaseController
      *
      * @return void
      */
-    public function view(int $cutting_id): void
+    public function cuttingView(int $cutting_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -175,7 +175,7 @@ class CuttingController extends BaseController
             'total_cap' => $total_cap,
         ];
 
-      $this->render('cutting/view.html.twig', $data);
+      $this->render('cutting/cutting_view.html.twig', $data);
     }
 
     /**
@@ -185,7 +185,7 @@ class CuttingController extends BaseController
      *
      * @return void
      */
-    public function edit(int $cutting_id): void
+    public function cuttingEdit(int $cutting_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -230,7 +230,7 @@ class CuttingController extends BaseController
             'total_cap' => $total_cap,
         ];
 
-        $this->render('cutting/edit.html.twig', $data);
+        $this->render('cutting/cutting_edit.html.twig', $data);
     }
 
     /**

@@ -63,7 +63,7 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function addForm(): void
+    public function materialNewForm(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -75,7 +75,7 @@ class MaterialController extends BaseController
             'units' => $units,
         ];
 
-        $this->render('material/add.html.twig', $data);
+        $this->render('material/material_new.html.twig', $data);
     }
 
     /**
@@ -83,7 +83,7 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function add(): void
+    public function materialAdd(): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
@@ -138,7 +138,7 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function view($material_id): void
+    public function materialViewForm($material_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -168,7 +168,7 @@ class MaterialController extends BaseController
             ],
         ];
 
-        $this->render('material/view.html.twig', $data);
+        $this->render('material/material_view.html.twig', $data);
     }
 
     /**
@@ -178,7 +178,7 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function editForm($material_id): void
+    public function materialEditForm($material_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -210,7 +210,7 @@ class MaterialController extends BaseController
             ],
         ];
 
-        $this->render('material/edit.html.twig', $data);
+        $this->render('material/material_edit.html.twig', $data);
     }
 
     /**
@@ -220,7 +220,7 @@ class MaterialController extends BaseController
      *
      * @return void
      */
-    public function edit($material_id): void
+    public function materialEdit($material_id): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 

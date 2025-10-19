@@ -172,7 +172,7 @@ class ProjectController extends BaseController
      *
      * @return void
      */
-    public function addForm(int $client_id = NULL, int $acc_doc_id = NULL): void
+    public function projectNewForm(?int $client_id = NULL, ?int $acc_doc_id = NULL): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -193,7 +193,7 @@ class ProjectController extends BaseController
             $data['client'] = $this->entityManager->find(Client::class, $client_id);
         }
 
-        $this->render('project/add.html.twig', $data);
+        $this->render('project/project_new.html.twig', $data);
     }
 
     /**
@@ -267,7 +267,7 @@ class ProjectController extends BaseController
      *
      * @return void
      */
-    public function view(int $project_id): void
+    public function projectViewForm(int $project_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -415,7 +415,7 @@ class ProjectController extends BaseController
             ],
         ];
 
-        $this->render('project/view.html.twig', $data);
+        $this->render('project/project_view.html.twig', $data);
     }
 
     /**
@@ -425,7 +425,7 @@ class ProjectController extends BaseController
      *
      * @return void
      */
-    public function editForm(int $project_id): void
+    public function projectEditForm(int $project_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -450,7 +450,7 @@ class ProjectController extends BaseController
           ],
         ];
 
-        $this->render('project/edit.html.twig', $data);
+        $this->render('project/project_edit.html.twig', $data);
     }
 
     /**
@@ -460,7 +460,7 @@ class ProjectController extends BaseController
      *
      * @return void
      */
-    public function edit(int $project_id): void
+    public function projectEdit(int $project_id): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
@@ -497,7 +497,7 @@ class ProjectController extends BaseController
      *
      * @return void
      */
-    public function addTask(int $project_id): void
+    public function taskAdd(int $project_id): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
@@ -540,7 +540,7 @@ class ProjectController extends BaseController
      *
      * @return void
      */
-    public function editTaskForm(int $project_id, int $task_id): void
+    public function taskEditForm(int $project_id, int $task_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -579,7 +579,7 @@ class ProjectController extends BaseController
             'task_notes' => $task_notes,
         ];
 
-        $this->render('project/editTask.html.twig', $data);
+        $this->render('project/task_edit.html.twig', $data);
     }
 
     /**
@@ -590,7 +590,7 @@ class ProjectController extends BaseController
      *
      * @return void
      */
-    public function editTask(int $project_id, int $task_id): void
+    public function taskEdit(int $project_id, int $task_id): void
     {
         $alertEnd = NULL;
 
@@ -844,7 +844,7 @@ class ProjectController extends BaseController
      *
      * @return void
      */
-    public function viewByCity(int $city_id): void
+    public function projectByCityView(int $city_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -922,7 +922,7 @@ class ProjectController extends BaseController
             'active_projects_data' => $active_projects_data,
         ];
 
-        $this->render('project/view_by_city.html.twig', $data);
+        $this->render('project/projects_by_city.html.twig', $data);
     }
 
     /**
