@@ -107,14 +107,14 @@ $router->add('GET', '/material/{material_id}/property/{property_id}/delete', 'Ma
 
 // ========== Orders routes ====================================================
 $router->add('GET', '/orders/', 'OrderController@index');
-$router->add('GET', '/orders/add', 'OrderController@addForm');
-$router->add('POST', '/orders/add', 'OrderController@add');
+$router->add('GET', '/orders/new', 'OrderController@orderNewForm');
+$router->add('POST', '/orders/add', 'OrderController@orderAdd');
 $router->add('GET', '/orders/search/', 'OrderController@search');
 
-$router->add('GET', '/order/{order_id}', 'OrderController@view');
-$router->add('GET', '/order/{order_id}/edit', 'OrderController@editForm');
-$router->add('POST', '/order/{order_id}/edit', 'OrderController@edit');
-$router->add('GET', '/order/{order_id}/delete', 'OrderController@delete');
+$router->add('GET', '/order/{order_id}', 'OrderController@orderViewForm');
+$router->add('GET', '/order/{order_id}/edit', 'OrderController@orderEditForm');
+$router->add('POST', '/order/{order_id}/edit', 'OrderController@orderEdit');
+$router->add('GET', '/order/{order_id}/delete', 'OrderController@orderDelete');
 
 $router->add('POST', '/order/{order_id}/addMaterial', 'OrderController@addMaterial');
 $router->add('GET', '/order/{order_id}/material/{order_material_id}/edit', 'OrderController@editMaterialForm');
