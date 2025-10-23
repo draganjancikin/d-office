@@ -1,3 +1,7 @@
+# Upgrade to 8.2.2
+Bug:
+* #335 - Transactions by document view issue
+
 # Upgrade to 8.2.1
 Bug:
 * #336 - Update tools menu links for creating a new project
