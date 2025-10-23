@@ -184,6 +184,10 @@ textarea[disabled] {
 }
 
 
+/* Home cards hover effect */
+a.card-link .card { transition: transform .15s ease, box-shadow .15s ease; }
+a.card-link:hover .card { transform: translateY(-4px); box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.15); }
+
 /* User form ---------------------- */
 form.user .form-control-user {
   border-radius: 0.5rem;
