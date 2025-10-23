@@ -1,3 +1,7 @@
+# Upgrade to 8.2.3
+Bug:
+* #344 - Update link for creating a new project from document
+
 # Upgrade to 8.2.2
 Bug:
 * #335 - Transactions by document view issue
