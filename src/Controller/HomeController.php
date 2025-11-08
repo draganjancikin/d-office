@@ -18,9 +18,8 @@ class HomeController extends AbstractController
     private EntityManagerInterface $entityManager;
     protected string $page_title;
     protected string $page;
-    public $user_role_id;
-  public $username;
-  protected $app_version;
+    protected string $app_version;
+    protected string $stylesheet;
 
     /**
      * HomeController constructor.
@@ -28,12 +27,18 @@ class HomeController extends AbstractController
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-
         $this->page_title = 'd-Office 2025';
         $this->page = 'home';
-      if (isset($_SESSION['user_role_id'])) $this->user_role_id = $_SESSION['user_role_id'];
-      if (isset($_SESSION['username'])) $this->username = $_SESSION['username'];
-      $this->app_version = APP_VERSION;
+
+        $composerJsonPath = __DIR__ . '/../../composer.json';
+        if (file_exists($composerJsonPath)) {
+            $composerData = json_decode(file_get_contents($composerJsonPath), true);
+            $this->app_version = $composerData['version'] ?? 'unknown';
+        } else {
+            $this->app_version = 'unknown';
+        }
+
+        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
@@ -42,9 +47,14 @@ class HomeController extends AbstractController
      * @return Response
      *   The rendered view.
      */
-    #[Route('/', name: 'home_index')]
+    #[Route('/', name: 'home_index', methods: ['GET'])]
     public function index(): Response
     {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
         $data = [
             'page_title' => $this->page_title,
             'page' => $this->page,
@@ -55,46 +65,47 @@ class HomeController extends AbstractController
             'number_of_orders' => $this->entityManager->getRepository('\App\Entity\Order')->count([]),
             'number_of_articles' => $this->entityManager->getRepository('\App\Entity\Article')->count([]),
             'number_of_projects' => $this->entityManager->getRepository('\App\Entity\Project')->count([]),
-          'user_role_id' => $this->user_role_id,
-          'username' => $this->username,
-          'app_version' => $this->app_version,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'user_id' => $_SESSION['user_id'],
+            'app_version' => $this->app_version,
+            'stylesheet' => $this->stylesheet,
         ];
-
-        // If the user is not logged in, redirect them to the login page.
-        // $this->isUserNotLoggedIn();
 
         return $this->render('home/index.html.twig', $data);
     }
 
     /**
-     * Login method.
+     * Render the login form.
      *
-     * @return void
-     *   The rendered view.
+     * @return Response
      */
-    public function loginForm(): void
+    #[Route('/login', name: 'login_form', methods: ['GET'])]
+    public function loginForm(): Response
     {
         $data = [
             'page_title' => $this->page_title,
             'page' => $this->page,
+            'stylesheet' => $this->stylesheet,
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('home/login_form.html.twig', $data);
+        return $this->render('home/login_form.html.twig', $data);
     }
 
     /**
      * Login the user.
      *
-     * @return void
+     * @return Response
      */
-    public function login(): void
+    #[Route('/login', name: 'login', methods: ['POST'])]
+    public function login(): Response
     {
-        require_once '../config/dbConfig.php';
 
         $table = "v6__users";    // the table that this script will set up and use.
 
         // Create connection.
-        $mysqli = new \mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+        $mysqli = new \mysqli("db", "user", "user", "default");
 
         // Check connection.
         if ($mysqli->connect_error) {
@@ -110,9 +121,7 @@ class HomeController extends AbstractController
         $num_rows = mysqli_num_rows($result);
 
         if ($num_rows <= 0) {
-            // Redirection ako nije dobar user
-            header('location: /login');
-            exit();
+            return $this->redirectToRoute('login_form');
         }
         else {
             $result_user = mysqli_query($mysqli, "SELECT * FROM $table WHERE username='$username' ") or die(mysqli_error($mysqli));
@@ -121,11 +130,12 @@ class HomeController extends AbstractController
             $user_id = $row_user['id'];
             $user_role_id = $row_user['role_id'];
 
+            session_start();
             $_SESSION['username'] = $_POST["username"];
             $_SESSION['user_id'] = $user_id;
             $_SESSION['user_role_id'] = $user_role_id;
 
-            header('location: /');
+            return $this->redirectToRoute('home_index');
         }
 
     }
@@ -133,14 +143,17 @@ class HomeController extends AbstractController
     /**
      * Logout the user.
      *
-     * @return void
+     * @return Response
      */
-    public function logout(): void
+    #[Route('/logout', name: 'logout', methods: ['GET'])]
+    public function logout(): Response
     {
         session_start();
-        unset($_SESSION['username']);
-        unset($_SESSION['user_role_id']);
-        header("Location: /");
+        $_SESSION = [];
+        session_unset();
+        session_destroy();
+
+        return $this->redirectToRoute('home_index');
     }
 
 }

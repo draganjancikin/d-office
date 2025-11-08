@@ -5,14 +5,7 @@ use App\Core\Router;
 
 $router = new Router();
 
-// Define routes (could also load routes from a separate file).
-$router->add('GET', '/', 'HomeController@index');
-$router->add('GET', '/login', 'HomeController@loginForm');
-$router->add('POST', '/login', 'HomeController@login');
-$router->add('GET', '/logout', 'HomeController@logout');
-
 // ========== Clients routes ===================================================
-
 $router->add('GET', '/clients/', 'ClientController@index');
 $router->add('GET', '/client/new', 'ClientController@clientNewForm');
 $router->add('POST', '/client/add', 'ClientController@clientAdd');

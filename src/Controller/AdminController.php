@@ -10,8 +10,6 @@ use App\Entity\Country;
 use App\Entity\Employee;
 use App\Entity\Street;
 
-require_once __DIR__ . '/../../config/dbConfig.php';
-
 /**
  * AdminController class.
  *
