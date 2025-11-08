@@ -16,28 +16,40 @@ class HomeController extends AbstractController
 {
 
     private EntityManagerInterface $entityManager;
-    protected string $page_title;
     protected string $page;
+    protected string $page_title;
     protected string $app_version;
     protected string $stylesheet;
 
     /**
+     * Loads the application version from composer.json.
+     *
+     * @return string
+     *   The app version, or 'unknown' if not found.
+     */
+    private function loadAppVersion(): string
+    {
+        $composerJsonPath = __DIR__ . '/../../composer.json';
+        if (file_exists($composerJsonPath)) {
+            $composerData = json_decode(file_get_contents($composerJsonPath), true);
+            return $composerData['version'] ?? 'unknown';
+        }
+        return 'unknown';
+    }
+
+    /**
      * HomeController constructor.
+     *
+     * Initializes controller properties, loads app version from composer.json, and sets stylesheet path.
+     *
+     * @param EntityManagerInterface $entityManager Doctrine entity manager for database operations.
      */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->page_title = 'd-Office 2025';
         $this->page = 'home';
-
-        $composerJsonPath = __DIR__ . '/../../composer.json';
-        if (file_exists($composerJsonPath)) {
-            $composerData = json_decode(file_get_contents($composerJsonPath), true);
-            $this->app_version = $composerData['version'] ?? 'unknown';
-        } else {
-            $this->app_version = 'unknown';
-        }
-
+        $this->page_title = 'd-Office 2025';
+        $this->app_version = $this->loadAppVersion();
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
