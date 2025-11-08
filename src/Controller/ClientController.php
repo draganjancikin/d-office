@@ -89,6 +89,43 @@ class ClientController extends AbstractController
     }
 
     /**
+     * Displays the form for creating a new client.
+     *
+     * Requires the user to be authenticated (session username set).
+     * Passes client types, countries, cities, streets, and user/page metadata
+     * to the template.
+     *
+     * @return Response
+     *   The rendered new client form view.
+     */
+    #[Route('/clients/new', name: 'client_new', methods: ['GET'])]
+    public function new(): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+            'client_types' => $this->entityManager->getRepository(ClientType::class)->findAll(),
+            'countries' => $this->countries,
+            'cities' => $this->cities,
+            'streets' => $this->streets,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
+        ];
+
+        return $this->render('client/client_new.html.twig', $data);
+    }
+
+    /**
      * Displays the details for a specific client.
      *
      * Requires the user to be authenticated (session username set).
@@ -256,33 +293,21 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @return void
-     */
-    public function clientNewForm(): void
-    {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'client_types' => $this->entityManager->getRepository(ClientType::class)->findAll(),
-            'countries' => $this->countries,
-            'cities' => $this->cities,
-            'streets' => $this->streets,
-        ];
-
-        $this->render('client/client_new.html.twig', $data);
-    }
-
-    /**
-     * Add client.
+     * Handles the creation of a new client from the new client form submission.
      *
-     * @return void
+     * Requires the user to be authenticated (session username set).
+     * Validates and sets client fields, checks for duplicate names, persists
+     * the new client to the database, and redirects to the client detail view
+     * after successful creation.
+     *
+     * @return Response
+     *   Redirects to the client detail view after creation.
      */
-    public function clientAdd(): void
+    #[Route('/clients/create', name: 'client_create', methods: ['POST'])]
+    public function create(): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $type_id = $_POST["type_id"];
         $type = $this->entityManager->find(ClientType::class, $type_id);
@@ -340,7 +365,7 @@ class ClientController extends AbstractController
 
         // Get last id and redirect.
         $new_client_id = $newClient->getId();
-        die('<script>location.href = "/client/'.$new_client_id.'" </script>');
+        return $this->redirectToRoute('client_show', ['client_id' => $new_client_id]);
     }
 
     /**
