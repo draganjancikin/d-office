@@ -2,36 +2,48 @@
 
 namespace App\Controller;
 
-use App\Core\BaseController;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * HomeController class.
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class HomeController extends BaseController
+class HomeController extends AbstractController
 {
 
+    private EntityManagerInterface $entityManager;
     protected string $page_title;
     protected string $page;
+    public $user_role_id;
+  public $username;
+  protected $app_version;
 
     /**
      * HomeController constructor.
      */
-    public function __construct() {
-        parent::__construct();
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
 
         $this->page_title = 'd-Office 2025';
         $this->page = 'home';
+      if (isset($_SESSION['user_role_id'])) $this->user_role_id = $_SESSION['user_role_id'];
+      if (isset($_SESSION['username'])) $this->username = $_SESSION['username'];
+      $this->app_version = APP_VERSION;
     }
 
     /**
      * Index method.
      *
-     * @return void
+     * @return Response
      *   The rendered view.
      */
-    public function index(): void
+    #[Route('/', name: 'home_index')]
+    public function index(): Response
     {
         $data = [
             'page_title' => $this->page_title,
@@ -43,12 +55,15 @@ class HomeController extends BaseController
             'number_of_orders' => $this->entityManager->getRepository('\App\Entity\Order')->count([]),
             'number_of_articles' => $this->entityManager->getRepository('\App\Entity\Article')->count([]),
             'number_of_projects' => $this->entityManager->getRepository('\App\Entity\Project')->count([]),
+          'user_role_id' => $this->user_role_id,
+          'username' => $this->username,
+          'app_version' => $this->app_version,
         ];
 
         // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        // $this->isUserNotLoggedIn();
 
-        $this->render('home/index.html.twig', $data);
+        return $this->render('home/index.html.twig', $data);
     }
 
     /**
