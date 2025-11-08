@@ -28,6 +28,12 @@
     "tecnickcom/tcpdf": "^6.3",
     "symfony/http-foundation": "^6.0",
     "symfony/cache": "^6.0",
-    "twig/twig": "^3.0"
+    "twig/twig": "^3.0",
+    "symfony/runtime": "^7.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "symfony/runtime": true
+    }
   }
 }
