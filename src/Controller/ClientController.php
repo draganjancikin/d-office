@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Core\BaseController;
 use App\Entity\City;
 use App\Entity\Client;
 use App\Entity\ClientType;
@@ -28,9 +27,9 @@ class ClientController extends AbstractController
     private EntityManagerInterface $entityManager;
     protected string $page;
     protected string $page_title;
-    protected $countries;
-    protected $cities;
-    protected $streets;
+    protected string $countries;
+    protected string $cities;
+    protected string $streets;
     protected string $app_version;
     protected string $stylesheet;
 
@@ -233,7 +232,6 @@ class ClientController extends AbstractController
         $type = $this->entityManager->find(ClientType::class, $type_id);
 
         if (empty($_POST['name'])) {
-            $nameError = 'Ime mora biti upisano';
             die('<script>location.href = "?new&name_error" </script>');
         }
         else {
@@ -398,7 +396,7 @@ class ClientController extends AbstractController
         $newContact->setNote($note);
         $newContact->setCreatedAt(new \DateTime("now"));
         $newContact->setCreatedByUser($user);
-        $newContact->setModifiedAt(new \DateTime("0000-01-01 00:00:00"));
+        $newContact->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
 
         $this->entityManager->persist($newContact);
         $this->entityManager->flush();
@@ -534,7 +532,6 @@ class ClientController extends AbstractController
         $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
-            $nameError = 'Ime mora biti upisano';
             die('<script>location.href = "?new&name_error" </script>');
         }
         else {
@@ -560,7 +557,7 @@ class ClientController extends AbstractController
         $newCountry->setAbbr($abbr);
         $newCountry->setCreatedAt(new \DateTime("now"));
         $newCountry->setCreatedByUser($user);
-        $newCountry->setModifiedAt(new \DateTime("0000-01-01 00:00:00"));
+        $newCountry->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
 
         $this->entityManager->persist($newCountry);
         $this->entityManager->flush();
@@ -617,7 +614,6 @@ class ClientController extends AbstractController
         $user = $this->entityManager->find(User::class,  $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
-            $nameError = 'Ime mora biti upisano';
             die('<script>location.href = "?new&name_error" </script>');
         }
         else {
