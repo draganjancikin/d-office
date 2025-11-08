@@ -101,43 +101,27 @@ class HomeController extends AbstractController
     #[Route('/login', name: 'login', methods: ['POST'])]
     public function login(): Response
     {
+        session_start();
 
-        $table = "v6__users";    // the table that this script will set up and use.
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
 
-        // Create connection.
-        $mysqli = new \mysqli("db", "user", "user", "default");
-
-        // Check connection.
-        if ($mysqli->connect_error) {
-            die("Connection failed: " . $mysqli->connect_error);
-        }
-
-        $username = $_POST["username"];
-        $password = $_POST["password"];
-
-        $match = "select id from $table where username = '".$_POST['username']."'and password = '".$_POST['password']."'";
-
-        $result = mysqli_query($mysqli, $match);
-        $num_rows = mysqli_num_rows($result);
-
-        if ($num_rows <= 0) {
+        if (empty($username) || empty($password)) {
             return $this->redirectToRoute('login_form');
         }
-        else {
-            $result_user = mysqli_query($mysqli, "SELECT * FROM $table WHERE username='$username' ") or die(mysqli_error($mysqli));
 
-            $row_user = mysqli_fetch_array($result_user);
-            $user_id = $row_user['id'];
-            $user_role_id = $row_user['role_id'];
+        $user = $this->entityManager->getRepository('App\\Entity\\User')->findOneBy(['username' => $username]);
 
-            session_start();
-            $_SESSION['username'] = $_POST["username"];
-            $_SESSION['user_id'] = $user_id;
-            $_SESSION['user_role_id'] = $user_role_id;
-
+        // Check if user exists and password matches
+        if ($user && $user->getPassword() === $password) { // If passwords are hashed, use password_verify($password, $user->getPassword())
+            $_SESSION['username'] = $user->getUsername();
+            $_SESSION['user_id'] = $user->getId();
+            $_SESSION['user_role_id'] = $user->getRoleId();
             return $this->redirectToRoute('home_index');
+        } else {
+            // Invalid credentials
+            return $this->redirectToRoute('login_form');
         }
-
     }
 
     /**
