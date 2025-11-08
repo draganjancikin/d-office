@@ -11,7 +11,7 @@ RolOffice v4.0.code-workspace
 
 # Ignore LIVE enviroments files an folders
 /config/dbConfig.live.php
-web/upload/
+public/upload/
 
 # Ignore enviroments files
 /todos/
