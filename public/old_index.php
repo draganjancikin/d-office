@@ -5,10 +5,6 @@ use App\Core\Router;
 
 $router = new Router();
 
-// ========== Clients routes ===================================================
-$router->add('GET', '/clients/advancedSearch', 'ClientController@advancedSearch');
-$router->add('POST', '/clients/advancedSearch', 'ClientController@advancedSearch');
-
 // ========== Documents routes =================================================
 
 $router->add('GET', '/pidbs/', 'PidbController@index');

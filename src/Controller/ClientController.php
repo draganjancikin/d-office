@@ -27,9 +27,9 @@ class ClientController extends AbstractController
     private EntityManagerInterface $entityManager;
     protected string $page;
     protected string $page_title;
-    protected string $countries;
-    protected string $cities;
-    protected string $streets;
+    protected array $countries;
+    protected array $cities;
+    protected array $streets;
     protected string $app_version;
     protected string $stylesheet;
 
