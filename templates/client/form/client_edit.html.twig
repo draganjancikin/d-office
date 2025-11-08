@@ -7,7 +7,7 @@
     </div>
 
     <div class="card-body px-2">
-        <form action="/client/{{ client.id }}/edit " method="post">
+        <form action="/clients/{{ client.id }}/edit " method="post">
             <input type="hidden" name="client_id" value="<?php echo $client_id ?>">
             <input type="hidden" name="type_id" value="<?php echo $client['type_id'] ?>">
 
@@ -117,7 +117,7 @@
                 </div>
                 <div class="col-sm-7">
                     <input class="form-control form-control-sm" id="inputNum" type="text" name="address_note"
-                           value="{{ cllient.address_note }}"
+                           value="{{ client.address_note }}"
                          title="Beleška uz adresu klijenta">
                 </div>
             </div>

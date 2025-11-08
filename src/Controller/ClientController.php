@@ -131,16 +131,26 @@ class ClientController extends AbstractController
     }
 
     /**
-     * Edit Client form.
+     * Displays the edit form for a specific client.
      *
-     * @param $client_id
+     * Requires the user to be authenticated (session username set).
+     * Retrieves client data, client types, countries, cities, streets, and
+     * contact types, and passes them along with user and page metadata to the
+     * template for editing.
      *
-     * @return void
+     * @param int $client_id
+     *   The unique identifier of the client to edit.
+     *
+     * @return Response
+     *   The rendered client edit view.
      */
-    public function clientEditForm($client_id):void
+    #[Route('/clients/{client_id}/edit', name: 'client_edit', methods: ['GET'])]
+    public function edit(int $client_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
@@ -153,25 +163,38 @@ class ClientController extends AbstractController
             'cities' => $this->cities,
             'streets' => $this->streets,
             'tools_menu' => [
-              'client' => TRUE,
-              'edit' => TRUE,
+                'client' => TRUE,
+                'view' => FALSE,
+                'edit' => TRUE,
             ],
             'contact_types' => $this->entityManager->getRepository(ContactType::class)->findAll(),
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
-
-        $this->render('client/client_edit.html.twig', $data);
+        return $this->render('client/client_edit.html.twig', $data);
     }
 
     /**
-     * Edit Client.
+     * Handles the update of a client's information from the edit form submission.
      *
-     * @param $client_id
+     * Requires the user to be authenticated (session username set).
+     * Validates and updates client fields, sets modification metadata, and
+     * persists changes to the database. Redirects to the client detail view
+     * after successful update.
      *
-     * @return void
+     * @param int $client_id
+     *   The unique identifier of the client to update.
+     *
+     * @return Response
+     *   Redirects to the client detail view after update.
      */
-    public function clientEdit($client_id): void
+    #[Route('/clients/{client_id}/edit', name: 'client_update', methods: ['POST'])]
+    public function update(int $client_id): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $type_id = $_POST["type_id"];
         $type = $this->entityManager->find(ClientType::class, $type_id);
@@ -229,7 +252,7 @@ class ClientController extends AbstractController
 
         $this->entityManager->flush();
 
-        die('<script>location.href = "/client/'.$client_id.'" </script>');
+        return $this->redirectToRoute('client_show', ['client_id' => $client_id]);
     }
 
     /**
