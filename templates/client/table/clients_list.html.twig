@@ -10,7 +10,7 @@
                     <tbody>
                         {% for client in last_clients %}
                         <tr>
-                            <td><a href="/client/{{ client.id }}">{{ client.name }}</a></td>
+                            <td><a href="/clients/{{ client.id }}">{{ client.name }}</a></td>
                             <td>
                                 {{ client.street ? client.street.name : '' }} {{ client.homeNumber }}
                                 {% if client.street and client.city %}, {% endif %}

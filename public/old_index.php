@@ -8,7 +8,6 @@ $router = new Router();
 // ========== Clients routes ===================================================
 $router->add('GET', '/client/new', 'ClientController@clientNewForm');
 $router->add('POST', '/client/add', 'ClientController@clientAdd');
-$router->add('GET', '/client/{client_id}', 'ClientController@clientView');
 $router->add('GET', '/client/{client_id}/edit', 'ClientController@clientEditForm');
 $router->add('POST', '/client/{client_id}/edit', 'ClientController@clientEdit');
 

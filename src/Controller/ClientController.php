@@ -93,12 +93,16 @@ class ClientController extends AbstractController
      *
      * @param $client_id
      *
-     * @return void
+     * @return Response
      */
-    public function clientView($client_id): void
+    #[Route('/clients/{client_id}', name: 'client_show', methods: ['GET'])]
+    public function show($client_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
         $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
 
         $data = [
@@ -108,11 +112,16 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => TRUE,
                 'view' => TRUE,
+                'edit' => FALSE,
             ],
             'contact_types' => $this->entityManager->getRepository(ContactType::class)->findAll(),
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('client/client_view.html.twig', $data);
+        return $this->render('client/client_view.html.twig', $data);
     }
 
     /**
