@@ -26,8 +26,6 @@
   "require": {
     "doctrine/orm": "^3.3",
     "tecnickcom/tcpdf": "^6.3",
-    "symfony/http-foundation": "^6.0",
-    "symfony/cache": "^6.0",
     "symfony/runtime": "^7.0",
     "symfony/framework-bundle": "^7.0",
     "symfony/twig-bundle": "^7.0",
