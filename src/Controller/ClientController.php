@@ -89,14 +89,20 @@ class ClientController extends AbstractController
     }
 
     /**
-     * View Client form.
+     * Displays the details for a specific client.
      *
-     * @param $client_id
+     * Requires the user to be authenticated (session username set).
+     * Retrieves client data and related contact types, and passes them along
+     * with user and page metadata to the template.
+     *
+     * @param int $client_id
+     *   The unique identifier of the client to display.
      *
      * @return Response
+     *   The rendered client detail view.
      */
     #[Route('/clients/{client_id}', name: 'client_show', methods: ['GET'])]
-    public function show($client_id): Response
+    public function show(int $client_id): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
