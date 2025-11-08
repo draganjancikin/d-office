@@ -6,7 +6,7 @@
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
 
                 <div class="btn-group mb-1 mb-sm-0" role="group" aria-label="First group">
-                    <a href="/clients/add" class="btn btn-sm btn-outline-secondary mr-1" title="Upis novog klijenta!">
+                    <a href="/client/new" class="btn btn-sm btn-outline-secondary mr-1" title="Upis novog klijenta!">
                         <i class="fas fa-plus"> </i>
                         <i class="fas fa-user"> </i>
                     </a>
@@ -35,19 +35,20 @@
                     </a>
 
                     <!-- Open new project with client data. -->
-                    <a href="/projects/add?client_id={{ client.id }}"
+                    <a href="/projects/new?client_id={{ client.id }}"
                        class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog projekta!">
                         <i class="fas fa-arrow-right"> </i> Projekat
                     </a>
 
                     <!-- Open new proforma-invoice with client data. -->
-                    <a href="/pidbs/add?client_id={{ client.id }}"
+                    <a href="/pidbs/new?client_id={{ client.id }}"
                        class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog predračuna!">
                         <i class="fas fa-arrow-right"> </i> Predračun
                     </a>
 
                     <!-- Open new cutting with client data. -->
-                    <a href="/cuttings/add?client_id={{ client.id }}" class="btn btn-sm btn-outline-secondary" title="Otvaranje nove krojne liste!">
+                    <a href="/cutting/new?client_id={{ client.id }}" class="btn btn-sm btn-outline-secondary"
+                       title="Otvaranje nove krojne liste!">
                         <i class="fas fa-arrow-right"> </i> <i class="fas fa-cut"> </i>
                     </a>
 

@@ -66,7 +66,7 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function addForm(): void
+    public function articleNewForm(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -81,7 +81,7 @@ class ArticleController extends BaseController
             'units' => $units,
         ];
 
-        $this->render('article/add.html.twig', $data);
+        $this->render('article/article_new.html.twig', $data);
     }
 
     /**
@@ -89,7 +89,7 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function add(): void
+    public function articleAdd(): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
@@ -136,7 +136,7 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function view(int $article_id): void
+    public function articleViewForm(int $article_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -159,7 +159,7 @@ class ArticleController extends BaseController
             ],
         ];
 
-        $this->render('article/view.html.twig', $data);
+        $this->render('article/article_view.html.twig', $data);
     }
 
     /**
@@ -169,7 +169,7 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function editForm(int $article_id): void
+    public function articleEditForm(int $article_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -196,7 +196,7 @@ class ArticleController extends BaseController
             ],
         ];
 
-        $this->render('article/edit.html.twig', $data);
+        $this->render('article/article_edit.html.twig', $data);
     }
 
     /**
@@ -206,7 +206,7 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function edit(int $article_id): void
+    public function articleEdit(int $article_id): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
@@ -330,7 +330,7 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function addGroupForm(): void
+    public function groupNewForm(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -340,7 +340,7 @@ class ArticleController extends BaseController
             'page_title' => $this->page_title,
         ];
 
-        $this->render('article/add_group.html.twig', $data);
+        $this->render('article/group_new.html.twig', $data);
     }
 
     /**
@@ -348,7 +348,7 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function addGroup(): void
+    public function groupAdd(): void
     {
         $name = htmlspecialchars($_POST['name']);
         if ($name == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
@@ -371,7 +371,7 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function viewGroup(int $group_id): void
+    public function groupView(int $group_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -390,7 +390,7 @@ class ArticleController extends BaseController
             ],
         ];
 
-        $this->render('article/view_group.html.twig', $data);
+        $this->render('article/group_view.html.twig', $data);
     }
 
     /**
@@ -400,7 +400,7 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function editGroupForm(int $group_id): void
+    public function groupEditForm(int $group_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -419,7 +419,7 @@ class ArticleController extends BaseController
             ],
         ];
 
-      $this->render('article/edit_group.html.twig', $data);
+      $this->render('article/group_edit.html.twig', $data);
     }
 
     /**
@@ -429,7 +429,7 @@ class ArticleController extends BaseController
      *
      * @return void
      */
-    public function editGroup(int $group_id): void
+    public function groupEdit(int $group_id): void
     {
         $name = htmlspecialchars($_POST["name"]);
         $article_group = $this->entityManager->find(ArticleGroup::class, $group_id);

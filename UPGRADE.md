@@ -1,3 +1,26 @@
+# Upgrade to 8.2.3
+Bug:
+* #344 - Update link for creating a new project from document
+
+# Upgrade to 8.2.2
+Bug:
+* #335 - Transactions by document view issue
+
+# Upgrade to 8.2.1
+Bug:
+* #336 - Update tools menu links for creating a new project
+
+# Upgrade to 8.2.0
+Enhancement:
+* #311 - Move forms into separate folders
+* #328 - Oct system update:
+  - "doctrine/orm" object relational mapper (3.3.2 => 3.5.2)
+  - "symfony/http-foundation" commponent (6.1.12 => 6.4.26)
+  - "symfony/cache" commponent (6.4.20 => 6.4.26)
+  - "twig/twig" (3.20.0 => 3.21.1)
+  - "tecnickcom/tcpdf" (6.9.4 => 6.10.0)
+  - "bootstrap" (5.1.3 => 5.2.3)
+
 # Upgrade to 8.1.4
 Bug:
 * #312 - Add "nl2br" into Accounting documents note

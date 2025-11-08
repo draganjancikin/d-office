@@ -8,7 +8,7 @@
                 </button>
             </a>
 
-            <a href="/projects/add">
+            <a href="/projects/new">
                 <button type="submit" class="btn btn-sm btn-outline-secondary" title="Otvaranje novog projekta!">
                     <!-- <i class="fas fa-plus"> </i> <i class="fas fa-folder"> </i> -->
                     <i class="fas fa-project-diagram"></i>
@@ -48,21 +48,23 @@
                 </a>
 
                 <!-- Open the proforma-invoice from project -->
-                <a href="/pidbs/add?client_id={{ project_data.getClient().getId() }}&project_id={{ project_data.getId() }}">
+                <a href="/pidbs/new?client_id={{ project_data.getClient().getId() }}&project_id={{ project_data.getId()
+            }}">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog predračuna!">
                         <i class="fas fa-arrow-right"> </i> Predračun
                     </button>
                 </a>
 
                 <!-- Open the material-order from project -->
-                <a href="/orders/add?project_id={{ project_data.getId() }}">
+                <a href="/orders/new?project_id={{ project_data.getId() }}">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje nove narudžbenice za materijal!">
                         <i class="fas fa-arrow-right"> </i> Narudžbenica
                     </button>
                 </a>
 
                 <!-- Open the cutting from project -->
-                <a href="/cuttings/add?client_id={{ project_data.getClient().getId() }}&project_id={{ project_data.getId() }}">
+                <a href="/cutting/new?client_id={{ project_data.getClient().getId() }}&project_id={{ project_data
+                .getId() }}">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje nove krojne liste!">
                         <i class="fas fa-arrow-right"> </i> <i class="fa fa-cut"> </i>
                     </button>

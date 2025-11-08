@@ -59,7 +59,7 @@ class AdminController extends BaseController
      *
      * @return void
      */
-    public function viewCompanyInfo(): void
+    public function companyInfoViewForm(): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -79,7 +79,7 @@ class AdminController extends BaseController
             ],
         ];
 
-        $this->render('admin/viewCompanyInfo.html.twig', $data);
+        $this->render('admin/company_info_view.html.twig', $data);
     }
 
     /**
@@ -87,7 +87,7 @@ class AdminController extends BaseController
      *
      * @return void
      */
-    public function editCompanyInfoForm(): void
+    public function companyInfoEditForm(): void
     {
 
         // If the user is not logged in, redirect them to the login page.
@@ -115,7 +115,7 @@ class AdminController extends BaseController
             ],
         ];
 
-        $this->render('admin/editCompanyInfo.html.twig', $data);
+        $this->render('admin/company_info_edit.html.twig', $data);
     }
 
     /**
@@ -123,7 +123,7 @@ class AdminController extends BaseController
      *
      * @return void
      */
-    public function editCompanyInfo(): void
+    public function companyInfoEdit(): void
     {
         $name = $_POST["name"] ?? "";
         $pib = $_POST["pib"] ?? "";
@@ -215,7 +215,7 @@ class AdminController extends BaseController
      *
      * @return void
      */
-    public function employees():void
+    public function employeesList():void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -229,7 +229,7 @@ class AdminController extends BaseController
             ],
         ];
 
-        $this->render('admin/employees.html.twig', $data);
+        $this->render('admin/employees_list.html.twig', $data);
     }
 
   /**
@@ -239,7 +239,7 @@ class AdminController extends BaseController
    *
    * @return void
    */
-    public function employeeView(int $employee_id): void
+    public function employeeViewForm(int $employee_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -259,7 +259,7 @@ class AdminController extends BaseController
             ],
         ];
 
-        $this->render('admin/viewEmployee.html.twig', $data);
+        $this->render('admin/employee_view.html.twig', $data);
     }
 
   /**
@@ -289,7 +289,7 @@ class AdminController extends BaseController
             ],
         ];
 
-        $this->render('admin/editEmployee.html.twig', $data);
+        $this->render('admin/employee_edit.html.twig', $data);
     }
 
   /**
@@ -343,7 +343,7 @@ class AdminController extends BaseController
           'employees' => $employees,
         ];
 
-        $this->render('admin/search_employees.html.twig', $data);
+        $this->render('admin/table/employees_search.html.twig', $data);
     }
 
 }

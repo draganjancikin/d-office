@@ -109,7 +109,7 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function addForm(int $project_id = NULL): void
+    public function orderNewForm(?int $project_id = NULL): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -130,7 +130,7 @@ class OrderController extends BaseController
             'project_data' => $project_data,
         ];
 
-        $this->render('order/add.html.twig', $data);
+        $this->render('order/order_new.html.twig', $data);
     }
 
     /**
@@ -138,7 +138,7 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function add(): void
+    public function orderAdd(): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
 
@@ -193,7 +193,7 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function view(int $order_id): void
+    public function orderViewForm(int $order_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -236,7 +236,7 @@ class OrderController extends BaseController
             'total_eur' => $total_rsd / $kurs,
         ];
 
-        $this->render('order/view.html.twig', $data);
+        $this->render('order/order_view.html.twig', $data);
     }
 
     /**
@@ -246,7 +246,7 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function editForm(int $order_id): void
+    public function orderEditForm(int $order_id): void
     {
         // If the user is not logged in, redirect them to the login page.
         $this->isUserNotLoggedIn();
@@ -293,7 +293,7 @@ class OrderController extends BaseController
             'project_list' => $project_list,
         ];
 
-        $this->render('order/edit.html.twig', $data);
+        $this->render('order/order_edit.html.twig', $data);
     }
 
     /**
@@ -303,7 +303,7 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function edit(int $order_id): void
+    public function orderEdit(int $order_id): void
     {
         $user = $this->entityManager->find(User::class, $this->user_id);
         $order = $this->entityManager->find(Order::class, $order_id);
@@ -357,7 +357,7 @@ class OrderController extends BaseController
      *
      * @return void
      */
-    public function delete(int $order_id): void
+    public function orderDelete(int $order_id): void
     {
         // Check if exist Order.
         if ($order = $this->entityManager->find(Order::class, $order_id)) {
@@ -612,7 +612,7 @@ class OrderController extends BaseController
 
         ];
 
-      $this->render('order/changeMaterialInOrder.html.twig', $data);
+      $this->render('order/material_in_order_change.html.twig', $data);
     }
 
     /**
