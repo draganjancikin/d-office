@@ -44,6 +44,7 @@
     </parameter>
     <parameter key="fragment.renderer.hinclude.global_template">null</parameter>
     <parameter key="fragment.path">/_fragment</parameter>
+    <parameter key="kernel.secret">%env(APP_SECRET)%</parameter>
     <parameter key="kernel.http_method_override">false</parameter>
     <parameter key="kernel.trust_x_sendfile_type_header">false</parameter>
     <parameter key="kernel.trusted_hosts" type="collection"/>
@@ -418,8 +419,7 @@
       <argument type="service" id="kernel"/>
     </service>
     <service id="uri_signer" class="Symfony\Component\HttpFoundation\UriSigner">
-      <tag name="container.error" message="You have requested a non-existent parameter &quot;kernel.secret&quot;. Did you mean this: &quot;kernel.charset&quot;?"/>
-      <argument>null</argument>
+      <argument>%env(APP_SECRET)%</argument>
     </service>
     <service id="config_cache_factory" class="Symfony\Component\Config\ResourceCheckerConfigCacheFactory">
       <argument type="tagged_iterator" tag="config_cache.resource_checker"/>
@@ -780,6 +780,16 @@
       </call>
       <call method="setDescription">
         <argument>Help debug routes by simulating a path info match</argument>
+      </call>
+    </service>
+    <service id="console.command.yaml_lint" class="Symfony\Bundle\FrameworkBundle\Command\YamlLintCommand">
+      <tag name="console.command"/>
+      <tag name="container.no_preload"/>
+      <call method="setName">
+        <argument>lint:yaml</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Lint a YAML file and outputs encountered errors</argument>
       </call>
     </service>
     <service id="console.command.secrets_set" class="Symfony\Bundle\FrameworkBundle\Command\SecretsSetCommand">
@@ -1286,6 +1296,9 @@
         <argument type="service" id="twig.extension.routing"/>
       </call>
       <call method="addExtension">
+        <argument type="service" id="twig.extension.yaml"/>
+      </call>
+      <call method="addExtension">
         <argument type="service" id="twig.extension.httpkernel"/>
       </call>
       <call method="addExtension">
@@ -1357,6 +1370,9 @@
     <service id="twig.extension.routing" class="Symfony\Bridge\Twig\Extension\RoutingExtension">
       <tag name="twig.extension"/>
       <argument type="service" id="router.default"/>
+    </service>
+    <service id="twig.extension.yaml" class="Symfony\Bridge\Twig\Extension\YamlExtension">
+      <tag name="twig.extension"/>
     </service>
     <service id="twig.extension.debug.stopwatch" class="Symfony\Bridge\Twig\Extension\StopwatchExtension">
       <argument>null</argument>
@@ -1711,6 +1727,13 @@
       <argument>false</argument>
       <argument type="service_closure" id="console.command.router_match"/>
     </service>
+    <service id=".console.command.yaml_lint.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>lint:yaml</argument>
+      <argument type="collection"/>
+      <argument>Lint a YAML file and outputs encountered errors</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="console.command.yaml_lint"/>
+    </service>
     <service id=".console.command.secrets_set.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>secrets:set</argument>
       <argument type="collection"/>
@@ -1776,7 +1799,7 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.b2d2zJq"/>
+      <argument type="service" id=".service_locator.LbPEm2B"/>
       <argument type="collection">
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -1795,6 +1818,7 @@
         <argument key="debug:event-dispatcher">console.command.event_dispatcher_debug</argument>
         <argument key="debug:router">console.command.router_debug</argument>
         <argument key="router:match">console.command.router_match</argument>
+        <argument key="lint:yaml">console.command.yaml_lint</argument>
         <argument key="secrets:set">console.command.secrets_set</argument>
         <argument key="secrets:remove">console.command.secrets_remove</argument>
         <argument key="secrets:generate-keys">console.command.secrets_generate_key</argument>
@@ -1806,7 +1830,7 @@
         <argument key="lint:twig">twig.command.lint</argument>
       </argument>
     </service>
-    <service id=".service_locator.b2d2zJq" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.LbPEm2B" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="console.command.about" type="service_closure" id=".console.command.about.lazy"/>
@@ -1826,6 +1850,7 @@
         <argument key="console.command.event_dispatcher_debug" type="service_closure" id=".console.command.event_dispatcher_debug.lazy"/>
         <argument key="console.command.router_debug" type="service_closure" id=".console.command.router_debug.lazy"/>
         <argument key="console.command.router_match" type="service_closure" id=".console.command.router_match.lazy"/>
+        <argument key="console.command.yaml_lint" type="service_closure" id=".console.command.yaml_lint.lazy"/>
         <argument key="console.command.secrets_set" type="service_closure" id=".console.command.secrets_set.lazy"/>
         <argument key="console.command.secrets_remove" type="service_closure" id=".console.command.secrets_remove.lazy"/>
         <argument key="console.command.secrets_generate_key" type="service_closure" id=".console.command.secrets_generate_key.lazy"/>
