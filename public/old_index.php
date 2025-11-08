@@ -6,22 +6,8 @@ use App\Core\Router;
 $router = new Router();
 
 // ========== Clients routes ===================================================
-$router->add('GET', '/clients/newCountry', 'ClientController@countryNewForm');
-$router->add('POST', '/clients/addCountry', 'ClientController@countryAdd');
-$router->add('GET', '/clients/newCity', 'ClientController@cityNewForm');
-$router->add('POST', '/clients/addCity', 'ClientController@cityAdd');
-$router->add('GET', '/clients/newStreet', 'ClientController@streetNewForm');
-$router->add('POST', '/clients/addStreet', 'ClientController@streetAdd');
-$router->add('GET', '/clients/search/', 'ClientController@search');
 $router->add('GET', '/clients/advancedSearch', 'ClientController@advancedSearch');
 $router->add('POST', '/clients/advancedSearch', 'ClientController@advancedSearch');
-
-$router->add('GET', '/client/{client_id}/addContact', 'ClientController@view');
-$router->add('POST', '/client/{client_id}/addContact', 'ClientController@addContact');
-
-$router->add('GET', '/client/{client_id}/editContact', 'ClientController@view');
-$router->add('POST', '/client/{client_id}/contact/{contact_id}/editContact', 'ClientController@editContact');
-$router->add('GET', '/client/{client_id}/contact/{contact_id}/removeContact', 'ClientController@removeContact');
 
 // ========== Documents routes =================================================
 

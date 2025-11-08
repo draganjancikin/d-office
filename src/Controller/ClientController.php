@@ -14,6 +14,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
@@ -33,12 +34,10 @@ class ClientController extends AbstractController
     protected string $app_version;
     protected string $stylesheet;
 
-
     /**
      * ClientController constructor.
      *
-     * Initializes controller properties, loads app version from composer.json,
-     * and sets stylesheet path.
+     * Initializes controller properties, loads app version from composer.json, and sets stylesheet path.
      *
      * @param EntityManagerInterface $entityManager
      *   Doctrine entity manager for database operations.
@@ -92,8 +91,7 @@ class ClientController extends AbstractController
      * Displays the form for creating a new client.
      *
      * Requires the user to be authenticated (session username set).
-     * Passes client types, countries, cities, streets, and user/page metadata
-     * to the template.
+     * Passes client types, countries, cities, streets, and user/page metadata to the template.
      *
      * @return Response
      *   The rendered new client form view.
@@ -129,8 +127,8 @@ class ClientController extends AbstractController
      * Displays the details for a specific client.
      *
      * Requires the user to be authenticated (session username set).
-     * Retrieves client data and related contact types, and passes them along
-     * with user and page metadata to the template.
+     * Retrieves client data and related contact types, and passes them along with user and page metadata to the
+     * template.
      *
      * @param int $client_id
      *   The unique identifier of the client to display.
@@ -138,7 +136,7 @@ class ClientController extends AbstractController
      * @return Response
      *   The rendered client detail view.
      */
-    #[Route('/clients/{client_id}', name: 'client_show', methods: ['GET'])]
+    #[Route('/clients/{client_id}', name: 'client_show', requirements: ['client_id' => '\d+'], methods: ['GET'])]
     public function show(int $client_id): Response
     {
         session_start();
@@ -171,9 +169,8 @@ class ClientController extends AbstractController
      * Displays the edit form for a specific client.
      *
      * Requires the user to be authenticated (session username set).
-     * Retrieves client data, client types, countries, cities, streets, and
-     * contact types, and passes them along with user and page metadata to the
-     * template for editing.
+     * Retrieves client data, client types, countries, cities, streets, and contact types, and passes them along with
+     * user and page metadata to the template for editing.
      *
      * @param int $client_id
      *   The unique identifier of the client to edit.
@@ -217,9 +214,8 @@ class ClientController extends AbstractController
      * Handles the update of a client's information from the edit form submission.
      *
      * Requires the user to be authenticated (session username set).
-     * Validates and updates client fields, sets modification metadata, and
-     * persists changes to the database. Redirects to the client detail view
-     * after successful update.
+     * Validates and updates client fields, sets modification metadata, and persists changes to the database. Redirects
+     * to the client detail view after successful update.
      *
      * @param int $client_id
      *   The unique identifier of the client to update.
@@ -296,9 +292,8 @@ class ClientController extends AbstractController
      * Handles the creation of a new client from the new client form submission.
      *
      * Requires the user to be authenticated (session username set).
-     * Validates and sets client fields, checks for duplicate names, persists
-     * the new client to the database, and redirects to the client detail view
-     * after successful creation.
+     * Validates and sets client fields, checks for duplicate names, persists the new client to the database, and
+     * redirects to the client detail view after successful creation.
      *
      * @return Response
      *   Redirects to the client detail view after creation.
@@ -335,7 +330,7 @@ class ClientController extends AbstractController
         $address_note = $this->basicValidation($_POST["address_note"]);
         $note = $this->basicValidation($_POST["note"]);
 
-        // check if name already exist in database
+        // Check if name already exist in database.
         $control_name = $this->entityManager->getRepository(Client::class)->findBy( array('name' => $name) );
         if ($control_name) {
             echo "Username already exist in database. Please choose new username!";
@@ -369,50 +364,23 @@ class ClientController extends AbstractController
     }
 
     /**
-     * Edit contact.
+     * Handles the creation of a new contact for a specific client from the contact form submission.
+     *
+     * Requires the user to be authenticated (session username set).
+     * Validates and sets contact fields, persists the new contact to the database, associates it with the client, and
+     * redirects to the client detail view after successful creation.
      *
      * @param int $client_id
-     * @param int $contact_id
+     *   The unique identifier of the client to associate the new contact with.
      *
-     * @return void
+     * @return Response
+     *   Redirects to the client detail view after contact creation.
      */
-    public function editContact(int $client_id, int $contact_id): void
+    #[Route('/clients/{client_id}/contacts/create', name: 'client_contact_create', methods: ['POST'])]
+    public function createContact(int $client_id): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
-
-        $contact_type_id = $_POST["contact_type_id"];
-        $contact_type = $this->entityManager->find(ContactType::class, $contact_type_id);
-        $body = $this->basicValidation($_POST["body"]);
-        $note = $this->basicValidation($_POST["note"]);
-
-        $contact = $this->entityManager->find(Contact::class, $contact_id);
-
-        if ($contact === null) {
-            echo "Contact with ID $contact_id does not exist.\n";
-            exit(1);
-        }
-
-        $contact->setType($contact_type);
-        $contact->setBody($body);
-        $contact->setNote($note);
-        $contact->setModifiedByUser($user);
-        $contact->setModifiedAt(new \DateTime("now"));
-
-        $this->entityManager->flush();
-
-        die('<script>location.href = "/client/'.$client_id.'" </script>');
-    }
-
-    /**
-     * Add contact to client.
-     *
-     * @param int $client_id
-     *
-     * @return void
-     */
-    public function addContact(int $client_id): void
-    {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
         $client = $this->entityManager->find(Client::class, $client_id);
 
         $type_id = $_POST["contact_type_id"];
@@ -440,18 +408,70 @@ class ClientController extends AbstractController
 
         $this->entityManager->flush();
 
-        die('<script>location.href = "/client/'.$client_id.'" </script>');
+        return $this->redirectToRoute('client_show', ['client_id' => $client_id]);
+    }
+
+  /**
+   * Handles the update of an existing contact for a specific client from the contact edit form submission.
+   *
+   * Requires the user to be authenticated (session username set).
+   * Validates and updates contact fields, sets modification metadata, persists changes to the database, and redirects
+   * to the client detail view after successful update.
+   *
+   * @param int $client_id
+   *   The unique identifier of the client associated with the contact.
+   * @param int $contact_id
+   *   The unique identifier of the contact to update.
+   *
+   * @return Response
+   *   Redirects to the client detail view after contact update.
+   */
+    #[Route('/clients/{client_id}/contacts/{contact_id}/update', name: 'client_contact_edit', methods: ['POST'])]
+    public function updateContact(int $client_id, int $contact_id): Response
+    {
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+
+        $contact_type_id = $_POST["contact_type_id"];
+        $contact_type = $this->entityManager->find(ContactType::class, $contact_type_id);
+        $body = $this->basicValidation($_POST["body"]);
+        $note = $this->basicValidation($_POST["note"]);
+
+        $contact = $this->entityManager->find(Contact::class, $contact_id);
+
+        if ($contact === null) {
+            echo "Contact with ID $contact_id does not exist.\n";
+            exit(1);
+        }
+
+        $contact->setType($contact_type);
+        $contact->setBody($body);
+        $contact->setNote($note);
+        $contact->setModifiedByUser($user);
+        $contact->setModifiedAt(new \DateTime("now"));
+
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('client_show', ['client_id' => $client_id]);
     }
 
     /**
-     * Remove contact from client.
+     * Handles the deletion of a contact from a specific client.
+     *
+     * Requires the user to be authenticated (session username set).
+     * Removes the contact from the client's contact collection and deletes it from the database.
+     * Redirects to the client detail view after successful deletion.
      *
      * @param int $client_id
+     *   The unique identifier of the client associated with the contact.
      * @param int $contact_id
+     *   The unique identifier of the contact to delete.
      *
-     * @return void
+     * @return Response
+     *   Redirects to the client detail view after contact deletion.
      */
-    public function removeContact(int $client_id, int $contact_id): void
+    #[Route('/clients/{client_id}/contacts/{contact_id}/delete', name: 'client_contact_remove', methods: ['GET'])]
+    public function deleteContact(int $client_id, int $contact_id): Response
     {
         $client = $this->entityManager->find(Client::class, $client_id);
         $contact = $this->entityManager->find(Contact::class, $contact_id);
@@ -462,35 +482,56 @@ class ClientController extends AbstractController
         $this->entityManager->remove($contact);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/client/'.$client_id.'" </script>');
+        return $this->redirectToRoute('client_show', ['client_id' => $client_id]);
     }
 
     /**
-     * Add country form.
+     * Displays the form for creating a new country.
      *
-     * @return void
+     * Requires the user to be authenticated (session username set).
+     * Passes user and page metadata to the template for rendering the new country form.
+     *
+     * @return Response
+     *   The rendered new country form view.
      */
-    public function countryNewForm(): void
+    #[Route('/countries/new', name: 'country_new', methods: ['GET'])]
+    public function newCountry(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('client/country_new.html.twig', $data);
+        return $this->render('client/country_new.html.twig', $data);
     }
 
     /**
-     * Add new country.
+     * Handles the creation of a new country from the new country form submission.
      *
-     * @return void
+     * Requires the user to be authenticated (session username set).
+     * Validates and sets country fields, checks for duplicate names, persists the new country to the database,
+     * and redirects to the clients index view after successful creation.
+     *
+     * @return Response
+     *   Redirects to the clients index view after country creation.
      */
-    public function countryAdd(): void
+    #[Route('/countries/create', name: 'country_create', methods: ['POST'])]
+    public function createCountry(): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -524,35 +565,56 @@ class ClientController extends AbstractController
         $this->entityManager->persist($newCountry);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/clients/" </script>');
+        return $this->redirectToRoute('clients_index');
     }
 
     /**
-     * Add city form.
+     * Displays the form for creating a new city.
      *
-     * @return void
+     * Requires the user to be authenticated (session username set).
+     * Passes user and page metadata to the template for rendering the new city form.
+     *
+     * @return Response
+     *   The rendered new city form view.
      */
-    public function cityNewForm(): void
+    #[Route('/cities/new', name: 'city_new', methods: ['GET'])]
+    public function newCity(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('client/city_new.html.twig', $data);
+        return $this->render('client/city_new.html.twig', $data);
     }
 
     /**
-     * Add new city.
+     * Handles the creation of a new city from the new city form submission.
      *
-     * @return void
+     * Requires the user to be authenticated (session username set).
+     * Validates and sets city fields, checks for duplicate names, persists the new city to the database, and redirects
+     * to the clients index view after successful creation.
+     *
+     * @return Response
+     *   Redirects to the clients index view after city creation.
      */
-    public function cityAdd(): void
+    #[Route('/cities/create', name: 'city_create', methods: ['POST'])]
+    public function createCity(): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class,  $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -575,40 +637,57 @@ class ClientController extends AbstractController
         $newCity->setName($name);
         $newCity->setCreatedAt(new \DateTime("now"));
         $newCity->setCreatedByUser($user);
-        $newCity->setModifiedAt(new \DateTime("0001-01-01 00:00:00"));
+        $newCity->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
 
         $this->entityManager->persist($newCity);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/clients/" </script>');
+        return $this->redirectToRoute('clients_index');
     }
 
     /**
      * Add Street form.
      *
-     * @return void
+     * @return Response
      */
-    public function streetNewForm(): void
+    #[Route('/streets/new', name: 'street_new', methods: ['GET'])]
+    public function newStreet(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+          return $this->redirectToRoute('login_form');
+        }
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('client/street_new.html.twig', $data);
+        return $this->render('client/street_new.html.twig', $data);
     }
 
     /**
-     * Add new street.
+     * Handles the creation of a new street from the new street form submission.
      *
-     * @return void
+     * Requires the user to be authenticated (session username set).
+     * Validates and sets street fields, checks for duplicate names, persists the new street to the database, and
+     * redirects to the clients index view after successful creation.
+     *
+     * @return Response
+     *   Redirects to the clients index view after street creation.
      */
-    public function streetAdd():void
+    #[Route('/streets/create', name: 'street_create', methods: ['POST'])]
+    public function createStreet(): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -631,23 +710,32 @@ class ClientController extends AbstractController
         $newStreet->setName($name);
         $newStreet->setCreatedAt(new \DateTime("now"));
         $newStreet->setCreatedByUser($user);
-        $newStreet->setModifiedAt(new \DateTime("0000-01-01 00:00:00"));
+        $newStreet->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
 
         $this->entityManager->persist($newStreet);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/clients/" </script>');
+        return $this->redirectToRoute('clients_index');
     }
 
     /**
-     * Advanced search.
+     * Displays and processes the advanced search form for clients.
      *
-     * @return void
+     * Requires the user to be authenticated (session username set).
+     * Accepts client, street, and city search terms from POST data, performs advanced search using the Client
+     * repository, and passes the results and search terms along with page and user metadata to the template.
+     *
+     * @return Response
+     *   The rendered advanced search view with results if a search was performed.
      */
-    public function advancedSearch(): void
+    #[Route('/clients/advanced-search', name: 'client_advanced_search', methods: ['GET', 'POST'])]
+    public function advancedSearch(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
         $client_name = $street_name = $city_name = NULL;
 
         if (isset($_POST['submit'])) {
@@ -675,9 +763,16 @@ class ClientController extends AbstractController
             'client_name' => $client_name,
             'street_name' => $street_name,
             'city_name' => $city_name,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('client/advanced_search.html.twig', $data);
+        return $this->render('client/advanced_search.html.twig', $data);
     }
 
     /**
@@ -692,28 +787,44 @@ class ClientController extends AbstractController
         return trim(htmlspecialchars($str));
     }
 
-  /**
-   * Search for clients.
-   *
-   * @param string $term
-   *   Search term.
-   *
-   * @return void
-   */
-    public function search(string $term): void
+    /**
+     * Searches for clients by a search term provided as a query parameter.
+     *
+     * Requires the user to be authenticated (session username set).
+     * Retrieves the 'term' from the query string, performs the search using the Client repository, and passes the
+     * results along with page metadata to the template.
+     *
+     * @param Request $request
+     *   The HTTP request object containing the search term as a query parameter.
+     *
+     * @return Response
+     *   The rendered client search results view.
+     */
+    #[Route('/clients/search', name: 'client_search', methods: ['GET'])]
+    public function search(Request $request): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
+        $term = $request->query->get('term', '');
         $clients= $this->entityManager->getRepository(Client::class)->search($term);
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
             'clients' => $clients,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('client/search.html.twig', $data);
+        return $this->render('client/search.html.twig', $data);
     }
 
     /**
@@ -724,11 +835,11 @@ class ClientController extends AbstractController
      */
     private function loadAppVersion(): string
     {
-      $composerJsonPath = __DIR__ . '/../../composer.json';
-      if (file_exists($composerJsonPath)) {
-        $composerData = json_decode(file_get_contents($composerJsonPath), true);
-        return $composerData['version'] ?? 'unknown';
-      }
-      return 'unknown';
+        $composerJsonPath = __DIR__ . '/../../composer.json';
+        if (file_exists($composerJsonPath)) {
+            $composerData = json_decode(file_get_contents($composerJsonPath), true);
+            return $composerData['version'] ?? 'unknown';
+        }
+        return 'unknown';
     }
 }

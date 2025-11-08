@@ -22,13 +22,13 @@
                         <td>{{ count }}</td>
                         <td><a href="/client/{{ client.id }}">{{ client.name }}</a></td>
                         <td>
-                            {% if client.street.name %}
+                            {% if client.street %}
                                 {{ client.street.name }} {{ client.homenumber }},
                             {% endif %}
-                            {% if client.city.name %}
+                            {% if client.city %}
                                 {{ client.city.name }},
                             {% endif %}
-                            {% if client.country.name %}
+                            {% if client.country %}
                                 {{ client.country.name }}
                             {% endif %}
 
