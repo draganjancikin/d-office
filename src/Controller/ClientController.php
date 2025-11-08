@@ -11,43 +11,65 @@ use App\Entity\ContactType;
 use App\Entity\Country;
 use App\Entity\Street;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * ClientController class.
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class ClientController extends BaseController
+class ClientController extends AbstractController
 {
 
-    protected string $page_title;
+    private EntityManagerInterface $entityManager;
     protected string $page;
+    protected string $page_title;
     protected $countries;
     protected $cities;
     protected $streets;
+    protected string $app_version;
+    protected string $stylesheet;
+
 
     /**
      * ClientController constructor.
+     *
+     * Initializes controller properties, loads app version from composer.json,
+     * and sets stylesheet path.
+     *
+     * @param EntityManagerInterface $entityManager
+     *   Doctrine entity manager for database operations.
      */
-    public function __construct() {
-        parent::__construct();
-
-        $this->page_title = 'Klijenti';
+    public function __construct(EntityManagerInterface $entityManager) {
+        $this->entityManager = $entityManager;
         $this->page = 'clients';
+        $this->page_title = 'Klijenti';
         $this->countries = $this->entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
         $this->cities = $this->entityManager->getRepository(City::class)->findBy([], ['name' => 'ASC']);
         $this->streets = $this->entityManager->getRepository(Street::class)->findBy([], ['name' => 'ASC']);
+        $this->app_version = $this->loadAppVersion();
+        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
-     * Index action.
+     * Displays the clients index page with a list of the most recently added clients.
      *
-     * @return void
+     * Requires the user to be authenticated (session username set).
+     * Passes page metadata, user info, and last clients to the template.
+     *
+     * @return Response
+     *   The rendered clients index view.
      */
-    public function index(): void
+    #[Route('/clients', name: 'clients_index', methods: ['GET'])]
+    public function index(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $data = [
             'page' => $this->page,
@@ -56,9 +78,14 @@ class ClientController extends BaseController
                 'client' => FALSE,
             ],
             'last_clients' => $this->entityManager->getRepository(Client::class)->getLastClients(10),
+            'app_version' => $this->app_version,
+            'stylesheet' => $this->stylesheet,
+            'user_id' => $_SESSION['user_id'],
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
         ];
 
-        $this->render('client/index.html.twig', $data);
+        return $this->render('client/index.html.twig', $data);
     }
 
     /**
@@ -624,5 +651,21 @@ class ClientController extends BaseController
         ];
 
         $this->render('client/search.html.twig', $data);
+    }
+
+    /**
+     * Loads the application version from composer.json.
+     *
+     * @return string
+     *   The app version, or 'unknown' if not found.
+     */
+    private function loadAppVersion(): string
+    {
+      $composerJsonPath = __DIR__ . '/../../composer.json';
+      if (file_exists($composerJsonPath)) {
+        $composerData = json_decode(file_get_contents($composerJsonPath), true);
+        return $composerData['version'] ?? 'unknown';
+      }
+      return 'unknown';
     }
 }

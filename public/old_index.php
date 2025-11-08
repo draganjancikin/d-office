@@ -6,7 +6,6 @@ use App\Core\Router;
 $router = new Router();
 
 // ========== Clients routes ===================================================
-$router->add('GET', '/clients/', 'ClientController@index');
 $router->add('GET', '/client/new', 'ClientController@clientNewForm');
 $router->add('POST', '/client/add', 'ClientController@clientAdd');
 $router->add('GET', '/client/{client_id}', 'ClientController@clientView');

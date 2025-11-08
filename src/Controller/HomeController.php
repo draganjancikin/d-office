@@ -22,27 +22,13 @@ class HomeController extends AbstractController
     protected string $stylesheet;
 
     /**
-     * Loads the application version from composer.json.
-     *
-     * @return string
-     *   The app version, or 'unknown' if not found.
-     */
-    private function loadAppVersion(): string
-    {
-        $composerJsonPath = __DIR__ . '/../../composer.json';
-        if (file_exists($composerJsonPath)) {
-            $composerData = json_decode(file_get_contents($composerJsonPath), true);
-            return $composerData['version'] ?? 'unknown';
-        }
-        return 'unknown';
-    }
-
-    /**
      * HomeController constructor.
      *
-     * Initializes controller properties, loads app version from composer.json, and sets stylesheet path.
+     * Initializes controller properties, loads app version from composer.json,
+     * and sets stylesheet path.
      *
-     * @param EntityManagerInterface $entityManager Doctrine entity manager for database operations.
+     * @param EntityManagerInterface $entityManager
+     *   Doctrine entity manager for database operations.
      */
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -152,4 +138,19 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('home_index');
     }
 
+    /**
+     * Loads the application version from composer.json.
+     *
+     * @return string
+     *   The app version, or 'unknown' if not found.
+     */
+    private function loadAppVersion(): string
+    {
+      $composerJsonPath = __DIR__ . '/../../composer.json';
+      if (file_exists($composerJsonPath)) {
+        $composerData = json_decode(file_get_contents($composerJsonPath), true);
+        return $composerData['version'] ?? 'unknown';
+      }
+      return 'unknown';
+    }
 }
