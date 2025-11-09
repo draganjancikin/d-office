@@ -28,7 +28,7 @@ class AccountingDocument
     protected $ordinal_num_in_year;
 
     /**
-     * Meny Accounting Documents belongs to the One Accounting Document Type.
+     * Many Accounting Documents belongs to the One Accounting Document Type.
      *
      * @var int
      */
@@ -122,12 +122,13 @@ class AccountingDocument
 
     /**
      * Bidirectional - Many Projects have many payments
-     *
      */
     #[ORM\ManyToMany(targetEntity: Payment::class)]
-    #[ORM\JoinTable(name: "v6__accounting_documents__payments")]
-//    #[ORM\JoinColumn(name: "accounting_document_id", referencedColumnName: "id")]
-//    #[ORM\InverseJoinColumn(name: "payment_id", referencedColumnName: "id")]
+    #[ORM\JoinTable(
+      name: "v6__accounting_documents__payments",
+      joinColumns: [new ORM\JoinColumn(name: "accountingdocument_id", referencedColumnName: "id")],
+      inverseJoinColumns: [new ORM\JoinColumn(name: "payment_id", referencedColumnName: "id")]
+    )]
     private $payments;
 
     public function getId() {
