@@ -23,15 +23,18 @@
                         {% for cutting in cuttings %}
                             <tr>
                                 <td class="centar">
-                                    <a href="/cutting/{{ cutting.getId() }}">
+                                    <a href="/cuttings/{{ cutting.getId() }}">
                                         KL_{{ '%04d'|format(cutting.getOrdinalNumInYear()) }}
                                     </a>
                                 </td>
                                 <td>{{ cutting.getClient().getName() }}</td>
                                 <td>
                                     {% if cutting.id == last_cutting_sheet.id %}
-                                        <a href="/cutting/{{ cutting.getId() }}/delete" class="btn btn-sm btn-danger">
-                                            <i class="fas fa-trash-alt"> </i>
+                                        <a onclick="return confirm('Da li ste sigurni da želite da obrišete krojnu ' +
+                                         'listu?');"
+                                           href="/cuttings/{{ cutting.getId() }}/delete"
+                                           class="btn btn-mini btn-danger">
+                                            <i class="fas fa-trash-alt"></i>
                                         </a>
                                     {% endif %}
                                 </td>

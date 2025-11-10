@@ -5,11 +5,6 @@ use App\Core\Router;
 
 $router = new Router();
 
-// ========== Cuttings routes ==================================================
-
-$router->add('GET', '/cuttings/search/', 'CuttingController@search');
-$router->add('GET', '/cutting/{cutting_id}/delete', 'CuttingController@delete');
-
 // ========== Materials routes =================================================
 $router->add('GET', '/materials/', 'MaterialController@index');
 $router->add('GET', '/materials/new', 'MaterialController@materialNewForm');

@@ -191,7 +191,7 @@ class CuttingController extends AbstractController
      * @return Response
      *   The HTTP response with the rendered template or a redirect.
      */
-    #[Route('/cuttings/{cutting_id}', name: 'cuttings_show')]
+    #[Route('/cuttings/{cutting_id}', name: 'cuttings_show', requirements: ['cutting_id' => '\d+'], methods: ['GET'])]
     public function show(int $cutting_id): Response
     {
         session_start();
@@ -768,9 +768,10 @@ class CuttingController extends AbstractController
      *
      * @param int $cutting_id
      *
-     * @return void
+     * @return Response
      */
-    public function delete(int $cutting_id): void
+    #[Route('/cuttings/{cutting_id}/delete', name: 'cutting_delete')]
+    public function delete(int $cutting_id): Response
     {
         // Check if exist CuttingSheet.
         if ($cs = $this->entityManager->find(CuttingSheet::class, $cutting_id)) {
@@ -793,7 +794,7 @@ class CuttingController extends AbstractController
             $this->entityManager->flush();
         }
 
-        die('<script>location.href = "/cuttings/?search=" </script>');
+        return $this->redirectToRoute('cuttings_search', ['term' => '']);
     }
 
   /**
@@ -950,14 +951,31 @@ class CuttingController extends AbstractController
         return $pickets;
     }
 
-  /**
-   * @param string $term
-   * @return void
-   */
-    public function search(string $term): void
+    /**
+     * Searches for Cutting Sheets based on a search term.
+     *
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the search term from the request query parameters.
+     * - Fetches cutting sheets matching the search term from the database.
+     * - Loads the last cutting sheet for display.
+     * - Prepares and passes all relevant data to the 'cutting/search.html.twig' template.
+     * - Renders the template with the search results.
+     *
+     * @param Request $request
+     *   The HTTP request containing the search term.
+     *
+     * @return Response
+     *   The HTTP response with the rendered search results template or a redirect.
+     */
+    #[Route('/cuttings/search', name: 'cuttings_search')]
+    public function search(Request $request): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $term = $request->query->get('term', '');
 
         $cuttings = $this->entityManager->getRepository(CuttingSheet::class)->search($term);
 
@@ -968,9 +986,16 @@ class CuttingController extends AbstractController
             'page_title' => $this->page_title,
             'cuttings' => $cuttings,
             'last_cutting_sheet' => $last_cutting_sheet,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'cutting' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('cutting/search.html.twig', $data);
+        return $this->render('cutting/search.html.twig', $data);
     }
 
     /**
