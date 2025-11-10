@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Core\BaseController;
 use App\Entity\AccountingDocument;
 use App\Entity\AccountingDocumentArticle;
 use App\Entity\AccountingDocumentArticleProperty;
@@ -16,6 +15,11 @@ use App\Entity\CuttingSheetArticle;
 use App\Entity\FenceModel;
 use App\Entity\Preferences;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use TCPDF;
 
 /**
@@ -23,21 +27,41 @@ use TCPDF;
  *
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
-class CuttingController extends BaseController
+class CuttingController extends AbstractController
 {
 
-    private $page = 'cuttings';
-    private $page_title = 'Krojne liste';
+    private EntityManagerInterface $entityManager;
+    private string $page;
+    private string $page_title;
+    protected string $stylesheet;
+    protected string $app_version;
+
+    public function __construct(EntityManagerInterface $entityManager) {
+        $this->entityManager = $entityManager;
+        $this->page_title = 'Krojne liste';
+        $this->page = 'cuttings';
+        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
+        $this->app_version = $this->loadAppVersion();
+    }
 
     /**
-     * Cutting home page.
+     * Displays the Cutting Sheets home page.
      *
-     * @return void
+     * Starts a session and checks if the user is logged in (redirects to login if not).
+     * Fetches the last 10 cutting sheets from the database.
+     * Passes page, title, tools menu, cutting sheets, stylesheet, user role, username, and app version to the view.
+     * Renders the 'cutting/index.html.twig' template with the data.
+     *
+     * @return Response
+     *   The HTTP response with the rendered template or a redirect.
      */
-    public function index(): void
+    #[Route('/cuttings/', name: 'cuttings_index')]
+    public function index(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $cutting_sheets = $this->entityManager->getRepository(CuttingSheet::class)->getLastCuttingSheets(10);
 
@@ -48,23 +72,40 @@ class CuttingController extends BaseController
                 'cutting' => FALSE,
             ],
             'cutting_sheets' => $cutting_sheets,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('cutting/index.html.twig', $data);
+        return $this->render('cutting/index.html.twig', $data);
     }
 
     /**
-     * Form for adding CuttingSheet.
+     * Displays the form for adding a new CuttingSheet.
+     *
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves a list of clients from the database, ordered by name.
+     * - Optionally loads a specific client if 'client_id' is present in the GET parameters.
+     * - Prepares data including page info, client list, selected client, stylesheet, user role, username, tools menu,
+     * and app version.
+     * - Renders the 'cutting/cutting_new.html.twig' template with the data.
      *
      * @param int|null $project_id
+     *   Optional project ID for context.
      * @param int|null $client_id
+     *   Optional client ID for pre-selection.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response with the rendered template or a redirect.
      */
-    public function cuttingNewForm(int $project_id = NULL, int $client_id = NULL): void
+    #[Route('/cuttings/new/', name: 'cutting_new_form')]
+    public function new(int $project_id = NULL, int $client_id = NULL): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $clients_list = $this->entityManager->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
 
@@ -79,9 +120,16 @@ class CuttingController extends BaseController
             'clients_list' => $clients_list,
             'client_id' => $client_id,
             'client' => $client ?? NULL,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'cutting' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('cutting/cutting_new.html.twig', $data);
+        return $this->render('cutting/cutting_new.html.twig', $data);
     }
 
     /**
@@ -90,11 +138,13 @@ class CuttingController extends BaseController
      * @param int|null $project_id
      * @param int|null $client_id
      *
-     * @return void
+     * @return Response
      */
-    public function cuttingAdd(int $project_id = NULL, int $client_id = NULL): void
+    #[Route('/cuttings/create', name: 'cutting_create', methods: ['POST'])]
+    public function create(int $project_id = NULL, int $client_id = NULL): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $ordinal_num_in_year = 0;
 
@@ -120,20 +170,34 @@ class CuttingController extends BaseController
         // Set Ordinal Number In Year.
         $this->entityManager->getRepository(CuttingSheet::class)->setOrdinalNumInYear($new__cutting_sheet__id);
 
-        die('<script>location.href = "/cutting/'.$new__cutting_sheet__id.'" </script>');
+        return $this->redirectToRoute('cuttings_show', ['cutting_id' => $new__cutting_sheet__id]);
     }
 
     /**
-     * View Cutting Sheet form.
+     * Displays the details of a specific Cutting Sheet.
+     *
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Loads the CuttingSheet entity by its ID.
+     * - Retrieves client data for the cutting sheet.
+     * - Fetches all articles associated with the cutting sheet.
+     * - Calculates total picket length and cap count for the sheet.
+     * - Loads available fence models.
+     * - Prepares and passes all relevant data to the 'cutting/cutting_view.html.twig' template.
+     * - Renders the template with the data for display.
      *
      * @param int $cutting_id
+     *   The ID of the Cutting Sheet to display.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response with the rendered template or a redirect.
      */
-    public function cuttingView(int $cutting_id): void
+    #[Route('/cuttings/{cutting_id}', name: 'cuttings_show')]
+    public function show(int $cutting_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $cutting = $this->entityManager->find(CuttingSheet::class, $cutting_id);
         $client = $this->entityManager->getRepository(Client::class)->getClientData($cutting->getClient()->getId());
@@ -173,22 +237,40 @@ class CuttingController extends BaseController
             'cutting_sheet_articles' => $cutting_sheet_articles,
             'total_picket_lenght' => $total_picket_lenght / 1000,
             'total_cap' => $total_cap,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-      $this->render('cutting/cutting_view.html.twig', $data);
+        return $this->render('cutting/cutting_view.html.twig', $data);
     }
 
     /**
-     * Edit Cutting Sheet form.
+     * Displays the edit form for a specific Cutting Sheet.
+     *
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Loads the CuttingSheet entity by its ID.
+     * - Retrieves client data for the cutting sheet.
+     * - Fetches all articles associated with the cutting sheet.
+     * - Calculates total picket length and cap count for the sheet.
+     * - Loads available fence models.
+     * - Prepares and passes all relevant data to the 'cutting/cutting_edit.html.twig' template.
+     * - Renders the template with the data for editing.
      *
      * @param int $cutting_id
+     *   The ID of the Cutting Sheet to edit.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response with the rendered template or a redirect.
      */
-    public function cuttingEdit(int $cutting_id): void
+    #[Route('/cuttings/{cutting_id}/edit', name: 'cutting_edit_form')]
+    public function edit(int $cutting_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $cutting = $this->entityManager->find(CuttingSheet::class, $cutting_id);
         $client = $this->entityManager->getRepository(Client::class)->getClientData($cutting->getClient()->getId());
@@ -228,22 +310,38 @@ class CuttingController extends BaseController
             'cutting_sheet_articles' => $cutting_sheet_articles,
             'total_picket_lenght' => $total_picket_lenght / 1000,
             'total_cap' => $total_cap,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('cutting/cutting_edit.html.twig', $data);
+        return $this->render('cutting/cutting_edit.html.twig', $data);
     }
 
     /**
-     * Print Cutting Sheet.
+     * Generates and displays a PDF for a specific Cutting Sheet.
+     *
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Loads company info and the CuttingSheet entity by its ID.
+     * - Retrieves all articles associated with the cutting sheet and computes their data (including picket calculations
+     * and geometry).
+     * - Prepares data for the PDF, renders HTML using a Twig template, and generates a PDF using TCPDF.
+     * - Sets appropriate HTTP headers and returns the PDF as an inline response to the browser.
      *
      * @param int $cutting_id
+     *   The ID of the Cutting Sheet to print.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response containing the generated PDF or a redirect.
      */
-    public function print(int $cutting_id): void
+    #[Route('/cuttings/{cutting_id}/print', name: 'cutting_print')]
+    public function print(int $cutting_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
 
@@ -306,16 +404,21 @@ class CuttingController extends BaseController
         ];
 
         // Render HTML content from a Twig template (or similar)
-        ob_start();
-        $this->render('cutting/print_cutting.html.twig', $data);
-        $html = ob_get_clean();
+        $html = $this->renderView('cutting/print_cutting.html.twig', $data);
 
         require_once '../config/packages/tcpdf_include.php';
 
         // Create a new TCPDF object / PDF document
-        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new TCPDF(
+          PDF_PAGE_ORIENTATION,
+          PDF_UNIT,
+          PDF_PAGE_FORMAT,
+          true,
+          'UTF-8',
+          false
+        );
 
-        // Set document information
+        // Set document information.
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor($company_info['name']);
         $pdf->SetTitle($company_info['name'] . ' - Krojna lista');
@@ -344,24 +447,40 @@ class CuttingController extends BaseController
         // Add a page.
         $pdf->AddPage();
 
-        // Write HTML content
+        // Write HTML content.
         $pdf->writeHTML($html, true, false, true, false, '');
 
         // Reset pointer to the last page.
         $pdf->lastPage();
 
-        // Close and output PDF document to browser.
-        $pdf->Output('rolostil_krojna_lista.pdf', 'I');
+        // Output PDF document to browser as a Symfony Response
+        $filename = 'krojna_lista_' . $data['cutting_sheet']->getOrdinalNumInYear() . '.pdf';
+        $pdfContent = $pdf->Output($filename, 'S');
+        // Remove leading __ from filename for the response
+        $cleanFilename = ltrim($filename, '_');
+        $response = new Response($pdfContent);
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'inline; filename="' . $cleanFilename . '"');
+        return $response;
     }
 
     /**
-     * Add Article to CuttingSheet.
+     * Adds a new Article to the specified Cutting Sheet.
+     *
+     * - Retrieves the CuttingSheet entity by its ID.
+     * - Gets the FenceModel and article parameters from the POST request.
+     * - Creates a new CuttingSheetArticle entity and sets its properties.
+     * - Persists the new article to the database.
+     * - Redirects to the Cutting Sheet details page after adding the article.
      *
      * @param int $cutting_id
+     *   The ID of the Cutting Sheet to which the article will be added.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response with a redirect to the Cutting Sheet details page.
      */
-    public function addArticle(int $cutting_id): void
+    #[Route('/cuttings/{cutting_id}/add-article', name: 'cutting_add_article', methods: ['POST'])]
+    public function addArticle(int $cutting_id): Response
     {
         $cutting_sheet = $this->entityManager->find(CuttingSheet::class, $cutting_id);
 
@@ -394,18 +513,28 @@ class CuttingController extends BaseController
         $this->entityManager->persist($newCuttingShettArticle);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/cutting/'.$cutting_id.'" </script>');
+        return $this->redirectToRoute('cuttings_show', ['cutting_id' => $cutting_id]);
     }
 
     /**
-     * Edit Article in CuttingSheet.
+     * Updates an existing Article in the specified Cutting Sheet.
+     *
+     * - Retrieves the CuttingSheetArticle entity by its ID.
+     * - Gets the FenceModel and article parameters from the POST request.
+     * - Updates the article's properties with the new values.
+     * - Persists the changes to the database.
+     * - Redirects to the Cutting Sheet details page after editing the article.
      *
      * @param int $cutting_id
+     *   The ID of the Cutting Sheet containing the article.
      * @param int $article_id
+     *   The ID of the Article to edit.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response with a redirect to the Cutting Sheet details page.
      */
-    public function editArticle(int $cutting_id, int $article_id): void
+    #[Route('/cuttings/{cutting_id}/articles/{article_id}/edit', name: 'cutting_edit_article', methods: ['POST'])]
+    public function editArticle(int $cutting_id, int $article_id): Response
     {
         $cutting_sheet__article = $this->entityManager->find(CuttingSheetArticle::class, $article_id);
 
@@ -434,44 +563,64 @@ class CuttingController extends BaseController
 
         $this->entityManager->flush();
 
-        die('<script>location.href = "/cutting/' . $cutting_id . '" </script>');
+        return $this->redirectToRoute('cuttings_show', ['cutting_id' => $cutting_id]);
     }
 
     /**
-     * Delete Article from CuttingSheet.
+     * Deletes an Article from the specified Cutting Sheet.
+     *
+     * - Retrieves the CuttingSheetArticle entity by its ID.
+     * - Removes the article from the database.
+     * - Persists the changes.
+     * - Redirects to the Cutting Sheet details page after deletion.
      *
      * @param int $cutting_id
+     *   The ID of the Cutting Sheet containing the article.
      * @param int $article_id
+     *   The ID of the Article to delete.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response with a redirect to the Cutting Sheet details page.
      */
-    public function deleteArticle(int $cutting_id, int $article_id): void
+    #[Route('/cuttings/{cutting_id}/articles/{article_id}/delete', name: 'cutting_delete_article')]
+    public function deleteArticle(int $cutting_id, int $article_id): Response
     {
         $cutting_sheet__article = $this->entityManager->find(CuttingSheetArticle::class, $article_id);
 
         $this->entityManager->remove($cutting_sheet__article);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/cutting/' . $cutting_id . '" </script>');
+        return $this->redirectToRoute('cuttings_show', ['cutting_id' => $cutting_id]);
     }
 
     /**
-     * Export to Accounting Document.
+     * Exports the specified Cutting Sheet to an Accounting Document (Proforma).
+     *
+     * - Retrieves total picket length, total cap count, and picket width from the request.
+     * - Loads the CuttingSheet and the current user.
+     * - Creates a new AccountingDocument and sets its properties.
+     * - Adds picket and cap articles to the document based on picket width.
+     * - Adds article properties to the AccountingDocumentArticle.
+     * - Persists all changes to the database.
+     * - Redirects to the Accounting Document details page after export.
      *
      * @param int $cutting_id
-     * @param $total_picket_lenght
-     * @param $total_kap
-     * @param $picket_width
+     *   The ID of the Cutting Sheet to export.
+     * @param Request $request
+     *   The HTTP request containing export parameters.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response with a redirect to the Accounting Document details page.
      */
-    public function exportToAccountingDocument(
-      int $cutting_id,
-      $total_picket_lenght,
-      $total_kap,
-      $picket_width): void
+    #[Route('/cuttings/{cutting_id}/export-to-accounting-document', name: 'cutting_export_to_accounting_document')]
+    public function exportToAccountingDocument(int $cutting_id, Request $request): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        $total_picket_lenght = htmlspecialchars($request->query->get('total_picket_lenght'));
+        $total_kap = htmlspecialchars($request->query->get('total_kap'));
+        $picket_width = htmlspecialchars($request->query->get('picket_width'));
+
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $cutting = $this->entityManager->find(CuttingSheet::class, $cutting_id);
 
@@ -611,7 +760,7 @@ class CuttingController extends BaseController
         $this->entityManager->persist($newProformaArticle);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/pidb/' . $newProforma_id.'" </script>');
+        return $this->redirectToRoute('document_show', ['document_id' => $newProforma_id]);
     }
 
     /**
@@ -822,6 +971,22 @@ class CuttingController extends BaseController
         ];
 
         $this->render('cutting/search.html.twig', $data);
+    }
+
+    /**
+     * Loads the application version from composer.json.
+     *
+     * @return string
+     *   The app version, or 'unknown' if not found.
+     */
+    private function loadAppVersion(): string
+    {
+        $composerJsonPath = __DIR__ . '/../../composer.json';
+        if (file_exists($composerJsonPath)) {
+            $composerData = json_decode(file_get_contents($composerJsonPath), true);
+            return $composerData['version'] ?? 'unknown';
+        }
+        return 'unknown';
     }
 
 }

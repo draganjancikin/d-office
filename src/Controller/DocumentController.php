@@ -63,7 +63,7 @@ class DocumentController extends AbstractController
     {
         session_start();
         if (!isset($_SESSION['username'])) {
-          return $this->redirectToRoute('login_form');
+            return $this->redirectToRoute('login_form');
         }
 
         $data = [
@@ -212,7 +212,7 @@ class DocumentController extends AbstractController
      *
      * @return Response
      */
-    #[Route('/documents/{document_id}', name: 'document_show', methods: ['GET'], requirements: ['document_id' => '\d+'])]
+    #[Route('/documents/{document_id}', name: 'document_show', requirements: ['document_id' => '\d+'], methods: ['GET'])]
     public function show(int $document_id): Response
     {
         session_start();

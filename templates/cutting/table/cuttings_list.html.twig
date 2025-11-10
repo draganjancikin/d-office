@@ -21,7 +21,7 @@
                 {% for cutting in cutting_sheets %}
                     <tr>
                         <td class="centar">
-                            <a href="/cutting/{{ cutting.getId() }}" title="Pregled krojne liste">
+                            <a href="/cuttings/{{ cutting.getId() }}" title="Pregled krojne liste">
                                 KL_{{ '%04d'|format(cutting.getOrdinalNumInYear()) }}
                             </a>
                         </td>

@@ -6,17 +6,8 @@ use App\Core\Router;
 $router = new Router();
 
 // ========== Cuttings routes ==================================================
-$router->add('GET', '/cuttings/', 'CuttingController@index');
-$router->add('GET', '/cutting/new', 'CuttingController@cuttingNewForm');
-$router->add('POST', '/cuttings/add', 'CuttingController@cuttingAdd');
+
 $router->add('GET', '/cuttings/search/', 'CuttingController@search');
-$router->add('GET', '/cutting/{cutting_id}', 'CuttingController@cuttingView');
-$router->add('GET', '/cutting/{cutting_id}/edit', 'CuttingController@cuttingEdit');
-$router->add('GET', '/cutting/{cutting_id}/print', 'CuttingController@print');
-$router->add('POST', '/cutting/{cutting_id}/addArticle', 'CuttingController@addArticle');
-$router->add('POST', '/cutting/{cutting_id}/article/{article_id}/edit', 'CuttingController@editArticle');
-$router->add('GET', '/cutting/{cutting_id}/article/{article_id}/delete', 'CuttingController@deleteArticle');
-$router->add('GET', '/cutting/{cutting_id}/exportToAccountingDocument', 'CuttingController@exportToAccountingDocument');
 $router->add('GET', '/cutting/{cutting_id}/delete', 'CuttingController@delete');
 
 // ========== Materials routes =================================================

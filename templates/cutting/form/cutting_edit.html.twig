@@ -15,7 +15,7 @@
             <dd class="col-sm-9 col-md-10">{{ client.name }}</dd>
             <dt class="col-sm-3 col-md-2">adresa:</dt>
             <dd class="col-sm-9 col-md-10">
-                {{ client.street }} {{ client.homeNumber }}, {{ client.city }}, {{ client.country }}
+                {{ client.street }} {{ client.home_number }}, {{ client.city }}, {{ client.country }}
             </dd>
         </dl>
 
@@ -39,7 +39,8 @@
                     {% set count = 0 %}
                     {% for cutting_sheet_article in cutting_sheet_articles %}
                         {% set count = count + 1 %}
-                        <form action="/cutting/{{ cutting_id }}/article/{{ cutting_sheet_article.getId() }}/edit" method="post">
+                        <form action="/cuttings/{{ cutting_id }}/articles/{{ cutting_sheet_article.getId() }}/edit"
+                              method="post">
 
                             <input type="hidden" name="cutting_sheet__article_id" value="{{ cutting_sheet_article.id }}" />
                             <input type="hidden" name="id" value="{{ cutting_id }}" />
@@ -95,7 +96,8 @@
                                     </button>
                                     <!-- @todo -->
                                     <a onClick="javascript: return confirm('Da li ste sigurni da želite da uklonite artikal iz krojne liste?')"
-                                       href="/cutting/{{ cutting_id }}/article/{{ cutting_sheet_article.getId() }}/delete">
+                                       href="/cuttings/{{ cutting_id }}/articles/{{ cutting_sheet_article.getId()
+                                       }}/delete">
                                         <button class="btn btn-danger btn-mini" type="button">
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -110,7 +112,7 @@
                         <td>{{ total_picket_lenght|number_format(2, '.', ',') }}</td>
                         <td colspan="5">
                             {% if cutting_sheet_articles %}
-                                <a href="/cutting/{{ cutting_id }}/exportToAccountingDocument?total_picket_lenght={{
+                                <a href="/cuttings/{{ cutting_id }}/export-to-accounting-document?total_picket_lenght={{
                                 total_picket_lenght }}&total_kap={{ total_cap }}&picket_width={{
                                 cutting_sheet_articles[0].getPicketWidth() }}">
                                     <button type="submit" class="btn btn-outline-secondary btn-sm">Otvori novi predracun</button>
