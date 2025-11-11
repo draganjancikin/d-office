@@ -5,23 +5,6 @@ use App\Core\Router;
 
 $router = new Router();
 
-// ========== Materials routes =================================================
-$router->add('GET', '/materials/', 'MaterialController@index');
-$router->add('GET', '/materials/new', 'MaterialController@materialNewForm');
-$router->add('POST', '/materials/add', 'MaterialController@materialAdd');
-$router->add('GET', '/materials/search/', 'MaterialController@search');
-
-$router->add('GET', '/material/{material_id}', 'MaterialController@materialViewForm');
-$router->add('GET', '/material/{material_id}/edit', 'MaterialController@materialEditForm');
-$router->add('POST', '/material/{material_id}/edit', 'MaterialController@materialEdit');
-
-$router->add('POST', '/material/{material_id}/addSupplier', 'MaterialController@addSupplier');
-$router->add('POST', '/material/{material_id}/supplier/{supplier_id}/edit', 'MaterialController@editSupplier');
-$router->add('GET', '/material/{material_id}/supplier/{supplier_id}/delete', 'MaterialController@deleteSupplier');
-
-$router->add('POST', '/material/{material_id}/addProperty', 'MaterialController@addProperty');
-$router->add('GET', '/material/{material_id}/property/{property_id}/delete', 'MaterialController@deleteProperty');
-
 // ========== Orders routes ====================================================
 $router->add('GET', '/orders/', 'OrderController@index');
 $router->add('GET', '/orders/new', 'OrderController@orderNewForm');

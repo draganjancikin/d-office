@@ -4,7 +4,7 @@
       <h6 class="m-0 text-dark">Izmena materiala: <strong>{{ material.getName() }}</strong></h6>
     </div>
     <div class="card-body p-2">
-        <form action="/material/{{ material_id }}/edit" method="post">
+        <form action="/materials/{{ material_id }}/update" method="post">
 
             <div class="row mb-2">
                 <label for="disabledModified" class="col-sm-3 col-lg-2 col-form-label text-left text-sm-right">
@@ -110,7 +110,7 @@
                     {%  set count = 0 %}
                     {% for material_supplier in material_suppliers %}
                         {%  set count = count + 1 %}
-                        <form action="/material/{{ material_id }}/supplier/{{ material_supplier.getId() }}/edit"
+                        <form action="/materials/{{ material_id }}/suppliers/{{ material_supplier.getId() }}/update"
                               method="post">
                             <input class="form-control" type="hidden" name="material_supplier_id"
                                  value="{{ material_supplier.getId() }}" />
@@ -143,7 +143,8 @@
                                     <button type="submit" class="btn btn-sm btn-success">
                                         <i class="fas fa-save"> </i>
                                     </button>
-                                    <a href="/material/{{ material_id }}/supplier/{{ material_supplier.getId()}}/delete"
+                                    <a onClick="return confirm('Da li sigurno želite obrisati dobavljaca?')"
+                                       href="/materials/{{ material_id }}/suppliers/{{ material_supplier.getId() }}/delete"
                                        class="btn btn-sm btn-danger">
                                         <i class="fas fa-trash-alt"> </i>
                                     </a>
@@ -175,7 +176,8 @@
                     </div>
 
                     <div class="col-sm-2">
-                        <a href="/material/{{ material_id }}/property/{{ material_property.getId() }}/delete"
+                        <a onClick="return confirm('Da li sigurno želite obrisati osobinu materijala?')"
+                           href="/materials/{{ material_id }}/properties/{{ material_property.getId() }}/delete"
                            class="btn btn-sm btn-danger">
                             <i class="fas fa-trash-alt"> </i>
                         </a>
