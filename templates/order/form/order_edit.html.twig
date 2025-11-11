@@ -9,7 +9,7 @@
             </strong>
             {% if project_data %}
                 - za projekat:
-                <a href="/project/{{ project_data.getId() }}">
+                <a href="/projects/{{ project_data.getId() }}">
                     {{ '%04d'|format(project_data.getOrdinalNumInYear()) }} -
                     {{ project_data.getClient().getName() }} -
                     {{ project_data.getTitle() }}
@@ -63,7 +63,7 @@
                 {% for material_on_order_data in materials_on_order_data %}
                     {% set count = count + 1 %}
 
-                    <form action="/order/{{ order_id }}/material/{{ material_on_order_data.material.id }}/edit"
+                    <form action="/orders/{{ order_id }}/materials/{{ material_on_order_data.material.id }}/update"
                           method="POST">
                         <input type="hidden" name="material_id"
                                value="{{ material_on_order_data.material.material.id }}" />
@@ -77,13 +77,15 @@
                                        value="{{ material_on_order_data.material.pieces }}"
                                        placeholder="(kol)">
                                 {# Order Material Properties. #}
-                                {% for material_on_order_property in material_on_order_data.material.properties %}
-                                    {{ material_on_order_property.name }}
-                                    <input class="input-box-50" type="text"
-                                           name="{{ material_on_order_property.name }}"
-                                           value="{{ material_on_order_property.quantity|number_format(2, ',', '.') }}"
-                                           placeholder="(cm)" >
-                                {% endfor %}
+                                {% if material_on_order_data.material.properties is defined %}
+                                    {% for material_on_order_property in material_on_order_data.material.properties %}
+                                        {{ material_on_order_property.name }}
+                                        <input class="input-box-50" type="text"
+                                               name="{{ material_on_order_property.name }}"
+                                               value="{{ material_on_order_property.quantity|number_format(2, ',', '.') }}"
+                                               placeholder="(cm)" >
+                                    {% endfor %}
+                                {% endif %}
                                 <br />
                                 <input type="text" class="in-article-note" name="note"
                                        value="{{ material_on_order_data.material.note }}">
@@ -116,16 +118,19 @@
                                 <button type="submit" class="btn btn-mini btn-outline-success px-1">
                                     <i class="fas fa-save" title="Snimi izmenu"> </i>
                                 </button>
-                                <a href="/order/{{ order_id }}/material/{{ material_on_order_data.material.id }}/edit"
+                                <a href="/orders/{{ order_id }}/material/{{ material_on_order_data.material.id
+                                }}/change"
                                    class="btn btn-mini btn-outline-info px-1">
                                     <i class="fas fa-edit" title="Promeni materijal"> </i>
                                 </a>
-                                <a href="/order/{{ order_id }}/material/{{ material_on_order_data.material.id }}/duplicate"
+                                <a href="/orders/{{ order_id }}/materials/{{ material_on_order_data.material.id
+                                }}/duplicate"
                                    class="btn btn-mini btn-outline-info px-1">
                                     <i class="fas fa-plus" title="Dupliciraj materijal"> </i>
                                 </a>
                                 <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete materijal?');"
-                                   href="/order/{{ order_id }}/material/{{ material_on_order_data.material.id }}/delete"
+                                   href="/orders/{{ order_id }}/materials/{{ material_on_order_data.material.id
+                                   }}/delete"
                                    class="btn btn-mini btn-outline-danger px-1">
                                     <i class="fas fa-trash-alt"> </i>
                                 </a>
@@ -161,7 +166,7 @@
                 </tfoot>
             </table>
 
-            <form action="/order/{{ order_id }}/edit" method="post">
+            <form action="/orders/{{ order_id }}/update" method="post">
                 <input type="hidden" name="order_id" value="{{ order_id }}" />
                 <input type="hidden" name="old_project_id"
                        value="{{ project_data ? project_data.getId() : 0 }}" />

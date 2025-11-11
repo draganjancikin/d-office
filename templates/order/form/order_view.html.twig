@@ -75,13 +75,15 @@
                                        value="{{ material_on_order_data.material.pieces }}"
                                        placeholder="(kol)" disabled >
                                 {# Order Material Properties. #}
-                                {% for material_on_order_property in material_on_order_data.material.properties %}
-                                    {{ material_on_order_property.name }}
-                                    <input class="input-box-50" type="text"
-                                           name="{{ material_on_order_property.name }}"
-                                           value="{{ material_on_order_property.quantity|number_format(2, ',', '.') }}"
-                                           placeholder="(cm)" disabled >
-                                {% endfor %}
+                                {% if material_on_order_data.material.properties is defined %}
+                                    {% for material_on_order_property in material_on_order_data.material.properties %}
+                                        {{ material_on_order_property.name }}
+                                        <input class="input-box-50" type="text"
+                                               name="{{ material_on_order_property.name }}"
+                                               value="{{ material_on_order_property.quantity|number_format(2, ',', '.') }}"
+                                               placeholder="(cm)" disabled >
+                                    {% endfor %}
+                                {% endif %}
                                 <br />
                                 {{ material_on_order_data.material.note }}
                             </td>

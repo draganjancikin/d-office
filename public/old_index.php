@@ -6,23 +6,8 @@ use App\Core\Router;
 $router = new Router();
 
 // ========== Orders routes ====================================================
-$router->add('GET', '/orders/', 'OrderController@index');
-$router->add('GET', '/orders/new', 'OrderController@orderNewForm');
-$router->add('POST', '/orders/add', 'OrderController@orderAdd');
 $router->add('GET', '/orders/search/', 'OrderController@search');
-
-$router->add('GET', '/order/{order_id}', 'OrderController@orderViewForm');
-$router->add('GET', '/order/{order_id}/edit', 'OrderController@orderEditForm');
-$router->add('POST', '/order/{order_id}/edit', 'OrderController@orderEdit');
 $router->add('GET', '/order/{order_id}/delete', 'OrderController@orderDelete');
-
-$router->add('POST', '/order/{order_id}/addMaterial', 'OrderController@addMaterial');
-$router->add('GET', '/order/{order_id}/material/{order_material_id}/edit', 'OrderController@editMaterialForm');
-$router->add('POST', '/order/{order_id}/material/{order_material_id}/edit', 'OrderController@editMaterial');
-$router->add('GET', '/order/{order_id}/material/{order_material_id}/delete', 'OrderController@deleteMaterial');
-$router->add('GET', '/order/{order_id}/material/{order_material_id}/duplicate', 'OrderController@duplicateMaterial');
-
-$router->add('GET', '/order/{order_id}/print', 'OrderController@print');
 
 // ========== Articles routes ==================================================
 $router->add('GET', '/articles/', 'ArticleController@index');

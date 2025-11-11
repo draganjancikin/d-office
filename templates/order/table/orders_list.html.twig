@@ -18,7 +18,7 @@
                     {% for order in orders_data %}
                         <tr>
                             <td class="px-1">
-                                <a href="/order/{{ order.id }}">
+                                <a href="/orders/{{ order.id }}">
                                     {{ '%04d'|format(order.ordinal_num_in_year) }} - {{ order.date }}
                                 </a>
                             </td>
@@ -37,7 +37,7 @@
                             <td class="px-1">{{ order.title }}</td>
                             <td class="px-1">
                                 {% if order.project %}
-                                    <a href="/project/{{ order.project.getId() }}">
+                                    <a href="/projects/{{ order.project.getId() }}">
                                         {{ order.project.getOrdinalNumInYear() }} - {{ order.project.getClient().getName() }} - {{ order.project.getTitle() }}
                                     </a>
                                 {% endif %}

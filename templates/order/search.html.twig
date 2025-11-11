@@ -27,7 +27,7 @@
                 {% for order_data in orders_data %}
                     <tr>
                         <td class="px-1">
-                            <a href="/order/{{ order_data.id }}">
+                            <a href="/orders/{{ order_data.id }}">
                                 {{ '%04d'|format(order_data.ordinal_num_in_year) }}-
                                 {{ order_data.date }}
                             </a>
@@ -51,7 +51,7 @@
                         </td>
                         <td class="px-1">
                             {% if order_data.project %}
-                                <a href="/project/{{ order_data.project.id }}">
+                                <a href="/projects/{{ order_data.project.id }}">
                                     {{ '%03d'|format(order_data.project.getOrdinalNumInYear()) }}
                                     - {{ order_data.project.getClient()
                                         .getName() }} - {{ order_data.project.getTitle() }}
@@ -60,8 +60,8 @@
                         </td>
                         <td class="px-1">
                             {% if order_data.is_last %}
-                                <a onClick="javascript: return confirm(\'Da li sigurno želite obrisati narudžbenicu?\')"
-                                   href="/order/{{ order_data.id }}/delete"
+                                <a onClick="return confirm('Da li sigurno želite obrisati narudžbenicu?')"
+                                   href="/orders/{{ order_data.id }}/delete"
                                    class="btn btn-danger btn-mini btn-article">
                                     <i class="fas fa-trash-alt"> </i>
                                 </a>
