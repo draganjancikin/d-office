@@ -1,4 +1,5 @@
 framework:
     secret: '%env(APP_SECRET)%'
     # Add other framework configuration as needed
-
+    session:
+        enabled: true
