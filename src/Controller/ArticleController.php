@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Core\BaseController;
 use App\Entity\Article;
 use App\Entity\ArticleGroup;
 use App\Entity\ArticleProperty;
@@ -10,37 +9,57 @@ use App\Entity\Preferences;
 use App\Entity\Property;
 use App\Entity\Unit;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\Compiler\ResolveAutowireInlineAttributesPass;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * ArticleController class
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class ArticleController extends BaseController
+class ArticleController extends AbstractController
 {
 
-    private $page;
-    private $page_title;
+    private EntityManagerInterface $entityManager;
+    private string $page;
+    private string $page_title;
+    protected string $stylesheet;
+    protected string $app_version;
 
     /**
      * ArticleController constructor.
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct() {
-        parent::__construct();
-
+    public function __construct(EntityManagerInterface $entityManager) {
+        $this->entityManager = $entityManager;
         $this->page = 'article';
         $this->page_title = 'Proizvodi';
+        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
+        $this->app_version = $this->loadAppVersion();
     }
 
     /**
-     * Index action.
+     * Displays the articles index page with the latest articles and article groups.
      *
-     * @return void
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves all article groups and the 15 most recent articles from the database.
+     * - Loads user preferences and prepares data for the template, including user role, username, and app version.
+     * - Renders the 'article/index.html.twig' template with the articles, groups, and related data.
+     *
+     * @return Response
+     *   The HTTP response with the rendered articles list or a redirect to the login page.
      */
-    public function index(): void
+    #[Route('/articles/', name: 'articles_index')]
+    public function index(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->findAll();
 
@@ -56,20 +75,33 @@ class ArticleController extends BaseController
                 'article' => FALSE,
                 'group' => FALSE,
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('article/index.html.twig', $data);
+        return $this->render('article/index.html.twig', $data);
     }
 
     /**
-     * Form for adding a new article.
+     * Displays the form for adding a new article.
      *
-     * @return void
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves all article groups and units from the database, ordered by name.
+     * - Prepares data for the template, including user role, username, and app version.
+     * - Renders the 'article/article_new.html.twig' template with the form and related data.
+     *
+     * @return Response
+     *   The HTTP response with the rendered new article form or a redirect to the login page.
      */
-    public function articleNewForm(): void
+    #[Route('/articles/new', name: 'article_new', methods: ['GET'])]
+    public function new(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->getArticleGroups();
         $units = $this->entityManager->getRepository(Unit::class)->findBy([], ['name' => 'ASC']);
@@ -79,19 +111,36 @@ class ArticleController extends BaseController
             'page_title' => $this->page_title,
             'article_groups' => $article_groups,
             'units' => $units,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'article' => FALSE,
+            'group' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('article/article_new.html.twig', $data);
+        return $this->render('article/article_new.html.twig', $data);
     }
 
     /**
-     * Add a new Article.
+     * Handles the creation of a new article from POST data.
      *
-     * @return void
+     * - Starts a session and retrieves the current user from the session.
+     * - Validates and sanitizes POST input for group, name, unit, weight, minimum calculation measure, price, and note.
+     * - Creates a new Article entity, sets its properties, and persists it to the database.
+     * - Sets creation and modification timestamps and user.
+     * - Redirects to the article details page for the newly created article.
+     *
+     * @return Response
+     *   Redirects to the article details page after successful creation, or halts on invalid input.
      */
-    public function articleAdd(): void
+    #[Route('/articles/create', name: 'article_create', methods: ['POST'])]
+    public function create(): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $group_id = htmlspecialchars($_POST['group_id']);
         $group = $this->entityManager->find(ArticleGroup::class, $group_id);
@@ -126,20 +175,29 @@ class ArticleController extends BaseController
 
         // Get last id and redirect.
         $new_article_id = $newArticle->getId();
-        die('<script>location.href = "/article/' . $new_article_id . '" </script>');
+        return $this->redirectToRoute('article_show', ['article_id' => $new_article_id]);
     }
 
     /**
-     * View article.
+     * Displays the details of a specific article.
      *
-     * @param int $article_id
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the article entity by its ID.
+     * - Fetches article properties and the full property list from the database.
+     * - Prepares data for the template, including user role, username, and app version.
+     * - Renders the 'article/article_view.html.twig' template with the article details and related data.
      *
-     * @return void
+     * @param int $article_id The ID of the article to display.
+     *
+     * @return Response The HTTP response with the rendered article details or a redirect to the login page.
      */
-    public function articleViewForm(int $article_id): void
+    #[Route('/articles/{article_id}', name: 'article_show', requirements: ['article_id' => '\d+'], methods: ['GET'])]
+    public function show(int $article_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $article_data = $this->entityManager->find(Article::class, $article_id);
         $article_properties = $this->entityManager->getRepository(ArticleProperty::class)->getArticleProperties($article_id);
@@ -156,23 +214,39 @@ class ArticleController extends BaseController
                 'article' => TRUE,
                 'view' => TRUE,
                 'edit' => FALSE,
+                'group' => FALSE,
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('article/article_view.html.twig', $data);
+        return $this->render('article/article_view.html.twig', $data);
     }
 
     /**
-     * Edit Article form.
+     * Displays the form for editing an existing article.
+     *
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the article entity by its ID.
+     * - Fetches article properties, all article groups, units (ordered by name), and the full property list from the database.
+     * - Prepares data for the template, including user role, username, and app version.
+     * - Renders the 'article/article_edit.html.twig' template with the article data and related information for editing.
      *
      * @param int $article_id
+     *   The ID of the article to edit.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response with the rendered article edit form or a redirect to the login page.
      */
-    public function articleEditForm(int $article_id): void
+    #[Route('/articles/{article_id}/edit', name: 'article_edit_form', methods: ['GET'])]
+    public function edit(int $article_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $article_data = $this->entityManager->find(Article::class, $article_id);
         $article_properties = $this->entityManager->getRepository(ArticleProperty::class)->getArticleProperties($article_id);
@@ -193,22 +267,38 @@ class ArticleController extends BaseController
                 'article' => TRUE,
                 'view' => FALSE,
                 'edit' => TRUE,
+                'group' => FALSE,
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('article/article_edit.html.twig', $data);
+        return $this->render('article/article_edit.html.twig', $data);
     }
 
     /**
-     * Edit Article.
+     * Handles updating an existing article with data from a POST request.
+     *
+     * - Starts a session and retrieves the current user from the session.
+     * - Validates and sanitizes POST input for group, name, unit, weight, minimum calculation measure, price, and note.
+     * - Finds the Article entity by its ID and updates its properties.
+     * - Sets the modification timestamp and user.
+     * - Persists the changes to the database.
+     * - Redirects to the article details page after successful update, or halts if the article does not exist.
      *
      * @param int $article_id
+     *   The ID of the article to update.
      *
-     * @return void
+     * @return Response
+     *   Redirects to the article details page after update, or halts if the article does not exist.
      */
-    public function articleEdit(int $article_id): void
+    #[Route('/articles/{article_id}/update', name: 'article_update', methods: ['POST'])]
+    public function update(int $article_id): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $group_id = htmlspecialchars($_POST['group_id']);
         $group = $this->entityManager->find(ArticleGroup::class, $group_id);
@@ -246,17 +336,27 @@ class ArticleController extends BaseController
 
         $this->entityManager->flush();
 
-        die('<script>location.href = "/article/' . $article_id . '" </script>');
+        return $this->redirectToRoute('article_show', ['article_id' => $article_id]);
     }
 
     /**
-     * Add property to article.
+     * Adds a property to an article using POST data.
+     *
+     * - Finds the article entity by its ID.
+     * - Retrieves and sanitizes the property ID, minimum size, and maximum size from POST data.
+     * - Finds the property entity by its ID.
+     * - Creates a new ArticleProperty entity, sets its associations and size limits.
+     * - Persists the new ArticleProperty to the database.
+     * - Redirects to the article details page after successful addition.
      *
      * @param int $article_id
+     *   The ID of the article to which the property will be added.
      *
-     * @return void
+     * @return Response
+     *   Redirects to the article details page after adding the property.
      */
-    public function addProperty(int $article_id): void
+    #[Route('/articles/{article_id}/add-property', name: 'article_add_property', methods: ['POST'])]
+    public function addProperty(int $article_id): Response
     {
         $article = $this->entityManager->find(Article::class, $article_id);
 
@@ -283,36 +383,54 @@ class ArticleController extends BaseController
         $this->entityManager->persist($newArticleProperty);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/article/' . $article_id . '" </script>');
+        return $this->redirectToRoute('article_show', ['article_id' => $article_id]);
     }
 
     /**
-     * Delete property from article.
+     * Deletes a property from an article.
+     *
+     * - Finds the ArticleProperty entity by its property ID.
+     * - Removes the ArticleProperty from the database.
+     * - Persists the change.
+     * - Redirects to the article details page after successful deletion.
      *
      * @param int $article_id
+     *   The ID of the article from which the property will be deleted.
      * @param int $property_id
+     *   The ID of the ArticleProperty to delete.
      *
-     * @return void
+     * @return Response
+     *   Redirects to the article details page after deleting the property.
      */
-    public function deleteProperty(int $article_id, int $property_id): void
+    #[Route('/articles/{article_id}/properties/{property_id}/delete', name: 'article_delete_property', methods: ['GET'])]
+    public function deleteProperty(int $article_id, int $property_id): Response
     {
         $article_property = $this->entityManager->find(ArticleProperty::class, $property_id);
 
         $this->entityManager->remove($article_property);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/article/' . $article_id . '" </script>');
+        return $this->redirectToRoute('article_show', ['article_id' => $article_id]);
     }
 
     /**
-     * Groups list view.
+     * Displays the list of all article groups.
      *
-     * @return void
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves all article groups from the database.
+     * - Prepares data for the template, including user role, username, and app version.
+     * - Renders the 'article/groups.html.twig' template with the list of article groups and related data.
+     *
+     * @return Response
+     *   The HTTP response with the rendered article groups list or a redirect to the login page.
      */
-    public function groups(): void
+    #[Route('/groups', name: 'article_groups_index', methods: ['GET'])]
+    public function groups(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->findAll();
 
@@ -320,35 +438,66 @@ class ArticleController extends BaseController
             'page' => $this->page,
             'page_title' => $this->page_title,
             'article_groups' => $article_groups,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'article' => FALSE,
+                'group' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('article/groups.html.twig', $data);
+        return $this->render('article/groups.html.twig', $data);
     }
 
     /**
-     * Add article group form.
+     * Displays the form for adding a new article group.
      *
-     * @return void
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Prepares data for the template, including user role, username, and app version.
+     * - Renders the 'article/group_new.html.twig' template with the form for creating a new article group.
+     *
+     * @return Response
+     *   The HTTP response with the rendered new article group form or a redirect to the login page.
      */
-    public function groupNewForm(): void
+    #[Route('/groups/new', name: 'article_group_new', methods: ['GET'])]
+    public function newGroup(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+              'article' => FALSE,
+              'group' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('article/group_new.html.twig', $data);
+        return $this->render('article/group_new.html.twig', $data);
     }
 
     /**
-     * Add Article Group.
+     * Handles the creation of a new article group from POST data.
      *
-     * @return void
+     * - Validates and sanitizes the group name from POST input.
+     * - Creates a new ArticleGroup entity and sets its name.
+     * - Persists the new group to the database.
+     * - Redirects to the article group details page after successful creation, or halts on invalid input.
+     *
+     * @return Response
+     *   Redirects to the article group details page after creation, or halts on invalid input.
      */
-    public function groupAdd(): void
+    #[Route('/groups/create', name: 'article_group_create', methods: ['POST'])]
+    public function createGroup(): Response
     {
         $name = htmlspecialchars($_POST['name']);
         if ($name == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
@@ -361,20 +510,30 @@ class ArticleController extends BaseController
         // Get last article group id and redirect.
         $new_article_group_id = $newArticleGroup->getId();
 
-        die('<script>location.href = "/articles/group/' . $new_article_group_id . '" </script>');
+        return $this->redirectToRoute('article_group_show', ['article_group_id' => $new_article_group_id]);
     }
 
     /**
-     * Group view.
+     * Displays the details of a specific article group.
+     *
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the article group entity by its ID.
+     * - Prepares data for the template, including user role, username, and app version.
+     * - Renders the 'article/group_view.html.twig' template with the group details and related data.
      *
      * @param int $group_id
+     *   The ID of the article group to display.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response with the rendered article group details or a redirect to the login page.
      */
-    public function groupView(int $group_id): void
+    #[Route('/groups/{group_id}', name: 'article_group_show', methods: ['GET'])]
+    public function showGroup(int $group_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $article_group_data = $this->entityManager->find(ArticleGroup::class, $group_id);
 
@@ -384,26 +543,41 @@ class ArticleController extends BaseController
             'group_id' => $group_id,
             'article_group_data' => $article_group_data,
             'tools_menu' => [
+                'article' => FALSE,
                 'group' => TRUE,
                 'view' => TRUE,
                 'edit' => FALSE,
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('article/group_view.html.twig', $data);
+        return $this->render('article/group_view.html.twig', $data);
     }
 
     /**
-     * Edit Article Group form.
+     * Displays the form for editing an existing article group.
+     *
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the article group entity by its ID.
+     * - Prepares data for the template, including user role, username, and app version.
+     * - Renders the 'article/group_edit.html.twig' template with the group data for editing.
      *
      * @param int $group_id
+     *   The ID of the article group to edit.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response with the rendered article group edit form or a redirect to the login page.
      */
-    public function groupEditForm(int $group_id): void
+    #[Route('/groups/{group_id}/edit', name: 'article_group_edit_form', methods: ['GET'])]
+    public function editGroup(int $group_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $article_group_data = $this->entityManager->find(ArticleGroup::class, $group_id);
 
@@ -413,23 +587,36 @@ class ArticleController extends BaseController
             'group_id' => $group_id,
             'article_group_data' => $article_group_data,
             'tools_menu' => [
+                'article' => FALSE,
                 'group' => TRUE,
                 'view' => FALSE,
                 'edit' => TRUE,
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-      $this->render('article/group_edit.html.twig', $data);
+        return $this->render('article/group_edit.html.twig', $data);
     }
 
     /**
-     * Edit Article Group.
+     * Handles updating an existing article group with data from a POST request.
+     *
+     * - Validates and sanitizes the group name from POST input.
+     * - Finds the ArticleGroup entity by its ID and updates its name.
+     * - Persists the changes to the database.
+     * - Redirects to the article group details page after successful update, or halts if the group does not exist.
      *
      * @param int $group_id
+     *   The ID of the article group to update.
      *
-     * @return void
+     * @return Response
+     *   Redirects to the article group details page after update, or halts if the group does not exist.
      */
-    public function groupEdit(int $group_id): void
+    #[Route('/groups/{group_id}/update', name: 'article_group_update', methods: ['POST'])]
+    public function updateGroup(int $group_id): Response
     {
         $name = htmlspecialchars($_POST["name"]);
         $article_group = $this->entityManager->find(ArticleGroup::class, $group_id);
@@ -442,22 +629,25 @@ class ArticleController extends BaseController
         $article_group->setName($name);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/articles/group/' . $group_id . '" </script>');
+        return $this->redirectToRoute('article_group_show', ['group_id' => $article_group->getId()]);
     }
 
     /**
      * Article price list.
      *
-     * @param int $group_id
+     * @param Request $request
      *
-     * @return void
+     * @return Response
      */
-    public function priceList(int $group_id): void
+    #[Route('/price-list', name: 'article_price_list', methods: ['GET'])]
+    public function priceList(Request $request): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
-        $group_id = htmlspecialchars($_GET['group_id']);
+        $group_id = $request->query->get('group_id', 0);
         $group = $this->entityManager->find(ArticleGroup::class, $group_id);
         $articles_by_group =  $this->entityManager->getRepository(Article::class)->getArticlesByGroup($group_id);
         $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->findAll();
@@ -470,26 +660,38 @@ class ArticleController extends BaseController
             'articles_by_group' => $articles_by_group,
             'article_groups' => $article_groups,
             'preferences' => $preferences,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'article' => FALSE,
+                'group' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('article/price_list.html.twig', $data);
+        return $this->render('article/price_list.html.twig', $data);
     }
 
     /**
      * Search for articles.
      *
-     * @param string $term
+     * @param Request $request
      *   Search term.
      *
-     * @return void
+     * @return Response
      */
-    public function search(string $term): void
+    #[Route('/articles/search', name: 'article_search', methods: ['GET'])]
+    public function search(Request $request): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $article_groups = $this->entityManager->getRepository(ArticleGroup::class)->findAll();
 
+        $term = $request->query->get('term', '');
         $articles = $this->entityManager->getRepository(Article::class)->search($term);
 
         $preferences = $this->entityManager->find(Preferences::class, 1);
@@ -500,9 +702,33 @@ class ArticleController extends BaseController
             'article_groups' => $article_groups,
             'articles' => $articles,
             'preferences' => $preferences,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'article' => FALSE,
+                'group' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('article/search.html.twig', $data);
+        return $this->render('article/search.html.twig', $data);
+    }
+
+    /**
+     * Loads the application version from composer.json.
+     *
+     * @return string
+     *   The app version, or 'unknown' if not found.
+     */
+    private function loadAppVersion(): string
+    {
+        $composerJsonPath = __DIR__ . '/../../composer.json';
+        if (file_exists($composerJsonPath)) {
+            $composerData = json_decode(file_get_contents($composerJsonPath), true);
+            return $composerData['version'] ?? 'unknown';
+        }
+        return 'unknown';
     }
 
 }

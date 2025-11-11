@@ -5,31 +5,6 @@ use App\Core\Router;
 
 $router = new Router();
 
-// ========== Orders routes ====================================================
-$router->add('GET', '/orders/search/', 'OrderController@search');
-$router->add('GET', '/order/{order_id}/delete', 'OrderController@orderDelete');
-
-// ========== Articles routes ==================================================
-$router->add('GET', '/articles/', 'ArticleController@index');
-$router->add('GET', '/articles/new', 'ArticleController@articleNewForm');
-$router->add('POST', '/articles/add', 'ArticleController@articleAdd');
-$router->add('GET', '/articles/price-list', 'ArticleController@priceList');
-$router->add('GET', '/articles/search/', 'ArticleController@search');
-
-$router->add('GET', '/articles/groups', 'ArticleController@groups');
-$router->add('GET', '/articles/groups/new', 'ArticleController@groupNewForm');
-$router->add('POST', '/articles/groups/add', 'ArticleController@groupAdd');
-$router->add('GET', '/articles/group/{group_id}', 'ArticleController@groupView');
-$router->add('GET', '/articles/group/{group_id}/edit', 'ArticleController@groupEditForm');
-$router->add('POST', '/articles/group/{group_id}/edit', 'ArticleController@groupEdit');
-
-$router->add('GET', '/article/{article_id}', 'ArticleController@articleViewForm');
-$router->add('GET', '/article/{article_id}/edit', 'ArticleController@articleEditForm');
-$router->add('POST', '/article/{article_id}/edit', 'ArticleController@articleEdit');
-
-$router->add('POST', '/article/{article_id}/addProperty', 'ArticleController@addProperty');
-$router->add('GET', '/article/{article_id}/property/{property_id}/delete', 'ArticleController@deleteProperty');
-
 // ========== Admins routes ====================================================
 $router->add('GET', '/admin/', 'AdminController@index');
 $router->add('GET', '/admin/base-backup', 'AdminController@baseBackup');
