@@ -1,4 +1,4 @@
-# d-Office 8.2.3
+# d-Office 9.0.0
 
 A web application for office and project management, built with PHP 8.2 and modern libraries.
 

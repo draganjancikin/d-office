@@ -1,3 +1,6 @@
+# Upgrade to 9.0.0
+* #351 Use Symfony 7 front controller
+
 # Upgrade to 8.2.3
 Bug:
 * #344 - Update link for creating a new project from document
