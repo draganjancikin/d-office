@@ -151,6 +151,10 @@ class OrderController extends AbstractController
         $suppliers = $this->entityManager->getRepository(Client::class)->findBy(['is_supplier' => 1], ['name' => 'ASC']);
         $projects = $this->entityManager->getRepository(Project::class)->findAll();
 
+        if (isset($_GET['project_id'])) {
+            $project_id = (int) htmlspecialchars($_GET['project_id']);
+        }
+
         $project_data = NULL;
         if (NULL != $project_id) {
             $project_data = $this->entityManager->find(Project::class, $project_id);
