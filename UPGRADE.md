@@ -1,3 +1,7 @@
+# Upgrade to 8.3.0
+Enhancement:
+* #349 - Rename web folder to public
+
 # Upgrade to 8.2.3
 Bug:
 * #344 - Update link for creating a new project from document
