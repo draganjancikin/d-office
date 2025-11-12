@@ -74,7 +74,7 @@
                                 <i class="fa fa-plus"></i> <i class="fas fa-pencil-alt"> </i>
                             </button>
                             <!-- Pregled i štampanje radnog naloga sa beleškama uz projekat -->
-                            <a href="/project/{{ project_id }}/printProjectTaskWithNotes"
+                            <a href="/projects/{{ project_id }}/print-project-with-notes"
                                title="Izvoz radnog naloga sa beleškama u PDF [new window]" target="_blank">
                                 <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
                                     <i class="fa fa-print"></i> Beleške
@@ -99,8 +99,8 @@
                                         {{ note.getNote()|nl2br }}
                                     </td>
                                     <td class="px-1">
-                                        <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete belešku?');"
-                                           href="/project/{{ project_id }}/note/{{ note.getId() }}/delete"
+                                        <a onClick="return confirm('Da li ste sigurni da želite da obrišete belešku?');"
+                                           href="/projects/{{ project_id }}/notes/{{ note.getId() }}/delete"
                                            title="Brisanje beleške">
                                             <i class="fas fa-trash-alt"></i>
                                         </a>
@@ -121,7 +121,7 @@
                         {% if orders_data %}
                             <h5>Narudžbenice:</h5>
                             {% for order_data in orders_data %}
-                                <a href="/order/{{ order_data.id }}">
+                                <a href="/orders/{{ order_data.id }}">
                                     {{ '%04d'|format(order_data.ordinal_num_in_year) }}
                                     _
                                     {{ order_data.created_at }}
@@ -145,7 +145,7 @@
                         {% if accounting_documents_data %}
                             <h5>Dokumenti:</h5>
                             {% for accounting_document_data in accounting_documents_data %}
-                                <a href="/pidb/{{ accounting_document_data.id }}">
+                                <a href="/documents/{{ accounting_document_data.id }}">
                                     {% if accounting_document_data.type.id == 1 %}P{% endif %}
                                     {% if accounting_document_data.type.id == 2 %}O{% endif %}
                                     {{ '%04d'|format(accounting_document_data.ordinal_num_in_year) }}
@@ -274,13 +274,15 @@
                                         <div class="card-footer p-2">
                                             <!-- dugme koje briše zadatka -->
                                             <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete zadatak?');"
-                                               href="/project/{{ project_id }}/task/{{ task_for_realization.id }}/delete">
+                                               href="/projects/{{ project_id }}/tasks/{{ task_for_realization.id
+                                               }}/delete">
                                                 <button type="button" class="btn btn-default btn-xs btn pull-left" title="Obriši zadatak!">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </a>
                                             <!-- dugme koje otvara formu za izmenu zadatka -->
-                                            <a href="/project/{{ project_id }}/task/{{ task_for_realization.id }}/edit">
+                                            <a href="/projects/{{ project_id }}/tasks/{{ task_for_realization.id
+                                            }}/edit">
                                                 <button type="button" class="btn btn-default btn-xs pull-right" title="Idi na izmenu zadatka!">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
@@ -379,13 +381,15 @@
                                         <div class="card-footer p-2">
                                             <!-- dugme koje briše zadatka -->
                                             <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete zadatak?');"
-                                               href="/project/{{ project_id }}/task/{{ task_in_realization.id }}/delete">
+                                               href="/projects/{{ project_id }}/tasks/{{ task_in_realization.id
+                                               }}/delete">
                                                 <button type="button" class="btn btn-default btn-xs btn pull-left" title="Obriši zadatak!">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </a>
                                             <!-- dugme koje otvara formu za izmenu zadatka -->
-                                            <a href="/project/{{ project_id }}/task/{{ task_in_realization.id }}/edit">
+                                            <a href="/projects/{{ project_id }}/tasks/{{ task_in_realization.id
+                                            }}/edit">
                                                 <button type="button" class="btn btn-default btn-xs pull-right" title="Idi na izmenu zadatka!">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
@@ -476,14 +480,14 @@
                                         <div class="card-footer p-2">
                                             <!-- dugme koje briše zadatka -->
                                             <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete zadatak?');"
-                                               href="/project/{{ project_id }}/task/{{ task_completed.id }}/delete">
+                                               href="/projects/{{ project_id }}/tasks/{{ task_completed.id }}/delete">
                                                 <button type="button" class="btn btn-default btn-xs btn pull-left"
                                                         title="Obriši zadatak!">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </a>
                                             <!-- dugme koje otvara formu za izmenu zadatka -->
-                                            <a href="/project/{{ project_id }}/task/{{ task_completed.id }}/edit">
+                                            <a href="/projects/{{ project_id }}/tasks/{{ task_completed.id }}/edit">
                                                 <button type="button" class="btn btn-default btn-xs pull-right"
                                                         title="Idi na izmenu zadatka!">
                                                     <i class="fa fa-edit"></i>

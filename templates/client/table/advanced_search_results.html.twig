@@ -20,7 +20,7 @@
                     {% set count = count + 1 %}
                     <tr>
                         <td>{{ count }}</td>
-                        <td><a href="/client/{{ client.id }}">{{ client.name }}</a></td>
+                        <td><a href="/clients/{{ client.id }}">{{ client.name }}</a></td>
                         <td>
                             {% if client.street %}
                                 {{ client.street.name }} {{ client.homenumber }},
