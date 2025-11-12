@@ -10,7 +10,7 @@
                 </button>
             </div>
 
-            <form action="/client/{{ client.id }}/addContact" method="post" role="form">
+            <form action="/clients/{{ client.id }}/contacts/create" method="post" role="form">
                 <input type="hidden" name="client_id" value="{{ client.id }}">
 
                 <div class="modal-body">

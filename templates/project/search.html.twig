@@ -26,7 +26,7 @@
                         {% for active_project_data in active_projects_data %}
                             <tr>
                                 <td>
-                                    <a href="/project/{{ active_project_data.id }}"
+                                    <a href="/projects/{{ active_project_data.id }}"
                                        class="d-block card-link"
                                        title="{{ active_project_data.created_at }}">
                                         #{{ '%04d'|format(active_project_data.ordinal_num_in_year) }}
@@ -43,7 +43,8 @@
                                     {% set count_for_realization = 0 %}
                                     {% for task_for_realization in active_project_data.tasks_for_realization %}
                                     {% set count_for_realization = count_for_realization + 1 %}
-                                    <a href="/project/{{ active_project_data.id }}/task/{{ task_for_realization.id }}/edit">
+                                    <a href="/projects/{{ active_project_data.id }}/tasks/{{ task_for_realization.id
+                                    }}/edit">
                                             <span class="badge badge-{{ task_for_realization.class }}">
                                                 {{ task_for_realization.type }}
                                             </span>
@@ -68,7 +69,8 @@
                                     {% set count_in_realization = 0 %}
                                     {% for task_in_realization in active_project_data.tasks_in_realization %}
                                         {% set count_in_realization = count_in_realization + 1 %}
-                                        <a href="/project/{{ active_project_data.id }}/task/{{ task_in_realization.id }}/edit">
+                                        <a href="/projects/{{ active_project_data.id }}/tasks/{{ task_in_realization
+                                        .id }}/edit">
                                             <span class="badge badge-{{ task_in_realization.class }}">
                                                 {{ task_in_realization.type }}
                                             </span>
@@ -93,7 +95,8 @@
                                     {% set count_completed = 0 %}
                                     {% for task_completed in active_project_data.tasks_completed %}
                                         {% set count_completed = count_completed + 1 %}
-                                        <a href="/project/{{ active_project_data.id }}/task/{{ task_completed.id }}/edit">
+                                        <a href="/projects/{{ active_project_data.id }}/tasks/{{ task_completed.id
+                                        }}/edit">
                                             <span class="badge badge-{{ task_completed.class }}">
                                                 {{ task_completed.type }}
                                             </span>
@@ -139,7 +142,7 @@
                         {% for inactive_project_data in inactive_projects_data %}
                             <tr>
                                 <td>
-                                    <a href="/project/{{ inactive_project_data.id }}"
+                                    <a href="/projects/{{ inactive_project_data.id }}"
                                        class="d-block card-link"
                                        title="{{ inactive_project_data.created_at }}">
                                         #{{ '%04d'|format(inactive_project_data.ordinal_num_in_year) }}
@@ -182,7 +185,8 @@
                                     {% set count_in_realization = 0 %}
                                     {% for task_in_realization in inactive_project_data.tasks_in_realization %}
                                         {% set count_in_realization = count_in_realization + 1 %}
-                                        <a href="/project/{{ inactive_project_data.id }}/task/{{ task_in_realization.id }}/edit">
+                                        <a href="/projects/{{ inactive_project_data.id }}/tasks/{{ task_in_realization
+                                        .id }}/edit">
                                             <span class="badge badge-{{ task_in_realization.class }}">
                                                 {{ task_in_realization.type }}
                                             </span>
@@ -207,7 +211,8 @@
                                     {% set count_completed = 0 %}
                                     {% for task_completed in inactive_project_data.tasks_completed %}
                                         {% set count_completed = count_completed + 1 %}
-                                        <a href="/project/{{ inactive_project_data.id }}/task/{{ task_completed.id }}/edit">
+                                        <a href="/projects/{{ inactive_project_data.id }}/tasks/{{ task_completed.id
+                                        }}/edit">
                                             <span class="badge badge-{{ task_completed.class }}">
                                                 {{ task_completed.type }}
                                             </span>

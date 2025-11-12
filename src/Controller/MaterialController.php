@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Core\BaseController;
 use App\Entity\Client;
 use App\Entity\Material;
 use App\Entity\MaterialSupplier;
@@ -11,37 +10,60 @@ use App\Entity\Preferences;
 use App\Entity\Property;
 use App\Entity\Unit;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * MaterialController class
  * 
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
-class MaterialController extends BaseController
+class MaterialController extends AbstractController
 {
 
+    private EntityManagerInterface $entityManager;
     private string $page;
     private string $page_title;
+    protected string $stylesheet;
+    protected string $app_version;
 
     /**
      * MaterialController constructor.
+     *
+     * Initializes controller properties and loads the application version.
+     *
+     * @param EntityManagerInterface $entityManager
+     *   The Doctrine entity manager for database operations.
      */
-    public function __construct() {
-        parent::__construct();
-
+    public function __construct(EntityManagerInterface $entityManager) {
+        $this->entityManager = $entityManager;
         $this->page = 'materials';
         $this->page_title = 'Materijali';
+        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
+        $this->app_version = $this->loadAppVersion();
     }
 
     /**
-     * Index action.
+     * Displays the list of the latest materials.
      *
-     * @return void
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the latest 10 materials from the database.
+     * - Loads user preferences and prepares data for the template.
+     * - Renders the 'material/index.html.twig' template with the materials and related data.
+     *
+     * @return Response
+     *   The HTTP response with the rendered materials list or a redirect to the login page.
      */
-    public function index(): void
+    #[Route('/materials/', name: 'materials_index', methods: ['GET'])]
+    public function index(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $materials = $this->entityManager->getRepository(Material::class)->getLastMaterials(10);
         $preferences = $this->entityManager->find(Preferences::class, 1);
@@ -53,39 +75,69 @@ class MaterialController extends BaseController
             'tools_menu' => [
               'material' => FALSE,
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('material/index.html.twig', $data);
+        return $this->render('material/index.html.twig', $data);
     }
 
     /**
-     * Form for adding a new material.
+     * Displays the form for adding a new material.
      *
-     * @return void
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves all available units from the database.
+     * - Prepares and passes data to the 'material/material_new.html.twig' template.
+     * - Renders the template for creating a new material.
+     *
+     * @return Response
+     *   The HTTP response with the rendered new material form or a redirect to the login page.
      */
-    public function materialNewForm(): void
+    #[Route('/materials/new', name: 'material_new_form', methods: ['GET'])]
+    public function new(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
         $units = $this->entityManager->getRepository(Unit::class)->findAll();
 
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
             'units' => $units,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'material' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('material/material_new.html.twig', $data);
+        return $this->render('material/material_new.html.twig', $data);
     }
 
     /**
-     * Add a new material.
+     * Handles the creation of a new material.
      *
-     * @return void
+     * - Starts a session and retrieves the current user.
+     * - Validates the submitted form data for the new material.
+     * - Checks for duplicate material names in the database.
+     * - Creates and persists a new Material entity with the provided data.
+     * - Redirects to the material details page upon successful creation.
+     *
+     * @return Response
+     *   The HTTP response that redirects to the new material's details page or displays an error.
      */
-    public function materialAdd(): void
+    #[Route('/materials/create', name: 'material_create', methods: ['POST'])]
+    public function create(): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -128,20 +180,32 @@ class MaterialController extends BaseController
 
         // Get last id and redirect.
         $new_id = $newMaterial->getId();
-        die('<script>location.href = "/material/' . $new_id . '" </script>');
+
+        return $this->redirectToRoute('materials_show', ['material_id' => $new_id]);
     }
 
     /**
-     * View material form.
+     * Displays the details of a specific material.
      *
-     * @param $material_id
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the material, its suppliers, and properties from the database.
+     * - Loads all suppliers and property definitions for selection.
+     * - Prepares and passes all relevant data to the 'material/material_view.html.twig' template.
+     * - Renders the template with the material details.
      *
-     * @return void
+     * @param int $material_id
+     *   The ID of the material to display.
+     *
+     * @return Response
+     *   The HTTP response with the rendered material details or a redirect to the login page.
      */
-    public function materialViewForm($material_id): void
+    #[Route('/materials/{material_id}', name: 'materials_show', requirements: ['material_id' => '\d+'], methods: ['GET'])]
+    public function show(int $material_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $material = $this->entityManager->find(Material::class, $material_id);
         $material_suppliers = $this->entityManager
@@ -166,22 +230,36 @@ class MaterialController extends BaseController
                 'view' => TRUE,
                 'edit' => FALSE,
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('material/material_view.html.twig', $data);
+        return $this->render('material/material_view.html.twig', $data);
     }
 
     /**
-     * Edit Material form.
+     * Displays the form for editing an existing material.
      *
-     * @param $material_id
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the material, its suppliers, properties, available units, and related data from the database.
+     * - Prepares and passes all relevant data to the 'material/material_edit.html.twig' template.
+     * - Renders the template for editing the material.
      *
-     * @return void
+     * @param int $material_id
+     *   The ID of the material to edit.
+     *
+     * @return Response
+     *   The HTTP response with the rendered edit material form or a redirect to the login page.
      */
-    public function materialEditForm($material_id): void
+    #[Route('/materials/{material_id}/edit', name: 'material_edit_form', methods: ['GET'])]
+    public function edit($material_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $material = $this->entityManager->find(Material::class, $material_id);
         $material_suppliers = $this->entityManager
@@ -208,21 +286,36 @@ class MaterialController extends BaseController
                 'view' => FALSE,
                 'edit' => TRUE,
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('material/material_edit.html.twig', $data);
+        return $this->render('material/material_edit.html.twig', $data);
     }
 
     /**
-     * Edit Material form.
+     * Handles updating an existing material.
      *
-     * @param $material_id
+     * - Starts a session and retrieves the current user.
+     * - Validates the submitted form data for the material.
+     * - Updates the material's properties, unit, weight, price, and note.
+     * - Sets the modified user and timestamp.
+     * - Persists changes to the database.
+     * - Redirects to the material details page upon successful update.
      *
-     * @return void
+     * @param int $material_id
+     *   The ID of the material to update.
+     *
+     * @return Response
+     *   The HTTP response that redirects to the updated material's details page or displays an error.
      */
-    public function materialEdit($material_id): void
+    #[Route('/materials/{material_id}/update', name: 'material_update', methods: ['POST'])]
+    public function update(int $material_id): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -258,19 +351,30 @@ class MaterialController extends BaseController
 
         $this->entityManager->flush();
 
-        die('<script>location.href = "/material/' . $material_id . '" </script>');
+        return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
 
     /**
-     * Add supplier to material.
+     * Adds a supplier to a material.
      *
-     * @param $material_id
+     * @param int $material_id
+     *   The ID of the material to which the supplier will be added.
      *
-     * @return void
+     * Expects the following POST parameters:
+     *   - supplier_id (int): The ID of the supplier (Client entity) to add. Required.
+     *   - note (string): Optional note about the supplier/material relationship.
+     *   - price (float, optional): Price value for the supplier/material relationship. Comma or dot as decimal separator.
+     *
+     * @return Response
+     *   Redirects to the material details page after adding the supplier.
+     *
+     * @throws \Exception If required POST data is missing or invalid.
      */
-    public function addSupplier($material_id): void
+    #[Route('/materials/{material_id}/add-supplier', name: 'material_add_supplier', methods: ['POST'])]
+    public function addSupplier(int $material_id): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $material = $this->entityManager->find(Material::class, $material_id);
 
@@ -298,17 +402,27 @@ class MaterialController extends BaseController
         $this->entityManager->persist($newMaterialSupplier);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/material/' . $material_id . '" </script>');
+        return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
 
     /**
-     * Add property to material.
+     * Adds a property to a material.
      *
      * @param int $material_id
+     *   The ID of the material to which the property will be added.
      *
-     * @return void
+     * Expects the following POST parameters:
+     *   - property_item_id (int): The ID of the Property entity to add. Required.
+     *   - min_size (string|float): The minimum size value for the property. Required.
+     *   - max_size (string|float): The maximum size value for the property. Required.
+     *
+     * @return Response
+     *   Redirects to the material details page after adding the property.
+     *
+     * @throws \Exception If required POST data is missing or invalid.
      */
-    public function addProperty(int $material_id): void
+    #[Route('/materials/{material_id}/add-property', name: 'material_add_property', methods: ['POST'])]
+    public function addProperty(int $material_id): Response
     {
         $material = $this->entityManager->find(Material::class, $material_id);
 
@@ -328,20 +442,30 @@ class MaterialController extends BaseController
         $this->entityManager->persist($newMaterialproperty);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/material/'.$material_id.'" </script>');
+        return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
 
     /**
-     * Edit supplier.
+     * Edits the supplier information for a material.
      *
-     * @param int $material_id
-     * @param int $supplier_id
+     * @param int $material_id The ID of the material whose supplier is being edited.
+     * @param int $supplier_id The ID of the supplier (Client entity) to update.
      *
-     * @return void
+     * Expects the following POST parameters:
+     *   - supplier_id (int): The new or existing supplier ID to associate. Required.
+     *   - note (string): Optional note about the supplier/material relationship.
+     *   - price (string|float, optional): Price value for the supplier/material relationship. Comma or dot as decimal separator.
+     *   - material_supplier_id (int): The ID of the MaterialSupplier entity to update. Required.
+     *
+     * @return Response Redirects to the material details page after updating the supplier.
+     *
+     * @throws \Exception If required POST data is missing or invalid.
      */
-    public function editSupplier(int $material_id, int $supplier_id): void
+    #[Route('/materials/{material_id}/suppliers/{supplier_id}/update', name: 'material_update_supplier', methods: ['POST'])]
+    public function editSupplier(int $material_id, int $supplier_id): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $material = $this->entityManager->find(Material::class, $material_id);
 
@@ -364,57 +488,79 @@ class MaterialController extends BaseController
 
         $this->entityManager->flush();
 
-        die('<script>location.href = "/material/' . $material_id . '" </script>');
+        return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
 
     /**
-     * Delete supplier.
+     * Deletes a supplier from a material.
      *
      * @param int $material_id
+     *   The ID of the material from which the supplier will be removed.
      * @param int $supplier_id
+     *   The ID of the MaterialSupplier entity to remove.
      *
-     * @return void
+     * @return Response
+     *   Redirects to the material details page after deleting the supplier.
+     *
+     * @throws \Exception If the MaterialSupplier entity is not found or cannot be deleted.
      */
-    public function deleteSupplier(int $material_id, int $supplier_id): void
+    #[Route('/materials/{material_id}/suppliers/{supplier_id}/delete', name: 'material_delete_supplier', methods: ['GET'])]
+    public function deleteSupplier(int $material_id, int $supplier_id): Response
     {
         $material_supplier =  $this->entityManager->find(MaterialSupplier::class, $supplier_id);
 
         $this->entityManager->remove($material_supplier);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/material/' . $material_id . '" </script>');
+        return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
 
     /**
-     * Delete property from material.
+     * Deletes a property from a material.
      *
      * @param int $material_id
+     *   The ID of the material from which the property will be removed.
      * @param int $property_id
+     *   The ID of the MaterialProperty entity to remove.
      *
-     * @return void
+     * @return Response
+     *   Redirects to the material details page after deleting the property.
+     *
+     * @throws \Exception
+     *   If the MaterialProperty entity is not found or cannot be deleted.
      */
-    public function deleteProperty(int $material_id, int $property_id): void
+    #[Route('/materials/{material_id}/properties/{property_id}/delete', name: 'material_delete_property', methods: ['GET'])]
+    public function deleteProperty(int $material_id, int $property_id): Response
     {
         $material_property = $this->entityManager->find(MaterialProperty::class, $property_id);
 
         $this->entityManager->remove($material_property);
         $this->entityManager->flush();;
 
-        die('<script>location.href = "/material/' . $material_id . '" </script>');
+        return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
 
     /**
-     * Search for materials.
+     * Searches for materials by a search term.
      *
-     * @param string $term
-     *   Search term.
+     * @param Request $request
+     *   The HTTP request object. Expects a 'term' query parameter for the search string.
      *
-     * @return void
+     * Query Parameters:
+     *   - term (string, optional): The search term to filter materials by name or note. Defaults to an empty string (returns all materials).
+     *
+     * @return Response
+     *   Renders the material search results page with the filtered materials and related data.
      */
-    public function search(string $term): void
+    #[Route('/materials/search', name: 'materials_search')]
+    public function search(Request $request): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $term = $request->query->get('term', '');
 
         $materials= $this->entityManager->getRepository(Material::class)->search($term);
         $preferences = $this->entityManager->find(Preferences::class, 1);
@@ -424,9 +570,32 @@ class MaterialController extends BaseController
             'page_title' => $this->page_title,
             'materials' => $materials,
             'preferences' => $preferences,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'material' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('material/search.html.twig', $data);
+        return $this->render('material/search.html.twig', $data);
+    }
+
+    /**
+     * Loads the application version from composer.json.
+     *
+     * @return string
+     *   The app version, or 'unknown' if not found.
+     */
+    private function loadAppVersion(): string
+    {
+        $composerJsonPath = __DIR__ . '/../../composer.json';
+        if (file_exists($composerJsonPath)) {
+            $composerData = json_decode(file_get_contents($composerJsonPath), true);
+            return $composerData['version'] ?? 'unknown';
+        }
+        return 'unknown';
     }
 
 }

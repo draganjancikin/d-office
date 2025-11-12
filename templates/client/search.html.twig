@@ -29,12 +29,12 @@
                     {% for client in clients %}
                         <tr>
                             <td>
-                                <a href="/client/{{ client.id }}">
+                                <a href="/clients/{{ client.id }}">
                                     {{ client.name }}
                                 </a>
                             </td>
                             <td>
-                                {{ client.street ? client.street.name : '' }} {{ client.home_number }}
+                                {{ client.street ? client.street.name : '' }} {{ client.homeNumber }}
                                 {% if client.street and client.city %}, {% endif %}
                                 {{ client.city ? client.city.name : '' }}
                                 {% if client.city and client.country %}, {% endif %}

@@ -2,46 +2,69 @@
 
 namespace App\Controller;
 
-use App\Core\BaseController;
-
 use App\Entity\City;
 use App\Entity\CompanyInfo;
 use App\Entity\Country;
 use App\Entity\Employee;
 use App\Entity\Street;
-
-require_once __DIR__ . '/../../config/dbConfig.php';
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * AdminController class.
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class AdminController extends BaseController
+class AdminController extends AbstractController
 {
 
-    private $page;
-    private $page_title;
+    private EntityManagerInterface $entityManager;
+    private string $page;
+    private string $page_title;
+    protected string $stylesheet;
+    protected string $app_version;
 
     /**
      * AdminController constructor.
+     *
+     * - Initializes controller properties for page, page title, stylesheet path, and application version.
+     * - Sets up the Doctrine EntityManager for database operations.
+     * - Loads the stylesheet path from environment variables or defaults to '/libraries/'.
+     * - Loads the current application version.
+     *
+     * @param EntityManagerInterface $entityManager
+     *   The Doctrine entity manager for database access.
      */
-    public function __construct() {
-        parent::__construct();
-
+    public function __construct(EntityManagerInterface $entityManager) {
+        $this->entityManager = $entityManager;
         $this->page = 'admin';
         $this->page_title = 'Admin';
+        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
+        $this->app_version = $this->loadAppVersion();
     }
 
     /**
-     * Index action.
+     * Displays the admin dashboard page.
      *
-     * @return void
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Prepares data for the template, including page metadata, user role, username, stylesheet, and app version.
+     * - Renders the 'admin/index.html.twig' template with the admin dashboard data.
+     *
+     * @return Response
+     *   The HTTP response with the rendered admin dashboard or a redirect to the login page.
      */
-    public function index($search = NULL):void
+    #[Route('/admin/', name: 'admin_index')]
+    public function index(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $data = [
             'page' => $this->page,
@@ -49,20 +72,33 @@ class AdminController extends BaseController
             'tools_menu' => [
                 'admin' => FALSE,
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('admin/index.html.twig', $data);
+        return $this->render('admin/index.html.twig', $data);
     }
 
     /**
-     * View company info.
+     * Displays the company information page in the admin panel.
      *
-     * @return void
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the company information entity from the database.
+     * - Prepares data for the template, including page metadata, user role, username, stylesheet, and app version.
+     * - Renders the 'admin/company_info_view.html.twig' template with the company information and related data.
+     *
+     * @return Response
+     *   The HTTP response with the rendered company information page or a redirect to the login page.
      */
-    public function companyInfoViewForm(): void
+    #[Route('/admin/company-info', name: 'admin_company_info')]
+    public function showCompanyInfo(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $company = $this->entityManager->find(CompanyInfo::class, '1');
 
@@ -76,22 +112,39 @@ class AdminController extends BaseController
                     'view' => TRUE,
                     'edit' => FALSE,
                 ],
+                'employee' => [
+                    'view' => FALSE,
+                    'edit' => FALSE,
+                ],
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('admin/company_info_view.html.twig', $data);
+        return $this->render('admin/company_info_view.html.twig', $data);
     }
 
     /**
-     * Edit company info form.
+     * Displays the form for editing company information in the admin panel.
      *
-     * @return void
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the company information entity from the database.
+     * - Fetches all countries, cities, and streets, ordered by name, for form selection fields.
+     * - Prepares data for the template, including page metadata, user role, username, stylesheet, and app version.
+     * - Renders the 'admin/company_info_edit.html.twig' template with the company information and related data for editing.
+     *
+     * @return Response
+     *   The HTTP response with the rendered company information edit form or a redirect to the login page.
      */
-    public function companyInfoEditForm(): void
+    #[Route('/admin/company-info/edit', name: 'admin_company_info_edit')]
+    public function editCompanyInfo(): Response
     {
-
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $company = $this->entityManager->find(CompanyInfo::class, '1');
 
@@ -112,18 +165,34 @@ class AdminController extends BaseController
                     'view' => FALSE,
                     'edit' => TRUE,
                 ],
+                'employee' => [
+                    'view' => FALSE,
+                    'edit' => FALSE,
+                ],
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('admin/company_info_edit.html.twig', $data);
+        return $this->render('admin/company_info_edit.html.twig', $data);
     }
 
     /**
-     * Edit company info.
+     * Handles updating the company information with data from a POST request.
      *
-     * @return void
+     * - Retrieves and sanitizes all relevant company info fields from POST data (name, PIB, MB, address, contacts, etc.).
+     * - Finds the CompanyInfo entity and related Country, City, and Street entities by their IDs.
+     * - Updates the CompanyInfo entity with the new data.
+     * - Persists the changes to the database.
+     * - Redirects to the company information view page after successful update.
+     *
+     * @return Response
+     *   Redirects to the company information view page after update.
      */
-    public function companyInfoEdit(): void
+    #[Route('/admin/company-info/update', name: 'admin_company_info_update', methods: ['POST'])]
+    public function updateCompanyInfo(): Response
     {
         $name = $_POST["name"] ?? "";
         $pib = $_POST["pib"] ?? "";
@@ -163,62 +232,96 @@ class AdminController extends BaseController
         $company_info->setWebsite1($website_1);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/admin/company-info" </script>');
+        return $this->redirectToRoute('admin_company_info');
     }
 
     /**
-     * Database backup.
+     * Creates a backup of the database and stores it in the var/backups directory.
      *
-     * @return void
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Reads database credentials from environment variables.
+     * - Ensures the backup directory exists.
+     * - Constructs a filename with the current date and environment.
+     * - Runs the mysqldump command using Symfony's Process component to export the database.
+     * - Saves the dump output to a file in the backup directory.
+     * - Adds a success flash message with the backup file path.
+     * - Redirects to the admin index page after completion.
+     *
+     * @return Response
+     *   Redirects to the admin index page after backup, or to the login page if not authenticated.
+     *
+     * @throws ProcessFailedException
+     *   If the mysqldump process fails.
      */
-    public function baseBackup (): void
+    #[Route('/admin/backup-database', name: 'admin_backup_database')]
+    public function backupDatabase(): Response
     {
-        $dump_dir = '';
-        $dumpfile = "roloffice_" . date("Y-m-d_H-i-s") . "_" . ENV . "_" . APP_VERSION . ".sql";
-
-        // Check OS version.
-        $os = PHP_OS;
-        if ($os == 'Windows') {
-            // $root = "D:/Documents/BackUps/MYSQL/";
-            $dump_dir = getenv('HOMEDRIVE') . getenv('HOMEPATH') . '\Downloads';
-        }
-        elseif ($os == 'Linux') {
-            // @HOLMES - Need define Download folder for Linux systems.
-            $dump_dir = __DIR__ . '/../home/dragan/Downloads/';
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
         }
 
-        $command = "C:/xampp/mysql/bin/mysqldump --opt --host=" . DB_SERVER
-          . " --user=" . DB_USERNAME
-          . " --password=" . DB_PASSWORD
-          . " "  . DB_NAME . " > " . $dump_dir . $dumpfile;
+        // Read database credentials from .env
+        $dbHost = $_ENV['DB_SERVER'] ?? 'localhost';
+        $dbUser = $_ENV['DB_USER'] ?? 'root';
+        $dbPass = $_ENV['DB_PASSWORD'] ?? 'root';
+        $dbName = $_ENV['DB_NAME'] ?? 'default';
 
-        try {
-            exec($command);
+        // Create backup directory
+        $backupDir = $this->getParameter('kernel.project_dir') . '/var/backups';
+        if (!is_dir($backupDir)) {
+          mkdir($backupDir, 0755, true);
         }
-        catch (Exception $e) {
-            echo 'Caught exception: ',  $e->getMessage(), "\n";
+
+        $env = $_ENV['APP_ENV'] ?? getenv('APP_ENV') ?? 'production';
+
+        // Create filename (e.g. backup_2025-11-11_19-40.sql)
+        $fileName = sprintf('backup_%s.sql', date('Y-m-d_H-i-s'));
+        $filePath = $backupDir . '/' . $env . '_' . $fileName;
+
+        // mysqldump command.
+        $command = [
+          'mysqldump',
+          '-h', $dbHost,
+          '-u', $dbUser,
+          sprintf('--password=%s', $dbPass),
+          $dbName,
+        ];
+
+        // Run process.
+        $process = new Process($command);
+        $process->run();
+
+        // Check for errors.
+        if (!$process->isSuccessful()) {
+          throw new ProcessFailedException($process);
         }
 
-        echo '
-            <div class="alert alert-info alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-info"></i> Obaveštenje!</h4>
-                Backup baze je izvšen u fajl: <br />' . $dump_dir . $dumpfile . '
-            </div>
-            ';
+        // Save dump output to file.
+        file_put_contents($filePath, $process->getOutput());
 
-        passthru("tail -1 $dumpfile");
+        $this->addFlash('success', 'Backup has been created in file ' . $filePath);
+        return $this->redirectToRoute('admin_index');
     }
 
     /**
-     * Employees action.
+     * Displays the list of the most recent employees in the admin panel.
      *
-     * @return void
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the 10 most recently added employees from the database.
+     * - Prepares data for the template, including page metadata, user role, username, stylesheet, and app version.
+     * - Renders the 'admin/employees_list.html.twig' template with the employees data.
+     *
+     * @return Response
+     *   The HTTP response with the rendered employees list or a redirect to the login page.
      */
-    public function employeesList():void
+    #[Route('/admin/employees', name: 'admin_employees_list')]
+    public function employees(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $data = [
             'page' => $this->page . '/employees',
@@ -226,23 +329,38 @@ class AdminController extends BaseController
             'last_employees' => $this->entityManager->getRepository(Employee::class)->getLastEmployees(10),
             'tools_menu' => [
                 'employees' => TRUE,
+              'admin' => FALSE,
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('admin/employees_list.html.twig', $data);
+        return $this->render('admin/employees_list.html.twig', $data);
     }
 
-  /**
-   * View employee details.
-   *
-   * @param int $employee_id
-   *
-   * @return void
-   */
-    public function employeeViewForm(int $employee_id): void
+    /**
+     * Displays the details of a specific employee in the admin panel.
+     *
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the employee entity by its ID from the database.
+     * - Prepares data for the template, including page metadata, user role, username, stylesheet, and app version.
+     * - Renders the 'admin/employee_view.html.twig' template with the employee's details and related data.
+     *
+     * @param int $employee_id
+     *   The ID of the employee to display.
+     *
+     * @return Response
+     *   The HTTP response with the rendered employee details or a redirect to the login page.
+     */
+    #[Route('/admin/employee/{employee_id}', name: 'admin_employee_view')]
+    public function showEmployee(int $employee_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $employee_data = $this->entityManager->find(Employee::class, $employee_id);
 
@@ -251,28 +369,46 @@ class AdminController extends BaseController
             'page_title' => $this->page_title . ' | Employee -' . $employee_data->getName(),
             'employee' => $employee_data,
             'tools_menu' => [
+                'company_info' => [
+                    'view' => FALSE,
+                    'edit' => FALSE,
+                ],
                 'admin' => TRUE,
                 'employee' => [
                     'view' => TRUE,
                     'edit' => FALSE,
                 ],
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('admin/employee_view.html.twig', $data);
+        return $this->render('admin/employee_view.html.twig', $data);
     }
 
-  /**
-   * Employee edit form.
-   *
-   * @param int $employee_id
-   *
-   * @return void
-   */
-    public function employeeEditForm(int $employee_id): void
+    /**
+     * Displays the form for editing an existing employee in the admin panel.
+     *
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the employee entity by its ID from the database.
+     * - Prepares data for the template, including page metadata, user role, username, stylesheet, and app version.
+     * - Renders the 'admin/employee_edit.html.twig' template with the employee's data for editing.
+     *
+     * @param int $employee_id
+     *   The ID of the employee to edit.
+     *
+     * @return Response
+     *   The HTTP response with the rendered employee edit form or a redirect to the login page.
+     */
+    #[Route('/admin/employee/{employee_id}/edit', name: 'admin_employee_edit_form')]
+    public function editEmployee(int $employee_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $employee_data = $this->entityManager->find(Employee::class, $employee_id);
 
@@ -286,20 +422,38 @@ class AdminController extends BaseController
                     'view' => FALSE,
                     'edit' => TRUE,
                 ],
+                'company_info' => [
+                    'view' => FALSE,
+                    'edit' => FALSE,
+                ],
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('admin/employee_edit.html.twig', $data);
+        return $this->render('admin/employee_edit.html.twig', $data);
     }
 
-  /**
-   * Edit employee.
-   *
-   * @param int $employee_id
-   *
-   * @return void
-   */
-    public function employeeEdit(int $employee_id):void
+    /**
+     * Handles updating an existing employee with data from a POST request.
+     *
+     * - Validates the 'name' field from POST data and halts with an error if missing.
+     * - Retrieves the employee entity by its ID from the database.
+     * - Updates the employee's name with validated input.
+     * - Persists the changes to the database.
+     * - Adds a success flash message upon successful update.
+     * - Redirects to the employee details page after update.
+     *
+     * @param int $employee_id
+     *   The ID of the employee to update.
+     *
+     * @return Response
+     *   Redirects to the employee details page after update, or halts if validation fails.
+     */
+    #[Route('/admin/employee/{employee_id}/update', name: 'admin_employee_update', methods: ['POST'])]
+    public function updateEmployee(int $employee_id): Response
     {
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -315,7 +469,8 @@ class AdminController extends BaseController
 
         $this->entityManager->flush();
 
-        die('<script>location.href = "/admin/employee/' . $employee_id . '" </script>');
+        $this->addFlash('success', 'Podaci o zaposlenom su uspesno izmenjeni.');
+        return $this->redirectToRoute('admin_employee_view', ['employee_id' => $employee_id]);
     }
 
     /**
@@ -330,20 +485,61 @@ class AdminController extends BaseController
         return trim(htmlspecialchars($str));
     }
 
-    public function employeesSearch(string $term)
+    /**
+     * Searches for employees based on a search term provided in the request query.
+     *
+     * - Starts a session and checks if the user is logged in (redirects to login if not).
+     * - Retrieves the search term from the request query parameters.
+     * - Uses the Employee repository to search for employees matching the term.
+     * - Prepares data for the template, including the search results, page metadata, user role, username, stylesheet, and app version.
+     * - Renders the 'admin/table/employees_search.html.twig' template with the search results.
+     *
+     * @param Request $request
+     *   The HTTP request containing the search term in the query string.
+     *
+     * @return Response
+     *   The HTTP response with the rendered search results or a redirect to the login page.
+     */
+    #[Route('/admin/employees/search', name: 'admin_employees_search')]
+    public function employeesSearch(Request $request): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
+        $term = $request->query->get('term');
         $employees= $this->entityManager->getRepository(Employee::class)->search($term);
 
         $data = [
-          'page' => $this->page . '/employees',
-          'page_title' => $this->page_title,
-          'employees' => $employees,
+            'page' => $this->page . '/employees',
+            'page_title' => $this->page_title,
+            'employees' => $employees,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'admin' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('admin/table/employees_search.html.twig', $data);
+        return $this->render('admin/table/employees_search.html.twig', $data);
     }
 
+    /**
+     * Loads the application version from composer.json.
+     *
+     * @return string
+     *   The app version, or 'unknown' if not found.
+     */
+    private function loadAppVersion(): string
+    {
+        $composerJsonPath = __DIR__ . '/../../composer.json';
+        if (file_exists($composerJsonPath)) {
+            $composerData = json_decode(file_get_contents($composerJsonPath), true);
+            return $composerData['version'] ?? 'unknown';
+        }
+        return 'unknown';
+    }
 }

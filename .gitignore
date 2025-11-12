@@ -1,3 +1,13 @@
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
 # Ignore IDE's files and folders
 RolOffice v4.0.code-workspace
 .vscode/
@@ -11,11 +21,10 @@ RolOffice v4.0.code-workspace
 
 # Ignore LIVE enviroments files an folders
 /config/dbConfig.live.php
-web/upload/
+public/upload/
 
 # Ignore enviroments files
 /todos/
-/vendor/
 
 # Ignore .sql files
 *.sql

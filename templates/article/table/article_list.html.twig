@@ -1,5 +1,5 @@
 <!-- List Last Article -->
-<form method="get" action="/articles/price-list">
+<form method="get" action="/price-list">
     <div class="form-group row">
         <div class="col-sm-5">
             <select class="form-select form-select-sm" name="group_id">
@@ -36,7 +36,7 @@
                 <tbody>
                 {% for article_data in last_articles %}
                     <tr>
-                        <td><a href="/article/{{ article_data.getId() }}">{{ article_data.getName() }}</a></td>
+                        <td><a href="/articles/{{ article_data.getId() }}">{{ article_data.getName() }}</a></td>
                         <td class="text-center">{{ article_data.getUnit().getName() }}</td>
                         <td class="text-right">
                             {{ (article_data.getPrice() * preferences.getKurs() * (preferences.getTax() / 100 + 1))|number_format(2, ',', '.') }}

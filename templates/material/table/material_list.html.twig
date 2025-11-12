@@ -16,7 +16,7 @@
                 <tbody>
                 {% for material in materials %}
                     <tr>
-                        <td><a href="/material/{{ material.getId() }}">{{ material.getName() }}</a></td>
+                        <td><a href="/materials/{{ material.getId() }}">{{ material.getName() }}</a></td>
                         <td class="text-center">{{ material.getUnit().getName() }}</td>
                         <td class="text-right">
                             {{ (material.price * preferences.kurs * (preferences.tax / 100 + 1))|number_format(2, ',', '.') }}

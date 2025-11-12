@@ -1,24 +1,25 @@
 {% if page == 'admin/employees' or page == 'admin/employee' %}
-    {% set action = '/admin/employees/' %}
+    {% set action = 'admin/employees' %}
 {% elseif page == 'articles' or page == 'article' %}
-    {% set action = '/articles/' %}
+    {% set action = 'articles' %}
 {% elseif page == 'clients' or page == 'client' %}
-    {% set action = '/clients/' %}
+    {% set action = 'clients' %}
 {% elseif page == 'cuttings' or page == 'cutting' %}
-    {% set action = '/cuttings/' %}
+    {% set action = 'cuttings' %}
 {% elseif page == 'materials' or page == 'material' %}
-    {% set action = '/materials/' %}
+    {% set action = 'materials' %}
 {% elseif page == 'orders' or page == 'order' %}
-    {% set action = '/orders/' %}
-{% elseif page == 'pidbs' or page == 'pidb' %}
-    {% set action = '/pidbs/' %}
+    {% set action = 'orders' %}
+{% elseif page == 'documents' or page == 'document' %}
+    {% set action = 'documents' %}
 {% elseif page == 'projects' or page == 'project' %}
-    {% set action = '/projects/' %}
+    {% set action = 'projects' %}
 {% else %}
     {% set action = '/' %}
 {% endif %}
 
-<form action="{{ action }}search/"  method="get" class="d-none d-sm-inline-block form-inline mr-auto my-2 my-md-0 mw-100
+<form action="/{{ action }}/search"  method="get" class="d-none d-sm-inline-block form-inline mr-auto my-2 my-md-0
+mw-100
 navbar-search">
     <div class="input-group">
         <input type="text" class="form-control bg-light border-0" name="term" placeholder="Pretraga ..."
