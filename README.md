@@ -1,30 +1,40 @@
-# d-Office 8.3.0
+# d-Office 9.0.0
 
-Web Application
+A web application for office and project management, built with PHP 8.2 and modern libraries.
 
-## Libraries
+## Libraries & Requirements
 
-### Communication with database: Doctrine ORM 3
+- **PHP:** 8.2 or higher
+- **Database ORM:** Doctrine ORM ^3.3
+- **Frontend:** Bootstrap 5.2.3
+- **PDF Generation:** tecnickcom/tcpdf ^6.3
+- **Templating:** twig/twig ^3.0
+- **Framework Components:**
+  - symfony/http-foundation ^6.0
+  - symfony/cache ^6.0
 
-Environment requirements:
-* PHP 8.2
+## Installation
 
-Required:
-* bootstrap 5.2.3
-* doctrine/orm:^3.3
-* symfony/http-foundation:^6.0
-* symfony/cache:^6.0
-* tecnickcom/tcpdf:^6.3
-* twig/twig: ^3.0
+1. Install PHP 8.2 and Composer.
+2. Run `composer install` to install dependencies.
+3. Configure your database and environment settings in `config/`.
+4. Set up your web server to serve the `public/` directory.
 
-## Settings
+## Project Task Type Classes
 
-Project task type classes:
-* info
-* warnning
-* secondary
-* suvvedd
-* isporuka
-* yellow
-* danger
-* popravka
+The following CSS classes are used for project task types:
+
+- info
+- warning
+- secondary
+- success
+- isporuka
+- yellow
+- danger
+- popravka
+
+> Note: Some class names were corrected for spelling (e.g., `warnning` → `warning`, `suvvedd` → `success`).
+
+## License
+
+See LICENCE file for details.

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Core\BaseController;
 use App\Entity\City;
 use App\Entity\Client;
 use App\Entity\CompanyInfo;
@@ -16,6 +15,11 @@ use App\Entity\ProjectTaskNote;
 use App\Entity\ProjectTaskType;
 use App\Entity\ProjectTaskStatus;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use TCPDF;
 
 /**
@@ -23,31 +27,53 @@ use TCPDF;
  *
  * @author Dragan Jancikin <dragan.jancikin@gamil.com>
  */
-class ProjectController extends BaseController
+class ProjectController extends AbstractController
 {
 
-    private $page;
-    private $page_title;
+    private EntityManagerInterface $entityManager;
+    private string $page;
+    private string $page_title;
+    protected string $stylesheet;
+    protected string $app_version;
 
     /**
-     * ArticleController constructor.
+     * ProjectController constructor.
+     *
+     * Initializes controller properties and loads the application version.
+     *
+     * @param EntityManagerInterface $entityManager
+     *   The Doctrine entity manager for database operations.
      */
-    public function __construct() {
-        parent::__construct();
-
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
         $this->page = 'project';
         $this->page_title = 'Projekti';
+        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
+        $this->app_version = $this->loadAppVersion();
     }
 
     /**
-     * Index action.
+     * Displays the list of active and inactive projects with their associated tasks.
      *
-     * @return void
+     * - Redirects to login if the user is not authenticated.
+     * - Retrieves cities with active projects.
+     * - Fetches active and inactive projects, and for each project, gathers tasks grouped by status:
+     *   - For realization
+     *   - In realization
+     *   - Completed
+     * - Passes all relevant data to the Twig template for rendering.
+     *
+     * @return Response
+     *   The HTTP response with the rendered project index page.
      */
-    public function index(): void
+    #[Route('/projects/', name: 'project_index')]
+    public function index(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $cities = $this->entityManager->getRepository(Project::class)->getCitiesByActiveProject();
 
@@ -159,23 +185,35 @@ class ProjectController extends BaseController
             ],
             'active_projects_data' => $active_projects_data,
             'inactive_projects_data' => $inactive_projects_data,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('project/index.html.twig', $data);
+        return $this->render('project/index.html.twig', $data);
     }
 
     /**
-     * Add project form.
+     * Displays the form for creating a new project.
      *
-     * @param int $client_id
-     * @param int $acc_doc_id
+     * - Redirects to login if the user is not authenticated.
+     * - Retrieves the list of clients for selection in the form.
+     * - Optionally pre-fills the form with accounting document or client data if provided via query parameters.
+     * - Passes all relevant data to the Twig template for rendering the new project form.
      *
-     * @return void
+     * @param Request $request
+     *   The HTTP request object.
+     * @return Response
+     *   The HTTP response with the rendered new project form.
      */
-    public function projectNewForm(?int $client_id = NULL, ?int $acc_doc_id = NULL): void
+    #[Route('/projects/new', name: 'project_new')]
+    public function new(Request $request): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $clients_list = $this->entityManager->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
 
@@ -183,28 +221,51 @@ class ProjectController extends BaseController
             'page' => $this->page,
             'page_title' => $this->page_title,
             'clients_list' => $clients_list,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'project' => FALSE,
+            ],
+            'acc_doc_id' => NULL,
+            'client' => NULL,
+            'app_version' => $this->app_version,
         ];
 
+        $acc_doc_id = $request->query->get('acc_doc_id');
         if ($acc_doc_id) {
             $data['acc_doc_id'] = $acc_doc_id;
         }
 
+        $client_id = $request->query->get('client_id');
         if ($client_id) {
             $data['client'] = $this->entityManager->find(Client::class, $client_id);
         }
 
-        $this->render('project/project_new.html.twig', $data);
+        return $this->render('project/project_new.html.twig', $data);
     }
 
     /**
-     * Add project.
+     * Handles the creation of a new project from POST data.
      *
-     * @return void
+     * - Requires user authentication (session check).
+     * - Retrieves and sanitizes form data from the POST request.
+     * - Creates and persists a new Project entity with the provided data.
+     * - Optionally links the project to an accounting document if provided.
+     * - Sets the ordinal number in year for the new project.
+     * - Redirects to the project view page after successful creation.
+     *
+     * @return Response
+     *   Redirects to the project view page for the newly created project.
+     *
      * @throws \Doctrine\DBAL\Exception
+     *   If a database error occurs during project creation.
      */
-    public function add(): void
+    #[Route('/projects/create', name: 'project_create', methods: ['POST'])]
+    public function create(): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $ordinal_num_in_year = 0;
 
@@ -257,20 +318,31 @@ class ProjectController extends BaseController
                 ]);
         }
 
-        die('<script>location.href = "/project/' . $new_project_id . '" </script>');
+        return $this->redirectToRoute('project_view', ['project_id' => $new_project_id]);
     }
 
     /**
-     * Project view.
+     * Displays detailed information for a specific project.
+     *
+     * - Redirects to login if the user is not authenticated.
+     * - Retrieves the project, client, orders, accounting documents, and notes.
+     * - Gathers and groups project tasks by status (for realization, in realization, completed).
+     * - Collects files associated with the project from the upload directory.
+     * - Passes all relevant data to the Twig template for rendering the project view page.
      *
      * @param int $project_id
+     *   The ID of the project to display.
      *
-     * @return void
+     * @return Response
+     *   The HTTP response with the rendered project view page.
      */
-    public function projectViewForm(int $project_id): void
+    #[Route('/projects/{project_id}', name: 'project_view', requirements: ['project_id' => '\d+'], methods: ['GET'])]
+    public function show(int $project_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $project_data = $this->entityManager->find(Project::class, $project_id);
         $notes = $this->entityManager->getRepository(Project::class)->getNotesByProject($project_id);
@@ -413,22 +485,36 @@ class ProjectController extends BaseController
                 'view' => TRUE,
                 'edit' => FALSE,
             ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('project/project_view.html.twig', $data);
+        return $this->render('project/project_view.html.twig', $data);
     }
 
     /**
-     * Project edit form.
+     * Displays detailed information for a specific project.
+     *
+     * - Redirects to login if the user is not authenticated.
+     * - Retrieves the project, client, orders, accounting documents, and notes.
+     * - Gathers and groups project tasks by status (for realization, in realization, completed).
+     * - Collects files associated with the project from the upload directory.
+     * - Passes all relevant data to the Twig template for rendering the project view page.
      *
      * @param int $project_id
-     *
-     * @return void
+     *   The ID of the project to display.
+     * @return Response
+     *   The HTTP response with the rendered project view page.
      */
-    public function projectEditForm(int $project_id): void
+    #[Route('/projects/{project_id}/edit', name: 'project_edit_form')]
+    public function edit(int $project_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $project_data = $this->entityManager->find(Project::class, $project_id);
         $client = $this->entityManager->getRepository(Client::class)->getClientData($project_data->getClient()->getId());
@@ -447,22 +533,35 @@ class ProjectController extends BaseController
                 'project' => TRUE,
                 'view' => FALSE,
                 'edit' => TRUE,
-          ],
+            ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('project/project_edit.html.twig', $data);
+        return $this->render('project/project_edit.html.twig', $data);
     }
 
     /**
-     * Edit project.
+     * Updates an existing project's details from POST data.
+     *
+     * - Requires user authentication (session check).
+     * - Retrieves and sanitizes form data from the POST request.
+     * - Updates the Project entity with new client, title, priority, and status.
+     * - Persists changes to the database.
+     * - Redirects to the project view page after successful update.
      *
      * @param int $project_id
-     *
-     * @return void
+     *   The ID of the project to update.
+     * @return Response
+     *   Redirects to the project view page for the updated project.
      */
-    public function projectEdit(int $project_id): void
+    #[Route('/projects/{project_id}/update', name: 'project_update', methods: ['POST'])]
+    public function update(int $project_id): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $project = $this->entityManager->find(Project::class, $project_id);
 
@@ -487,19 +586,28 @@ class ProjectController extends BaseController
 
         $this->entityManager->flush();
 
-        die('<script>location.href = "/project/' . $project_id . '" </script>');
+        return $this->redirectToRoute('project_view', ['project_id' => $project_id], );
     }
 
     /**
-     * Add project task.
+     * Handles the creation of a new task for a specific project from POST data.
+     *
+     * - Requires user authentication (session check).
+     * - Retrieves and sanitizes form data from the POST request.
+     * - Creates and persists a new ProjectTask entity with the provided data.
+     * - Sets default start and end dates for the new task.
+     * - Redirects to the project view page after successful task creation.
      *
      * @param int $project_id
-     *
-     * @return void
+     *   The ID of the project to which the task will be added.
+     * @return Response
+     *   Redirects to the project view page for the associated project.
      */
-    public function taskAdd(int $project_id): void
+    #[Route('/projects/{project_id}/add-task', name: 'project_task_add', methods: ['POST'])]
+    public function createTask(int $project_id): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $project = $this->entityManager->find(Project::class, $project_id);
 
@@ -528,8 +636,7 @@ class ProjectController extends BaseController
         $this->entityManager->persist($newTask);
         $this->entityManager->flush();
 
-        // Redirect to view Project page.
-        die('<script>location.href = "/project/' . $project_id . '" </script>');
+        return $this->redirectToRoute('project_view', ['project_id' => $project_id], );
     }
 
     /**
@@ -538,12 +645,15 @@ class ProjectController extends BaseController
      * @param int $project_id
      * @param int $task_id
      *
-     * @return void
+     * @return Response
      */
-    public function taskEditForm(int $project_id, int $task_id): void
+    #[Route('/projects/{project_id}/tasks/{task_id}/edit', name: 'project_task_edit_form')]
+    public function editTask(int $project_id, int $task_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $task = $this->entityManager->find(ProjectTask::class, $task_id);
         $project = $this->entityManager->find(Project::class, $project_id);
@@ -577,24 +687,40 @@ class ProjectController extends BaseController
             'project_data' => $project_data,
             'employees_list' => $employees_list,
             'task_notes' => $task_notes,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'project' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('project/task_edit.html.twig', $data);
+        return $this->render('project/task_edit.html.twig', $data);
     }
 
     /**
-     * Edit project task.
+     * Updates an existing project task with new data from POST request.
+     *
+     * - Requires user authentication (session check).
+     * - Retrieves and sanitizes form data for task title, employee, start, and end dates.
+     * - Determines the task status based on the presence and values of start and end dates.
+     * - Updates the ProjectTask entity and persists changes to the database.
+     * - Redirects to the project view page after successful update.
      *
      * @param int $project_id
+     *   The ID of the project containing the task.
      * @param int $task_id
-     *
-     * @return void
+     *   The ID of the task to update.
+     * @return Response
+     *   Redirects to the project view page for the associated project.
      */
-    public function taskEdit(int $project_id, int $task_id): void
+    #[Route('/projects/{project_id}/tasks/{task_id}/update', name: 'project_task_update', methods: ['POST'])]
+    public function updateTask(int $project_id, int $task_id): Response
     {
         $alertEnd = NULL;
-
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
         $project = $this->entityManager->find(Project::class, $project_id);
 
         $title = htmlspecialchars($_POST["title"]);
@@ -702,18 +828,25 @@ class ProjectController extends BaseController
 
         // $db->connection->query("UPDATE project_task SET title='$title', status_id='$status_id', employee_id='$employee_id', start='$start', end='$end'  WHERE id = '$task_id' ") or die(mysqli_error($db->connection));
 
-        die('<script>location.href = "/project/' . $project_id . '" </script>');
+        return $this->redirectToRoute('project_view', ['project_id' => $project_id], );
     }
 
     /**
-     * Delete project task.
+     * Deletes a specific task from a project, including all associated task notes.
+     *
+     * - Removes all notes linked to the specified task.
+     * - Deletes the task entity from the database.
+     * - Redirects to the project view page after successful deletion.
      *
      * @param int $project_id
+     *   The ID of the project containing the task.
      * @param int $task_id
-     *
-     * @return void
+     *   The ID of the task to delete.
+     * @return Response
+     *   Redirects to the project view page for the associated project.
      */
-    public function deleteTask(int $project_id, int $task_id): void
+    #[Route('/projects/{project_id}/tasks/{task_id}/delete', name: 'project_task_delete')]
+    public function deleteTask(int $project_id, int $task_id): Response
     {
         $task = $this->entityManager->find(ProjectTask::class, $task_id);
 
@@ -731,18 +864,26 @@ class ProjectController extends BaseController
         $this->entityManager->remove($task);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/project/' . $project_id . '" </script>');
+        return $this->redirectToRoute('project_view', ['project_id' => $project_id], );
     }
 
     /**
-     * Set start date for project task.
+     * Sets the start date of a specific project task to the current date and updates its status.
+     *
+     * - Retrieves the specified task and updates its start date to now.
+     * - Sets the task status to "in realization" (status ID 2).
+     * - Persists changes to the database.
+     * - Redirects to the task edit form after updating.
      *
      * @param int $project_id
+     *   The ID of the project containing the task.
      * @param int $task_id
-     *
-     * @return void
+     *   The ID of the task to update.
+     * @return Response
+     *   Redirects to the task edit form for the updated task.
      */
-    public function setStartDate(int $project_id, int $task_id): void
+    #[Route('/projects/{project_id}/tasks/{task_id}/set-start-date', name: 'project_task_set_start_date')]
+    public function setStartDate(int $project_id, int $task_id): Response
     {
         $task = $this->entityManager->find(ProjectTask::class, $task_id);
 
@@ -754,18 +895,27 @@ class ProjectController extends BaseController
 
         $this->entityManager->flush();
 
-        die('<script>location.href = "/project/' . $project_id . '/task/' . $task_id . '/edit" </script>');
+        return $this->redirectToRoute('project_task_edit_form', ['project_id' => $project_id, 'task_id' => $task_id] );
     }
 
     /**
-     * Set end date for project task.
+     * Sets the end date of a specific project task to the current date and updates its status.
+     *
+     * - Retrieves the specified task and checks if the start date is set.
+     * - If the start date is not set, redirects back to the task edit form.
+     * - Sets the end date to now and updates the task status to "completed" (status ID 3).
+     * - Persists changes to the database.
+     * - Redirects to the task edit form after updating.
      *
      * @param int $project_id
+     *   The ID of the project containing the task.
      * @param int $task_id
-     *
-     * @return void
+     *   The ID of the task to update.
+     * @return Response
+     *   Redirects to the task edit form for the updated task.
      */
-    public function setEndDate(int $project_id, int $task_id): void
+    #[Route('/projects/{project_id}/tasks/{task_id}/set-end-date', name: 'project_task_set_end_date')]
+    public function setEndDate(int $project_id, int $task_id): Response
     {
         $task = $this->entityManager->find(ProjectTask::class, $task_id);
         $start = $task->getStartDate()->format('Y-m-d H:i:s');
@@ -783,20 +933,30 @@ class ProjectController extends BaseController
 
         $this->entityManager->flush();
 
-        die('<script>location.href = "/project/' . $project_id . '/task/' . $task_id . '/edit" </script>');
+        return $this->redirectToRoute('project_task_edit_form', ['project_id' => $project_id, 'task_id' => $task_id] );
     }
 
     /**
-     * Add project task note.
+     * Adds a new note to a specific project task from POST data.
+     *
+     * - Requires user authentication (session check).
+     * - Retrieves and sanitizes the note content from the POST request.
+     * - Creates and persists a new ProjectTaskNote entity linked to the specified task.
+     * - Sets creation and modification timestamps for the note.
+     * - Redirects to the task edit form after successful note creation.
      *
      * @param int $project_id
+     *   The ID of the project containing the task.
      * @param int $task_id
-     *
-     * @return void
+     *   The ID of the task to which the note will be added.
+     * @return Response
+     *   Redirects to the task edit form for the updated task.
      */
-    public function addTaskNote(int $project_id, int $task_id): void
+    #[Route('/projects/{project_id}/tasks/{task_id}/add-note', name: 'project_task_add_note', methods: ['POST'])]
+    public function addTaskNote(int $project_id, int $task_id): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
         $task = $this->entityManager->find(ProjectTask::class, $task_id);
 
         $note = htmlspecialchars($_POST['note']);
@@ -815,40 +975,60 @@ class ProjectController extends BaseController
         $this->entityManager->flush();
 
         // ovde link da vodi na pregled zadatka
-        die('<script>location.href = "/project/' .$project_id. '/task/' . $task_id . '/edit" </script>');
+        return $this->redirectToRoute('project_task_edit_form', ['project_id' => $project_id, 'task_id' => $task_id] );
     }
 
     /**
-     * Delete project task note.
+     * Deletes a specific note from a project task.
+     *
+     * - Removes the specified ProjectTaskNote entity from the database.
+     * - Redirects to the task edit form after successful deletion.
      *
      * @param int $project_id
+     *   The ID of the project containing the task.
      * @param int $task_id
+     *   The ID of the task containing the note.
      * @param int $note_id
-     *
-     * @return void
+     *   The ID of the note to delete.
+     * @return Response
+     *   Redirects to the task edit form for the updated task.
      */
-    public function deleteTaskNote(int $project_id, int $task_id, int $note_id): void
+    #[Route('/projects/{project_id}/tasks/{task_id}/notes/{note_id}/delete', name: 'project_task_delete_note')]
+    public function deleteTaskNote(int $project_id, int $task_id, int $note_id): Response
     {
         $task_note = $this->entityManager->find(ProjectTaskNote::class, $note_id);
 
         $this->entityManager->remove($task_note);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/project/' . $project_id . '/task/' . $task_id . '/edit" </script>');
+        return $this->redirectToRoute('project_task_edit_form', ['project_id' => $project_id, 'task_id' => $task_id] );
     }
 
     /**
-     * List of projects by city.
+     * Displays a list of projects filtered by city.
      *
-     * @param int $city_id
+     * - Redirects to login if the user is not authenticated.
+     * - Retrieves the selected city and all cities with active projects.
+     * - Fetches active projects for the specified city and groups their tasks by status:
+     *   - For realization
+     *   - In realization
+     *   - Completed
+     * - Passes all relevant data to the Twig template for rendering.
      *
-     * @return void
+     * @param Request $request
+     *   The HTTP request object containing the city filter.
+     * @return Response
+     *   The HTTP response with the rendered projects-by-city page.
      */
-    public function projectByCityView(int $city_id): void
+    #[Route('/projects/by-city', name: 'projects_by_city_view')]
+    public function projectByCityView(Request $request): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
+        $city_id = $request->query->get('city_id');
         $city = $this->entityManager->find(City::class, $city_id);
         $cities = $this->entityManager->getRepository(Project::class)->getCitiesByActiveProject();
 
@@ -920,21 +1100,37 @@ class ProjectController extends BaseController
             'city_name' => $city_name,
             'alert' => $alert,
             'active_projects_data' => $active_projects_data,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'project' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('project/projects_by_city.html.twig', $data);
+        return $this->render('project/projects_by_city.html.twig', $data);
     }
 
     /**
-     * Add project note.
+     * Adds a new note to a specific project from POST data.
+     *
+     * - Requires user authentication (session check).
+     * - Retrieves and sanitizes the note content from the POST request.
+     * - Creates and persists a new ProjectNote entity linked to the specified project.
+     * - Sets creation and modification timestamps for the note.
+     * - Redirects to the project view page after successful note creation.
      *
      * @param int $project_id
-     *
-     * @return void
+     *   The ID of the project to which the note will be added.
+     * @return Response
+     *   Redirects to the project view page for the updated project.
      */
-    public function addNote(int $project_id): void
+    #[Route('/projects/{project_id}/notes/create', name: 'project_add_note', methods: ['POST'])]
+    public function addNote(int $project_id): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
         $project = $this->entityManager->find(Project::class, $project_id);
         $note = htmlspecialchars($_POST['note']);
 
@@ -952,39 +1148,54 @@ class ProjectController extends BaseController
         $this->entityManager->persist($newProjectNote);
         $this->entityManager->flush();
 
-        // ovde link da vodi na pregled projekta
-        die('<script>location.href = "/project/' . $project_id . '" </script>');
+        return $this->redirectToRoute('project_view', ['project_id' => $project_id]);
     }
 
     /**
-     * Delete project note.
+     * Deletes a specific note from a project.
+     *
+     * - Removes the specified ProjectNote entity from the database.
+     * - Redirects to the project view page after successful deletion.
      *
      * @param int $project_id
+     *   The ID of the project containing the note.
      * @param int $note_id
-     *
-     * @return void
+     *   The ID of the note to delete.
+     * @return Response
+     *   Redirects to the project view page for the updated project.
      */
-    public function deleteNote(int $project_id, int $note_id): void
+    #[Route('/projects/{project_id}/notes/{note_id}/delete', name: 'project_delete_note')]
+    public function deleteNote(int $project_id, int $note_id): Response
     {
         $note = $this->entityManager->find(ProjectNote::class, $note_id);
 
         $this->entityManager->remove($note);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/project/' . $project_id . '" </script>');
+        return $this->redirectToRoute('project_view', ['project_id' => $project_id]);
     }
 
     /**
-     * Print project task with notes.
+     * Generates and returns a PDF document of a project with its notes.
+     *
+     * - Redirects to login if the user is not authenticated.
+     * - Retrieves company info, project, client, and project notes.
+     * - Renders the project and notes into an HTML template.
+     * - Uses TCPDF to generate a PDF from the rendered HTML.
+     * - Returns the PDF as an inline HTTP response.
      *
      * @param int $project_id
-     *
-     * @return void
+     *   The ID of the project to print.
+     * @return Response
+     *   The HTTP response containing the generated PDF document.
      */
-    public function printProjectTaskWithNotes(int $project_id): void
+    #[Route('/projects/{project_id}/print-project-with-notes', name: 'project_print_with_notes')]
+    public function printProjectTaskWithNotes(int $project_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
         $project = $this->entityManager->find(Project::class, $project_id);
@@ -1002,9 +1213,7 @@ class ProjectController extends BaseController
         ];
 
         // Render HTML content from a Twig template (or similar)
-        ob_start();
-        $this->render('project/print_project_task_with_notes.html.twig', $data);
-        $html = ob_get_clean();
+        $html = $this->renderView('project/print_project_task_with_notes.html.twig', $data);
 
         require_once '../config/packages/tcpdf_include.php';
 
@@ -1046,21 +1255,38 @@ class ProjectController extends BaseController
         // Reset pointer to the last page.
         $pdf->lastPage();
 
-        // Close and output PDF document to browser.
-        $pdf->Output('radni_nalog_' .$client['name']. '.pdf', 'I');
+        // Output PDF document to browser as a Symfony Response
+        $filename = 'radni_nalog_' . $client['name'] .'.pdf';
+        $pdfContent = $pdf->Output($filename, 'S');
+        // Remove leading __ from filename for the response
+        $cleanFilename = ltrim($filename, '_');
+        $response = new Response($pdfContent);
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'inline; filename="' . $cleanFilename . '"');
+        return $response;
     }
 
     /**
-     * Print project task.
+     * Generates and returns a PDF document for a specific project.
+     *
+     * - Redirects to login if the user is not authenticated.
+     * - Retrieves company info, project, and client data.
+     * - Renders the project details into an HTML template.
+     * - Uses TCPDF to generate a PDF from the rendered HTML.
+     * - Returns the PDF as an inline HTTP response.
      *
      * @param int $project_id
-     *
-     * @return void
+     *   The ID of the project to print.
+     * @return Response
+     *   The HTTP response containing the generated PDF document.
      */
-    public function printProjectTask(int $project_id): void
+    #[Route('/projects/{project_id}/print-project', name: 'project_print_task')]
+    public function printProjectTask(int $project_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
         $project = $this->entityManager->find(Project::class, $project_id);
@@ -1075,9 +1301,7 @@ class ProjectController extends BaseController
         ];
 
         // Render HTML content from a Twig template (or similar)
-        ob_start();
-        $this->render('project/print_project_task.html.twig', $data);
-        $html = ob_get_clean();
+        $html = $this->renderView('project/print_project_task.html.twig', $data);
 
         require_once '../config/packages/tcpdf_include.php';
 
@@ -1119,21 +1343,38 @@ class ProjectController extends BaseController
         // Reset pointer to the last page.
         $pdf->lastPage();
 
-        // Close and output PDF document to browser.
-        $pdf->Output('nalog_' . $client['name'] . '.pdf', 'I');
+        // Output PDF document to browser as a Symfony Response
+        $filename = 'nalog_' . $client['name'] .'.pdf';
+        $pdfContent = $pdf->Output($filename, 'S');
+        // Remove leading __ from filename for the response
+        $cleanFilename = ltrim($filename, '_');
+        $response = new Response($pdfContent);
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'inline; filename="' . $cleanFilename . '"');
+        return $response;
     }
 
     /**
-     * Print installation record.
+     * Generates and returns a PDF installation record for a specific project.
+     *
+     * - Redirects to login if the user is not authenticated.
+     * - Retrieves company info, project, and client data.
+     * - Renders the installation record into an HTML template.
+     * - Uses TCPDF to generate a PDF from the rendered HTML.
+     * - Returns the PDF as an inline HTTP response.
      *
      * @param int $project_id
-     *
-     * @return void
+     *   The ID of the project for which to generate the installation record.
+     * @return Response
+     *   The HTTP response containing the generated PDF document.
      */
-    public function printInstallationRecord(int $project_id):void
+    #[Route('/projects/{project_id}/print-installation-record', name: 'project_print_installation_record')]
+    public function printInstallationRecord(int $project_id):Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
         $project = $this->entityManager->find(Project::class, $project_id);
@@ -1147,17 +1388,15 @@ class ProjectController extends BaseController
             'project' => $project,
         ];
 
-        // Render HTML content from a Twig template (or similar)
-        ob_start();
-        $this->render('project/print_installation_record.html.twig', $data);
-        $html = ob_get_clean();
+        // Render HTML content from a Twig template (or similar).
+        $html = $this->renderView('project/print_installation_record.html.twig', $data);
 
         require_once '../config/packages/tcpdf_include.php';
 
-        // Create a new TCPDF object / PDF document
+        // Create a new TCPDF object / PDF document.
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-        // Set document information
+        // Set document information.
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor($company_info['name']);
         $pdf->SetTitle('Zapisnik o ugradnji (montaži)');
@@ -1186,29 +1425,45 @@ class ProjectController extends BaseController
         // Add a page.
         $pdf->AddPage();
 
-        // Write HTML content
+        // Write HTML content.
         $pdf->writeHTML($html, true, false, true, false, '');
 
         // Reset pointer to the last page.
         $pdf->lastPage();
 
-        // Close and output PDF document to browser.
-        $pdf->Output('test_name.pdf', 'I');
+        // Output PDF document to browser as a Symfony Response.
+        $filename = 'nalog_' . $client['name'] .'.pdf';
+        $pdfContent = $pdf->Output($filename, 'S');
+        // Remove leading __ from filename for the response
+        $cleanFilename = ltrim($filename, '_');
+        $response = new Response($pdfContent);
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'inline; filename="' . $cleanFilename . '"');
+        return $response;
+
     }
 
     /**
-     * Add file to project.
+     * Handles file upload and attaches the file to a specific project.
+     *
+     * - Validates the uploaded file and handles upload errors.
+     * - Creates the project upload directory if it does not exist.
+     * - Sanitizes the file name and moves the uploaded file to the project directory.
+     * - Displays error messages for upload issues or file conflicts.
+     * - Redirects to the project view page after successful upload.
      *
      * @param int $project_id
-     *
-     * @return void
+     *   The ID of the project to which the file will be attached.
+     * @return Response
+     *   Redirects to the project view page for the associated project.
      */
-    public function addFileToProject(int $project_id): void
+    #[Route('/projects/{project_id}/add-file', name: 'project_add_file', methods: ['POST'])]
+    public function addFileToProject(int $project_id): Response
     {
         if ($_FILES["file"]["error"] > 0) {
             if ($_FILES["file"]["error"] == 4) {
                 echo "Molimo izaberite fajl! <br>";
-                echo "<a href='/project/" . $project_id . "'>Povratak u projekat</a>";
+                echo "<a href='/projects/" . $project_id . "'>Povratak u projekat</a>";
             }
             elseif ($_FILES["file"]["error"] == 1) {
                 echo"Fajl koji ste izabrali je prevelik!";
@@ -1237,23 +1492,34 @@ class ProjectController extends BaseController
                 echo "jeah";
             }
 
-            die('<script>location.href = "/project/' . $project_id . '" </script>');
+            return $this->redirectToRoute('project_view', ['project_id' => $project_id]);
         }
     }
 
     /**
-     * Search for projects.
+     * Searches for projects based on a search term and displays the results.
      *
-     * @param string $term
-     *   Search term.
+     * - Redirects to login if the user is not authenticated.
+     * - Retrieves the search term from the query parameters.
+     * - Searches for projects matching the term.
+     * - Groups found projects into active and inactive based on their status.
+     * - Gathers and groups tasks for each project by status (for realization, in realization, completed).
+     * - Passes the search results and relevant data to the Twig template for rendering.
      *
-     * @return void
+     * @param Request $request
+     *   The HTTP request object containing the search term.
+     * @return Response
+     *   The HTTP response with the rendered search results page.
      */
-    public function search(string $term): void
+    #[Route('/projects/search', name: 'project_search')]
+    public function search(Request $request): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
+        $term = $request->query->get('term');
         $project_list = $this->entityManager->getRepository(Project::class)->search($term);
         $active_projects_data = [];
         foreach ($project_list as $project_item) {
@@ -1360,20 +1626,36 @@ class ProjectController extends BaseController
             'page_title' => $this->page_title,
             'active_projects_data' => $active_projects_data,
             'inactive_projects_data' => $inactive_projects_data,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'project' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('project/search.html.twig', $data);
+        return $this->render('project/search.html.twig', $data);
     }
 
     /**
-     * Advanced project search.
+     * Displays the advanced project search form and handles search queries.
      *
-     * @return void
+     * - Redirects to login if the user is not authenticated.
+     * - Retrieves search parameters (client, project title, city) from POST data.
+     * - Performs an advanced search for projects based on the provided criteria.
+     * - Passes the search results and relevant data to the Twig template for rendering.
+     *
+     * @return Response
+     *   The HTTP response with the rendered advanced search results page.
      */
-    public function advancedSearch(): void
+    #[Route('/projects/advanced-search', name: 'project_advanced_search')]
+    public function advancedSearch(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $client = $_POST["client"] ?? '';
         $project_title = $_POST["project_title"] ?? '';
@@ -1435,9 +1717,31 @@ class ProjectController extends BaseController
             'page' => $this->page,
             'page_title' => $this->page_title,
             'project_advanced_search_list_data' => $project_advanced_search_list_data,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'project' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('project/advanced_search.html.twig', $data);
+        return $this->render('project/advanced_search.html.twig', $data);
     }
 
+    /**
+     * Loads the application version from composer.json.
+     *
+     * @return string
+     *   The app version, or 'unknown' if not found.
+     */
+    private function loadAppVersion(): string
+    {
+        $composerJsonPath = __DIR__ . '/../../composer.json';
+        if (file_exists($composerJsonPath)) {
+            $composerData = json_decode(file_get_contents($composerJsonPath), true);
+            return $composerData['version'] ?? 'unknown';
+        }
+        return 'unknown';
+    }
 }

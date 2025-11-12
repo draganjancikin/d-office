@@ -108,7 +108,8 @@ class User
     }
 
     public function getRoleId() {
-        return $this->role_id;
+        // return $this->role_id;
+        return $this->role ? $this->role->getId() : null;
     }
 
     public function setCreatedAt(\DateTime $created_at) {

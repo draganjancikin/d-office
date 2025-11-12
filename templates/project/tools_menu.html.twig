@@ -18,7 +18,7 @@
             {% if tools_menu.project %}
 
                 {% if tools_menu.view %}
-                    <a href="/project/{{ project_id }}/edit">
+                    <a href="/projects/{{ project_id }}/edit">
                         <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Link ka stranici za izmenu podataka o projektu!">
                             <i class="fas fa-edit"> </i> <!-- Izmena -->
                         </button>
@@ -26,7 +26,7 @@
                 {% endif  %}
 
                 {% if tools_menu.edit %}
-                    <a href="/project/{{ project_id }}">
+                    <a href="/projects/{{ project_id }}">
                         <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Link ka stranici za pregled podataka o projektu">
                             <i class="fas fa-eye"> </i> <!-- Pregled -->
                         </button>
@@ -48,7 +48,8 @@
                 </a>
 
                 <!-- Open the proforma-invoice from project -->
-                <a href="/pidbs/new?client_id={{ project_data.getClient().getId() }}&project_id={{ project_data.getId()
+                <a href="/documents/new?client_id={{ project_data.getClient().getId() }}&project_id={{ project_data
+                .getId()
             }}">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje novog predračuna!">
                         <i class="fas fa-arrow-right"> </i> Predračun
@@ -63,7 +64,7 @@
                 </a>
 
                 <!-- Open the cutting from project -->
-                <a href="/cutting/new?client_id={{ project_data.getClient().getId() }}&project_id={{ project_data
+                <a href="/cuttings/new?client_id={{ project_data.getClient().getId() }}&project_id={{ project_data
                 .getId() }}">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Otvaranje nove krojne liste!">
                         <i class="fas fa-arrow-right"> </i> <i class="fa fa-cut"> </i>
@@ -71,7 +72,7 @@
                 </a>
 
                 <!-- Preview and printing project task -->
-                <a href="/project/{{ project_id }}/printProjectTask"
+                <a href="/projects/{{ project_id }}/print-project"
                    title="Izvoz radnog naloga u PDF [new window]"
                    target="_blank">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1">
@@ -80,7 +81,7 @@
                 </a>
 
                 <!-- Preview and printing Instalation Record (Log) -->
-                <a href="/project/{{ project_id }}/printInstallationRecord"
+                <a href="/projects/{{ project_id }}/print-installation-record"
                    title="Štampa zapisnika o ugradnji (montaži)"
                    target="_blank">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1">

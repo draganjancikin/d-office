@@ -1,0 +1,34 @@
+<!-- Modal: addTaskNote (dodaj belešku uz zadatak) -->
+<div class="modal fade" id="addTaskNote" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Beleška uz zadatak</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form action="/projects/{{ project_id }}/tasks/{{ task_id }}/add-note"
+                  method="post" >
+
+                <div class="modal-body">
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control form-control-sm" name="note" value=""
+                                   placeholder="Upišite belešku" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <i class="fas fa-save"> </i> Snimi belešku
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

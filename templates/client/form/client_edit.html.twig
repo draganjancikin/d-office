@@ -7,7 +7,7 @@
     </div>
 
     <div class="card-body px-2">
-        <form action="/client/{{ client.id }}/edit " method="post">
+        <form action="/clients/{{ client.id }}/edit " method="post">
             <input type="hidden" name="client_id" value="<?php echo $client_id ?>">
             <input type="hidden" name="type_id" value="<?php echo $client['type_id'] ?>">
 
@@ -117,7 +117,7 @@
                 </div>
                 <div class="col-sm-7">
                     <input class="form-control form-control-sm" id="inputNum" type="text" name="address_note"
-                           value="{{ cllient.address_note }}"
+                           value="{{ client.address_note }}"
                          title="Beleška uz adresu klijenta">
                 </div>
             </div>
@@ -143,7 +143,7 @@
     <div class="card-footer px-2">
         <p class="h5">Kontakti</p>
         {% for contact in client.contacts %}
-            <form action="/client/{{ client.id }}/contact/{{ contact.id }}/editContact"
+            <form action="/clients/{{ client.id }}/contacts/{{ contact.id }}/update"
                   method="post">
 
                 <div class="row mb-2">
@@ -171,7 +171,7 @@
                           <i class="fas fa-save"></i>
                         </button>
                         <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete kontakt?');"
-                           href="/client/{{ client.id }}/contact/{{ contact.id }}/removeContact"
+                           href="/clients/{{ client.id }}/contacts/{{ contact.id }}/delete"
                            class="btn btn-danger btn-sm "
                            title="Obriši kontakt!">
                           <i class="fas fa-trash"></i>

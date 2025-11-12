@@ -8,7 +8,7 @@
             </div>
 
             <div class="card-body p-2">
-                <form action="/projects/add" method="post">
+                <form action="/projects/create" method="post">
 
                     {% if acc_doc_id %}
                       <input type="hidden" name="acc_doc_id" value="{{ acc_doc_id }}">
@@ -35,7 +35,7 @@
                         <label for="selectClient" class="col-sm-3 col-lg-2 col-form-label text-sm-right">Klijent: </label>
                         <div class="col-sm-9">
                             <select id="selectClient" name="client_id" class="form-select form-select-sm" required>
-                                {% if client.id %}
+                                {% if client %}
                                     <option value="{{ client.id }}">{{ client.name }}</option>
                                 {% else %}
                                     <option value="">Izaberi klijenta</option>

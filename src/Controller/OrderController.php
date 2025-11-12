@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Core\BaseController;
 use App\Entity\Client;
 use App\Entity\CompanyInfo;
 use App\Entity\Material;
@@ -13,6 +12,13 @@ use App\Entity\OrderMaterialProperty;
 use App\Entity\Preferences;
 use App\Entity\Project;
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use TCPDF;
 
 /**
@@ -20,31 +26,45 @@ use TCPDF;
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class OrderController extends BaseController
+class OrderController extends AbstractController
 {
 
-    private $page;
-    private $page_title;
+    private EntityManagerInterface $entityManager;
+    private string $page;
+    private string $page_title;
+    protected string $stylesheet;
+    protected string $app_version;
 
     /**
      * OrderController constructor.
      */
-    public function __construct() {
-        parent::__construct();
-
+    public function __construct(EntityManagerInterface $entityManager) {
+        $this->entityManager = $entityManager;
         $this->page = 'order';
         $this->page_title = 'Narudžbenice';
+        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
+        $this->app_version = $this->loadAppVersion();
     }
 
     /**
-     * Index action.
+     * Displays the list of recent orders and related data.
      *
-     * @return void
+     * - Requires user to be logged in (checks $_SESSION['username']).
+     * - Fetches the 10 most recent materials, preferences, and orders.
+     * - For each order, collects ID, title, date, status, ordinal number, supplier name, archive status, and project (if any).
+     * - Prepares order status classes for display.
+     * - Passes all data to the 'order/index.html.twig' template for rendering.
+     *
+     * @return Response
+     *   Renders the orders index page with all relevant data.
      */
-    public function index(): void
+    #[Route('/orders/', name: 'orders_index', methods: ['GET'])]
+    public function index(): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $materials = $this->entityManager->getRepository(Material::class)->getLastMaterials(10);
         $preferences = $this->entityManager->find(Preferences::class, 1);
@@ -97,25 +117,43 @@ class OrderController extends BaseController
                 'order' => FALSE,
             ],
             'order_status_classes' => $order_status_classes,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('order/index.html.twig', $data);
+        return $this->render('order/index.html.twig', $data);
     }
 
     /**
-     * Form for adding a new order.
+     * Displays the form for adding a new order.
      *
-     * @param int $project_id
+     * @param int|null $project_id
+     *   Optional project ID to pre-fill project data in the form.
      *
-     * @return void
+     * - Requires user to be logged in (checks $_SESSION['username']).
+     * - Fetches all suppliers and projects for selection in the form.
+     * - If a project_id is provided, fetches the corresponding project data.
+     * - Passes all data to the 'order/order_new.html.twig' template for rendering.
+     *
+     * @return Response
+     *   Renders the new order form page with all relevant data.
      */
-    public function orderNewForm(?int $project_id = NULL): void
+    #[Route('/orders/new/{project_id?}', name: 'order_new_form', methods: ['GET'])]
+    public function new(?int $project_id = NULL): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $suppliers = $this->entityManager->getRepository(Client::class)->findBy(['is_supplier' => 1], ['name' => 'ASC']);
         $projects = $this->entityManager->getRepository(Project::class)->findAll();
+
+        if (isset($_GET['project_id'])) {
+            $project_id = (int) htmlspecialchars($_GET['project_id']);
+        }
 
         $project_data = NULL;
         if (NULL != $project_id) {
@@ -128,19 +166,41 @@ class OrderController extends BaseController
             'suppliers' => $suppliers,
             'projects' => $projects,
             'project_data' => $project_data,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            "tools_menu" => [
+                'order' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('order/order_new.html.twig', $data);
+        return $this->render('order/order_new.html.twig', $data);
     }
 
     /**
-     * Add a new Order.
+     * Handles creation of a new order from POST data.
      *
-     * @return void
+     * - Requires user to be logged in (checks $_SESSION['user_id']).
+     * - Expects the following POST parameters:
+     *   - supplier_id (int): The ID of the supplier for the order. Required.
+     *   - title (string): The title of the order. Required.
+     *   - note (string): Optional note for the order.
+     *   - project_id (int, optional): If provided, associates the order with a project.
+     *
+     * - Creates a new Order entity, sets its fields, and persists it to the database.
+     * - Sets the ordinal number in year for the new order.
+     * - If a project is specified, associates the order with the project.
+     * - Redirects to the order details page after creation.
+     *
+     * @return Response
+     *   Redirects to the order details page for the newly created order.
      */
-    public function orderAdd(): void
+    #[Route('/orders/create', name: 'order_create', methods: ['POST'])]
+    public function create(): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $ordinal_num_in_year = 0;
 
@@ -182,21 +242,31 @@ class OrderController extends BaseController
             $project->getOrders()->add($newOrder);
             $this->entityManager->flush();
         }
-
-        die('<script>location.href = "/order/' . $new_order_id . '" </script>');
+        return $this->redirectToRoute('order_show', ['order_id' => $new_order_id]);
     }
 
     /**
-     * View order form.
+     * Displays the details of a specific order.
      *
      * @param int $order_id
+     *   The ID of the order to display.
      *
-     * @return void
+     * - Requires user to be logged in (checks $_SESSION['username']).
+     * - Fetches the order, related project, supplier, supplier contacts, and materials.
+     * - Retrieves preferences and currency exchange rate.
+     * - Calculates order material data, tax base, tax amount, and totals in RSD and EUR.
+     * - Passes all relevant data to the 'order/order_view.html.twig' template for rendering.
+     *
+     * @return Response
+     *   Renders the order details page with all relevant data.
      */
-    public function orderViewForm(int $order_id): void
+    #[Route('/orders/{order_id}', name: 'order_show', requirements: ['order_id' => '\d+'], methods: ['GET'])]
+    public function show(int $order_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $order_data = $this->entityManager->find(Order::class, $order_id);
 
@@ -234,22 +304,38 @@ class OrderController extends BaseController
             'total_tax_amount_rsd' => $total_tax_amount_rsd,
             'total_rsd' => $total_rsd,
             'total_eur' => $total_rsd / $kurs,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('order/order_view.html.twig', $data);
+        return $this->render('order/order_view.html.twig', $data);
     }
 
     /**
-     * Edit Order form.
+     * Displays the form for editing an existing order.
      *
      * @param int $order_id
+     *   The ID of the order to edit.
      *
-     * @return void
+     * - Requires user to be logged in (checks $_SESSION['username']).
+     * - Fetches the order, related supplier, supplier contacts, project, and materials.
+     * - Retrieves preferences and currency exchange rate.
+     * - Calculates order material data, tax base, tax amount, and totals in RSD and EUR.
+     * - Fetches the list of all active projects for selection.
+     * - Passes all relevant data to the 'order/order_edit.html.twig' template for rendering.
+     *
+     * @return Response
+     *   Renders the order edit form page with all relevant data.
      */
-    public function orderEditForm(int $order_id): void
+    #[Route('/orders/{order_id}/edit', name: 'order_edit_form', methods: ['GET'])]
+    public function edit(int $order_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $order_data = $this->entityManager->find(Order::class, $order_id);
         $supplier_data = $this->entityManager->getRepository(Client::class)->getClientData($order_data->getSupplier());
@@ -291,21 +377,42 @@ class OrderController extends BaseController
             'total_rsd' => $total_rsd,
             'total_eur' => $total_rsd / $kurs,
             'project_list' => $project_list,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('order/order_edit.html.twig', $data);
+        return $this->render('order/order_edit.html.twig', $data);
     }
 
     /**
-     * Edit Order.
+     * Updates an existing order with data from a POST request.
      *
      * @param int $order_id
+     *   The ID of the order to update.
      *
-     * @return void
+     * - Requires user to be logged in (checks $_SESSION['user_id']).
+     * - Expects the following POST parameters:
+     *   - title (string): The updated title of the order. Required.
+     *   - status (int): The updated status of the order. Required.
+     *   - is_archived (int, optional): Whether the order is archived (1 or 0).
+     *   - note (string): Optional note for the order.
+     *   - project_id (int, optional): The new project ID to associate with the order.
+     *   - old_project_id (int, optional): The previous project ID for project reassignment logic.
+     *
+     * - Updates the order entity and persists changes to the database.
+     * - If the project association changes, updates the order's project relationship accordingly.
+     * - Redirects to the order details page after updating.
+     *
+     * @return Response
+     *   Redirects to the order details page for the updated order.
      */
-    public function orderEdit(int $order_id): void
+    #[Route('/orders/{order_id}/update', name: 'order_update', methods: ['POST'])]
+    public function update(int $order_id): Response
     {
-        $user = $this->entityManager->find(User::class, $this->user_id);
+        session_start();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
         $order = $this->entityManager->find(Order::class, $order_id);
 
         $title = htmlspecialchars($_POST["title"]);
@@ -347,17 +454,26 @@ class OrderController extends BaseController
                 $this->entityManager->flush();
             }
         }
-        die('<script>location.href = "/order/' . $order_id . '" </script>');
+
+        return $this->redirectToRoute('order_show', ['order_id' => $order_id]);
     }
 
     /**
-     * Delete Order.
+     * Deletes an order and all its associated materials and material properties.
+     *
+     * - Checks if the order exists for the given order_id.
+     * - If the order has materials, removes all associated material properties and materials from the database.
+     * - Removes the order itself from the database.
+     * - Redirects to the order search page after deletion.
      *
      * @param int $order_id
+     *   The ID of the order to delete.
      *
-     * @return void
+     * @return Response
+     *   Redirects to the order search page after deletion.
      */
-    public function orderDelete(int $order_id): void
+    #[Route('/orders/{order_id}/delete', name: 'order_delete', methods: ['GET'])]
+    public function delete(int $order_id): Response
     {
         // Check if exist Order.
         if ($order = $this->entityManager->find(Order::class, $order_id)) {
@@ -365,10 +481,10 @@ class OrderController extends BaseController
             // Check if exist Materials in Order.
             if ($order_materials = $this->entityManager->getRepository(OrderMaterial::class)->getOrderMaterials($order_id)) {
 
-                // Loop trough all materials
+                // Loop trough all materials.
                 foreach ($order_materials as $order_material) {
 
-                    // Check if exist Properties in Order Material
+                    // Check if exist Properties in Order Material.
                     if (
                       $order_material_properties = $this->entityManager
                         ->getRepository(OrderMaterialProperty::class)
@@ -390,23 +506,37 @@ class OrderController extends BaseController
 
             }
 
-            // Remove Order
+            // Remove Order.
             $this->entityManager->remove($order);
             $this->entityManager->flush();
 
         }
 
-        die('<script>location.href = "/orders/?search=" </script>');
+        return $this->redirectToRoute('order_search', ['term' => '']);
     }
 
     /**
-     * Add Material to Order.
+     * Adds a material to an order.
      *
      * @param int $order_id
+     *   The ID of the order to which the material will be added.
      *
-     * @return void
+     * Expects the following POST parameters:
+     *   - material_id (int): The ID of the material to add. Required.
+     *   - pieces (int, optional): The number of pieces to add. Defaults to 0 if not provided.
+     *   - note (string, optional): An optional note for the order material.
+     *
+     * - Fetches the order and material entities.
+     * - Uses the material's price and weight, and the default tax from preferences.
+     * - Creates a new OrderMaterial entity and persists it.
+     * - For each property of the material, creates a corresponding OrderMaterialProperty with quantity 0.
+     * - Redirects to the order edit form after adding the material.
+     *
+     * @return Response
+     *   Redirects to the order edit form for the order.
      */
-    public function addMaterial(int $order_id): void
+    #[Route('/orders/{order_id}/add-material', name: 'order_add_material', methods: ['POST'])]
+    public function addMaterial(int $order_id): Response
     {
         $order = $this->entityManager->find(Order::class, $order_id);
 
@@ -454,17 +584,35 @@ class OrderController extends BaseController
             $this->entityManager->flush();
         }
 
-        die('<script>location.href = "/order/' . $order_id . '/edit" </script>');
+        return $this->redirectToRoute('order_edit_form', ['order_id' => $order_id]);
     }
 
     /**
-     * Edit Material in Order.
+     * Updates a material in an order with new data from a POST request.
      *
      * @param int $order_id
+     *   The ID of the order containing the material.
      * @param int $order_material_id
-     * @return void
+     *   The ID of the material in the order to update.
+     *
+     * Expects the following POST parameters:
+     *   - material_id (int): The new material ID to set (if changed).
+     *   - note (string, optional): Note for the order material.
+     *   - pieces (int, optional): Number of pieces.
+     *   - price (float|string, optional): Price for the material.
+     *   - discount (float|string, optional): Discount for the material.
+     *   - [property_name] (float|string, optional): For each property, the new quantity value.
+     *
+     * - If the material is changed, removes old properties, sets new material, and adds new properties with quantity 0.
+     * - If the material is not changed, updates note, pieces, price, discount, and property quantities.
+     * - Redirects to the order edit form after updating.
+     *
+     * @return Response
+     *   Redirects to the order edit form for the order.
      */
-    public function editMaterial(int $order_id, int $order_material_id): void
+    #[Route('/orders/{order_id}/materials/{order_material_id}/update', name: 'order_material_update', methods:
+      ['POST'])]
+    public function updateMaterial(int $order_id, int $order_material_id): Response
     {
         // Old material on Order.
         $old_material = $this->entityManager->find(OrderMaterial::class, $order_material_id);
@@ -580,21 +728,32 @@ class OrderController extends BaseController
             }
         }
 
-        die('<script>location.href = "/order/' . $order_id . '/edit" </script>');
+        return $this->redirectToRoute('order_edit_form', ['order_id' => $order_id]);
     }
 
     /**
-     * Edit Material form.
+     * Displays the form for changing a material in an order.
      *
      * @param int $order_id
+     *   The ID of the order containing the material.
      * @param int $order_material_id
+     *   The ID of the material in the order to change.
      *
-     * @return void
+     * - Requires user to be logged in (checks $_SESSION['username']).
+     * - Fetches the order, the specific material in the order, and all materials available from the order's supplier.
+     * - Passes all relevant data to the 'order/material_in_order_change.html.twig' template for rendering.
+     *
+     * @return Response
+     *   Renders the material change form for the order.
      */
-    public function editMaterialForm(int $order_id, int $order_material_id): void
+    #[Route('/orders/{order_id}/material/{order_material_id}/change', name: 'order_material_change_form', methods:
+      ['GET'])]
+    public function changeMaterial(int $order_id, int $order_material_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $material_on_order_id = $order_material_id;
         $material_data = $this->entityManager->find(OrderMaterial::class, $material_on_order_id);
@@ -609,21 +768,36 @@ class OrderController extends BaseController
             'material_data' => $material_data,
             'materials_by_supplier' => $materials_by_supplier,
             'order_data' => $order_data,
-
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'order' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-      $this->render('order/material_in_order_change.html.twig', $data);
+        return $this->render('order/material_in_order_change.html.twig', $data);
     }
 
     /**
-     * Delete Material from Order.
+     * Deletes a material from an order, including its associated properties.
      *
      * @param int $order_id
+     *   The ID of the order from which the material will be deleted.
      * @param int $order_material_id
+     *   The ID of the material in the order to delete.
      *
-     * @return void
+     * - Removes all properties associated with the order material from the database.
+     * - Removes the order material itself from the database.
+     * - Redirects to the order edit form after deletion.
+     *
+     * @return Response
+     *   Redirects to the order edit form for the order.
      */
-    public function deleteMaterial(int $order_id, int $order_material_id): void
+    #[Route('/orders/{order_id}/materials/{order_material_id}/delete', name: 'order_material_delete', methods:
+      ['GET'])]
+    public function deleteMaterial(int $order_id, int $order_material_id): Response
     {
         $order_material = $this->entityManager->find(OrderMaterial::class, $order_material_id);
 
@@ -643,18 +817,29 @@ class OrderController extends BaseController
         $this->entityManager->remove($order_material);
         $this->entityManager->flush();
 
-        die('<script>location.href = "/order/' . $order_id . '" </script>');
+        return $this->redirectToRoute('order_edit_form', ['order_id' => $order_id]);
     }
 
     /**
-     * Duplicate Material on Order.
+     * Duplicates a material in an order, including its properties.
      *
      * @param int $order_id
+     *   The ID of the order in which to duplicate the material.
      * @param int $order_material_id
+     *   The ID of the material in the order to duplicate.
      *
-     * @return void
+     * - Creates a new OrderMaterial entity with the same order, material, pieces, price, tax, weight, and note as the original.
+     * - Sets discount to 0 for the duplicated material.
+     * - Duplicates all properties from the original OrderMaterial, setting their quantity to 0 in the new entity.
+     * - Persists the new OrderMaterial and its properties to the database.
+     * - Redirects to the order edit form after duplication.
+     *
+     * @return Response
+     *   Redirects to the order edit form for the order.
      */
-    public function duplicateMaterial(int $order_id, int $order_material_id): void
+    #[Route('/orders/{order_id}/materials/{order_material_id}/duplicate', name: 'order_material_duplicate', methods:
+      ['GET'])]
+    public function duplicateMaterial(int $order_id, int $order_material_id): Response
     {
         $orderMaterial = $this->entityManager->find(OrderMaterial::class, $order_material_id);
 
@@ -688,20 +873,33 @@ class OrderController extends BaseController
             $this->entityManager->flush();
         }
 
-        die('<script>location.href = "/order/' . $order_id . '/edit" </script>');
+        return $this->redirectToRoute('order_edit_form', ['order_id' => $order_id]);
     }
 
     /**
-     * Print Order.
+     * Generates and returns a PDF document for the specified order.
+     *
+     * - Requires user to be logged in (checks $_SESSION['username']).
+     * - Fetches company info, order data, supplier data, and materials on the order.
+     * - Renders the order data as HTML using the 'order/print.html.twig' template.
+     * - Uses TCPDF to generate a PDF from the rendered HTML.
+     * - Sets PDF metadata (author, title, subject, keywords) based on company and order info.
+     * - Attempts to save the PDF to a supplier-specific folder on the local machine if it exists; otherwise, returns the PDF as a download.
+     * - Sets appropriate HTTP headers for PDF output.
      *
      * @param int $order_id
+     *   The ID of the order to print.
      *
-     * @return void
+     * @return Response
+     *   Returns a PDF file as an HTTP response, either inline or as a download, depending on folder availability.
      */
-    public function print(int $order_id): void
+    #[Route('/orders/{order_id}/print', name: 'order_print', methods: ['GET'])]
+    public function print(int $order_id): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
 
         $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
 
@@ -720,9 +918,7 @@ class OrderController extends BaseController
         ];
 
         // Render HTML content from a Twig template (or similar)
-        ob_start();
-        $this->render('order/print.html.twig', $data);
-        $html = ob_get_clean();
+        $html = $this->renderView('order/print.html.twig', $data);
 
         require_once '../config/packages/tcpdf_include.php';
 
@@ -812,12 +1008,18 @@ class OrderController extends BaseController
         // Check if folder exist on local machine.
         if (is_dir($root . '/' . $folder)) {
             // Close and output PDF document and save PDF to "$root.$folder./" .
-            $pdf->Output($root . '/' . $folder . '/' . $file_name, 'FI');
+            $pdfContent = $pdf->Output($root . '/' . $folder . '/' . $file_name, 'FS');
         }
         else {
             // Close and output PDF document.
-            $pdf->Output($file_name, 'I');
+            $pdfContent = $pdf->Output($file_name, 'S');
         }
+        // Remove leading __ from filename for the response
+        $cleanFilename = ltrim($file_name, '_');
+        $response = new Response($pdfContent);
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'inline; filename="' . $cleanFilename . '"');
+        return $response;
     }
 
     /**
@@ -919,17 +1121,30 @@ class OrderController extends BaseController
     }
 
     /**
-     * Search for orders.
+     * Searches for orders and archived orders by a search term.
      *
-     * @param string $term
-     *   Search term.
+     * - Requires user to be logged in (checks $_SESSION['username']).
+     * - Accepts a 'term' query parameter from the request (string, optional).
+     * - Searches both active and archived orders using the repository's search method.
+     * - For each order, collects ID, ordinal number, title, supplier name, date, status, archive status, project, and whether it is the last order.
+     * - Prepares order status classes for display.
+     * - Passes all data to the 'order/search.html.twig' template for rendering.
      *
-     * @return void
+     * @param Request $request
+     *   The HTTP request object containing the search term as a query parameter.
+     *
+     * @return Response
+     *   Renders the search results page with all relevant data.
      */
-    public function search(string $term): void
+    #[Route('/orders/search', name: 'order_search', methods: ['GET'])]
+    public function search(Request $request): Response
     {
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $term = htmlspecialchars($request->query->get('term', ''));
 
         $orders = $this->entityManager->getRepository(Order::class)->search($term, 0);
         $orders_data = [];
@@ -991,9 +1206,31 @@ class OrderController extends BaseController
             'orders_data' => $orders_data,
             'orders_archived_data' => $orders_archived_data,
             'order_status_classes' => $order_status_classes,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            "tools_menu" => [
+              'order' => FALSE,
+            ],
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('order/search.html.twig', $data);
+        return $this->render('order/search.html.twig', $data);
     }
 
+    /**
+     * Loads the application version from composer.json.
+     *
+     * @return string
+     *   The app version, or 'unknown' if not found.
+     */
+    private function loadAppVersion(): string
+    {
+        $composerJsonPath = __DIR__ . '/../../composer.json';
+        if (file_exists($composerJsonPath)) {
+            $composerData = json_decode(file_get_contents($composerJsonPath), true);
+            return $composerData['version'] ?? 'unknown';
+        }
+        return 'unknown';
+    }
 }

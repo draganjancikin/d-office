@@ -20,14 +20,14 @@
         <div id="klijenti" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="/clients/">Klijenti</a>
-                <a class="collapse-item" href="/client/new"><i class="fas fa-plus"></i> Novi klijent</a>
-                <a class="collapse-item" href="/clients/advancedSearch">
+                <a class="collapse-item" href="/clients/new"><i class="fas fa-plus"></i> Novi klijent</a>
+                <a class="collapse-item" href="/clients/advanced-search">
                     <i class="fas fa-search"></i> Detaljna pretraga
                 </a>
                 <hr class="sidebar-divider">
-                <a class="collapse-item" href="/clients/newCountry"><i class="fas fa-plus"></i> Dodaj državu</a>
-                <a class="collapse-item" href="/clients/newCity"><i class="fas fa-plus"></i> Dodaj naselje</a>
-                <a class="collapse-item" href="/clients/newStreet"><i class="fas fa-plus"></i> Dodaj ulicu</a>
+                <a class="collapse-item" href="/countries/new"><i class="fas fa-plus"></i> Dodaj državu</a>
+                <a class="collapse-item" href="/cities/new"><i class="fas fa-plus"></i> Dodaj naselje</a>
+                <a class="collapse-item" href="/streets/new"><i class="fas fa-plus"></i> Dodaj ulicu</a>
             </div>
         </div>
     </li>
@@ -40,11 +40,11 @@
         </a>
         <div id="knjigovodstvo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="/pidbs/">Knjigovodstvo</a>
-                <a class="collapse-item" href="/pidbs/transactions">Transakcije</a>
-                <a class="collapse-item" href="/pidbs/cashRegister">Kasa</a>
-                <a class="collapse-item" href="/pidbs/new"><i class="fas fa-plus"></i> Novi dokument</a>
-                <a class="collapse-item" href="/pidbs/preferences"><i class="fas fa-cog"></i> Podešavanja</a>
+                <a class="collapse-item" href="/documents/">Knjigovodstvo</a>
+                <a class="collapse-item" href="/documents/transactions">Transakcije</a>
+                <a class="collapse-item" href="/documents/cash-register">Kasa</a>
+                <a class="collapse-item" href="/documents/new"><i class="fas fa-plus"></i> Novi dokument</a>
+                <a class="collapse-item" href="/documents/preferences"><i class="fas fa-cog"></i> Podešavanja</a>
             </div>
         </div>
     </li>
@@ -58,7 +58,7 @@
         <div id="krojne-liste" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="/cuttings/">Krojne liste</a>
-                <a class="collapse-item" href="/cutting/new"><i class="fas fa-plus"></i> Nova krojna lista</a>
+                <a class="collapse-item" href="/cuttings/new"><i class="fas fa-plus"></i> Nova krojna lista</a>
             </div>
         </div>
     </li>
@@ -102,8 +102,8 @@
                 <a class="collapse-item" href="/articles/">Proizvodi</a>
                 <a class="collapse-item" href="/articles/new"><i class="fas fa-plus"></i> Novi proizvod</a>
                 {% if user_role_id == 1 %}
-                    <a class="collapse-item" href="/articles/groups">Grupe proizvoda</a>
-                    <a class="collapse-item" href="/articles/groups/new">
+                    <a class="collapse-item" href="/groups">Grupe proizvoda</a>
+                    <a class="collapse-item" href="/groups/new">
                         <i class="fas fa-plus"></i> Nova grupa proizvoda
                     </a>
                 {%  endif %}
@@ -121,7 +121,8 @@
         <div id="admin" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="/admin/">Admin</a>
-                <a class="collapse-item" href="/admin/base-backup"><i class="fas fa-download"></i> Bekap baze</a>
+                <a class="collapse-item" href="/admin/backup-database"><i class="fas fa-download"></i> Backup
+                    baze</a>
                 <a class="collapse-item" href="/admin/company-info"><i class="fas fa-info"></i> Company info</a>
                 <hr class="sidebar-divider">
                 <a class="collapse-item" href="/admin/employees"><i class="fas fa-user"></i> Zaposleni</a>
@@ -141,7 +142,8 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="/projects/">Projekti</a>
                 <a class="collapse-item" href="/projects/new"><i class="fas fa-plus"></i> Novi Projekat</a>
-                <a class="collapse-item" href="/projects/advancedSearch"><i class="fa fa-search"></i> Detajna pretraga</a>
+                <a class="collapse-item" href="/projects/advanced-search"><i class="fa fa-search"></i> Detajna
+                    pretraga</a>
                 {% if user_role_id == 1 %}
                     <a class="collapse-item" href="/projects/tasks"><i class="fa fa-tasks"></i>
                         Projektni zadaci</a>

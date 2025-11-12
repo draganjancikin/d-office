@@ -9,7 +9,7 @@
             {% if tools_menu.material %}
 
                 {% if tools_menu.view %}
-                    <a href="/material/{{ material.id }}/edit">
+                    <a href="/materials/{{ material.id }}/edit">
                         <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za izmenu podataka o materijalu!">
                             <i class="fas fa-edit"> </i> Izmena
                         </button>
@@ -17,7 +17,7 @@
                 {% endif  %}
 
                 {% if tools_menu.edit %}
-                    <a href="/material/{{ material.id }}">
+                    <a href="/materials/{{ material.id }}">
                         <button type="button" class="btn btn-sm btn-outline-secondary mx-1" title="Idi na stranicu za pregled podataka o materijalu!">
                             <i class="fas fa-eye"> </i> Pregled
                         </button>

@@ -6,7 +6,7 @@
     </div>
 
     <div class="card-body p-2">
-        <form action="/article/{{ article_id }}/edit" method="post">
+        <form action="/articles/{{ article_id }}/update" method="post">
 
             <div class="row mb-2">
                 <label for="selectGroup" class="col-sm-3 col-lg-2 col-form-label text-right">Grupa proizvoda:</label>
@@ -111,8 +111,8 @@
                         </select>
                     </div>
                     <div class="col-sm-2">
-                        <a onClick="javascript: return confirm('Da li ste sigurni da želite da obrišete osobinu proizvoda?')"
-                           href="/article/{{ article_id }}/property/{{ article_property.getId() }}/delete"
+                        <a onClick="return confirm('Da li ste sigurni da želite da obrišete osobinu proizvoda?')"
+                           href="/articles/{{ article_id }}/properties/{{ article_property.getId() }}/delete"
                            class="btn btn-sm btn-danger">
                           <i class="fas fa-trash-alt"> </i>
                         </a>

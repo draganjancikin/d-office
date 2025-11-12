@@ -80,17 +80,18 @@ class AccountingDocumentRepository extends EntityRepository {
     }
 
     /**
-     * Methot that return avans income by AccountingDocument
+     * Method that return advance payment by AccountingDocument.
      *
-     * @param int $accd_id
-     *  AccountingDocument ID
+     * @param int $document_id
+     *   AccountingDocument ID
      *
      * @return float
      */
-    public function getAvans($accd_id) {
+    public function getAvans(int $document_id): float
+    {
         // Get all payment for $accd_id where payment type = 1 or 2 (avans gotovinski, avans virmanski).
         $avans = 0;
-        $payments = $this->getEntityManager()->find('\App\Entity\AccountingDocument', $accd_id)->getPayments();
+        $payments = $this->getEntityManager()->find('\App\Entity\AccountingDocument', $document_id)->getPayments();
         foreach ($payments as $payment) {
             if ($payment->getType()->getId() == 1 || $payment->getType()->getId() == 2) {
                 // Sabrati sve avanse.

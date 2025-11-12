@@ -30,7 +30,7 @@
                 {% endif %}
             </h6>
             <!-- povratak na pregled projekta -->
-            <a href="/project/{{ project_id }}">
+            <a href="/projects/{{ project_id }}">
                 <button type="button" class="btn btn-sm btn-light float-right" title="Povratak na pregled projekta!">
                     <i class="fas fa-reply"></i>
                 </button>
@@ -41,7 +41,7 @@
 
         <div class="card-body p-2">
 
-            <form action="/project/{{ project_id }}/task/{{ task_id }}/edit"
+            <form action="/projects/{{ project_id }}/tasks/{{ task_id }}/update"
                   method="post">
 
                 <div class="row mb-2">
@@ -57,7 +57,7 @@
                     <label for="inputStart" class="col-sm-3 col-lg-2 col-form-label text-right">Start: </label>
                     <div class="col-sm-4">
                         {% if task.getStartDate|date('Y-m-d H:i:s') == '1970-01-01 00:00:00' %}
-                            <a href="/project/{{ project_id }}/task/{{ task_id }}/setStartDate">
+                            <a href="/projects/{{ project_id }}/tasks/{{ task_id }}/set-start-date">
                                 <button type="button" class="btn btn-sm btn-secondary" title="Postavi početak realizacije zadatka!">
                                     <i class="fa fa-hand-pointer-o"></i>
                                     Postavi datum
@@ -95,7 +95,7 @@
                     <label class="col-sm-3 col-lg-2 col-form-label text-right">End: </label>
                     <div class="col-sm-4">
                         {% if task.getEndDate|date('Y-m-d H:i:s') == '1970-01-01 00:00:00' %}
-                        <a href="/project/{{ project_id }}/task/{{ task_id }}/setEndDate">
+                        <a href="/projects/{{ project_id }}/tasks/{{ task_id }}/set-end-date">
                             <button type="button" class="btn btn-sm btn-secondary" title="Postavi kraj realizacije zadatka!">
                                 <i class="fa fa-hand-pointer-o"></i>
                                 Postavi datum
@@ -156,8 +156,10 @@
                         </td>
                         {% if user_role_id == 1 %}
                             <td>
-                                <!-- ovaj link treba da obriše belešku uz zadatak -->
-                                <a href="/project/{{ project_id }}/task/{{ task_id }}/note/{{ task_note.getId() }}/delete">
+                                <a onclick="return confirm('Da li ste sigurni da želite da obrišete ovu belešku?');"
+                                   title="Obriši belešku uz zadatak!"
+                                   href="/projects/{{ project_id }}/tasks/{{ task_id }}/notes/{{ task_note.getId()
+                                }}/delete">
                                     <i class="fas fa-trash-alt"></i>
                                 </a>
                             </td>

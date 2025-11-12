@@ -2,37 +2,57 @@
 
 namespace App\Controller;
 
-use App\Core\BaseController;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * HomeController class.
  *
  * @author Dragan Jancikin <dragan.jancikin@gmail.com>
  */
-class HomeController extends BaseController
+class HomeController extends AbstractController
 {
 
-    protected string $page_title;
+    private EntityManagerInterface $entityManager;
     protected string $page;
+    protected string $page_title;
+    protected string $app_version;
+    protected string $stylesheet;
 
     /**
      * HomeController constructor.
+     *
+     * Initializes controller properties, loads app version from composer.json,
+     * and sets stylesheet path.
+     *
+     * @param EntityManagerInterface $entityManager
+     *   Doctrine entity manager for database operations.
      */
-    public function __construct() {
-        parent::__construct();
-
-        $this->page_title = 'd-Office 2025';
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
         $this->page = 'home';
+        $this->page_title = 'd-Office 2025';
+        $this->app_version = $this->loadAppVersion();
+        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
      * Index method.
      *
-     * @return void
+     * @return Response
      *   The rendered view.
      */
-    public function index(): void
+    #[Route('/', name: 'home_index', methods: ['GET'])]
+    public function index(): Response
     {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
         $data = [
             'page_title' => $this->page_title,
             'page' => $this->page,
@@ -43,89 +63,94 @@ class HomeController extends BaseController
             'number_of_orders' => $this->entityManager->getRepository('\App\Entity\Order')->count([]),
             'number_of_articles' => $this->entityManager->getRepository('\App\Entity\Article')->count([]),
             'number_of_projects' => $this->entityManager->getRepository('\App\Entity\Project')->count([]),
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'user_id' => $_SESSION['user_id'],
+            'app_version' => $this->app_version,
+            'stylesheet' => $this->stylesheet,
         ];
 
-        // If the user is not logged in, redirect them to the login page.
-        $this->isUserNotLoggedIn();
-
-        $this->render('home/index.html.twig', $data);
+        return $this->render('home/index.html.twig', $data);
     }
 
     /**
-     * Login method.
+     * Render the login form.
      *
-     * @return void
-     *   The rendered view.
+     * @return Response
      */
-    public function loginForm(): void
+    #[Route('/login', name: 'login_form', methods: ['GET'])]
+    public function loginForm(): Response
     {
         $data = [
             'page_title' => $this->page_title,
             'page' => $this->page,
+            'stylesheet' => $this->stylesheet,
+            'app_version' => $this->app_version,
         ];
 
-        $this->render('home/login_form.html.twig', $data);
+        return $this->render('home/login_form.html.twig', $data);
     }
 
     /**
      * Login the user.
      *
-     * @return void
+     * @return Response
      */
-    public function login(): void
+    #[Route('/login', name: 'login', methods: ['POST'])]
+    public function login(): Response
     {
-        require_once '../config/dbConfig.php';
+        session_start();
 
-        $table = "v6__users";    // the table that this script will set up and use.
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
 
-        // Create connection.
-        $mysqli = new \mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
-
-        // Check connection.
-        if ($mysqli->connect_error) {
-            die("Connection failed: " . $mysqli->connect_error);
+        if (empty($username) || empty($password)) {
+            return $this->redirectToRoute('login_form');
         }
 
-        $username = $_POST["username"];
-        $password = $_POST["password"];
+        $user = $this->entityManager->getRepository('App\\Entity\\User')->findOneBy(['username' => $username]);
 
-        $match = "select id from $table where username = '".$_POST['username']."'and password = '".$_POST['password']."'";
-
-        $result = mysqli_query($mysqli, $match);
-        $num_rows = mysqli_num_rows($result);
-
-        if ($num_rows <= 0) {
-            // Redirection ako nije dobar user
-            header('location: /login');
-            exit();
+        // Check if user exists and password matches
+        if ($user && $user->getPassword() === $password) { // If passwords are hashed, use password_verify($password, $user->getPassword())
+            $_SESSION['username'] = $user->getUsername();
+            $_SESSION['user_id'] = $user->getId();
+            $_SESSION['user_role_id'] = $user->getRoleId();
+            return $this->redirectToRoute('home_index');
+        } else {
+            // Invalid credentials
+            return $this->redirectToRoute('login_form');
         }
-        else {
-            $result_user = mysqli_query($mysqli, "SELECT * FROM $table WHERE username='$username' ") or die(mysqli_error($mysqli));
-
-            $row_user = mysqli_fetch_array($result_user);
-            $user_id = $row_user['id'];
-            $user_role_id = $row_user['role_id'];
-
-            $_SESSION['username'] = $_POST["username"];
-            $_SESSION['user_id'] = $user_id;
-            $_SESSION['user_role_id'] = $user_role_id;
-
-            header('location: /');
-        }
-
     }
 
     /**
      * Logout the user.
      *
-     * @return void
+     * @return Response
      */
-    public function logout(): void
+    #[Route('/logout', name: 'logout', methods: ['GET'])]
+    public function logout(): Response
     {
         session_start();
-        unset($_SESSION['username']);
-        unset($_SESSION['user_role_id']);
-        header("Location: /");
+        $_SESSION = [];
+        session_unset();
+        session_destroy();
+
+        return $this->redirectToRoute('home_index');
     }
 
+    /**
+     * Loads the application version from composer.json.
+     *
+     * @return string
+     *   The app version, or 'unknown' if not found.
+     */
+    private function loadAppVersion(): string
+    {
+      $composerJsonPath = __DIR__ . '/../../composer.json';
+      if (file_exists($composerJsonPath)) {
+        $composerData = json_decode(file_get_contents($composerJsonPath), true);
+        return $composerData['version'] ?? 'unknown';
+      }
+      return 'unknown';
+    }
 }

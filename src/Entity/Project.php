@@ -78,7 +78,11 @@ class Project
      *
      */
     #[ORM\ManyToMany(targetEntity: AccountingDocument::class)]
-    #[ORM\JoinTable(name: "v6__projects__accounting_documents")]
+    #[ORM\JoinTable(
+      name: "v6__projects__accounting_documents",
+      joinColumns: [new ORM\JoinColumn(name: "project_id", referencedColumnName: "id")],
+      inverseJoinColumns: [new ORM\JoinColumn(name: "accountingdocument_id", referencedColumnName: "id")]
+    )]
     private $accounting_documents;
 
     /**

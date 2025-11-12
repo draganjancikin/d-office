@@ -1,0 +1,206 @@
+<div class="card border-{{ pidb_style }} mb-4">
+    <div class="card-header bg-{{ pidb_style }} p-2">
+        <h6 class="m-0 font-weight-bold text-white">
+            {{ pidb_type }}
+            {{ '%04d'|format(pidb_data.getOrdinalNumInYear()) }} - {{ pidb_data.getCreatedAt().format('m') }}
+            <span class="font-weight-normal">{{ pidb_data.getCreatedAt().format('d-M-Y') }}</span>
+            <span class="font-weight-normal">{{ pidb_data.title }}</span>
+        </h6>
+    </div>
+    <div class="card-body p-2">
+        <dl class="row mb-0">
+            <dt class="col-sm-3 col-md-2">klijent:</dt>
+            <dd class="col-sm-9 col-md-10">
+                <a href="/client/{{ client.id }}" title="Pregled svih podataka o klijentu: {{ client.name }}">
+                    {{ client.name }}
+                </a>
+            </dd>
+            <dt class="col-sm-3 col-md-2">adresa:</dt>
+            <dd class="col-sm-9 col-md-10">
+                {{ client.street ?? '' }} {{ client.home_number }}
+                {% if client.street and client.city %}, {% endif %}
+                {{ client.city ?? '' }}
+                {% if client.city and client.country %}, {% endif %}
+                {{ client.country ?? '' }}
+            </dd>
+            {% for client_contact in client.contacts %}
+                <dt class="col-sm-3 col-md-2">{{ client_contact.type.name }}:</dt>
+                <dd class="col-sm-9 col-md-10">
+                    {{ client_contact.body }}
+                    {% if client_contact.note %}
+                        ({{ client_contact.note }})
+                    {% endif %}
+                </dd>
+            {% endfor %}
+        </dl>
+
+        <div class="table-responsive">
+            <table class="table table-hover" >
+                <thead>
+                    <tr class="table-<?php echo $style; ?>">
+                        <th class="px-1 text-center">#</th>
+                        <th class="px-1">naziv proizvoda</th>
+                        <th class="px-1 text-center">jed.<br />mere</th>
+                        <th class="px-1 text-center">kol.</th>
+                        <th class="px-1 text-center">cena</th>
+                        <th class="px-1 text-center">popust<br />%</th>
+                        <th class="px-1 text-center">poreska<br />osnovica</th>
+                        <th class="px-1 text-center">PDV<br />%</th>
+                        <th class="px-1 text-center">iznos PDV</th>
+                        <th class="px-1 text-center">ukupno</th>
+                        <th class="px-1 text-center" id="pidb-tools"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% set count = 0 %}
+                {% for accounting_document_article_data in accounting_document_articles_data %}
+                    {% set count = count + 1 %}
+                    <form action="#" class="form-horizontal" role="form" method="post">
+                        <tr>
+                            <td class="px-1 text-center">{{ count }}</td>
+                            <td class="px-1">
+                                <span class="text-decoration-underline">
+                                {{ accounting_document_article_data.article.name }}
+                                </span>
+                                <br />
+                                kom
+                                <input class="input-box-pieces" type="text" name="pieces"
+                                       value="{{ accounting_document_article_data.article.pieces }}"
+                                       placeholder="(kom)" disabled >
+                                <br />
+                                {# AccountingDocument Article Properties. #}
+                                {% if accounting_document_article_data.article.properties is defined and accounting_document_article_data.article.properties %}
+                                    {% for accounting_document_article_property in accounting_document_article_data.article.properties %}
+                                        {{ accounting_document_article_property.name }}
+                                        <input class="input-box-65 my-1" type="text"
+                                               name="{{ accounting_document_article_property.name }}"
+                                               value="{{ accounting_document_article_property.quantity|number_format(2, ',', '.') }}"
+                                               title="(cm)" disabled > cm
+                                        <br />
+                                    {% endfor %}
+                                {% endif %}
+                                {{ accounting_document_article_data.article.note }}
+                                <?php
+                            </td>
+                            <td class="px-1 text-center">
+                                {{ accounting_document_article_data.article.unit }}
+                            </td>
+                            <td class="px-1 input-box-45">
+                                {{ accounting_document_article_data.article.quantity|number_format(2, ',', '.') }}
+                            </td>
+                            <td class="px-1 text-center">
+                                <input class="input-box-price" type="text" name="price"
+                                       value="{{ accounting_document_article_data.article.price|number_format(4, ',', '.') }}" disabled >
+                            </td>
+                            <td class="px-1 text-center">
+                                <input class="input-box-discounts" type="text" name="discounts"
+                                       value="{{ accounting_document_article_data.article.discount|number_format(2, ',', '.') }}" disabled >
+                            </td>
+                            <td class="px-1 input-box-65">
+                                {{ accounting_document_article_data.article.tax_base_rsd|number_format(2, ',', '.') }}
+                            </td>
+                            <td class="px-1 text-center">{{ accounting_document_article_data.article.tax }}</td>
+                            <td class="px-1 input-box-45">
+                                {{ accounting_document_article_data.article.tax_amount_rsd|number_format(2, ',', '.') }}
+                            </td>
+                            <td class="px-1 input-box-65">
+                                {{ accounting_document_article_data.article.sub_total_rsd|number_format(2, ',', '.') }}
+                            </td>
+                            <td class="px-1 text-center">
+                                <button type="submit" class="btn btn-mini btn-outline-secondary px-1 disabled" disabled>
+                                    <i class="fas fa-save" title="Snimi izmenu"> </i>
+                                </button>
+                                <a class="btn btn-mini btn-outline-secondary px-1 disable">
+                                    <i class="fas fa-edit" title="Izmeni artikal"> </i>
+                                </a>
+                                <a class="btn btn-mini btn-outline-secondary px-1 disable">
+                                    <i class="fas fa-plus" title="Dupliciraj artikal"> </i>
+                                </a>
+                                <a class="btn btn-mini btn-outline-secondary px-1 disable">
+                                    <i class="fas fa-trash" title="Obriši artikal"> </i>
+                                </a>
+                            </td>
+                        </tr>
+                    </form>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-{{ pidb_style }}">
+                        <td rowspan="6" colspan="3"></td>
+                        <td colspan="3">ukupno poreska osnovica</td>
+                        <td class="text-right">{{ total_tax_base_rsd|number_format(2, ',', '.') }}</td>
+                        <td colspan="4"></td>
+                    </tr>
+                    <tr class="table-{{ pidb_style }}">
+                        <td colspan="5">ukupno iznos PDV-a</td>
+                        <td class="text-right">{{ total_tax_amount_rsd|number_format(2, ',', '.') }}</td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr class="table-{{ pidb_style }}">
+                        <td colspan="6">UKUPNO</td>
+                        <td class="text-right">{{ total_rsd|number_format(2, ',', '.') }}</td>
+                        <td class="text-right">(&#8364; {{ total_eur|number_format(2, ',', '.') }})</td>
+                    </tr>
+                    <tr class="table-{{ pidb_style }}">
+                        <td colspan="6">Avans</td>
+                        <td class="text-right">{{ avans_rsd|number_format(2, ',', '.') }}</td>
+                        <td class="text-right">(&#8364; {{ avans_eur|number_format(4, ',', '.') }})</td>
+                    </tr>
+                    {% if pidb_type_id == 2 %}
+                    <tr class="table-{{ pidb_style }}">
+                        <td colspan="6">Uplaćeno</td>
+                        <td class="text-right">{{ income_rsd }}</td>
+                        <td class="text-right">(&#8364; {{ income_eur }})</td>
+                    </tr>
+                    {% endif %}
+                    <tr class="table-{{ pidb_style }}">
+                        <td colspan="6"><strong>OSTALO ZA UPLATU</strong></td>
+                        <td class="text-right"><strong>{{ remaining_rsd|number_format(2, ',', '.') }}</strong></td>
+                        <td class="text-right">(&#8364; {{ remaining_eur|number_format(4, ',', '.') }})</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <form action="" method="post">
+                <table class="table">
+                    <tbody>
+                    <tr class="table-{{ pidb_style }}">
+                        <td width="110">Naslov: </td>
+                        <td>{{ pidb_data.title }}</td>
+                        <td></td>
+                    </tr>
+                    <tr class="table-{{ pidb_style }}">
+                        <td>Klijent: </td>
+                        <td>{{ client.name }}</td>
+                        <td></td>
+                    </tr>
+                    <tr class="table-{{ pidb_style }}">
+                        <td>Arhivirano: </td>
+                        <td>
+                            {{ pidb_data.isArchived ? 'nije' : 'jeste' }}
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr class="table-{{ pidb_style }}">
+                        <td>Napomena:</td>
+                        <td colspan="2">
+                            <textarea class="form-control" rows="3" name="note" disabled>{{ pidb_data.note }}</textarea>
+                        </td>
+                    </tr>
+                    <tr class="table-{{ pidb_style }}">
+                        <td></td>
+                        <td colspan="2">
+                            <button type="submit" class="btn btn-sm btn-light my-1" disabled>
+                                <i class="fas fa-save"></i> Snimi
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <!-- End Card Body -->
+</div>
+<!-- End Card -->
