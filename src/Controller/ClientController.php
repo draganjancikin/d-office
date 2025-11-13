@@ -623,7 +623,8 @@ class ClientController extends AbstractController
         // Check if name already exist in database.
         $control_name = $this->entityManager->getRepository(City::class)->findBy( array('name' => $name) );
         if ($control_name) {
-            echo 'City wit name: "<strong>'.$name.'</strong>" already exist in database!';
+            echo 'Naselje sa nazivom: "<strong>'.$name.'</strong>", već postoji u bazi!';
+            echo '<br><a href="/cities/new">Povratak na stranicu za kreiranje novog grada</a>';
             exit(1);
             // die('<script>location.href = "?alert&ob=2" </script>');
         }
