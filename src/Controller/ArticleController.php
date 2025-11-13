@@ -639,7 +639,7 @@ class ArticleController extends AbstractController
      *
      * @return Response
      */
-    #[Route('/price-list', name: 'article_price_list', methods: ['GET'])]
+    #[Route('/articles/price-list', name: 'article_price_list', methods: ['GET'])]
     public function priceList(Request $request): Response
     {
         session_start();
