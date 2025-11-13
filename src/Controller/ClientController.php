@@ -332,8 +332,8 @@ class ClientController extends AbstractController
         $control_name = $this->entityManager->getRepository(Client::class)->findBy( array('name' => $name) );
         if ($control_name) {
             echo "Username already exist in database. Please choose new username!";
+            echo '<br><a href="/clients/new">Povratak na stranicu za kreiranje novog klijenta</a>';
             exit(1);
-            // die('<script>location.href = "?alert&ob=2" </script>');
         }
 
         $newClient = new Client();
@@ -542,8 +542,8 @@ class ClientController extends AbstractController
         $control_country = $this->entityManager->getRepository(Country::class)->findBy( array('name' => $name) );
         if ($control_country) {
             echo 'Country with name: "<strong>'.$name.'</strong>" already exist in database. Please choose new name!';
+            echo '<br><a href="/countries/new">Povratak na stranicu za kreiranje nove države</a>';
             exit(1);
-            // die('<script>location.href = "?alert&ob=2" </script>');
         }
 
         $abbr = "";
@@ -623,7 +623,8 @@ class ClientController extends AbstractController
         // Check if name already exist in database.
         $control_name = $this->entityManager->getRepository(City::class)->findBy( array('name' => $name) );
         if ($control_name) {
-            echo 'City wit name: "<strong>'.$name.'</strong>" already exist in database!';
+            echo 'Naselje sa nazivom: "<strong>'.$name.'</strong>", već postoji u bazi!';
+            echo '<br><a href="/cities/new">Povratak na stranicu za kreiranje novog grada</a>';
             exit(1);
             // die('<script>location.href = "?alert&ob=2" </script>');
         }
@@ -696,9 +697,9 @@ class ClientController extends AbstractController
         // Check if name already exist in database.
         $control_name = $this->entityManager->getRepository(Street::class)->findBy( array('name' => $name) );
         if ($control_name) {
-            echo 'Street wit name: "<strong>'.$name.'</strong>" already exist in database. Please choose new name!';
+            echo 'Ulica sa nazivom: "<strong>'.$name.'</strong>", već postoji u bazi. Unesite novi naziv!';
+            echo '<br><a href="/streets/new">Povratak na stranicu za kreiranje nove ulice</a>';
             exit(1);
-            // die('<script>location.href = "?alert&ob=2" </script>');
         }
 
         $newStreet = new Street();
