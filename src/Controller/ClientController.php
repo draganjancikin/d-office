@@ -542,8 +542,8 @@ class ClientController extends AbstractController
         $control_country = $this->entityManager->getRepository(Country::class)->findBy( array('name' => $name) );
         if ($control_country) {
             echo 'Country with name: "<strong>'.$name.'</strong>" already exist in database. Please choose new name!';
+            echo '<br><a href="/countries/new">Povratak na stranicu za kreiranje nove države</a>';
             exit(1);
-            // die('<script>location.href = "?alert&ob=2" </script>');
         }
 
         $abbr = "";
