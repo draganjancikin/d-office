@@ -1,3 +1,13 @@
+# Upgrade to 9.0.1
+Bugs:
+* #361 - Add back link to "Client exist in db" error page
+* #363 - Add back link to "Country exist in db" error page
+* #365 - Add back link to "City exist in db" error page
+* #367 - Add back link to "Street exist in db" error page
+* #369 - Update link to material single page on materials/search page
+* #371 - Fix(twig): prevent error if properties key is missing in material_on_order_data
+* #373 - fix(articles): update priceList route to /articles/price-list for correct URL matching
+
 # Upgrade to 9.0.0
 Enhancement:
 * #351 Use Symfony 7 front controller
