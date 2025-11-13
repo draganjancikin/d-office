@@ -91,11 +91,13 @@
             {% endif %}
             <br />
             {% set property_count = 0 %}
-            {% for order_material_property in material_on_order_data.material.properties %}
-                {% set property_count = property_count + 1 %}
-                {% if property_count == 2 %}x{% endif %}
-                {{ order_material_property.quantity|number_format(2, ',', '.') }}cm
-            {% endfor %}
+            {% if material_on_order_data.material.properties is defined and material_on_order_data.material.properties is not empty %}
+                {% for order_material_property in material_on_order_data.material.properties %}
+                    {% set property_count = property_count + 1 %}
+                    {% if property_count == 2 %}x{% endif %}
+                    {{ order_material_property.quantity|number_format(2, ',', '.') }}cm
+                {% endfor %}
+            {% endif %}
             - {{ material_on_order_data.material.pieces }}
             {% if material_on_order_data.material.unit == "set" or material_on_order_data.material.unit == "par" %}
                 {{ material_on_order_data.material.unit }}
