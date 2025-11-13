@@ -332,8 +332,8 @@ class ClientController extends AbstractController
         $control_name = $this->entityManager->getRepository(Client::class)->findBy( array('name' => $name) );
         if ($control_name) {
             echo "Username already exist in database. Please choose new username!";
+            echo '<br><a href="/clients/new">Povratak na stranicu za kreiranje novog klijenta</a>';
             exit(1);
-            // die('<script>location.href = "?alert&ob=2" </script>');
         }
 
         $newClient = new Client();
