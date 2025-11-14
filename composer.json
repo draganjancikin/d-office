@@ -29,7 +29,8 @@
     "symfony/console": "^7.0",
     "symfony/yaml": "^7.0",
     "symfony/dotenv": "^7.0",
-    "symfony/process": "^7.3"
+    "symfony/process": "^7.3",
+    "symfony/form": "^7.3"
   },
   "config": {
     "allow-plugins": {
