@@ -179,7 +179,7 @@ class ClientController extends AbstractController
             'app_version' => $this->app_version,
         ];
 
-        return $this->render('client/client_view.html.twig', $data);
+        return $this->render('client/view.html.twig', $data);
     }
 
     /**

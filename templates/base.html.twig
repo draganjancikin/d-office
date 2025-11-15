@@ -18,16 +18,15 @@
         <link href="{{ stylesheet }}theme-admin-2/css/sb-admin-2.min.css" rel="stylesheet">
         <link href="{{ stylesheet }}css/my-css.css" rel="stylesheet">
         <!-- Favicon -->
-        <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $stylesheet ?>favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $stylesheet ?>favicon/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="<?php echo $stylesheet ?>favicon/favicon-16x16.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ stylesheet }}/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ stylesheet }}/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ stylesheet }}/favicon/favicon-16x16.png">
     {% endblock %}
 
     {% block javascripts %}
 
     {% endblock %}
 </head>
-<body>
 <body id="page-top">
 
 <!-- Page Wrapper -->
@@ -66,7 +65,7 @@
                         </div>
                     {% endfor %}
                     {% for message in app.flashes('success') %}
-                        <div class="alert alert-success role="alert">
+                        <div class="alert alert-success" role="alert">
                             {{ message|raw }}
                         </div>
                     {% endfor %}
@@ -111,23 +110,23 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-<!-- page body footer -->
-<!-- Bootstrap core JavaScript-->
+{# Page body footer #}
+{# Bootstrap core JavaScript #}
 <script src="{{ stylesheet }}theme-admin-2/vendor/jquery/jquery.min.js"></script>
 <script src="{{ stylesheet }}theme-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- Core plugin JavaScript-->
+{# Core plugin JavaScript #}
 <script src="{{ stylesheet }}theme-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-<!-- Custom scripts for all pages-->
+{# Custom scripts for all pages #}
 <script src="{{ stylesheet }}theme-admin-2/js/sb-admin-2.min.js"></script>
 
-<!-- Page level plugins -->
+{# Page level plugins #}
 <!-- <script src="{{ stylesheet }}theme-admin-2/vendor/chart.js/Chart.min.js"></script> -->
 <script src="{{ stylesheet }}theme-admin-2/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="{{ stylesheet }}theme-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-<!-- dodatni js -->
+{# Additional JS #}
 <script src="{{ stylesheet }}js/add.js"></script>
 </body>
 </html>
