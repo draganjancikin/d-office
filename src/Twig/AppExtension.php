@@ -6,10 +6,14 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * Twig extension to provide the app_version() function for retrieving the application version.
+ * Provides custom Twig functions for the application.
  *
- * This extension reads the version from composer.json and exposes it as a Twig function
- * for use in templates, allowing you to display the current application version easily.
+ * Currently, this extension exposes the app_version() function, which retrieves
+ * the application version from composer.json. This allows templates to easily
+ * display the current version of the application.
+ *
+ * Usage in Twig:
+ *   {{ app_version() }}
  */
 class AppExtension extends AbstractExtension
 {
