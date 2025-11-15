@@ -31,7 +31,6 @@ class ClientController extends AbstractController
     protected array $countries;
     protected array $cities;
     protected array $streets;
-    protected string $app_version;
     protected string $stylesheet;
 
     /**
@@ -49,7 +48,6 @@ class ClientController extends AbstractController
         $this->countries = $this->entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
         $this->cities = $this->entityManager->getRepository(City::class)->findBy([], ['name' => 'ASC']);
         $this->streets = $this->entityManager->getRepository(Street::class)->findBy([], ['name' => 'ASC']);
-        $this->app_version = $this->loadAppVersion();
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
@@ -77,7 +75,6 @@ class ClientController extends AbstractController
                 'client' => FALSE,
             ],
             'last_clients' => $this->entityManager->getRepository(Client::class)->getLastClients(10),
-            'app_version' => $this->app_version,
             'stylesheet' => $this->stylesheet,
             'user_id' => $_SESSION['user_id'],
             'user_role_id' => $_SESSION['user_role_id'],
@@ -135,7 +132,6 @@ class ClientController extends AbstractController
                 'tools_menu' => [
                 'client' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ]);
 
     }
@@ -176,7 +172,6 @@ class ClientController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('client/view.html.twig', $data);
@@ -222,7 +217,6 @@ class ClientController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
         return $this->render('client/client_edit.html.twig', $data);
     }
@@ -527,7 +521,6 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('client/country_new.html.twig', $data);
@@ -609,7 +602,6 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('client/city_new.html.twig', $data);
@@ -682,7 +674,6 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('client/street_new.html.twig', $data);
@@ -784,7 +775,6 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('client/advanced_search.html.twig', $data);
@@ -836,25 +826,9 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('client/search.html.twig', $data);
     }
 
-    /**
-     * Loads the application version from composer.json.
-     *
-     * @return string
-     *   The app version, or 'unknown' if not found.
-     */
-    private function loadAppVersion(): string
-    {
-        $composerJsonPath = __DIR__ . '/../../composer.json';
-        if (file_exists($composerJsonPath)) {
-            $composerData = json_decode(file_get_contents($composerJsonPath), true);
-            return $composerData['version'] ?? 'unknown';
-        }
-        return 'unknown';
-    }
 }
