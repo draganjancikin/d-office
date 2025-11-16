@@ -20,7 +20,7 @@ class ContactType
     #[ORM\Id]
     #[ORM\Column(type: "integer")]
     #[ORM\GeneratedValue]
-    protected $id;
+    protected int $id;
 
     /**
      * ContactType's name.
@@ -28,9 +28,9 @@ class ContactType
      * @var string
      */
     #[ORM\Column(type: "string", length: 48)]
-    protected $name;
+    protected string $name;
 
-    public function getId() {
+    public function getId(): int {
         return $this->id;
     }
 
@@ -40,6 +40,11 @@ class ContactType
 
     public function getName() {
         return $this->name;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getName();
     }
 
 }

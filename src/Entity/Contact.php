@@ -24,7 +24,7 @@ class Contact
     #[ORM\Id]
     #[ORM\Column(type: "integer")]
     #[ORM\GeneratedValue]
-    protected $id;
+    protected int $id;
 
     /**
      * Many Contacts belong to the One Type.
@@ -41,7 +41,7 @@ class Contact
      * @var string
      */
     #[ORM\Column(type: "string", length: 48)]
-    protected $body;
+    protected string $body;
 
     /**
      * Contact's note.
@@ -49,7 +49,7 @@ class Contact
      * @var string
      */
     #[ORM\Column(type: "string")]
-    protected $note;
+    protected string $note;
 
     /**
      * Date when the contact was created.
@@ -94,6 +94,7 @@ class Contact
     public function __construct()
     {
         $this->clients = new ArrayCollection();
+        $this->note = '';
     }
 
 
@@ -118,7 +119,7 @@ class Contact
     }
 
     public function setNote($note) {
-        $this->note = $note;
+        $this->note = $note === null ? '' : $note;
     }
 
     public function getNote() {
