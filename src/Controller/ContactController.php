@@ -20,13 +20,13 @@ class ContactController extends AbstractController {
     {
         $contact = $em->getRepository(Contact::class)->find($id);
         if (!$contact) {
-            $this->addFlash('error', 'Kontakt nije pronađen.');
+            // $this->addFlash('error', 'Kontakt nije pronađen.');
             return $this->redirect($request->headers->get('referer') ?: '/');
         }
         // Optionally add CSRF protection here
         $em->remove($contact);
         $em->flush();
-        $this->addFlash('success', 'Kontakt je uspešno obrisan.');
+        // $this->addFlash('success', 'Kontakt je uspešno obrisan.');
         return $this->redirect($request->headers->get('referer') ?: '/');
     }
 }

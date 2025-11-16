@@ -13,7 +13,11 @@ class ContactType extends AbstractType
     {
         $builder
             ->add('type', null, [
-                'label' => false,
+                'label' => 'Tip kontakta',
+                'label_attr' => [
+                    'for' => 'selectType',
+                    'class' => 'col-sm-3 col-form-label text-left text-sm-right',
+                ],
                 'required' => true,
                 'attr' => [
                     'id' => 'selectType',
@@ -22,7 +26,11 @@ class ContactType extends AbstractType
                 ],
             ])
             ->add('body', null, [
-                'label' => false,
+                'label' => 'Kontakt',
+                'label_attr' => [
+                    'for' => 'selectType',
+                    'class' => 'col-sm-3 col-form-label text-left text-sm-right',
+                ],
                 'required' => true,
                 'attr' => [
                     'id' => 'inputBody',
@@ -32,16 +40,19 @@ class ContactType extends AbstractType
                 ],
             ])
             ->add('note', null, [
-                'label' => false,
+                'label' => 'Beleška',
+                'label_attr' => [
+                    'for' => 'inputNote',
+                    'class' => 'col-sm-3 col-form-label text-left text-sm-right',
+                ],
                 'required' => false,
                 'attr' => [
-                    'id' => 'inputNody',
+                    'id' => 'inputNote',
                     'title' => 'Unesite napomenu uz kontakt',
                     'placeholder' => 'Unesite napomenu uz kontakt',
                     'class' => 'form-control',
                 ],
-            ])
-            ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -177,27 +177,12 @@ class ClientType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-                'label' => 'Kontakti',
+                'label' => false,
                 'prototype' => true,
                 'attr' => [
                     'class' => 'contacts-collection',
                 ],
-            ])
-
-//            ->add('contacts', EntityType::class, [
-//                'class' => Contact::class,
-//                'choice_label' => 'id',
-//                'multiple' => true,
-//            ])
-//            ->add('created_by_user', EntityType::class, [
-//                'class' => User::class,
-//                'choice_label' => 'id',
-//            ])
-//            ->add('modified_by_user', EntityType::class, [
-//                'class' => User::class,
-//                'choice_label' => 'id',
-//            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
