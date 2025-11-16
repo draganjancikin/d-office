@@ -1,0 +1,83 @@
+{{ form_start(form) }}
+
+<div class="row mb-2">
+    {{ form_label(form.type) }}
+    <div class="col-sm-4">{{ form_widget(form.type) }}</div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.name) }}
+    <div class="col-sm-9">{{ form_widget(form.name) }}</div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.name_note) }}
+    <div class="col-sm-9 offset-sm-3">{{ form_widget(form.name_note) }}</div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.lb) }}
+    <div class="col-sm-3">{{ form_widget(form.lb) }}</div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.is_supplier) }}
+    <div class="col-sm-3">{{ form_widget(form.is_supplier) }}<span class="ml-4">Jeste</span></div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.country) }}
+    <div class="col-sm-5">{{ form_widget(form.country) }}</div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.city) }}
+    <div class="col-sm-5">{{ form_widget(form.city) }}</div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.street) }}
+    <div class="col-sm-5">{{ form_widget(form.street) }}</div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.home_number) }}
+    <div class="col-sm-2">{{ form_widget(form.home_number) }}</div>
+    <div class="col-sm-7">{{ form_widget(form.address_note) }}</div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.note) }}
+    <div class="col-sm-9">{{ form_widget(form.note) }}</div>
+</div>
+<div class="row mb-2">
+    <div class="col-sm-3 offset-sm-3">
+        <button type="submit" class="btn btn-sm btn-success" title="Snimi podatake o klijentu!">
+            <i class="fas fa-save"> </i> Snimi
+        </button>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <label class="col-form-label">Kontakti</label>
+    <div class="col-sm-12">
+        <div id="contacts-collection-wrapper"
+             data-prototype="{{ form_widget(form.contacts.vars.prototype)|e('html_attr') }}">
+            {% for contactForm in form.contacts %}
+                <div class="form-row contact-row">
+                    <div class="form-group col-sm-3">
+                        {{ form_widget(contactForm.type) }}
+                    </div>
+                    <div class="form-group col-sm-4">
+                        {{ form_widget(contactForm.body) }}
+                    </div>
+                    <div class="form-group col-sm-5 d-flex align-items-center">
+                        {{ form_widget(contactForm.note) }}
+                        {% set contactId = contactForm.vars.data.id ?? null %}
+                        {% if contactId %}
+                            <a onclick="return confirm('Da li ste sigurni da želite da obrišete ovaj kontakt?');"
+                               href="/contact/delete/{{ contactId }}" class="btn btn-link text-danger btn-sm ms-2"
+                               title="Obriši kontakt">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {{ form_errors(form.contacts) }}
+    </div>
+</div>
+
+{{ form_end(form) }}

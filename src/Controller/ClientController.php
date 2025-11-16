@@ -6,11 +6,12 @@ use App\Entity\City;
 use App\Entity\Client;
 use App\Entity\ClientType as ClientEntityType;
 use App\Entity\Contact;
-use App\Entity\ContactType;
+use App\Entity\ContactType as ContactEntityType;
 use App\Entity\Country;
 use App\Entity\Street;
 use App\Entity\User;
 use App\Form\ClientType;
+use App\Form\ContactType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,29 +26,20 @@ use Symfony\Component\Routing\Attribute\Route;
 class ClientController extends AbstractController
 {
 
-    private EntityManagerInterface $entityManager;
     protected string $page;
     protected string $page_title;
-    protected array $countries;
-    protected array $cities;
-    protected array $streets;
     protected string $stylesheet;
 
     /**
      * ClientController constructor.
      *
-     * Initializes controller properties, loads app version from composer.json, and sets stylesheet path.
-     *
-     * @param EntityManagerInterface $entityManager
-     *   Doctrine entity manager for database operations.
+     * Initializes controller properties:
+     * - Sets the page identifier and title for client-related views.
+     * - Loads the application stylesheet path from environment variables or defaults.
      */
-    public function __construct(EntityManagerInterface $entityManager) {
-        $this->entityManager = $entityManager;
+    public function __construct() {
         $this->page = 'clients';
         $this->page_title = 'Klijenti';
-        $this->countries = $this->entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
-        $this->cities = $this->entityManager->getRepository(City::class)->findBy([], ['name' => 'ASC']);
-        $this->streets = $this->entityManager->getRepository(Street::class)->findBy([], ['name' => 'ASC']);
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
@@ -55,13 +47,16 @@ class ClientController extends AbstractController
      * Displays the clients index page with a list of the most recently added clients.
      *
      * Requires the user to be authenticated (session username set).
-     * Passes page metadata, user info, and last clients to the template.
+     * Passes page metadata, user info, and last clients to the template for rendering.
+     *
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
      *
      * @return Response
      *   The rendered clients index view.
      */
     #[Route('/clients', name: 'clients_index', methods: ['GET'])]
-    public function index(): Response
+    public function index(EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
@@ -74,7 +69,7 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'last_clients' => $this->entityManager->getRepository(Client::class)->getLastClients(10),
+            'last_clients' => $em->getRepository(Client::class)->getLastClients(10),
             'stylesheet' => $this->stylesheet,
             'user_id' => $_SESSION['user_id'],
             'user_role_id' => $_SESSION['user_role_id'],
@@ -108,7 +103,7 @@ class ClientController extends AbstractController
         }
 
         $client = new Client();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+        $user = $em->find(User::class, $_SESSION['user_id']);
         $client->setCreatedByUser($user);
 
         $form = $this->createForm(ClientType::class, $client); // CORRECT
@@ -118,11 +113,11 @@ class ClientController extends AbstractController
             $em->persist($client);
             $em->flush();
 
-            $this->addFlash('success', 'Client created successfully!');
+            // $this->addFlash('success', 'Client created successfully!');
             return $this->redirectToRoute('client_show', ['client_id' => $client->getId()]);
         }
 
-        return $this->render('client/client_new.html.twig', [
+        return $this->render('client/new.html.twig', [
             'form' => $form->createView(),
             'page' => $this->page,
             'page_title' => $this->page_title,
@@ -133,31 +128,51 @@ class ClientController extends AbstractController
                 'client' => FALSE,
             ],
         ]);
-
     }
 
     /**
      * Displays the details for a specific client.
      *
      * Requires the user to be authenticated (session username set).
-     * Retrieves client data and related contact types, and passes them along with user and page metadata to the
-     * template.
+     * Retrieves client data and related contact types, and passes them along with user and page metadata to the template.
      *
      * @param int $client_id
      *   The unique identifier of the client to display.
+     * @param Request $request
+     *    The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
      *
      * @return Response
      *   The rendered client detail view.
      */
-    #[Route('/clients/{client_id}', name: 'client_show', requirements: ['client_id' => '\d+'], methods: ['GET'])]
-    public function show(int $client_id): Response
+    #[Route('/clients/{client_id}', name: 'client_show', requirements: ['client_id' => '\d+'], methods: ['GET', 'POST'])]
+    public function show(int $client_id, Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
+        $client = $em->getRepository(Client::class)->getClientData($client_id);
+        $client_object = $em->find(Client::class, $client_id);
+        $user = $em->find(User::class, $_SESSION['user_id']);
+
+        $contact = new Contact();
+        $contact_form = $this->createForm(ContactType::class, $contact);
+        $contact_form->handleRequest($request);
+        if ($contact_form->isSubmitted() && $contact_form->isValid()) {
+            $contact->setModifiedAt(new \DateTime("now"));
+            $contact->setCreatedAt(new \DateTime("now"));
+            $contact->setCreatedByUser($user);
+            $client_object->addContact($contact);
+
+            $em->persist($contact);
+            $em->flush();
+
+            // $this->addFlash('success', 'Contact created successfully!');
+            return $this->redirectToRoute('client_show', ['client_id' => $client_id]);
+        }
 
         $data = [
             'page' => $this->page,
@@ -168,331 +183,132 @@ class ClientController extends AbstractController
                 'view' => TRUE,
                 'edit' => FALSE,
             ],
-            'contact_types' => $this->entityManager->getRepository(ContactType::class)->findAll(),
+            'contact_types' => $em->getRepository(ContactEntityType::class)->findAll(),
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
+            'contact_form' => $contact_form->createView(),
         ];
 
         return $this->render('client/view.html.twig', $data);
     }
 
     /**
-     * Displays the edit form for a specific client.
+     * Displays the edit form for a specific client and handles its submission.
      *
      * Requires the user to be authenticated (session username set).
-     * Retrieves client data, client types, countries, cities, streets, and contact types, and passes them along with
-     * user and page metadata to the template for editing.
+     * Retrieves client data and related entities, processes the Symfony form for editing the client and its contacts.
+     * Updates the modifiedAt field for the client and only for contacts that are changed.
+     * Sets createdAt for new contacts. Persists all changes and redirects to the client detail view on success.
      *
      * @param int $client_id
      *   The unique identifier of the client to edit.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
      *
      * @return Response
-     *   The rendered client edit view.
+     *   The rendered client edit view or a redirect to the client detail view after editing.
      */
-    #[Route('/clients/{client_id}/edit', name: 'client_edit', methods: ['GET'])]
-    public function edit(int $client_id): Response
+    #[Route('/clients/{client_id}/edit', name: 'client_edit', methods: ['GET', 'POST'])]
+    public function edit(int $client_id, Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
+        $client = $em->find(Client::class, $client_id);
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $form = $this->createForm(ClientType::class, $client);
 
-        $data = [
+        $originalContacts = [];
+        foreach ($client->getContacts() as $contact) {
+            $id = null;
+            if (method_exists($contact, 'getId')) {
+                try {
+                    $id = $contact->getId();
+                } catch (\Error $e) {
+                    $id = null;
+                }
+            }
+            if ($id) {
+                $originalContacts[$id] = clone $contact;
+            }
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $client->setModifiedByUser($user);
+            $client->setModifiedAt(new \DateTime("now"));
+
+            foreach ($client->getContacts() as $contact) {
+                $id = null;
+                if (method_exists($contact, 'getId')) {
+                    try {
+                        $id = $contact->getId();
+                    } catch (\Error $e) {
+                        $id = null;
+                    }
+                }
+                if (!$id) {
+                    if ($contact->getCreatedAt() === null) {
+                        $contact->setCreatedAt(new \DateTime());
+                    }
+                    $contact->setModifiedAt(new \DateTime());
+                    continue;
+                }
+                if (isset($originalContacts[$id])) {
+                    $orig = $originalContacts[$id];
+                    if (
+                        $contact->getType() !== $orig->getType() ||
+                        $contact->getBody() !== $orig->getBody() ||
+                        $contact->getNote() !== $orig->getNote()
+                    ) {
+                        $contact->setModifiedAt(new \DateTime());
+                    }
+                }
+            }
+
+            $em->flush();
+
+            // $this->addFlash('success', 'Client updated successfully!');
+            return $this->redirectToRoute('client_show', ['client_id' => $client_id]);
+        }
+
+        $contact = new Contact();
+        $contact_form = $this->createForm(ContactType::class, $contact);
+        $contact_form->handleRequest($request);
+        if ($contact_form->isSubmitted() && $contact_form->isValid()) {
+            $contact->setModifiedAt(new \DateTime("now"));
+            $contact->setCreatedAt(new \DateTime("now"));
+            $contact->setCreatedByUser($user);
+            $client->addContact($contact);
+
+            $em->persist($contact);
+            $em->flush();
+
+            // $this->addFlash('success', 'Contact created successfully!');
+            return $this->redirectToRoute('client_show', ['client_id' => $client_id]);
+        }
+
+        return $this->render('client/edit.html.twig', [
+            'form' => $form->createView(),
+            'contact_form' => $contact_form->createView(),
             'page' => $this->page,
             'page_title' => $this->page_title,
             'client' => $client,
-            'client_types' => $this->entityManager->getRepository(ClientEntityType::class)->findAll(),
-            'countries' => $this->countries,
-            'cities' => $this->cities,
-            'streets' => $this->streets,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
             'tools_menu' => [
                 'client' => TRUE,
                 'view' => FALSE,
                 'edit' => TRUE,
             ],
-            'contact_types' => $this->entityManager->getRepository(ClientEntityType::class)->findAll(),
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
-        ];
-        return $this->render('client/client_edit.html.twig', $data);
-    }
-
-    /**
-     * Handles the update of a client's information from the edit form submission.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Validates and updates client fields, sets modification metadata, and persists changes to the database. Redirects
-     * to the client detail view after successful update.
-     *
-     * @param int $client_id
-     *   The unique identifier of the client to update.
-     *
-     * @return Response
-     *   Redirects to the client detail view after update.
-     */
-    #[Route('/clients/{client_id}/edit', name: 'client_update', methods: ['POST'])]
-    public function update(int $client_id): Response
-    {
-        session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
-
-        $type_id = $_POST["type_id"];
-        $type = $this->entityManager->find(ClientEntityType::class, $type_id);
-
-        if (empty($_POST['name'])) {
-            die('<script>location.href = "?new&name_error" </script>');
-        }
-        else {
-            $name = $this->basicValidation($_POST['name']);
-        }
-
-        $name_note = $this->basicValidation($_POST["name_note"]);
-
-        $lb = "";
-        if (isset($_POST["lb"])) {
-            $lb = $_POST["lb"];
-        }
-
-        $is_supplier = 0;
-        if (isset($_POST["is_supplier"])) {
-            $is_supplier = $_POST["is_supplier"];
-        }
-
-        $country_id = $_POST["country_id"];
-        $country = $this->entityManager->find(Country::class, $country_id);
-        $city_id = $_POST["city_id"];
-        $city = $this->entityManager->find(City::class, $city_id);
-        $street_id = $_POST["street_id"];
-        $street = $this->entityManager->find(Street::class, $street_id);
-        $home_number = $this->basicValidation($_POST["home_number"]);
-        $address_note = $this->basicValidation($_POST["address_note"]);
-        $note = $this->basicValidation($_POST["note"]);
-
-        $client = $this->entityManager->find(Client::class, $client_id);
-
-        if ($client === null) {
-            echo "Client with ID $client_id does not exist.\n";
-            exit(1);
-        }
-
-        $client->setType($type);
-        $client->setName($name);
-        $client->setNameNote($name_note);
-        $client->setLb($lb);
-        $client->setIsSupplier($is_supplier);
-        $client->setCountry($country);
-        $client->setCity($city);
-        $client->setStreet($street);
-        $client->setHomeNumber($home_number);
-        $client->setAddressNote($address_note);
-        $client->setNote($note);
-        $client->setModifiedByUser($user);
-        $client->setModifiedAt(new \DateTime("now"));
-
-        $this->entityManager->flush();
-
-        return $this->redirectToRoute('client_show', ['client_id' => $client_id]);
-    }
-
-    /**
-     * Handles the creation of a new client from the new client form submission.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Validates and sets client fields, checks for duplicate names, persists the new client to the database, and
-     * redirects to the client detail view after successful creation.
-     *
-     * @return Response
-     *   Redirects to the client detail view after creation.
-     */
-    #[Route('/clients/create', name: 'client_create', methods: ['POST'])]
-    public function create(): Response
-    {
-        session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
-
-        $type_id = $_POST["type_id"];
-        $type = $this->entityManager->find(ClientEntityType::class, $type_id);
-
-        if (empty($_POST['name'])) {
-            $nameError = 'Ime mora biti upisano';
-            die('<script>location.href = "?new&name_error" </script>');
-        }
-        else {
-            $name = $this->basicValidation($_POST['name']);
-        }
-
-        $name_note = $this->basicValidation($_POST["name_note"]);
-
-        $lb = $_POST["lb"] ?? '';
-        $is_supplier = $_POST["is_supplier"] ?? 0;
-
-        $country_id = $_POST["country_id"];
-        $country = $this->entityManager->find(Country::class, $country_id);
-        $city_id = $_POST["city_id"];
-        $city = $this->entityManager->find(City::class, $city_id);
-        $street_id = $_POST["street_id"];
-        $street = $this->entityManager->find(Street::class, $street_id);
-        $home_number = $this->basicValidation($_POST["home_number"]);
-        $address_note = $this->basicValidation($_POST["address_note"]);
-        $note = $this->basicValidation($_POST["note"]);
-
-        // Check if name already exist in database.
-        $control_name = $this->entityManager->getRepository(Client::class)->findBy( array('name' => $name) );
-        if ($control_name) {
-            echo "Username already exist in database. Please choose new username!";
-            echo '<br><a href="/clients/new">Povratak na stranicu za kreiranje novog klijenta</a>';
-            exit(1);
-        }
-
-        $newClient = new Client();
-
-        $newClient->setType($type);
-        $newClient->setName($name);
-        $newClient->setNameNote($name_note);
-        $newClient->setLb($lb);
-        $newClient->setIsSupplier($is_supplier);
-        $newClient->setCountry($country);
-        $newClient->setCity($city);
-        $newClient->setStreet($street);
-        $newClient->setHomeNumber($home_number);
-        $newClient->setAddressNote($address_note);
-        $newClient->setNote($note);
-        $newClient->setCreatedAt(new \DateTime("now"));
-        $newClient->setCreatedByUser($user);
-        $newClient->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
-
-        $this->entityManager->persist($newClient);
-        $this->entityManager->flush();
-
-        // Get last id and redirect.
-        $new_client_id = $newClient->getId();
-        return $this->redirectToRoute('client_show', ['client_id' => $new_client_id]);
-    }
-
-    /**
-     * Handles the creation of a new contact for a specific client from the contact form submission.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Validates and sets contact fields, persists the new contact to the database, associates it with the client, and
-     * redirects to the client detail view after successful creation.
-     *
-     * @param int $client_id
-     *   The unique identifier of the client to associate the new contact with.
-     *
-     * @return Response
-     *   Redirects to the client detail view after contact creation.
-     */
-    #[Route('/clients/{client_id}/contacts/create', name: 'client_contact_create', methods: ['POST'])]
-    public function createContact(int $client_id): Response
-    {
-        session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
-        $client = $this->entityManager->find(Client::class, $client_id);
-
-        $type_id = $_POST["contact_type_id"];
-        $type = $this->entityManager->find(ClientEntityType::class, $type_id);
-
-        $contact_type_id = $_POST["contact_type_id"];
-        $contact_type = $this->entityManager->find(ContactType::class, $contact_type_id);
-        $body = $this->basicValidation($_POST["body"]);
-        $note = $this->basicValidation($_POST["note"]);
-
-        $newContact = new Contact();
-
-        $newContact->setType($contact_type);
-        $newContact->setBody($body);
-        $newContact->setNote($note);
-        $newContact->setCreatedAt(new \DateTime("now"));
-        $newContact->setCreatedByUser($user);
-        $newContact->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
-
-        $this->entityManager->persist($newContact);
-        $this->entityManager->flush();
-
-        // Add $newContact to table v6_client_contacts.
-        $client->getContacts()->add($newContact);
-
-        $this->entityManager->flush();
-
-        return $this->redirectToRoute('client_show', ['client_id' => $client_id]);
-    }
-
-  /**
-   * Handles the update of an existing contact for a specific client from the contact edit form submission.
-   *
-   * Requires the user to be authenticated (session username set).
-   * Validates and updates contact fields, sets modification metadata, persists changes to the database, and redirects
-   * to the client detail view after successful update.
-   *
-   * @param int $client_id
-   *   The unique identifier of the client associated with the contact.
-   * @param int $contact_id
-   *   The unique identifier of the contact to update.
-   *
-   * @return Response
-   *   Redirects to the client detail view after contact update.
-   */
-    #[Route('/clients/{client_id}/contacts/{contact_id}/update', name: 'client_contact_edit', methods: ['POST'])]
-    public function updateContact(int $client_id, int $contact_id): Response
-    {
-        session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
-
-        $contact_type_id = $_POST["contact_type_id"];
-        $contact_type = $this->entityManager->find(ContactType::class, $contact_type_id);
-        $body = $this->basicValidation($_POST["body"]);
-        $note = $this->basicValidation($_POST["note"]);
-
-        $contact = $this->entityManager->find(Contact::class, $contact_id);
-
-        if ($contact === null) {
-            echo "Contact with ID $contact_id does not exist.\n";
-            exit(1);
-        }
-
-        $contact->setType($contact_type);
-        $contact->setBody($body);
-        $contact->setNote($note);
-        $contact->setModifiedByUser($user);
-        $contact->setModifiedAt(new \DateTime("now"));
-
-        $this->entityManager->flush();
-
-        return $this->redirectToRoute('client_show', ['client_id' => $client_id]);
-    }
-
-    /**
-     * Handles the deletion of a contact from a specific client.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Removes the contact from the client's contact collection and deletes it from the database.
-     * Redirects to the client detail view after successful deletion.
-     *
-     * @param int $client_id
-     *   The unique identifier of the client associated with the contact.
-     * @param int $contact_id
-     *   The unique identifier of the contact to delete.
-     *
-     * @return Response
-     *   Redirects to the client detail view after contact deletion.
-     */
-    #[Route('/clients/{client_id}/contacts/{contact_id}/delete', name: 'client_contact_remove', methods: ['GET'])]
-    public function deleteContact(int $client_id, int $contact_id): Response
-    {
-        $client = $this->entityManager->find(Client::class, $client_id);
-        $contact = $this->entityManager->find(Contact::class, $contact_id);
-
-        // Remove $contact from table v6_client_contacts.
-        $client->getContacts()->removeElement($contact);
-
-        $this->entityManager->remove($contact);
-        $this->entityManager->flush();
-
-        return $this->redirectToRoute('client_show', ['client_id' => $client_id]);
+        ]);
     }
 
     /**
@@ -533,14 +349,17 @@ class ClientController extends AbstractController
      * Validates and sets country fields, checks for duplicate names, persists the new country to the database,
      * and redirects to the clients index view after successful creation.
      *
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
      * @return Response
      *   Redirects to the clients index view after country creation.
      */
     #[Route('/countries/create', name: 'country_create', methods: ['POST'])]
-    public function createCountry(): Response
+    public function createCountry(EntityManagerInterface $em): Response
     {
         session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+        $user = $em->find(User::class, $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
             die('<script>location.href = "?new&name_error" </script>');
@@ -550,7 +369,7 @@ class ClientController extends AbstractController
         }
 
         // Check if name already exist in database.
-        $control_country = $this->entityManager->getRepository(Country::class)->findBy( array('name' => $name) );
+        $control_country = $em->getRepository(Country::class)->findBy( array('name' => $name) );
         if ($control_country) {
             echo 'Country with name: "<strong>'.$name.'</strong>" already exist in database. Please choose new name!';
             echo '<br><a href="/countries/new">Povratak na stranicu za kreiranje nove države</a>';
@@ -570,8 +389,8 @@ class ClientController extends AbstractController
         $newCountry->setCreatedByUser($user);
         $newCountry->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
 
-        $this->entityManager->persist($newCountry);
-        $this->entityManager->flush();
+        $em->persist($newCountry);
+        $em->flush();
 
         return $this->redirectToRoute('clients_index');
     }
@@ -614,14 +433,17 @@ class ClientController extends AbstractController
      * Validates and sets city fields, checks for duplicate names, persists the new city to the database, and redirects
      * to the clients index view after successful creation.
      *
+     * @param EntityManagerInterface $em
+     *     Doctrine entity manager for database operations.
+     *
      * @return Response
      *   Redirects to the clients index view after city creation.
      */
     #[Route('/cities/create', name: 'city_create', methods: ['POST'])]
-    public function createCity(): Response
+    public function createCity(EntityManagerInterface $em): Response
     {
         session_start();
-        $user = $this->entityManager->find(User::class,  $_SESSION['user_id']);
+        $user = $em->find(User::class,  $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
             die('<script>location.href = "?new&name_error" </script>');
@@ -631,7 +453,7 @@ class ClientController extends AbstractController
         }
 
         // Check if name already exist in database.
-        $control_name = $this->entityManager->getRepository(City::class)->findBy( array('name' => $name) );
+        $control_name = $em->getRepository(City::class)->findBy( array('name' => $name) );
         if ($control_name) {
             echo 'Naselje sa nazivom: "<strong>'.$name.'</strong>", već postoji u bazi!';
             echo '<br><a href="/cities/new">Povratak na stranicu za kreiranje novog grada</a>';
@@ -646,8 +468,8 @@ class ClientController extends AbstractController
         $newCity->setCreatedByUser($user);
         $newCity->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
 
-        $this->entityManager->persist($newCity);
-        $this->entityManager->flush();
+        $em->persist($newCity);
+        $em->flush();
 
         return $this->redirectToRoute('clients_index');
     }
@@ -686,14 +508,17 @@ class ClientController extends AbstractController
      * Validates and sets street fields, checks for duplicate names, persists the new street to the database, and
      * redirects to the clients index view after successful creation.
      *
+     * @param EntityManagerInterface $em
+     *    Doctrine entity manager for database operations.
+     *
      * @return Response
      *   Redirects to the clients index view after street creation.
      */
     #[Route('/streets/create', name: 'street_create', methods: ['POST'])]
-    public function createStreet(): Response
+    public function createStreet(EntityManagerInterface $em): Response
     {
         session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+        $user = $em->find(User::class, $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -704,7 +529,7 @@ class ClientController extends AbstractController
         }
 
         // Check if name already exist in database.
-        $control_name = $this->entityManager->getRepository(Street::class)->findBy( array('name' => $name) );
+        $control_name = $em->getRepository(Street::class)->findBy( array('name' => $name) );
         if ($control_name) {
             echo 'Ulica sa nazivom: "<strong>'.$name.'</strong>", već postoji u bazi. Unesite novi naziv!';
             echo '<br><a href="/streets/new">Povratak na stranicu za kreiranje nove ulice</a>';
@@ -718,8 +543,8 @@ class ClientController extends AbstractController
         $newStreet->setCreatedByUser($user);
         $newStreet->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
 
-        $this->entityManager->persist($newStreet);
-        $this->entityManager->flush();
+        $em->persist($newStreet);
+        $em->flush();
 
         return $this->redirectToRoute('clients_index');
     }
@@ -731,11 +556,14 @@ class ClientController extends AbstractController
      * Accepts client, street, and city search terms from POST data, performs advanced search using the Client
      * repository, and passes the results and search terms along with page and user metadata to the template.
      *
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
      * @return Response
      *   The rendered advanced search view with results if a search was performed.
      */
     #[Route('/clients/advanced-search', name: 'client_advanced_search', methods: ['GET', 'POST'])]
-    public function advancedSearch(): Response
+    public function advancedSearch(EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
@@ -759,7 +587,7 @@ class ClientController extends AbstractController
             if ($city) {
                 $city_name = $this->basicValidation($city);
             }
-            $clients_data = $this->entityManager->getRepository(Client::class)->advancedSearch($term, $street, $city);
+            $clients_data = $em->getRepository(Client::class)->advancedSearch($term, $street, $city);
         }
 
         $data = [
@@ -801,12 +629,14 @@ class ClientController extends AbstractController
      *
      * @param Request $request
      *   The HTTP request object containing the search term as a query parameter.
+     * @param EntityManagerInterface $em
+     *    Doctrine entity manager for database operations.
      *
      * @return Response
      *   The rendered client search results view.
      */
     #[Route('/clients/search', name: 'client_search', methods: ['GET'])]
-    public function search(Request $request): Response
+    public function search(Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
@@ -814,7 +644,7 @@ class ClientController extends AbstractController
         }
 
         $term = $request->query->get('term', '');
-        $clients= $this->entityManager->getRepository(Client::class)->search($term);
+        $clients= $em->getRepository(Client::class)->search($term);
 
         $data = [
             'page' => $this->page,

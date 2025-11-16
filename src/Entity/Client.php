@@ -123,7 +123,7 @@ class Client
   //   * @ORM\ManyToMany(targetEntity="Contact")
   //   * @ORM\JoinTable(name="v6__clients__contacts")
      */
-    #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'clients')]
+    #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'clients', cascade: ['persist'])]
     #[ORM\JoinTable(
         name: 'v6__clients__contacts',
         joinColumns: [new ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id')],
@@ -273,6 +273,25 @@ class Client
 
     public function getContacts() {
         return $this->contacts;
+    }
+
+    public function setContacts($contacts)
+    {
+        $this->contacts = $contacts;
+    }
+
+    public function addContact(Contact $contact): self
+    {
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts[] = $contact;
+        }
+        return $this;
+    }
+
+    public function removeContact(Contact $contact): self
+    {
+        $this->contacts->removeElement($contact);
+        return $this;
     }
 
     public function setCreatedAt(\DateTime $created_at) {
