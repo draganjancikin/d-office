@@ -34,7 +34,6 @@ class ProjectController extends AbstractController
     private string $page;
     private string $page_title;
     protected string $stylesheet;
-    protected string $app_version;
 
     /**
      * ProjectController constructor.
@@ -50,7 +49,6 @@ class ProjectController extends AbstractController
         $this->page = 'project';
         $this->page_title = 'Projekti';
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
-        $this->app_version = $this->loadAppVersion();
     }
 
     /**
@@ -188,7 +186,6 @@ class ProjectController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('project/index.html.twig', $data);
@@ -229,7 +226,6 @@ class ProjectController extends AbstractController
             ],
             'acc_doc_id' => NULL,
             'client' => NULL,
-            'app_version' => $this->app_version,
         ];
 
         $acc_doc_id = $request->query->get('acc_doc_id');
@@ -488,7 +484,6 @@ class ProjectController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('project/project_view.html.twig', $data);
@@ -537,7 +532,6 @@ class ProjectController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('project/project_edit.html.twig', $data);
@@ -693,7 +687,6 @@ class ProjectController extends AbstractController
             'tools_menu' => [
                 'project' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('project/task_edit.html.twig', $data);
@@ -1106,7 +1099,6 @@ class ProjectController extends AbstractController
             'tools_menu' => [
                 'project' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('project/projects_by_city.html.twig', $data);
@@ -1632,7 +1624,6 @@ class ProjectController extends AbstractController
             'tools_menu' => [
                 'project' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('project/search.html.twig', $data);
@@ -1723,25 +1714,9 @@ class ProjectController extends AbstractController
             'tools_menu' => [
                 'project' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('project/advanced_search.html.twig', $data);
     }
 
-    /**
-     * Loads the application version from composer.json.
-     *
-     * @return string
-     *   The app version, or 'unknown' if not found.
-     */
-    private function loadAppVersion(): string
-    {
-        $composerJsonPath = __DIR__ . '/../../composer.json';
-        if (file_exists($composerJsonPath)) {
-            $composerData = json_decode(file_get_contents($composerJsonPath), true);
-            return $composerData['version'] ?? 'unknown';
-        }
-        return 'unknown';
-    }
 }

@@ -34,14 +34,12 @@ class CuttingController extends AbstractController
     private string $page;
     private string $page_title;
     protected string $stylesheet;
-    protected string $app_version;
 
     public function __construct(EntityManagerInterface $entityManager) {
         $this->entityManager = $entityManager;
         $this->page_title = 'Krojne liste';
         $this->page = 'cuttings';
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
-        $this->app_version = $this->loadAppVersion();
     }
 
     /**
@@ -75,7 +73,6 @@ class CuttingController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('cutting/index.html.twig', $data);
@@ -126,7 +123,6 @@ class CuttingController extends AbstractController
             'tools_menu' => [
                 'cutting' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('cutting/cutting_new.html.twig', $data);
@@ -240,7 +236,6 @@ class CuttingController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('cutting/cutting_view.html.twig', $data);
@@ -313,7 +308,6 @@ class CuttingController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('cutting/cutting_edit.html.twig', $data);
@@ -992,26 +986,9 @@ class CuttingController extends AbstractController
             'tools_menu' => [
                 'cutting' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('cutting/search.html.twig', $data);
-    }
-
-    /**
-     * Loads the application version from composer.json.
-     *
-     * @return string
-     *   The app version, or 'unknown' if not found.
-     */
-    private function loadAppVersion(): string
-    {
-        $composerJsonPath = __DIR__ . '/../../composer.json';
-        if (file_exists($composerJsonPath)) {
-            $composerData = json_decode(file_get_contents($composerJsonPath), true);
-            return $composerData['version'] ?? 'unknown';
-        }
-        return 'unknown';
     }
 
 }

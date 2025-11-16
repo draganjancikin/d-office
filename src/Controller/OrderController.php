@@ -33,7 +33,6 @@ class OrderController extends AbstractController
     private string $page;
     private string $page_title;
     protected string $stylesheet;
-    protected string $app_version;
 
     /**
      * OrderController constructor.
@@ -43,7 +42,6 @@ class OrderController extends AbstractController
         $this->page = 'order';
         $this->page_title = 'Narudžbenice';
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
-        $this->app_version = $this->loadAppVersion();
     }
 
     /**
@@ -120,7 +118,6 @@ class OrderController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('order/index.html.twig', $data);
@@ -172,7 +169,6 @@ class OrderController extends AbstractController
             "tools_menu" => [
                 'order' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('order/order_new.html.twig', $data);
@@ -307,7 +303,6 @@ class OrderController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('order/order_view.html.twig', $data);
@@ -380,7 +375,6 @@ class OrderController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('order/order_edit.html.twig', $data);
@@ -774,7 +768,6 @@ class OrderController extends AbstractController
             'tools_menu' => [
                 'order' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('order/material_in_order_change.html.twig', $data);
@@ -1212,25 +1205,9 @@ class OrderController extends AbstractController
             "tools_menu" => [
               'order' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('order/search.html.twig', $data);
     }
 
-    /**
-     * Loads the application version from composer.json.
-     *
-     * @return string
-     *   The app version, or 'unknown' if not found.
-     */
-    private function loadAppVersion(): string
-    {
-        $composerJsonPath = __DIR__ . '/../../composer.json';
-        if (file_exists($composerJsonPath)) {
-            $composerData = json_decode(file_get_contents($composerJsonPath), true);
-            return $composerData['version'] ?? 'unknown';
-        }
-        return 'unknown';
-    }
 }

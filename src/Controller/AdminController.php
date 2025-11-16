@@ -27,7 +27,6 @@ class AdminController extends AbstractController
     private string $page;
     private string $page_title;
     protected string $stylesheet;
-    protected string $app_version;
 
     /**
      * AdminController constructor.
@@ -45,7 +44,6 @@ class AdminController extends AbstractController
         $this->page = 'admin';
         $this->page_title = 'Admin';
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
-        $this->app_version = $this->loadAppVersion();
     }
 
     /**
@@ -75,7 +73,6 @@ class AdminController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('admin/index.html.twig', $data);
@@ -120,7 +117,6 @@ class AdminController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('admin/company_info_view.html.twig', $data);
@@ -173,7 +169,6 @@ class AdminController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('admin/company_info_edit.html.twig', $data);
@@ -334,7 +329,6 @@ class AdminController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('admin/employees_list.html.twig', $data);
@@ -382,7 +376,6 @@ class AdminController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('admin/employee_view.html.twig', $data);
@@ -430,7 +423,6 @@ class AdminController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('admin/employee_edit.html.twig', $data);
@@ -521,25 +513,9 @@ class AdminController extends AbstractController
             'tools_menu' => [
                 'admin' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('admin/table/employees_search.html.twig', $data);
     }
 
-    /**
-     * Loads the application version from composer.json.
-     *
-     * @return string
-     *   The app version, or 'unknown' if not found.
-     */
-    private function loadAppVersion(): string
-    {
-        $composerJsonPath = __DIR__ . '/../../composer.json';
-        if (file_exists($composerJsonPath)) {
-            $composerData = json_decode(file_get_contents($composerJsonPath), true);
-            return $composerData['version'] ?? 'unknown';
-        }
-        return 'unknown';
-    }
 }

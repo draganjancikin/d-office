@@ -11,3 +11,7 @@ services:
     App\EventSubscriber\:
         resource: '../src/EventSubscriber/'
         tags: ['kernel.event_subscriber']
+
+    App\Twig\:
+        resource: '../src/Twig/'
+        tags: ['twig.extension']

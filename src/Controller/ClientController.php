@@ -4,12 +4,13 @@ namespace App\Controller;
 
 use App\Entity\City;
 use App\Entity\Client;
-use App\Entity\ClientType;
+use App\Entity\ClientType as ClientEntityType;
 use App\Entity\Contact;
 use App\Entity\ContactType;
 use App\Entity\Country;
 use App\Entity\Street;
 use App\Entity\User;
+use App\Form\ClientType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,6 @@ class ClientController extends AbstractController
     protected array $countries;
     protected array $cities;
     protected array $streets;
-    protected string $app_version;
     protected string $stylesheet;
 
     /**
@@ -48,7 +48,6 @@ class ClientController extends AbstractController
         $this->countries = $this->entityManager->getRepository(Country::class)->findBy([], ['name' => 'ASC']);
         $this->cities = $this->entityManager->getRepository(City::class)->findBy([], ['name' => 'ASC']);
         $this->streets = $this->entityManager->getRepository(Street::class)->findBy([], ['name' => 'ASC']);
-        $this->app_version = $this->loadAppVersion();
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
@@ -76,7 +75,6 @@ class ClientController extends AbstractController
                 'client' => FALSE,
             ],
             'last_clients' => $this->entityManager->getRepository(Client::class)->getLastClients(10),
-            'app_version' => $this->app_version,
             'stylesheet' => $this->stylesheet,
             'user_id' => $_SESSION['user_id'],
             'user_role_id' => $_SESSION['user_role_id'],
@@ -87,39 +85,55 @@ class ClientController extends AbstractController
     }
 
     /**
-     * Displays the form for creating a new client.
+     * Displays the form for creating a new client and handles its submission.
      *
      * Requires the user to be authenticated (session username set).
-     * Passes client types, countries, cities, streets, and user/page metadata to the template.
+     * Renders the Symfony form for client creation, processes form submission, persists the new client,
+     * sets the current user as created_by_user, and redirects to the client detail view with a flash message on success.
+     *
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
      *
      * @return Response
-     *   The rendered new client form view.
+     *   The rendered new client form view or a redirect to the client detail view after creation.
      */
-    #[Route('/clients/new', name: 'client_new', methods: ['GET'])]
-    public function new(): Response
+    #[Route('/clients/new', name: 'client_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $data = [
+        $client = new Client();
+        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+        $client->setCreatedByUser($user);
+
+        $form = $this->createForm(ClientType::class, $client); // CORRECT
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($client);
+            $em->flush();
+
+            $this->addFlash('success', 'Client created successfully!');
+            return $this->redirectToRoute('client_show', ['client_id' => $client->getId()]);
+        }
+
+        return $this->render('client/client_new.html.twig', [
+            'form' => $form->createView(),
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'tools_menu' => [
-                'client' => FALSE,
-            ],
-            'client_types' => $this->entityManager->getRepository(ClientType::class)->findAll(),
-            'countries' => $this->countries,
-            'cities' => $this->cities,
-            'streets' => $this->streets,
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
-        ];
+                'tools_menu' => [
+                'client' => FALSE,
+            ],
+        ]);
 
-        return $this->render('client/client_new.html.twig', $data);
     }
 
     /**
@@ -158,10 +172,9 @@ class ClientController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
-        return $this->render('client/client_view.html.twig', $data);
+        return $this->render('client/view.html.twig', $data);
     }
 
     /**
@@ -191,7 +204,7 @@ class ClientController extends AbstractController
             'page' => $this->page,
             'page_title' => $this->page_title,
             'client' => $client,
-            'client_types' => $this->entityManager->getRepository(ClientType::class)->findAll(),
+            'client_types' => $this->entityManager->getRepository(ClientEntityType::class)->findAll(),
             'countries' => $this->countries,
             'cities' => $this->cities,
             'streets' => $this->streets,
@@ -200,11 +213,10 @@ class ClientController extends AbstractController
                 'view' => FALSE,
                 'edit' => TRUE,
             ],
-            'contact_types' => $this->entityManager->getRepository(ContactType::class)->findAll(),
+            'contact_types' => $this->entityManager->getRepository(ClientEntityType::class)->findAll(),
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
         return $this->render('client/client_edit.html.twig', $data);
     }
@@ -229,7 +241,7 @@ class ClientController extends AbstractController
         $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $type_id = $_POST["type_id"];
-        $type = $this->entityManager->find(ClientType::class, $type_id);
+        $type = $this->entityManager->find(ClientEntityType::class, $type_id);
 
         if (empty($_POST['name'])) {
             die('<script>location.href = "?new&name_error" </script>');
@@ -303,7 +315,7 @@ class ClientController extends AbstractController
         $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
 
         $type_id = $_POST["type_id"];
-        $type = $this->entityManager->find(ClientType::class, $type_id);
+        $type = $this->entityManager->find(ClientEntityType::class, $type_id);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -382,7 +394,7 @@ class ClientController extends AbstractController
         $client = $this->entityManager->find(Client::class, $client_id);
 
         $type_id = $_POST["contact_type_id"];
-        $type = $this->entityManager->find(ClientType::class, $type_id);
+        $type = $this->entityManager->find(ClientEntityType::class, $type_id);
 
         $contact_type_id = $_POST["contact_type_id"];
         $contact_type = $this->entityManager->find(ContactType::class, $contact_type_id);
@@ -509,7 +521,6 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('client/country_new.html.twig', $data);
@@ -591,7 +602,6 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('client/city_new.html.twig', $data);
@@ -664,7 +674,6 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('client/street_new.html.twig', $data);
@@ -766,7 +775,6 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('client/advanced_search.html.twig', $data);
@@ -818,25 +826,9 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('client/search.html.twig', $data);
     }
 
-    /**
-     * Loads the application version from composer.json.
-     *
-     * @return string
-     *   The app version, or 'unknown' if not found.
-     */
-    private function loadAppVersion(): string
-    {
-        $composerJsonPath = __DIR__ . '/../../composer.json';
-        if (file_exists($composerJsonPath)) {
-            $composerData = json_decode(file_get_contents($composerJsonPath), true);
-            return $composerData['version'] ?? 'unknown';
-        }
-        return 'unknown';
-    }
 }
