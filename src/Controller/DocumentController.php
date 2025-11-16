@@ -35,7 +35,6 @@ class DocumentController extends AbstractController
     private string $page;
     private string $page_title;
     protected string $stylesheet;
-    protected string $app_version;
 
     /**
      * DocumentController constructor.
@@ -47,7 +46,6 @@ class DocumentController extends AbstractController
         $this->page_title = 'Dokumenti';
         $this->page = 'documents';
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
-        $this->app_version = $this->loadAppVersion();
     }
 
     /**
@@ -79,7 +77,6 @@ class DocumentController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('document/index.html.twig', $data);
@@ -130,7 +127,6 @@ class DocumentController extends AbstractController
                 'document' => FALSE,
                 'cash_register' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('document/document_new.html.twig', $data);
@@ -293,7 +289,6 @@ class DocumentController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('document/document_view.html.twig', $data);
@@ -391,7 +386,6 @@ class DocumentController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('document/document_edit.html.twig', $data);
@@ -1220,7 +1214,6 @@ class DocumentController extends AbstractController
                 'document' => FALSE,
                 'cash_register' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('document/article_in_document_change.html.twig', $data);
@@ -1411,7 +1404,6 @@ class DocumentController extends AbstractController
                 'document' => FALSE,
                 'cash_register' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('document/transactions_view.html.twig', $data);
@@ -1471,7 +1463,6 @@ class DocumentController extends AbstractController
                 'document' => FALSE,
                 'cash_register' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('document/transactions_by_document.html.twig', $data);
@@ -1517,7 +1508,6 @@ class DocumentController extends AbstractController
                 'document' => FALSE,
                 'cash_register' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('document/transaction_edit.html.twig', $data);
@@ -1610,7 +1600,6 @@ class DocumentController extends AbstractController
                 'document' => FALSE,
                 'cash_register' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('document/preferences_edit.html.twig', $data);
@@ -1761,7 +1750,6 @@ class DocumentController extends AbstractController
                 'document' => FALSE,
                 'cash_register' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('document/search.html.twig', $data);
@@ -1908,7 +1896,6 @@ class DocumentController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('document/cash_register.html.twig', $data);
@@ -2056,19 +2043,4 @@ class DocumentController extends AbstractController
         return $response;
     }
 
-    /**
-     * Loads the application version from composer.json.
-     *
-     * @return string
-     *   The app version, or 'unknown' if not found.
-     */
-    private function loadAppVersion(): string
-    {
-        $composerJsonPath = __DIR__ . '/../../composer.json';
-        if (file_exists($composerJsonPath)) {
-            $composerData = json_decode(file_get_contents($composerJsonPath), true);
-            return $composerData['version'] ?? 'unknown';
-        }
-        return 'unknown';
-    }
 }

@@ -18,7 +18,6 @@ class HomeController extends AbstractController
     private EntityManagerInterface $entityManager;
     protected string $page;
     protected string $page_title;
-    protected string $app_version;
     protected string $stylesheet;
 
     /**
@@ -35,7 +34,6 @@ class HomeController extends AbstractController
         $this->entityManager = $entityManager;
         $this->page = 'home';
         $this->page_title = 'd-Office 2025';
-        $this->app_version = $this->loadAppVersion();
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
@@ -66,7 +64,6 @@ class HomeController extends AbstractController
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'user_id' => $_SESSION['user_id'],
-            'app_version' => $this->app_version,
             'stylesheet' => $this->stylesheet,
         ];
 
@@ -85,7 +82,6 @@ class HomeController extends AbstractController
             'page_title' => $this->page_title,
             'page' => $this->page,
             'stylesheet' => $this->stylesheet,
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('home/login_form.html.twig', $data);
@@ -138,19 +134,4 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('home_index');
     }
 
-    /**
-     * Loads the application version from composer.json.
-     *
-     * @return string
-     *   The app version, or 'unknown' if not found.
-     */
-    private function loadAppVersion(): string
-    {
-      $composerJsonPath = __DIR__ . '/../../composer.json';
-      if (file_exists($composerJsonPath)) {
-        $composerData = json_decode(file_get_contents($composerJsonPath), true);
-        return $composerData['version'] ?? 'unknown';
-      }
-      return 'unknown';
-    }
 }

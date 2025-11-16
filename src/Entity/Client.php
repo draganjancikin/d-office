@@ -29,12 +29,12 @@ class Client
     #[ORM\Id]
     #[ORM\Column(type: "integer")]
     #[ORM\GeneratedValue]
-    protected $id;
+    protected int $id;
 
     /**
      * Many clients belong to one type.
      *
-     * @var int
+     * @var ClientType|null
      */
     #[ORM\ManyToOne(targetEntity: ClientType::class)]
     #[ORM\JoinColumn(name: "type_id", referencedColumnName: "id")]
@@ -46,7 +46,7 @@ class Client
      * @var string
      */
     #[ORM\Column(type: "string", length: 48)]
-    protected $name;
+    protected string $name;
 
     /**
      * Client's name note.
@@ -54,7 +54,7 @@ class Client
      * @var string
      */
     #[ORM\Column(type: "string", length: 128)]
-    protected $name_note;
+    protected string $name_note = '';
 
     /**
      * Client's LB number.
@@ -70,7 +70,7 @@ class Client
      * @var boolean
      */
     #[ORM\Column(type: "boolean")]
-    protected $is_supplier;
+    protected bool $is_supplier;
 
     /**
      * Many Clients live in One Country.
@@ -99,7 +99,7 @@ class Client
      * @var string
      */
     #[ORM\Column(type: "string", length: 8)]
-    protected $home_number;
+    protected string $home_number = '';
 
     /**
      * Client's address note.
@@ -107,7 +107,7 @@ class Client
      * @var string
      */
     #[ORM\Column(type: "string", length: 128)]
-    protected $address_note;
+    protected string $address_note = '';
 
     /**
      * Client's note.
@@ -115,7 +115,7 @@ class Client
      * @var string
      */
     #[ORM\Column(type: "text")]
-    protected $note;
+    protected string $note = '';
 
     /**
      * Unidirectional - Many users have many contacts
@@ -123,7 +123,7 @@ class Client
   //   * @ORM\ManyToMany(targetEntity="Contact")
   //   * @ORM\JoinTable(name="v6__clients__contacts")
      */
-    #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'clients')]
+    #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'clients', cascade: ['persist'])]
     #[ORM\JoinTable(
         name: 'v6__clients__contacts',
         joinColumns: [new ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id')],
@@ -168,17 +168,26 @@ class Client
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
+        $this->name_note = '';
+        $this->lb = '';
+        $this->home_number = '';
+        $this->address_note = '';
+        $this->note = '';
+        $this->created_at = new \DateTime();
+        $this->modified_at = new \DateTime();
     }
 
     public function getId() {
         return $this->id;
     }
 
-    public function setType($type) {
+    public function setType(?ClientType $type): void
+    {
         $this->type = $type;
     }
 
-    public function getType() {
+    public function getType(): ?ClientType
+    {
         return $this->type;
     }
 
@@ -191,7 +200,7 @@ class Client
     }
 
     public function setNameNote($name_note) {
-        $this->name_note = $name_note;
+        $this->name_note = $name_note === null ? '' : $name_note;
     }
 
     public function getNameNote() {
@@ -199,7 +208,7 @@ class Client
     }
 
     public function setLb($lb) {
-        $this->lb = $lb;
+        $this->lb = $lb === null ? '' : $lb;
     }
 
     public function getLb() {
@@ -239,7 +248,7 @@ class Client
     }
 
     public function setHomeNumber($home_number) {
-        $this->home_number = $home_number;
+        $this->home_number = $home_number === null ? '' : $home_number;
     }
 
     public function getHomeNumber() {
@@ -247,7 +256,7 @@ class Client
     }
 
     public function setAddressNote($address_note) {
-        $this->address_note = $address_note;
+        $this->address_note = $address_note === null ? '' : $address_note;
     }
 
     public function getAddressNote() {
@@ -255,7 +264,7 @@ class Client
     }
 
     public function setNote($note) {
-        $this->note = $note;
+        $this->note = $note === null ? '' : $note;
     }
 
     public function getNote() {
@@ -264,6 +273,25 @@ class Client
 
     public function getContacts() {
         return $this->contacts;
+    }
+
+    public function setContacts($contacts)
+    {
+        $this->contacts = $contacts;
+    }
+
+    public function addContact(Contact $contact): self
+    {
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts[] = $contact;
+        }
+        return $this;
+    }
+
+    public function removeContact(Contact $contact): self
+    {
+        $this->contacts->removeElement($contact);
+        return $this;
     }
 
     public function setCreatedAt(\DateTime $created_at) {

@@ -1,3 +1,24 @@
+# Upgrade to 9.1.0
+Enhancement:
+* #379 - Handle unknow route/path globally
+  * Create RouteCheckRedirectSubscriber service to handle unknow routes and paths globally 
+ 
+* #360 - Replace simple html client forms with symfony forms
+  * Install symfony/maker-bundle (1.64)
+  * Install symfony/form (7.3.6)
+  * Install symfony/validator (7.3.7)
+  * Create ClientType form and add to /clients/new route
+  * Update client view template
+  * Move AppVersion method from controllers to Twig Extension
+  * Add ClientType form to client/edit route
+
+Bugfixes:
+* #383 - Added usage of app_version() Twig function in the login form footer to show the current application version
+* #382 - Variable "project_data" does not exist in project/table/projects_list.html.twig at line 72
+  * Refactored project list tables for active and inactive projects
+* #386 - On Project index page, show all tasks in section, but need shows only first four
+  * Update markup for consistent UI and maintainability.
+
 # Upgrade to 9.0.1
 Bugs:
 * #361 - Add back link to "Client exist in db" error page

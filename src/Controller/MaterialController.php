@@ -28,7 +28,6 @@ class MaterialController extends AbstractController
     private string $page;
     private string $page_title;
     protected string $stylesheet;
-    protected string $app_version;
 
     /**
      * MaterialController constructor.
@@ -43,7 +42,6 @@ class MaterialController extends AbstractController
         $this->page = 'materials';
         $this->page_title = 'Materijali';
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
-        $this->app_version = $this->loadAppVersion();
     }
 
     /**
@@ -78,7 +76,6 @@ class MaterialController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('material/index.html.twig', $data);
@@ -115,7 +112,6 @@ class MaterialController extends AbstractController
             'tools_menu' => [
                 'material' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('material/material_new.html.twig', $data);
@@ -233,7 +229,6 @@ class MaterialController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('material/material_view.html.twig', $data);
@@ -289,7 +284,6 @@ class MaterialController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('material/material_edit.html.twig', $data);
@@ -576,26 +570,9 @@ class MaterialController extends AbstractController
             'tools_menu' => [
                 'material' => FALSE,
             ],
-            'app_version' => $this->app_version,
         ];
 
         return $this->render('material/search.html.twig', $data);
-    }
-
-    /**
-     * Loads the application version from composer.json.
-     *
-     * @return string
-     *   The app version, or 'unknown' if not found.
-     */
-    private function loadAppVersion(): string
-    {
-        $composerJsonPath = __DIR__ . '/../../composer.json';
-        if (file_exists($composerJsonPath)) {
-            $composerData = json_decode(file_get_contents($composerJsonPath), true);
-            return $composerData['version'] ?? 'unknown';
-        }
-        return 'unknown';
     }
 
 }
