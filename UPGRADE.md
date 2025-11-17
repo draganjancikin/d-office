@@ -1,3 +1,11 @@
+# Upgrade to 9.2.0
+Bugfixes:
+* #395 - Print Order issue: Change output destination for print order ("FS" =>"FI")
+* #397 - Project search issue: Change twig variable name project_data to active_project_data or inactive_project_data
+
+Enhancements:
+* #390 - Client Controller: Remove search method and integrate search to index method
+
 # Upgrade to 9.1.0
 Enhancement:
 * #379 - Handle unknow route/path globally
