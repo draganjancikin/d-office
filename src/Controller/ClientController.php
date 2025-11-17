@@ -396,7 +396,7 @@ class ClientController extends AbstractController
         $newCountry->setAbbr($abbr);
         $newCountry->setCreatedAt(new \DateTime("now"));
         $newCountry->setCreatedByUser($user);
-        $newCountry->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
+        $newCountry->setModifiedAt(new \DateTime("now"));
 
         $em->persist($newCountry);
         $em->flush();
@@ -475,7 +475,7 @@ class ClientController extends AbstractController
         $newCity->setName($name);
         $newCity->setCreatedAt(new \DateTime("now"));
         $newCity->setCreatedByUser($user);
-        $newCity->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
+        $newCity->setModifiedAt(new \DateTime("now"));
 
         $em->persist($newCity);
         $em->flush();
@@ -550,71 +550,12 @@ class ClientController extends AbstractController
         $newStreet->setName($name);
         $newStreet->setCreatedAt(new \DateTime("now"));
         $newStreet->setCreatedByUser($user);
-        $newStreet->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
+        $newStreet->setModifiedAt(new \DateTime("now"));
 
         $em->persist($newStreet);
         $em->flush();
 
         return $this->redirectToRoute('clients_index');
-    }
-
-    /**
-     * Displays and processes the advanced search form for clients.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Accepts client, street, and city search terms from POST data, performs advanced search using the Client
-     * repository, and passes the results and search terms along with page and user metadata to the template.
-     *
-     * @param EntityManagerInterface $em
-     *   Doctrine entity manager for database operations.
-     *
-     * @return Response
-     *   The rendered advanced search view with results if a search was performed.
-     */
-    #[Route('/clients/advanced-search', name: 'client_advanced_search', methods: ['GET', 'POST'])]
-    public function advancedSearch(EntityManagerInterface $em): Response
-    {
-        session_start();
-        if (!isset($_SESSION['username'])) {
-            return $this->redirectToRoute('login_form');
-        }
-
-        $client_name = $street_name = $city_name = NULL;
-
-        if (isset($_POST['submit'])) {
-            $term = $_POST["client"];
-            if ($term) {
-                $client_name = $this->basicValidation($term);
-            }
-
-            $street = $_POST["street"];
-            if ($street) {
-                $street_name = $this->basicValidation($street);
-            }
-
-            $city = $_POST["city"];
-            if ($city) {
-                $city_name = $this->basicValidation($city);
-            }
-            $clients_data = $em->getRepository(Client::class)->advancedSearch($term, $street, $city);
-        }
-
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'clients' => $clients_data ?? NULL,
-            'client_name' => $client_name,
-            'street_name' => $street_name,
-            'city_name' => $city_name,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
-            'tools_menu' => [
-                'client' => FALSE,
-            ],
-        ];
-
-        return $this->render('client/advanced_search.html.twig', $data);
     }
 
     /**
