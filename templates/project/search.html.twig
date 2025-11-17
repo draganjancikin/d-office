@@ -42,25 +42,24 @@
                                 <td>
                                     {% set count_for_realization = 0 %}
                                     {% for task_for_realization in active_project_data.tasks_for_realization %}
-                                    {% set count_for_realization = count_for_realization + 1 %}
-                                    <a href="/projects/{{ active_project_data.id }}/tasks/{{ task_for_realization.id
-                                    }}/edit">
+                                        {% set count_for_realization = count_for_realization + 1 %}
+                                        <a href="/projects/{{ active_project_data.id }}/tasks/{{ task_for_realization.id }}/edit">
                                             <span class="badge badge-{{ task_for_realization.class }}">
                                                 {{ task_for_realization.type }}
                                             </span>
-                                        {{ task_for_realization.title }}
-                                    </a>
-                                <br />
-                                    {% if count_for_realization == 4 %}
-                                    <a class="" data-toggle="collapse" href="#collapseExample1-{{ project_data.id }}"
-                                       role="button" aria-expanded="false" aria-controls="collapseExample1">
-                                        <i class="fas fa-caret-down"></i>
-                                    </a>
-                                    <div class="collapse" id="collapseExample1-{{ project_data.id }}">
+                                            {{ task_for_realization.title }}
+                                        </a>
+                                        <br />
+                                        {% if count_for_realization == 4 %}
+                                            <a data-toggle="collapse" href="#activeTasksForRealization-{{ active_project_data.id }}"
+                                               role="button" aria-expanded="false" aria-controls="activeTasksForRealization">
+                                                <i class="fas fa-caret-down"></i>
+                                            </a>
+                                            <div class="collapse" id="activeTasksForRealization-{{ active_project_data.id }}">
                                         {% endif %}
-                                        {% endfor %}
-                                        {% if count_for_realization > 3 %}
-                                    </div>
+                                    {% endfor %}
+                                    {% if count_for_realization > 3 %}
+                                        </div>
                                     {% endif %}
                                 </td>
 
@@ -69,8 +68,7 @@
                                     {% set count_in_realization = 0 %}
                                     {% for task_in_realization in active_project_data.tasks_in_realization %}
                                         {% set count_in_realization = count_in_realization + 1 %}
-                                        <a href="/projects/{{ active_project_data.id }}/tasks/{{ task_in_realization
-                                        .id }}/edit">
+                                        <a href="/projects/{{ active_project_data.id }}/tasks/{{ task_in_realization.id }}/edit">
                                             <span class="badge badge-{{ task_in_realization.class }}">
                                                 {{ task_in_realization.type }}
                                             </span>
@@ -78,16 +76,16 @@
                                         </a>
                                         <br />
                                         {% if count_in_realization == 4 %}
-                                            <a class="" data-toggle="collapse" href="#collapseExample2-{{ project_data.id }}"
-                                               role="button" aria-expanded="false" aria-controls="collapseExample2">
+                                            <a data-toggle="collapse" href="#activeTasksInRealization-{{ active_project_data.id }}"
+                                               role="button" aria-expanded="false" aria-controls="activeTasksInRealization">
                                                 <i class="fas fa-caret-down"></i>
                                             </a>
-                                            <div class="collapse" id="collapseExample2-{{ project_data.id }}">
-                                        {% endif %}
-                                        {% if count_in_realization > 3 %}
-                                            </div>
+                                            <div class="collapse" id="activeTasksInRealization-{{ active_project_data.id }}">
                                         {% endif %}
                                     {% endfor %}
+                                    {% if count_in_realization > 3 %}
+                                        </div>
+                                    {% endif %}
                                 </td>
 
                                 {# completed tasks ================================== #}
@@ -95,25 +93,24 @@
                                     {% set count_completed = 0 %}
                                     {% for task_completed in active_project_data.tasks_completed %}
                                         {% set count_completed = count_completed + 1 %}
-                                        <a href="/projects/{{ active_project_data.id }}/tasks/{{ task_completed.id
-                                        }}/edit">
+                                        <a href="/projects/{{ active_project_data.id }}/tasks/{{ task_completed.id }}/edit">
                                             <span class="badge badge-{{ task_completed.class }}">
                                                 {{ task_completed.type }}
                                             </span>
                                             {{ task_completed.title }}
                                         </a>
                                         <br />
-                                        {% if count_in_realization == 4 %}
-                                            <a class="" data-toggle="collapse" href="#collapseExample3-{{ project_data.id }}"
-                                               role="button" aria-expanded="false" aria-controls="collapseExample3">
+                                        {% if count_completed == 4 %}
+                                            <a class="" data-toggle="collapse" href="#completedActiveTasks-{{ active_project_data.id }}"
+                                               role="button" aria-expanded="false" aria-controls="completedActiveTasks">
                                                 <i class="fas fa-caret-down"></i>
                                             </a>
-                                            <div class="collapse" id="collapseExample3-{{ project_data.id }}">
-                                        {% endif %}
-                                        {% if count_completed > 3 %}
-                                            </div>
+                                            <div class="collapse" id="completedActiveTasks-{{ active_project_data.id }}">
                                         {% endif %}
                                     {% endfor %}
+                                    {% if count_completed > 3 %}
+                                        </div>
+                                    {% endif %}
                                 </td>
 
                             </tr>
@@ -168,11 +165,11 @@
                                     </a>
                                 <br />
                                     {% if count_for_realization == 4 %}
-                                    <a class="" data-toggle="collapse" href="#collapseExample1-{{ project_data.id }}"
-                                       role="button" aria-expanded="false" aria-controls="collapseExample1">
+                                    <a data-toggle="collapse" href="#inactiveTasksForRealization-{{ inactive_project_data.id }}"
+                                       role="button" aria-expanded="false" aria-controls="inactiveTasksForRealization">
                                         <i class="fas fa-caret-down"></i>
                                     </a>
-                                    <div class="collapse" id="collapseExample1-{{ project_data.id }}">
+                                    <div class="collapse" id="inactiveTasksForRealization-{{ inactive_project_data.id }}">
                                         {% endif %}
                                         {% endfor %}
                                         {% if count_for_realization >= 4 %}
@@ -194,16 +191,16 @@
                                         </a>
                                         <br />
                                         {% if count_in_realization == 4 %}
-                                            <a class="" data-toggle="collapse" href="#collapseExample2-{{ project_data.id }}"
-                                               role="button" aria-expanded="false" aria-controls="collapseExample2">
+                                            <a data-toggle="collapse" href="#inactiveTasksInRealization-{{ inactive_project_data.id }}"
+                                               role="button" aria-expanded="false" aria-controls="inactiveTasksInRealization">
                                                 <i class="fas fa-caret-down"></i>
                                             </a>
-                                            <div class="collapse" id="collapseExample2-{{ project_data.id }}">
-                                        {% endif %}
-                                        {% if count_in_realization >= 4 %}
-                                            </div>
+                                            <div class="collapse" id="inactiveTasksInRealization-{{ inactive_project_data.id }}">
                                         {% endif %}
                                     {% endfor %}
+                                    {% if count_in_realization >= 4 %}
+                                        </div>
+                                    {% endif %}
                                 </td>
 
                                 {# completed tasks ================================== #}
@@ -219,17 +216,17 @@
                                             {{ task_completed.title }}
                                         </a>
                                         <br />
-                                        {% if count_in_realization == 4 %}
-                                            <a class="" data-toggle="collapse" href="#collapseExample3-{{ project_data.id }}"
-                                               role="button" aria-expanded="false" aria-controls="collapseExample3">
+                                        {% if count_completed == 4 %}
+                                            <a data-toggle="collapse" href="#completedInactiveTasks-{{ inactive_project_data.id }}"
+                                               role="button" aria-expanded="false" aria-controls="completedInactiveTasks">
                                                 <i class="fas fa-caret-down"></i>
                                             </a>
-                                            <div class="collapse" id="collapseExample3-{{ project_data.id }}">
-                                        {% endif %}
-                                        {% if count_completed > 3 %}
-                                            </div>
+                                            <div class="collapse" id="completedInactiveTasks-{{ inactive_project_data.id }}">
                                         {% endif %}
                                     {% endfor %}
+                                    {% if count_completed > 3 %}
+                                        </div>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

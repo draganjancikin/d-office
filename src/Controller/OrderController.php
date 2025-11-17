@@ -1001,7 +1001,7 @@ class OrderController extends AbstractController
         // Check if folder exist on local machine.
         if (is_dir($root . '/' . $folder)) {
             // Close and output PDF document and save PDF to "$root.$folder./" .
-            $pdfContent = $pdf->Output($root . '/' . $folder . '/' . $file_name, 'FS');
+            $pdfContent = $pdf->Output($root . '/' . $folder . '/' . $file_name, 'FI');
         }
         else {
             // Close and output PDF document.

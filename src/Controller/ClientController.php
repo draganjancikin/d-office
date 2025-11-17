@@ -49,6 +49,8 @@ class ClientController extends AbstractController
      * Requires the user to be authenticated (session username set).
      * Passes page metadata, user info, and last clients to the template for rendering.
      *
+     * @param Request $request
+     *   The HTTP request object.
      * @param EntityManagerInterface $em
      *   Doctrine entity manager for database operations.
      *
@@ -56,11 +58,18 @@ class ClientController extends AbstractController
      *   The rendered clients index view.
      */
     #[Route('/clients', name: 'clients_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $em): Response
+    public function index(Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
+        }
+
+        if ($request->query->has('search')) {
+            $term = $request->query->get('search', '');
+            $clients= $em->getRepository(Client::class)->search($term);
+        } else {
+            $clients = $em->getRepository(Client::class)->findAll();
         }
 
         $data = [
@@ -69,7 +78,7 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
-            'last_clients' => $em->getRepository(Client::class)->getLastClients(10),
+            'clients' => $clients,
             'stylesheet' => $this->stylesheet,
             'user_id' => $_SESSION['user_id'],
             'user_role_id' => $_SESSION['user_role_id'],
@@ -618,47 +627,6 @@ class ClientController extends AbstractController
     public function basicValidation($str): string
     {
         return trim(htmlspecialchars($str));
-    }
-
-    /**
-     * Searches for clients by a search term provided as a query parameter.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Retrieves the 'term' from the query string, performs the search using the Client repository, and passes the
-     * results along with page metadata to the template.
-     *
-     * @param Request $request
-     *   The HTTP request object containing the search term as a query parameter.
-     * @param EntityManagerInterface $em
-     *    Doctrine entity manager for database operations.
-     *
-     * @return Response
-     *   The rendered client search results view.
-     */
-    #[Route('/clients/search', name: 'client_search', methods: ['GET'])]
-    public function search(Request $request, EntityManagerInterface $em): Response
-    {
-        session_start();
-        if (!isset($_SESSION['username'])) {
-            return $this->redirectToRoute('login_form');
-        }
-
-        $term = $request->query->get('term', '');
-        $clients= $em->getRepository(Client::class)->search($term);
-
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'clients' => $clients,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
-            'tools_menu' => [
-                'client' => FALSE,
-            ],
-        ];
-
-        return $this->render('client/search.html.twig', $data);
     }
 
 }
