@@ -52,7 +52,7 @@ class ClientType extends AbstractType
                 'required' => false,
                 'label' => false,
                 'attr' => [
-                    'title' => 'Unsetite napomenu uz naziv klijenta',
+                    'title' => 'Unesite napomenu uz naziv klijenta',
                     'placeholder' => 'Unesite napomenu uz naziv klijenta',
                     'class' => 'form-control form-control-sm',
                 ],
@@ -100,6 +100,9 @@ class ClientType extends AbstractType
                     'class' => 'form-select form-select-sm',
                 ],
                 'placeholder' => 'Izaberite državu',
+                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                    return $er->createQueryBuilder('c')->orderBy('c.name', 'ASC');
+                },
             ])
             ->add('city', EntityType::class, [
                 'required' => false,
@@ -116,6 +119,9 @@ class ClientType extends AbstractType
                     'class' => 'form-select form-select-sm',
                 ],
                 'placeholder' => 'Izaberite grad',
+                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                    return $er->createQueryBuilder('c')->orderBy('c.name', 'ASC');
+                },
             ])
             ->add('street', EntityType::class, [
                 'required' => false,
@@ -132,6 +138,9 @@ class ClientType extends AbstractType
                     'class' => 'form-select form-select-sm',
                 ],
                 'placeholder' => 'Izaberite ulicu',
+                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                    return $er->createQueryBuilder('s')->orderBy('s.name', 'ASC');
+                },
             ])
             ->add('home_number', null, [
                 'required' => false,
@@ -150,7 +159,7 @@ class ClientType extends AbstractType
                 'required' => false,
                 'label' => false,
                 'attr' => [
-                    'id' => 'ImputHomeNumber',
+                    'id' => 'formInputNote',
                     'title' => 'Unesite napomenu uz adresu',
                     'class' => 'form-control form-control-sm',
                     'placeholder' => 'Unesite napomenu uz adresu',
