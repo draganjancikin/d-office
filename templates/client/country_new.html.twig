@@ -5,7 +5,23 @@
 {% block body %}
     {% include 'client/tools_menu.html.twig' %}
     <div class="col-sm-12 col-md-11 col-lg-9 col-xl-7 px-2">
-        {% include 'client/form/country_new.html.twig' %}
+        <div class="card mb-4">
+            <div class="card-header p-2">
+                <h6 class="m-0 font-weight-bold text-primary">Unos nove države </h6>
+            </div>
+            <div class="card-body">
+                {% include 'client/form/country.html.twig' %}
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header p-2">
+                <h6 class="m-0 font-weight-bold text-primary">Lista država</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    {% include 'client/table/countries.html.twig' %}
+                </div>
+            </div>
+        </div>
     </div>
-
 {% endblock %}
