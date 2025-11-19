@@ -88,7 +88,7 @@
                 {% for order_archived_data in orders_archived_data %}
                     <tr class="table-secondary">
                         <td class="px-1">
-                            <a href="/order/{{ order_archived_data.id }}">
+                            <a href="/orders/{{ order_archived_data.id }}">
                                 {{ '%04d'|format(order_archived_data.ordinal_num_in_year) }}-
                                 {{ order_archived_data.date }}
                             </a>
