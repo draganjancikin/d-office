@@ -363,7 +363,7 @@ class ClientController extends AbstractController
             $em->flush();
 
             // $this->addFlash('success', 'Country created successfully!');
-            return $this->redirectToRoute('country_new');
+            return $this->redirectToRoute('country_show', ['country_id' => $country->getId()]);
         }
 
         $all_countries = $em->getRepository(Country::class)->findAll();
@@ -499,7 +499,7 @@ class ClientController extends AbstractController
             $city->setModifiedAt(new \DateTime("now"));
             $em->persist($city);
             $em->flush();
-            return $this->redirectToRoute('city_new');
+            return $this->redirectToRoute('city_show', ['city_id' => $city->getId()]);
         }
 
         $all_cities = $em->getRepository(City::class)->findAll();
@@ -526,7 +526,7 @@ class ClientController extends AbstractController
      * Requires the user to be authenticated (session username set).
      * Retrieves city data and passes it along with user and page metadata to the template.
      *
-     * @param int $id
+     * @param int $city_id
      *   The unique identifier of the city to display.
      * @param Request $request
      *   The HTTP request object.
@@ -536,15 +536,15 @@ class ClientController extends AbstractController
      * @return Response
      *   The rendered city detail view.
      */
-    #[Route('/cities/{id}', name: 'city_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function showCity(int $id, Request $request, EntityManagerInterface $em): Response
+    #[Route('/cities/{city_id}', name: 'city_show', requirements: ['city_id' => '\d+'], methods: ['GET'])]
+    public function showCity(int $city_id, Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $city = $em->find(City::class, $id);
+        $city = $em->find(City::class, $city_id);
         if (!$city) {
             throw $this->createNotFoundException('City not found.');
         }
@@ -567,7 +567,7 @@ class ClientController extends AbstractController
     /**
      * Edit City form.
      *
-     * @param int $id
+     * @param int $city_id
      *   The unique identifier of the city to edit.
      * @param Request $request
      *   The HTTP request object.
@@ -577,14 +577,14 @@ class ClientController extends AbstractController
      * @return Response
      *   The rendered city edit view or a redirect to the city detail view after editing.
      */
-    #[Route('/cities/{id}/edit', name: 'city_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function editCity(int $id, Request $request, EntityManagerInterface $em): Response
+    #[Route('/cities/{city_id}/edit', name: 'city_edit', requirements: ['$city_id' => '\d+'], methods: ['GET', 'POST'])]
+    public function editCity(int $city_id, Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
-        $city = $em->find(City::class, $id);
+        $city = $em->find(City::class, $city_id);
         if (!$city) {
             throw $this->createNotFoundException('City not found.');
         }
@@ -595,7 +595,7 @@ class ClientController extends AbstractController
             $city->setModifiedByUser($user);
             $city->setModifiedAt(new \DateTime("now"));
             $em->flush();
-            return $this->redirectToRoute('city_show', ['id' => $id]);
+            return $this->redirectToRoute('city_show', ['city_id' => $city_id]);
         }
         return $this->render('client/city_edit.html.twig', [
             'form' => $form->createView(),
@@ -642,7 +642,7 @@ class ClientController extends AbstractController
             $street->setModifiedAt(new \DateTime('now'));
             $em->persist($street);
             $em->flush();
-            return $this->redirectToRoute('street_new');
+            return $this->redirectToRoute('street_show', ['street_id' => $street->getId()]);
         }
 
         $all_streets = $em->getRepository(Street::class)->findAll();
@@ -669,7 +669,7 @@ class ClientController extends AbstractController
      * Requires the user to be authenticated (session username set).
      * Retrieves street data and passes it along with user and page metadata to the template.
      *
-     * @param int $id
+     * @param int $street_id
      *   The unique identifier of the street to display.
      * @param Request $request
      *   The HTTP request object.
@@ -679,15 +679,15 @@ class ClientController extends AbstractController
      * @return Response
      *   The rendered street detail view.
      */
-    #[Route('/streets/{id}', name: 'street_show', requirements: ['id' => '\\d+'], methods: ['GET'])]
-    public function showStreet(int $id, Request $request, EntityManagerInterface $em): Response
+    #[Route('/streets/{street_id}', name: 'street_show', requirements: ['street_id' => '\\d+'], methods: ['GET'])]
+    public function showStreet(int $street_id, Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $street = $em->find(Street::class, $id);
+        $street = $em->find(Street::class, $street_id);
         if (!$street) {
             throw $this->createNotFoundException('Street not found.');
         }
@@ -710,7 +710,7 @@ class ClientController extends AbstractController
     /**
      * Edit Street form.
      *
-     * @param int $id
+     * @param int $street_id
      *   The unique identifier of the street to edit.
      * @param Request $request
      *   The HTTP request object.
@@ -720,14 +720,14 @@ class ClientController extends AbstractController
      * @return Response
      *   The rendered street edit view or a redirect to the street detail view after editing.
      */
-    #[Route('/streets/{id}/edit', name: 'street_edit', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
-    public function editStreet(int $id, Request $request, EntityManagerInterface $em): Response
+    #[Route('/streets/{street_id}/edit', name: 'street_edit', requirements: ['street_id' => '\\d+'], methods: ['GET', 'POST'])]
+    public function editStreet(int $street_id, Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
-        $street = $em->find(Street::class, $id);
+        $street = $em->find(Street::class, $street_id);
         if (!$street) {
             throw $this->createNotFoundException('Street not found.');
         }
@@ -738,7 +738,7 @@ class ClientController extends AbstractController
             $street->setModifiedByUser($user);
             $street->setModifiedAt(new \DateTime("now"));
             $em->flush();
-            return $this->redirectToRoute('street_show', ['id' => $id]);
+            return $this->redirectToRoute('street_show', ['street_id' => $street_id]);
         }
         return $this->render('client/street_edit.html.twig', [
             'form' => $form->createView(),
