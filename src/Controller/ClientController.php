@@ -470,7 +470,6 @@ class ClientController extends AbstractController
         ]);
     }
 
-
     /**
      * Displays the form for creating a new city.
      *
@@ -521,6 +520,96 @@ class ClientController extends AbstractController
         return $this->render('client/city_new.html.twig', $data);
     }
 
+    /**
+     * Displays the details for a specific city.
+     *
+     * Requires the user to be authenticated (session username set).
+     * Retrieves city data and passes it along with user and page metadata to the template.
+     *
+     * @param int $id
+     *   The unique identifier of the city to display.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   The rendered city detail view.
+     */
+    #[Route('/cities/{id}', name: 'city_show', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function showCity(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $city = $em->find(City::class, $id);
+        if (!$city) {
+            throw $this->createNotFoundException('City not found.');
+        }
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+            'city' => $city,
+        ];
+
+        return $this->render('client/city_view.html.twig', $data);
+    }
+
+    /**
+     * Edit City form.
+     *
+     * @param int $id
+     *   The unique identifier of the city to edit.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   The rendered city edit view or a redirect to the city detail view after editing.
+     */
+    #[Route('/cities/{id}/edit', name: 'city_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function editCity(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+        $city = $em->find(City::class, $id);
+        if (!$city) {
+            throw $this->createNotFoundException('City not found.');
+        }
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $form = $this->createForm(CityType::class, $city);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $city->setModifiedByUser($user);
+            $city->setModifiedAt(new \DateTime("now"));
+            $em->flush();
+            return $this->redirectToRoute('city_show', ['id' => $id]);
+        }
+        return $this->render('client/city_edit.html.twig', [
+            'form' => $form->createView(),
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'city' => $city,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+        ]);
+    }
 
     /**
      * Add Street form.
