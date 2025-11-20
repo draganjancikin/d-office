@@ -12,6 +12,9 @@ use App\Entity\Street;
 use App\Entity\User;
 use App\Form\ClientType;
 use App\Form\ContactType;
+use App\Form\CountryType;
+use App\Form\CityType;
+use App\Form\StreetType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -326,16 +329,44 @@ class ClientController extends AbstractController
      * Requires the user to be authenticated (session username set).
      * Passes user and page metadata to the template for rendering the new country form.
      *
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
      * @return Response
      *   The rendered new country form view.
      */
-    #[Route('/countries/new', name: 'country_new', methods: ['GET'])]
-    public function newCountry(): Response
+    #[Route('/countries/new', name: 'country_new', methods: ['GET', 'POST'])]
+    public function newCountry(Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
+
+        $country = new Country();
+
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $country->setCreatedByUser($user);
+
+        $form = $this->createForm(CountryType::class, $country);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($country->getAbbr() === null) {
+                $country->setAbbr('');
+            }
+            $country->setCreatedAt(new \DateTime());
+            $country->setModifiedAt(new \DateTime());
+            $em->persist($country);
+            $em->flush();
+
+            // $this->addFlash('success', 'Country created successfully!');
+            return $this->redirectToRoute('country_new');
+        }
+
+        $all_countries = $em->getRepository(Country::class)->findAll();
 
         $data = [
             'page' => $this->page,
@@ -346,62 +377,11 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
+            'form' => $form->createView(),
+            'all_countries' => $all_countries,
         ];
 
         return $this->render('client/country_new.html.twig', $data);
-    }
-
-    /**
-     * Handles the creation of a new country from the new country form submission.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Validates and sets country fields, checks for duplicate names, persists the new country to the database,
-     * and redirects to the clients index view after successful creation.
-     *
-     * @param EntityManagerInterface $em
-     *   Doctrine entity manager for database operations.
-     *
-     * @return Response
-     *   Redirects to the clients index view after country creation.
-     */
-    #[Route('/countries/create', name: 'country_create', methods: ['POST'])]
-    public function createCountry(EntityManagerInterface $em): Response
-    {
-        session_start();
-        $user = $em->find(User::class, $_SESSION['user_id']);
-
-        if (empty($_POST['name'])) {
-            die('<script>location.href = "?new&name_error" </script>');
-        }
-        else {
-            $name = $this->basicValidation($_POST['name']);
-        }
-
-        // Check if name already exist in database.
-        $control_country = $em->getRepository(Country::class)->findBy( array('name' => $name) );
-        if ($control_country) {
-            echo 'Country with name: "<strong>'.$name.'</strong>" already exist in database. Please choose new name!';
-            echo '<br><a href="/countries/new">Povratak na stranicu za kreiranje nove države</a>';
-            exit(1);
-        }
-
-        $abbr = "";
-        if (!empty($_POST['abbr'])) {
-            $abbr = $this->basicValidation($_POST['abbr']);
-        }
-
-        $newCountry = new Country();
-
-        $newCountry->setName($name);
-        $newCountry->setAbbr($abbr);
-        $newCountry->setCreatedAt(new \DateTime("now"));
-        $newCountry->setCreatedByUser($user);
-        $newCountry->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
-
-        $em->persist($newCountry);
-        $em->flush();
-
-        return $this->redirectToRoute('clients_index');
     }
 
     /**
@@ -413,13 +393,30 @@ class ClientController extends AbstractController
      * @return Response
      *   The rendered new city form view.
      */
-    #[Route('/cities/new', name: 'city_new', methods: ['GET'])]
-    public function newCity(): Response
+    #[Route('/cities/new', name: 'city_new', methods: ['GET', 'POST'])]
+    public function newCity(Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
+
+        $city = new City();
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $city->setCreatedByUser($user);
+
+        $form = $this->createForm(CityType::class, $city);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $city->setCreatedAt(new \DateTime("now"));
+            $city->setModifiedAt(new \DateTime("now"));
+            $em->persist($city);
+            $em->flush();
+            return $this->redirectToRoute('city_new');
+        }
+
+        $all_cities = $em->getRepository(City::class)->findAll();
 
         $data = [
             'page' => $this->page,
@@ -430,72 +427,50 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
+            'form' => $form->createView(),
+            'all_cities' => $all_cities,
         ];
 
         return $this->render('client/city_new.html.twig', $data);
     }
 
-    /**
-     * Handles the creation of a new city from the new city form submission.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Validates and sets city fields, checks for duplicate names, persists the new city to the database, and redirects
-     * to the clients index view after successful creation.
-     *
-     * @param EntityManagerInterface $em
-     *     Doctrine entity manager for database operations.
-     *
-     * @return Response
-     *   Redirects to the clients index view after city creation.
-     */
-    #[Route('/cities/create', name: 'city_create', methods: ['POST'])]
-    public function createCity(EntityManagerInterface $em): Response
-    {
-        session_start();
-        $user = $em->find(User::class,  $_SESSION['user_id']);
-
-        if (empty($_POST['name'])) {
-            die('<script>location.href = "?new&name_error" </script>');
-        }
-        else {
-            $name = $this->basicValidation($_POST['name']);
-        }
-
-        // Check if name already exist in database.
-        $control_name = $em->getRepository(City::class)->findBy( array('name' => $name) );
-        if ($control_name) {
-            echo 'Naselje sa nazivom: "<strong>'.$name.'</strong>", već postoji u bazi!';
-            echo '<br><a href="/cities/new">Povratak na stranicu za kreiranje novog grada</a>';
-            exit(1);
-            // die('<script>location.href = "?alert&ob=2" </script>');
-        }
-
-        $newCity = new City();
-
-        $newCity->setName($name);
-        $newCity->setCreatedAt(new \DateTime("now"));
-        $newCity->setCreatedByUser($user);
-        $newCity->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
-
-        $em->persist($newCity);
-        $em->flush();
-
-        return $this->redirectToRoute('clients_index');
-    }
 
     /**
      * Add Street form.
      *
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
      * @return Response
+     *   The rendered new street form view.
      */
-    #[Route('/streets/new', name: 'street_new', methods: ['GET'])]
-    public function newStreet(): Response
+    #[Route('/streets/new', name: 'street_new', methods: ['GET', 'POST'])]
+    public function newStreet(Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
           return $this->redirectToRoute('login_form');
         }
 
+        $street = new Street();
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $street->setCreatedByUser($user);
+
+        $form = $this->createForm(StreetType::class, $street);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $street->setCreatedAt(new \DateTime('now'));
+            $street->setModifiedAt(new \DateTime('now'));
+            $em->persist($street);
+            $em->flush();
+            return $this->redirectToRoute('street_new');
+        }
+
+        $all_streets = $em->getRepository(Street::class)->findAll();
+
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
@@ -505,128 +480,11 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
+            'form' => $form->createView(),
+            'all_streets' => $all_streets,
         ];
 
         return $this->render('client/street_new.html.twig', $data);
-    }
-
-    /**
-     * Handles the creation of a new street from the new street form submission.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Validates and sets street fields, checks for duplicate names, persists the new street to the database, and
-     * redirects to the clients index view after successful creation.
-     *
-     * @param EntityManagerInterface $em
-     *    Doctrine entity manager for database operations.
-     *
-     * @return Response
-     *   Redirects to the clients index view after street creation.
-     */
-    #[Route('/streets/create', name: 'street_create', methods: ['POST'])]
-    public function createStreet(EntityManagerInterface $em): Response
-    {
-        session_start();
-        $user = $em->find(User::class, $_SESSION['user_id']);
-
-        if (empty($_POST['name'])) {
-            $nameError = 'Ime mora biti upisano';
-            die('<script>location.href = "?new&name_error" </script>');
-        }
-        else {
-            $name = $this->basicValidation($_POST['name']);
-        }
-
-        // Check if name already exist in database.
-        $control_name = $em->getRepository(Street::class)->findBy( array('name' => $name) );
-        if ($control_name) {
-            echo 'Ulica sa nazivom: "<strong>'.$name.'</strong>", već postoji u bazi. Unesite novi naziv!';
-            echo '<br><a href="/streets/new">Povratak na stranicu za kreiranje nove ulice</a>';
-            exit(1);
-        }
-
-        $newStreet = new Street();
-
-        $newStreet->setName($name);
-        $newStreet->setCreatedAt(new \DateTime("now"));
-        $newStreet->setCreatedByUser($user);
-        $newStreet->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
-
-        $em->persist($newStreet);
-        $em->flush();
-
-        return $this->redirectToRoute('clients_index');
-    }
-
-    /**
-     * Displays and processes the advanced search form for clients.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Accepts client, street, and city search terms from POST data, performs advanced search using the Client
-     * repository, and passes the results and search terms along with page and user metadata to the template.
-     *
-     * @param EntityManagerInterface $em
-     *   Doctrine entity manager for database operations.
-     *
-     * @return Response
-     *   The rendered advanced search view with results if a search was performed.
-     */
-    #[Route('/clients/advanced-search', name: 'client_advanced_search', methods: ['GET', 'POST'])]
-    public function advancedSearch(EntityManagerInterface $em): Response
-    {
-        session_start();
-        if (!isset($_SESSION['username'])) {
-            return $this->redirectToRoute('login_form');
-        }
-
-        $client_name = $street_name = $city_name = NULL;
-
-        if (isset($_POST['submit'])) {
-            $term = $_POST["client"];
-            if ($term) {
-                $client_name = $this->basicValidation($term);
-            }
-
-            $street = $_POST["street"];
-            if ($street) {
-                $street_name = $this->basicValidation($street);
-            }
-
-            $city = $_POST["city"];
-            if ($city) {
-                $city_name = $this->basicValidation($city);
-            }
-            $clients_data = $em->getRepository(Client::class)->advancedSearch($term, $street, $city);
-        }
-
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'clients' => $clients_data ?? NULL,
-            'client_name' => $client_name,
-            'street_name' => $street_name,
-            'city_name' => $city_name,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
-            'tools_menu' => [
-                'client' => FALSE,
-            ],
-        ];
-
-        return $this->render('client/advanced_search.html.twig', $data);
-    }
-
-    /**
-     * Basic validation method.
-     *
-     * @param $str
-     *
-     * @return string
-     */
-    public function basicValidation($str): string
-    {
-        return trim(htmlspecialchars($str));
     }
 
 }

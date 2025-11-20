@@ -1,0 +1,27 @@
+{{ form_start(form) }}
+<div class="row mb-2">
+    <label for="{{ form.name.vars.id }}" class="col-sm-3 col-md-4 col-lg-3 col-xl-2 col-form-label text-left text-sm-right">
+        {{ form.name.vars.label|default('Država:') }}
+    </label>
+    <div class="col-sm-9 col-md-8 col-lg-9 col-xl-10">
+        {{ form_widget(form.name) }}
+        {{ form_errors(form.name) }}
+    </div>
+</div>
+
+<div class="row mb-2">
+    <label for="{{ form.abbr.vars.id }}" class="col-sm-3 col-md-4 col-lg-3 col-xl-2 col-form-label text-left text-sm-right">
+        {{ form.abbr.vars.label|default('Skraćenica:') }}
+    </label>
+    <div class="col-sm-5 col-md-4 col-lg-5 col-xl-6">
+        {{ form_widget(form.abbr) }}
+        {{ form_errors(form.abbr) }}
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-sm-3 offset-sm-3 offset-md-4 offset-lg-3 offset-xl-2">
+        <button type="submit" class="btn btn-sm btn-success">Snimi</button>
+    </div>
+</div>
+{{ form_end(form) }}

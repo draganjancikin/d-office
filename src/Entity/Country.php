@@ -36,7 +36,7 @@ class Country
      *
      * @var string
      */
-    #[ORM\Column(type: "string", length: 3)]
+    #[ORM\Column(type: "string", length: 3, nullable: true)]
     protected $abbr;
 
     /**

@@ -972,6 +972,9 @@ class DocumentController extends AbstractController
      * Export Proforma to Dispatch.
      *
      * @param int $document_id
+     *   The ID of the proforma document to be exported.
+     * @param EntityManagerInterface $em
+     *   The EntityManagerInterface instance.
      *
      * @return Response
      * @throws \Doctrine\DBAL\Exception
@@ -981,13 +984,13 @@ class DocumentController extends AbstractController
         name: 'document_export_proforma_to_dispatch',
         methods: ['GET']
     )]
-    public function exportProformaToDispatch(int $document_id): Response
+    public function exportProformaToDispatch(int $document_id, EntityManagerInterface $em): Response
     {
         session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+        $user = $em->find(User::class, $_SESSION['user_id']);
 
         $proforma_id = $document_id;
-        $proforma = $this->entityManager->find(AccountingDocument::class, $proforma_id);
+        $proforma = $em->find(AccountingDocument::class, $proforma_id);
 
         $ordinal_num_in_year = 0;
 
@@ -998,7 +1001,7 @@ class DocumentController extends AbstractController
         $newDispatch->setDate(new \DateTime("now"));
         $newDispatch->setIsArchived(0);
 
-        $newDispatch->setType($this->entityManager->find(AccountingDocumentType::class, 2));
+        $newDispatch->setType($em->find(AccountingDocumentType::class, 2));
         $newDispatch->setTitle($proforma->getTitle());
         $newDispatch->setClient($proforma->getClient());
         $newDispatch->setParent($proforma);
@@ -1006,27 +1009,28 @@ class DocumentController extends AbstractController
 
         $newDispatch->setCreatedAt(new \DateTime("now"));
         $newDispatch->setCreatedByUser($user);
-        $newDispatch->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
+        $newDispatch->setModifiedAt(new \DateTime("now"));
 
-        $this->entityManager->persist($newDispatch);
-        $this->entityManager->flush();
+        $em->persist($newDispatch);
+        $em->flush();
 
         // Get id of last AccountingDocument.
         $last_accounting_document_id = $newDispatch->getId();
 
         // Set Ordinal Number In Year.
-        $this->entityManager->getRepository(AccountingDocument::class)->setOrdinalNumInYear($last_accounting_document_id);
+        $em->getRepository(AccountingDocument::class)->setOrdinalNumInYear($last_accounting_document_id);
 
         // Get proforma payments.
         $payments = $proforma->getPayments();
+
         // Update all payment.
         foreach ($payments as $payment) {
             // TODO Dragan: Rešiti bolje konekciju na bazu.
             $conn = \Doctrine\DBAL\DriverManager::getConnection([
-                'dbname' => DB_NAME,
-                'user' => DB_USERNAME,
-                'password' => DB_PASSWORD,
-                'host' => DB_SERVER,
+                'dbname' => $_ENV['DB_NAME'],
+                'user' => $_ENV['DB_USER'],
+                'password' => $_ENV['DB_PASSWORD'],
+                'host' => $_ENV['DB_SERVER'],
                 'driver' => 'mysqli',
             ]);
             $queryBuilder = $conn->createQueryBuilder();
@@ -1040,7 +1044,7 @@ class DocumentController extends AbstractController
         }
 
         // Get articles from proforma.
-        $proforma_articles = $this->entityManager->getRepository(AccountingDocument::class)->getArticles($proforma->getId());
+        $proforma_articles = $em->getRepository(AccountingDocument::class)->getArticles($proforma->getId());
 
         // Save articles to dispatch.
         foreach ($proforma_articles as $proforma_article) {
@@ -1055,39 +1059,38 @@ class DocumentController extends AbstractController
             $newDispatchArticle->setWeight($proforma_article->getWeight());
             $newDispatchArticle->setNote($proforma_article->getNote());
 
-            $this->entityManager->persist($newDispatchArticle);
-            $this->entityManager->flush();
+            $em->persist($newDispatchArticle);
+            $em->flush();
 
-            // Get $proforma_article properies
+            // Get $proforma_article properties.
             $proforma_article_properties =
-              $this->entityManager
-                ->getRepository(AccountingDocumentArticleProperty::class)
-                ->findBy(array('accounting_document_article' => $proforma_article->getId()), []);
+                $em->getRepository(AccountingDocumentArticleProperty::class)
+                    ->findBy(array('accounting_document_article' => $proforma_article->getId()), []);
 
-            // Save $proforma_article properies to $newDispatchArticle
+            // Save $proforma_article properties to $newDispatchArticle.
             foreach ($proforma_article_properties as $article_property) {
                 $newDispatchArticleProperty = new AccountingDocumentArticleProperty();
 
                 $newDispatchArticleProperty->setAccountingDocumentArticle($newDispatchArticle);
                 $newDispatchArticleProperty->setProperty($article_property->getProperty());
                 $newDispatchArticleProperty->setQuantity($article_property->getQuantity());
-                $this->entityManager->persist($newDispatchArticleProperty);
-                $this->entityManager->flush();
+                $em->persist($newDispatchArticleProperty);
+                $em->flush();
             }
         }
 
         // Set Proforma to archive.
         $proforma->setIsArchived(1);
-        $this->entityManager->flush();
+        $em->flush();
 
         // Check if proforma belong to any Project
-        $project = $this->entityManager->getRepository(AccountingDocument::class)->getProjectByAccountingDocument
+        $project = $em->getRepository(AccountingDocument::class)->getProjectByAccountingDocument
         ($proforma->getId());
 
         if ($project) {
             // Set same project to dispatch.
             $project->getAccountingDocuments()->add($newDispatch);
-            $this->entityManager->flush();
+            $em->flush();
         }
 
         return $this->redirectToRoute('document_show', ['document_id' => $last_accounting_document_id]);
