@@ -14,7 +14,7 @@ class CountryType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Država',
+                'label' => 'Naziv',
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Unesite naziv drzave',

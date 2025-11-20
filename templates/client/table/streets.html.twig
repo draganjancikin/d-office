@@ -3,7 +3,7 @@
     <tbody>
     {% for street in all_streets %}
         <tr>
-            <td>{{ street.name }}</td>
+            <td><a href="/streets/{{ street.id }}">{{ street.name }}</a></td>
         </tr>
     {% endfor %}
     </tbody>

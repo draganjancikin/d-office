@@ -385,6 +385,92 @@ class ClientController extends AbstractController
     }
 
     /**
+     * Displays the details for a specific country.
+     *
+     * @param int $country_id
+     *   The unique identifier of the country to display.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   The rendered country detail view.
+     */
+    #[Route('/countries/{country_id}', name: 'country_show', requirements: ['country_id' => '\d+'], methods: ['GET'])]
+    public function showCountry(int $country_id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $country = $em->getRepository(Country::class)->find($country_id);
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+
+            'country' => $country,
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+        ];
+
+        return $this->render('client/country_view.html.twig', $data);
+    }
+
+    /**
+     * Edit Country form.
+     *
+     * @param int $country_id
+     *   The unique identifier of the country to edit.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   The rendered country edit view or a redirect to the country detail view after editing.
+     *
+     * @throws \Doctrine\ORM\Exception\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    #[Route('/countries/{country_id}/edit', name: 'country_edit', methods: ['GET', 'POST'])]
+    public function editCountry(int $country_id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+        $country = $em->find(Country::class, $country_id);
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $form = $this->createForm(CountryType::class, $country);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $country->setModifiedByUser($user);
+            $country->setModifiedAt(new \DateTime("now"));
+            $em->flush();
+            return $this->redirectToRoute('country_show', ['country_id' => $country_id]);
+        }
+        return $this->render('client/country_edit.html.twig', [
+            'form' => $form->createView(),
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'country' => $country,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+        ]);
+    }
+
+    /**
      * Displays the form for creating a new city.
      *
      * Requires the user to be authenticated (session username set).
@@ -434,6 +520,96 @@ class ClientController extends AbstractController
         return $this->render('client/city_new.html.twig', $data);
     }
 
+    /**
+     * Displays the details for a specific city.
+     *
+     * Requires the user to be authenticated (session username set).
+     * Retrieves city data and passes it along with user and page metadata to the template.
+     *
+     * @param int $id
+     *   The unique identifier of the city to display.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   The rendered city detail view.
+     */
+    #[Route('/cities/{id}', name: 'city_show', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function showCity(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $city = $em->find(City::class, $id);
+        if (!$city) {
+            throw $this->createNotFoundException('City not found.');
+        }
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+            'city' => $city,
+        ];
+
+        return $this->render('client/city_view.html.twig', $data);
+    }
+
+    /**
+     * Edit City form.
+     *
+     * @param int $id
+     *   The unique identifier of the city to edit.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   The rendered city edit view or a redirect to the city detail view after editing.
+     */
+    #[Route('/cities/{id}/edit', name: 'city_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function editCity(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+        $city = $em->find(City::class, $id);
+        if (!$city) {
+            throw $this->createNotFoundException('City not found.');
+        }
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $form = $this->createForm(CityType::class, $city);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $city->setModifiedByUser($user);
+            $city->setModifiedAt(new \DateTime("now"));
+            $em->flush();
+            return $this->redirectToRoute('city_show', ['id' => $id]);
+        }
+        return $this->render('client/city_edit.html.twig', [
+            'form' => $form->createView(),
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'city' => $city,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+        ]);
+    }
 
     /**
      * Add Street form.
@@ -485,6 +661,97 @@ class ClientController extends AbstractController
         ];
 
         return $this->render('client/street_new.html.twig', $data);
+    }
+
+    /**
+     * Displays the details for a specific street.
+     *
+     * Requires the user to be authenticated (session username set).
+     * Retrieves street data and passes it along with user and page metadata to the template.
+     *
+     * @param int $id
+     *   The unique identifier of the street to display.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   The rendered street detail view.
+     */
+    #[Route('/streets/{id}', name: 'street_show', requirements: ['id' => '\\d+'], methods: ['GET'])]
+    public function showStreet(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $street = $em->find(Street::class, $id);
+        if (!$street) {
+            throw $this->createNotFoundException('Street not found.');
+        }
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+            'street' => $street,
+        ];
+
+        return $this->render('client/street_view.html.twig', $data);
+    }
+
+    /**
+     * Edit Street form.
+     *
+     * @param int $id
+     *   The unique identifier of the street to edit.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   The rendered street edit view or a redirect to the street detail view after editing.
+     */
+    #[Route('/streets/{id}/edit', name: 'street_edit', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
+    public function editStreet(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+        $street = $em->find(Street::class, $id);
+        if (!$street) {
+            throw $this->createNotFoundException('Street not found.');
+        }
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $form = $this->createForm(StreetType::class, $street);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $street->setModifiedByUser($user);
+            $street->setModifiedAt(new \DateTime("now"));
+            $em->flush();
+            return $this->redirectToRoute('street_show', ['id' => $id]);
+        }
+        return $this->render('client/street_edit.html.twig', [
+            'form' => $form->createView(),
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'street' => $street,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+        ]);
     }
 
 }
