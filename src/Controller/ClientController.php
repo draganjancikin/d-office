@@ -13,6 +13,7 @@ use App\Entity\User;
 use App\Form\ClientType;
 use App\Form\ContactType;
 use App\Form\CountryType;
+use App\Form\CityType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -388,13 +389,30 @@ class ClientController extends AbstractController
      * @return Response
      *   The rendered new city form view.
      */
-    #[Route('/cities/new', name: 'city_new', methods: ['GET'])]
-    public function newCity(): Response
+    #[Route('/cities/new', name: 'city_new', methods: ['GET', 'POST'])]
+    public function newCity(Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
+
+        $city = new City();
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $city->setCreatedByUser($user);
+
+        $form = $this->createForm(CityType::class, $city);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $city->setCreatedAt(new \DateTime("now"));
+            $city->setModifiedAt(new \DateTime("now"));
+            $em->persist($city);
+            $em->flush();
+            return $this->redirectToRoute('city_new');
+        }
+
+        $all_cities = $em->getRepository(City::class)->findAll();
 
         $data = [
             'page' => $this->page,
@@ -405,58 +423,13 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
+            'form' => $form->createView(),
+            'all_cities' => $all_cities,
         ];
 
         return $this->render('client/city_new.html.twig', $data);
     }
 
-    /**
-     * Handles the creation of a new city from the new city form submission.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Validates and sets city fields, checks for duplicate names, persists the new city to the database, and redirects
-     * to the clients index view after successful creation.
-     *
-     * @param EntityManagerInterface $em
-     *     Doctrine entity manager for database operations.
-     *
-     * @return Response
-     *   Redirects to the clients index view after city creation.
-     */
-    #[Route('/cities/create', name: 'city_create', methods: ['POST'])]
-    public function createCity(EntityManagerInterface $em): Response
-    {
-        session_start();
-        $user = $em->find(User::class,  $_SESSION['user_id']);
-
-        if (empty($_POST['name'])) {
-            die('<script>location.href = "?new&name_error" </script>');
-        }
-        else {
-            $name = $this->basicValidation($_POST['name']);
-        }
-
-        // Check if name already exist in database.
-        $control_name = $em->getRepository(City::class)->findBy( array('name' => $name) );
-        if ($control_name) {
-            echo 'Naselje sa nazivom: "<strong>'.$name.'</strong>", već postoji u bazi!';
-            echo '<br><a href="/cities/new">Povratak na stranicu za kreiranje novog grada</a>';
-            exit(1);
-            // die('<script>location.href = "?alert&ob=2" </script>');
-        }
-
-        $newCity = new City();
-
-        $newCity->setName($name);
-        $newCity->setCreatedAt(new \DateTime("now"));
-        $newCity->setCreatedByUser($user);
-        $newCity->setModifiedAt(new \DateTime("now"));
-
-        $em->persist($newCity);
-        $em->flush();
-
-        return $this->redirectToRoute('clients_index');
-    }
 
     /**
      * Add Street form.
