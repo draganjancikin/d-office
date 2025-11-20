@@ -1,3 +1,18 @@
+# Upgrade to 9.4.0
+Enhancements:
+* #421 - November system update:
+  - "doctrine/orm" object relational mapper (3.5.3 => 3.5.7)
+  - "symfony/runtime" package (7.3.4 => 7.3.4)
+  - "symfony/framework-bundle" package (7.3.6 => 7.3.6)
+  - "symfony/twig-bundle" package (7.3.4 => 7.3.4)
+  - "symfony/console" package (7.3.6 => 7.3.6)
+  - "symfony/yaml" package (7.3.5 => 7.3.5)
+  - "symfony/dotenv" package (7.3.2 => 7.3.2)
+  - "bootstrap" css framework (5.2.3 => 5.3.8)
+* #420 - Create Country show and edit page
+* #422 - Create City show and edit page
+* #423 - Create Street show and edit page
+
 # Upgrade to 9.3.0
 Bugfixes:
 * #401 - On Document show page link to client is broken: Updated link to client view page ("/client/{id}" => "/clients/{id}")
