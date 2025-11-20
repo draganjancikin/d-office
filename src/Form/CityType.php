@@ -14,7 +14,7 @@ class CityType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Naziv naselja',
+                'label' => 'Naziv',
                 'attr' => [
                     'maxlength' => 32,
                     'required' => true,
