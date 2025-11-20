@@ -4,7 +4,7 @@ A web application for office and project management, built with PHP 8.2 and mode
 
 - **PHP:** 8.2 or higher
 - **Database ORM:** Doctrine ORM ^3.3
-- **Frontend:** Bootstrap 5.2.3
+- **Frontend:** Bootstrap 5.3.8
 - **PDF Generation:** tecnickcom/tcpdf ^6.3
 - **Templating:** twig/twig ^3.0
 - **Framework Components:**
