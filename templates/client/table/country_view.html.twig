@@ -1,0 +1,33 @@
+<div class="card shadow-sm">
+    <div class="card-header">
+        Drzava info
+    </div>
+    <div class="card-body pt-2">
+        <table class="table table-borderless mb-0">
+            <tbody>
+                <tr class="border-bottom">
+                    <td class="p-2 w-25">ID</td>
+                    <td class="p-2">{{ country.id }}</td>
+                </tr>
+                <tr class="border-bottom">
+                    <td class="p-2">Naziv države</td>
+                    <td class="p-2">{{ country.name }}</td>
+                </tr>
+                <tr class="border-bottom">
+                    <td class="p-2">Skraćenica</td>
+                    <td class="p-2">{{ country.abbr }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer">
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+            <a href="/countries/new" class="btn btn-outline-secondary" title="Povratak na klijente">
+                <i class="fas fa-arrow-left"></i> Povratak na države
+            </a>
+            <a href="/countries/{{ country.id }}/edit" class="btn btn-primary" title="Izmeni podatke o klijentu">
+                <i class="fas fa-edit"></i> Izmeni državu
+            </a>
+        </div>
+    </div>
+</div>

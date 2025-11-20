@@ -3,7 +3,7 @@
     <tbody>
     {% for country in all_countries %}
         <tr>
-            <td>{{ country.name }}</td>
+            <td><a href="/countries/{{ country.id }}">{{ country.name }}</a></td>
             <td>{{ country.abbr }}</td>
         </tr>
     {% endfor %}
