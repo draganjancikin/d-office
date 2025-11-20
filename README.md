@@ -8,8 +8,9 @@ A web application for office and project management, built with PHP 8.2 and mode
 - **PDF Generation:** tecnickcom/tcpdf ^6.3
 - **Templating:** twig/twig ^3.0
 - **Framework Components:**
-  - symfony/http-foundation ^6.0
-  - symfony/cache ^6.0
+  - symfony/framework-bundle ^7.3
+  - symfony/twig-bundle ^7.3
+  - symfony/form ^7.3
 
 ## Installation
 
