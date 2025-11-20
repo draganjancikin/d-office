@@ -14,6 +14,7 @@ use App\Form\ClientType;
 use App\Form\ContactType;
 use App\Form\CountryType;
 use App\Form\CityType;
+use App\Form\StreetType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -353,6 +354,9 @@ class ClientController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($country->getAbbr() === null) {
+                $country->setAbbr('');
+            }
             $country->setCreatedAt(new \DateTime());
             $country->setModifiedAt(new \DateTime());
             $em->persist($country);
@@ -434,15 +438,38 @@ class ClientController extends AbstractController
     /**
      * Add Street form.
      *
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
      * @return Response
+     *   The rendered new street form view.
      */
-    #[Route('/streets/new', name: 'street_new', methods: ['GET'])]
-    public function newStreet(): Response
+    #[Route('/streets/new', name: 'street_new', methods: ['GET', 'POST'])]
+    public function newStreet(Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
           return $this->redirectToRoute('login_form');
         }
+
+        $street = new Street();
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $street->setCreatedByUser($user);
+
+        $form = $this->createForm(StreetType::class, $street);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $street->setCreatedAt(new \DateTime('now'));
+            $street->setModifiedAt(new \DateTime('now'));
+            $em->persist($street);
+            $em->flush();
+            return $this->redirectToRoute('street_new');
+        }
+
+        $all_streets = $em->getRepository(Street::class)->findAll();
 
         $data = [
             'page' => $this->page,
@@ -453,69 +480,11 @@ class ClientController extends AbstractController
             'tools_menu' => [
                 'client' => FALSE,
             ],
+            'form' => $form->createView(),
+            'all_streets' => $all_streets,
         ];
 
         return $this->render('client/street_new.html.twig', $data);
-    }
-
-    /**
-     * Handles the creation of a new street from the new street form submission.
-     *
-     * Requires the user to be authenticated (session username set).
-     * Validates and sets street fields, checks for duplicate names, persists the new street to the database, and
-     * redirects to the clients index view after successful creation.
-     *
-     * @param EntityManagerInterface $em
-     *    Doctrine entity manager for database operations.
-     *
-     * @return Response
-     *   Redirects to the clients index view after street creation.
-     */
-    #[Route('/streets/create', name: 'street_create', methods: ['POST'])]
-    public function createStreet(EntityManagerInterface $em): Response
-    {
-        session_start();
-        $user = $em->find(User::class, $_SESSION['user_id']);
-
-        if (empty($_POST['name'])) {
-            $nameError = 'Ime mora biti upisano';
-            die('<script>location.href = "?new&name_error" </script>');
-        }
-        else {
-            $name = $this->basicValidation($_POST['name']);
-        }
-
-        // Check if name already exist in database.
-        $control_name = $em->getRepository(Street::class)->findBy( array('name' => $name) );
-        if ($control_name) {
-            echo 'Ulica sa nazivom: "<strong>'.$name.'</strong>", već postoji u bazi. Unesite novi naziv!';
-            echo '<br><a href="/streets/new">Povratak na stranicu za kreiranje nove ulice</a>';
-            exit(1);
-        }
-
-        $newStreet = new Street();
-
-        $newStreet->setName($name);
-        $newStreet->setCreatedAt(new \DateTime("now"));
-        $newStreet->setCreatedByUser($user);
-        $newStreet->setModifiedAt(new \DateTime("now"));
-
-        $em->persist($newStreet);
-        $em->flush();
-
-        return $this->redirectToRoute('clients_index');
-    }
-
-    /**
-     * Basic validation method.
-     *
-     * @param $str
-     *
-     * @return string
-     */
-    public function basicValidation($str): string
-    {
-        return trim(htmlspecialchars($str));
     }
 
 }
