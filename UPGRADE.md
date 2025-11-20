@@ -1,5 +1,7 @@
 # Upgrade to 9.3.0
 Bugfixes:
+* #401 - On Document show page link to client is broken: Updated link to client view page ("/client/{id}" => "/clients/{id}")
+* #403 - Export proforma to Dispatch issue: Update getting db credentials
 * #409 - Open archived order issue: Update archived order link on order search page
 
 Enhancements:
