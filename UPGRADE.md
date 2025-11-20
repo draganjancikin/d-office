@@ -1,3 +1,14 @@
+# Upgrade to 9.3.0
+Bugfixes:
+* #409 - Open archived order issue: Update archived order link on order search page
+
+Enhancements:
+* #405 - Update .env file
+* #407 - Remove "Detaljna pretraga" from Clients page
+* #411 - Replace Country simple html form with symfony form
+* #412 - Replace City simple html form with symfony form
+* #413 - Replace Street simple html form with symfony form
+
 # Upgrade to 9.2.0
 Bugfixes:
 * #395 - Print Order issue: Change output destination for print order ("FS" =>"FI")
@@ -62,8 +73,8 @@ Enhancement:
 * #311 - Move forms into separate folders
 * #328 - Oct system update:
   - "doctrine/orm" object relational mapper (3.3.2 => 3.5.2)
-  - "symfony/http-foundation" commponent (6.1.12 => 6.4.26)
-  - "symfony/cache" commponent (6.4.20 => 6.4.26)
+  - "symfony/http-foundation" component (6.1.12 => 6.4.26)
+  - "symfony/cache" component (6.4.20 => 6.4.26)
   - "twig/twig" (3.20.0 => 3.21.1)
   - "tecnickcom/tcpdf" (6.9.4 => 6.10.0)
   - "bootstrap" (5.1.3 => 5.2.3)
@@ -124,11 +135,11 @@ Upgrade:
 
 Bug:
 * #288 - Recreate file name during upload to Project page
-* #289 - Creating project from Proforma back Error
+* #289 - Creating project from Pro-form back Error
 
 # Upgrade to 7.2.1
 Enhancement:
-* #285 - After add a new material, duplicate material and edit material, back in Order edit mode'
+* #285 - After add a new material, duplicate material and edit material, back in Order edit mode
 
 # Upgrade to 7.2.0
 Upgrade:
@@ -236,7 +247,7 @@ Enhancement:
 # Upgrade to 6.5.2
 
 Bug:
-* #194 - Error on Projects page'
+* #194 - Error on Projects page
 * #197 - Update Deprecated Doctrine\ORM\Tools\Setup
 
 Enhancement:
@@ -250,7 +261,7 @@ Bug:
 * #178 - php 7.3 compatibility issue
 * #179 - Issue on search on Client page
 * #180 - Make a phone number call-able on client page
-* #183 - Error on page Dokuments-Transactions
+* #183 - Error on page Documents-Transactions
 * #184 - Error on page: Order view
 * #185 - Update structure of tools menu on Clients page
 
@@ -279,11 +290,11 @@ Bug:
 * #159 - Issue with print on Accounting Document page
 * #160 - Create an article issue
 * #161 - Issue on edit article page
-* #163 - Create a new "Narudzbenica"
+* #163 - Create a new "Narudžbenica"
 * #164 - Error on page "edit Material Supplier"
 * #165 - Error on page add material to order
 * #166 - Error on page printOrder
-* #167 - Error on page "Add article to Accounting Document
+* #167 - Error on page "Add article to Accounting Document"
 
 # Upgrade to 6.4.0
 
@@ -339,7 +350,7 @@ Enhancement:
 * Add Material modified date to Material Supplier on view and edit
 * Add TCPDF trough composer
 * Move printProjectTaskWithNotes.php, printProjectTask.php and printProjectTask.php to Project
-* Move printAccountingDocuments and printDailyCachReport to pidb
+* Move printAccountingDocuments and printDailyCacheReport to pidb
 * Move printCutting to cutting
 * Move printOrder to order
 * Remove TCPDF from code base
@@ -381,10 +392,10 @@ Bug:
 * #106 - Adding file to project dont work
 * #108 - Search for archived project dont work
 * #110 - Order material print error
-* #112 - Create a new Project from AccountingDocument dont work
+* #112 - Create a new Project from AccountingDocument don't work
 * #113 - Print AccountingDocument error
 * #116 - Add same material in order error
-* #118 - Cities and Streets list need to be order by name
+* #118 - Cities and Streets list need to be ordered by name
 * #120 - Export Proforma to Dispatch dont work
 * #122 - Cutting Sheets Calculations in no good
 
@@ -400,7 +411,7 @@ Updates:
 
 # Upgrade to 6.0.0-beta1
 
-* Inplement Doctrine 2.8.4 to application.
+* Implement Doctrine 2.8.4 to application.
 
 # Upgrade to 6.0.0-alpha1
 
