@@ -663,4 +663,95 @@ class ClientController extends AbstractController
         return $this->render('client/street_new.html.twig', $data);
     }
 
+    /**
+     * Displays the details for a specific street.
+     *
+     * Requires the user to be authenticated (session username set).
+     * Retrieves street data and passes it along with user and page metadata to the template.
+     *
+     * @param int $id
+     *   The unique identifier of the street to display.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   The rendered street detail view.
+     */
+    #[Route('/streets/{id}', name: 'street_show', requirements: ['id' => '\\d+'], methods: ['GET'])]
+    public function showStreet(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $street = $em->find(Street::class, $id);
+        if (!$street) {
+            throw $this->createNotFoundException('Street not found.');
+        }
+
+        $data = [
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+            'street' => $street,
+        ];
+
+        return $this->render('client/street_view.html.twig', $data);
+    }
+
+    /**
+     * Edit Street form.
+     *
+     * @param int $id
+     *   The unique identifier of the street to edit.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   The rendered street edit view or a redirect to the street detail view after editing.
+     */
+    #[Route('/streets/{id}/edit', name: 'street_edit', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
+    public function editStreet(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+        $street = $em->find(Street::class, $id);
+        if (!$street) {
+            throw $this->createNotFoundException('Street not found.');
+        }
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $form = $this->createForm(StreetType::class, $street);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $street->setModifiedByUser($user);
+            $street->setModifiedAt(new \DateTime("now"));
+            $em->flush();
+            return $this->redirectToRoute('street_show', ['id' => $id]);
+        }
+        return $this->render('client/street_edit.html.twig', [
+            'form' => $form->createView(),
+            'page' => $this->page,
+            'page_title' => $this->page_title,
+            'street' => $street,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+            'tools_menu' => [
+                'client' => FALSE,
+            ],
+        ]);
+    }
+
 }
