@@ -406,6 +406,12 @@ class ClientController extends AbstractController
         }
 
         $country = $em->getRepository(Country::class)->find($country_id);
+        $all_clients_where_country_use = $em->getRepository(Client::class)->findBy(['country' => $country]);
+
+        $allow_to_delete = FALSE;
+        if (count($all_clients_where_country_use) === 0) {
+            $allow_to_delete = TRUE;
+        }
 
         $data = [
             'page' => $this->page,
@@ -418,6 +424,8 @@ class ClientController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
+            'all_clients_where_country_use' => $all_clients_where_country_use,
+            'allow_to_delete' => $allow_to_delete,
         ];
 
         return $this->render('client/country_view.html.twig', $data);
@@ -469,6 +477,46 @@ class ClientController extends AbstractController
             ],
         ]);
     }
+
+    /**
+     * Deletes a country if it is not used by any clients.
+     *
+     * @param int $country_id
+     *   The unique identifier of the country to delete.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   Redirects to the country list or shows an error if not allowed.
+     */
+    #[Route('/countries/{country_id}/delete', name: 'country_delete', requirements: ['country_id' => '\d+'], methods:
+        ['POST', 'GET'])]
+    public function deleteCountry(int $country_id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $country = $em->getRepository(Country::class)->find($country_id);
+        if (!$country) {
+            throw $this->createNotFoundException('Country not found.');
+        }
+
+        $all_clients_where_country_use = $em->getRepository(Client::class)->findBy(['country' => $country]);
+        if (count($all_clients_where_country_use) > 0) {
+            $this->addFlash('error', 'Cannot delete country: it is used by clients.');
+            return $this->redirectToRoute('country_show', ['country_id' => $country_id]);
+        }
+
+        $em->remove($country);
+        $em->flush();
+        // $this->addFlash('success', 'Country deleted successfully.');
+        return $this->redirectToRoute('country_new');
+    }
+
 
     /**
      * Displays the form for creating a new city.
