@@ -15,7 +15,6 @@ use App\Entity\PaymentType;
 use App\Entity\Preferences;
 use App\Entity\Project;
 use App\Entity\User;
-use Doctrine\DBAL\Schema\AbstractAsset;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -458,7 +457,7 @@ class DocumentController extends AbstractController
             // Check if AccountingDocument have Payments, where PaymentType is Income.
             if ($this->entityManager->getRepository(AccountingDocument::class)->getPaymentsByIncome($acc_doc_id)) {
                 echo "Brisanje dokumenta nije moguće jer postoje uplate vezane za ovaj dokument!";
-                echo "<br><a href='/pidb/{$acc_doc_id}/transactions'>Idi na transakcije dokumenta >></a>";
+                echo "<br><a href='/documents/$acc_doc_id/transactions'>Idi na transakcije dokumenta >></a>";
                 exit();
             }
             else {
@@ -474,10 +473,10 @@ class DocumentController extends AbstractController
                     foreach ($payments as $payment) {
                         // TODO Dragan: Rešiti bolje konekciju na bazu.
                         $conn = \Doctrine\DBAL\DriverManager::getConnection([
-                            'dbname' => DB_NAME,
-                            'user' => DB_USERNAME,
-                            'password' => DB_PASSWORD,
-                            'host' => DB_SERVER,
+                            'dbname' => $_ENV['DB_NAME'],
+                            'user' => $_ENV['DB_USER'],
+                            'password' => $_ENV['DB_PASSWORD'],
+                            'host' => $_ENV['DB_SERVER'],
                             'driver' => 'mysqli',
                         ]);
                         $queryBuilder = $conn->createQueryBuilder();
@@ -497,7 +496,7 @@ class DocumentController extends AbstractController
                 else {
                     if ( $this->entityManager->getRepository(AccountingDocument::class)->getPaymentsByAvans($acc_doc_id) ){
                         echo "Brisanje dokumenta nije moguće jer postoje avansi vezani za ovaj dokument!<br>";
-                        echo "<a href='/pidb/{$acc_doc_id}/transactions'>Idi na transakcije dokumenta >></a>";
+                        echo "<a href='/documents/$acc_doc_id/transactions'>Idi na transakcije dokumenta >></a>";
                         exit();
                     }
                 }
@@ -682,7 +681,7 @@ class DocumentController extends AbstractController
       require_once '../config/packages/tcpdf_include.php';
 
       // Create a new TCPDF object / PDF document
-      $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+      $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
       // Set document information
       $pdf->SetCreator(PDF_CREATOR);
@@ -781,7 +780,7 @@ class DocumentController extends AbstractController
         ];
         $html = $this->renderView('document/print_accounting_document_w.html.twig', $data);
         require_once '../config/packages/tcpdf_include.php';
-        $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor($company_info['name']);
         $pdf->SetTitle($company_info['name'] . ' - Dokument');
@@ -863,7 +862,7 @@ class DocumentController extends AbstractController
         ];
         $html = $this->renderView('document/print_accounting_document_i.html.twig', $data);
         require_once '../config/packages/tcpdf_include.php';
-        $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor($company_info['name']);
         $pdf->SetTitle($company_info['name'] . ' - Dokument');
@@ -943,7 +942,7 @@ class DocumentController extends AbstractController
         ];
         $html = $this->renderView('document/print_accounting_document_iw.html.twig', $data);
         require_once '../config/packages/tcpdf_include.php';
-        $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
         $pdf->SetAuthor($company_info['name']);
         $pdf->SetTitle($company_info['name'] . ' - Dokument');
@@ -969,10 +968,10 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * Export Proforma to Dispatch.
+     * Export Pro-form to Dispatch.
      *
      * @param int $document_id
-     *   The ID of the proforma document to be exported.
+     *   The ID of the pro-form document to be exported.
      * @param EntityManagerInterface $em
      *   The EntityManagerInterface instance.
      *
@@ -1043,7 +1042,7 @@ class DocumentController extends AbstractController
             $result = $queryBuilder ->executeStatement();
         }
 
-        // Get articles from proforma.
+        // Get articles from pro-form.
         $proforma_articles = $em->getRepository(AccountingDocument::class)->getArticles($proforma->getId());
 
         // Save articles to dispatch.
@@ -1079,11 +1078,11 @@ class DocumentController extends AbstractController
             }
         }
 
-        // Set Proforma to archive.
+        // Set Pro-form to archive.
         $proforma->setIsArchived(1);
         $em->flush();
 
-        // Check if proforma belong to any Project
+        // Check if pro-form belong to any Project
         $project = $em->getRepository(AccountingDocument::class)->getProjectByAccountingDocument
         ($proforma->getId());
 
@@ -1928,8 +1927,6 @@ class DocumentController extends AbstractController
         $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
         $payment_type = $this->entityManager->find(PaymentType::class, $payment_type_id);
 
-        $date = date('Y-m-d H:i:s');
-
         $amount = htmlspecialchars($_POST["amount"]);
         // Correct decimal separator.
         $amount = str_replace(",", ".", $amount);
@@ -1946,7 +1943,7 @@ class DocumentController extends AbstractController
         $newPayment->setType($payment_type);
 
         $newPayment->setAmount($amount);
-        $newPayment->setDate(new \DateTime($date));
+        $newPayment->setDate(new \DateTime("now"));
         $newPayment->setNote($note);
         $newPayment->setCreatedAt(new \DateTime("now"));
         $newPayment->setCreatedByUser($user);
