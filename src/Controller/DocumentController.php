@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\AccountingDocument;
 use App\Entity\AccountingDocumentArticle;
 use App\Entity\AccountingDocumentArticleProperty;
-use App\Entity\AccountingDocumentType;
+use App\Entity\AccountingDocumentType as AccountingDocumentTypeEntity;
 use App\Entity\Article;
 use App\Entity\ArticleProperty;
 use App\Entity\Client;
@@ -15,7 +15,9 @@ use App\Entity\PaymentType;
 use App\Entity\Preferences;
 use App\Entity\Project;
 use App\Entity\User;
+use App\Form\AccountingDocumentType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,38 +89,73 @@ class DocumentController extends AbstractController
      * Checks if the user is logged in, retrieves optional client and project data, fetches the list of clients, and
      * renders the new document form view.
      *
-     * @param int|null $client_id
-     *   Optional client ID to preselect in the form.
-     * @param int|null $project_id
-     *   Optional project ID to preselect in the form.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   The entity manager for database operations.
      *
      * @return Response
      */
-    #[Route('/documents/new', name: 'documents_new_form', methods: ['GET'])]
-    public function new(?int $client_id = NULL, ?int $project_id = NULL): Response
+    #[Route('/documents/new', name: 'documents_new_form', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
+        $document = new AccountingDocument();
+        $user = $em->find(User::class, $_SESSION['user_id']);
+        $document->setCreatedByUser($user);
+
+        $form = $this->createForm(AccountingDocumentType::class, null );
+
+        if ($request->query->get('client_id')) {
+            $client = $em->find(Client::class, $request->query->get('client_id'));
+            $form->get('client')->setData($client);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $document->setDate(new \DateTime("now"));
+            $document->setOrdinalNumInYear(0);
+            $document->setTitle($form->get('title')->getData());
+            $document->setIsArchived(0);
+
+            $document->setType($form->get('type')->getData());
+            $document->setClient($form->get('client')->getData());
+
+            $noteValue = $form->get('note')->getData();
+            $document->setNote($noteValue !== null ? $noteValue : '');
+
+            $document->setCreatedAt(new \DateTime("now"));
+            $document->setModifiedAt(new \DateTime("now"));
+
+            $em->persist($document);
+            $em->flush();
+
+            $em->getRepository(AccountingDocument::class)->setOrdinalNumInYear($document->getId());
+
+            if ($request->query->get('project_id')) {
+                $project = $em->find(Project::class, $request->query->get('project_id'));
+                $project->getAccountingDocuments()->add($document);
+                $em->flush();
+            }
+
+            return $this->redirectToRoute('document_edit_form', ['document_id' => $document->getId()]);
+        }
+
         if (isset($_GET['project_id'])) {
             $project_id = htmlspecialchars($_GET['project_id']);
         }
 
-        if (isset($_GET['client_id'])) {
-            $client_id = htmlspecialchars($_GET['client_id']);
-            $client = $this->entityManager->find(Client::class, $client_id);
-        }
+        $clients_list = $em->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
 
-        $clients_list = $this->entityManager->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
-
-        $data = [
+        return $this->render('document/new.html.twig', [
+            'form' => $form->createView(),
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'project_id' => $project_id,
-            'client' => $client ?? NULL,
-            'clients_list' => $clients_list,
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
@@ -126,74 +163,7 @@ class DocumentController extends AbstractController
                 'document' => FALSE,
                 'cash_register' => FALSE,
             ],
-        ];
-
-        return $this->render('document/document_new.html.twig', $data);
-    }
-
-    /**
-     * Handles the creation of a new accounting document.
-     *
-     * Validates user session, processes form data for a new document, persists the document and its associations
-     * (client, type, project), and redirects to the document details page.
-     *
-     * @return Response
-     */
-    #[Route('/documents/create', name: 'documents_create', methods: ['POST'])]
-    public function create(): Response
-    {
-        session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
-
-        $ordinal_num_in_year = 0;
-
-        $client_id = htmlspecialchars($_POST["client_id"]);
-        $client = $this->entityManager->find(Client::class, $client_id);
-
-        $accd_type_id = htmlspecialchars($_POST["pidb_type_id"]);
-        $accd_type = $this->entityManager->find(AccountingDocumentType::class, $accd_type_id);
-
-        $title = htmlspecialchars($_POST["title"]);
-        $note = htmlspecialchars($_POST["note"]);
-
-        // Create a new AccountingDocument.
-        $newAccountingDocument = new AccountingDocument();
-
-        $newAccountingDocument->setOrdinalNumInYear($ordinal_num_in_year);
-        $newAccountingDocument->setDate(new \DateTime("now"));
-        $newAccountingDocument->setIsArchived(0);
-
-        $newAccountingDocument->setType($accd_type);
-        $newAccountingDocument->setClient($client);
-        $newAccountingDocument->setTitle($title);
-        $newAccountingDocument->setNote($note);
-
-        $newAccountingDocument->setCreatedAt(new \DateTime("now"));
-        $newAccountingDocument->setCreatedByUser($user);
-        $newAccountingDocument->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
-
-        $this->entityManager->persist($newAccountingDocument);
-        $this->entityManager->flush();
-
-        // Get id of last AccountingDocument.
-        $new_accounting_document_id = $newAccountingDocument->getId();
-
-        // Set Ordinal Number In Year.
-        $this->entityManager->getRepository(AccountingDocument::class)->setOrdinalNumInYear($new_accounting_document_id);
-
-        if (isset($_POST["project_id"])) {
-            $project_id = htmlspecialchars($_POST["project_id"]);
-            $project = $this->entityManager->find(Project::class, $project_id);
-
-            $project->getAccountingDocuments()->add($newAccountingDocument);
-
-            $this->entityManager->flush();
-        }
-        else {
-            $project_id = NULL;
-        }
-
-        return $this->redirectToRoute('document_show', ['document_id' => $new_accounting_document_id]);
+        ]);
     }
 
     /**
@@ -1000,7 +970,7 @@ class DocumentController extends AbstractController
         $newDispatch->setDate(new \DateTime("now"));
         $newDispatch->setIsArchived(0);
 
-        $newDispatch->setType($em->find(AccountingDocumentType::class, 2));
+        $newDispatch->setType($em->find(AccountingDocumentTypeEntity::class, 2));
         $newDispatch->setTitle($proforma->getTitle());
         $newDispatch->setClient($proforma->getClient());
         $newDispatch->setParent($proforma);
