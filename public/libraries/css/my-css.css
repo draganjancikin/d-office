@@ -232,3 +232,7 @@ dt {
   min-height: 10em;
   height: 26em;
 }
+
+#wrapper #content-wrapper {
+  background-color: #f3f4f9;
+}
