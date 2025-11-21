@@ -14,13 +14,13 @@
             </div>
             <div class="card-footer">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <a href="/countries/new" class="btn btn-outline-secondary" title="Povratak na klijente">
+                    <a href="/countries/new" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-arrow-left"></i> Lista država</a>
-                    <a href="/countries/{{ country.id }}/edit" class="btn btn-primary" title="Izmeni podatke o klijentu">
+                    <a href="/countries/{{ country.id }}/edit" class="btn btn-sm btn-primary">
                         <i class="fas fa-edit"></i> Izmeni državu
                     </a>
                     {% if allow_to_delete %}
-                    <a href="/countries/{{ country.id }}/delete" class="btn btn-danger" title="Obriši državu"
+                    <a href="/countries/{{ country.id }}/delete" class="btn btn-sm btn-danger"
                        onclick="return confirm('Da li ste sigurni da želite da obrišete ovu državu?');">
                         <i class="fas fa-trash-alt"></i> Obriši državu
                     </a>

@@ -4,8 +4,40 @@
 
 {% block body %}
     {% include 'client/tools_menu.html.twig' %}
-    <div class="col-sm-12 col-md-11 col-lg-9 col-xl-6 px-2">
-        {% include 'client/table/city_view.html.twig' %}
+    <div class="col-sm-12 col-md-11 col-lg-9 col-xl-7 px-2">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                Naselje info
+            </div>
+            <div class="card-body pt-2">
+                {% include 'client/table/city_view.html.twig' %}
+            </div>
+            <div class="card-footer">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="/cities/new" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Lista naselja
+                    </a>
+                    <a href="/cities/{{ city.id }}/edit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i> Izmeni naselje
+                    </a>
+                    {% if allow_to_delete %}
+                        <a href="/cities/{{ city.id }}/delete" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Da li ste sigurni da želite da obrišete ovo naselje?');">
+                            <i class="fas fa-trash-alt"></i> Obriši naselje
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-11 col-lg-9 col-xl-7 px-2">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                Lista klijenata iz: {{ city.name }}
+            </div>
+            <div class="card-body pt-2">
+                {% include 'client/table/clients_where_city_use.html.twig' %}
+            </div>
+        </div>
     </div>
 {% endblock %}
-

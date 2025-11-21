@@ -596,6 +596,12 @@ class ClientController extends AbstractController
         if (!$city) {
             throw $this->createNotFoundException('City not found.');
         }
+        $all_clients_where_city_use = $em->getRepository(Client::class)->findBy(['city' => $city]);
+
+        $allow_to_delete = FALSE;
+        if (count($all_clients_where_city_use) === 0) {
+            $allow_to_delete = TRUE;
+        }
 
         $data = [
             'page' => $this->page,
@@ -607,6 +613,8 @@ class ClientController extends AbstractController
                 'client' => FALSE,
             ],
             'city' => $city,
+            'all_clients_where_city_use' => $all_clients_where_city_use,
+            'allow_to_delete' => $allow_to_delete,
         ];
 
         return $this->render('client/city_view.html.twig', $data);
@@ -657,6 +665,44 @@ class ClientController extends AbstractController
                 'client' => FALSE,
             ],
         ]);
+    }
+
+    /**
+     * Deletes a city if it is not used by any clients.
+     *
+     * @param int $city_id
+     *   The unique identifier of the city to delete.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   Redirects to the city list or shows an error if not allowed.
+     */
+    #[Route('/cities/{city_id}/delete', name: 'city_delete', requirements: ['city_id' => '\d+'], methods: ['POST', 'GET'])]
+    public function deleteCity(int $city_id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $city = $em->find(City::class, $city_id);
+        if (!$city) {
+            throw $this->createNotFoundException('City not found.');
+        }
+
+        $all_clients_where_city_use = $em->getRepository(Client::class)->findBy(['city' => $city]);
+        if (count($all_clients_where_city_use) > 0) {
+            $this->addFlash('error', 'Cannot delete city: it is used by clients.');
+            return $this->redirectToRoute('city_show', ['city_id' => $city_id]);
+        }
+
+        $em->remove($city);
+        $em->flush();
+        // $this->addFlash('success', 'City deleted successfully.');
+        return $this->redirectToRoute('city_new');
     }
 
     /**
