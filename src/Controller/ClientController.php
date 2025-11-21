@@ -785,6 +785,12 @@ class ClientController extends AbstractController
         if (!$street) {
             throw $this->createNotFoundException('Street not found.');
         }
+        $all_clients_where_street_use = $em->getRepository(Client::class)->findBy(['street' => $street]);
+
+        $allow_to_delete = FALSE;
+        if (count($all_clients_where_street_use) === 0) {
+            $allow_to_delete = TRUE;
+        }
 
         $data = [
             'page' => $this->page,
@@ -796,6 +802,8 @@ class ClientController extends AbstractController
                 'client' => FALSE,
             ],
             'street' => $street,
+            'all_clients_where_street_use' => $all_clients_where_street_use,
+            'allow_to_delete' => $allow_to_delete,
         ];
 
         return $this->render('client/street_view.html.twig', $data);
@@ -848,4 +856,41 @@ class ClientController extends AbstractController
         ]);
     }
 
+    /**
+     * Deletes a street if it is not used by any clients.
+     *
+     * @param int $street_id
+     *   The unique identifier of the street to delete.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   Redirects to the street list or shows an error if not allowed.
+     */
+    #[Route('/streets/{street_id}/delete', name: 'street_delete', requirements: ['street_id' => '\d+'], methods: ['POST', 'GET'])]
+    public function deleteStreet(int $street_id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $street = $em->find(Street::class, $street_id);
+        if (!$street) {
+            throw $this->createNotFoundException('Street not found.');
+        }
+
+        $all_clients_where_street_use = $em->getRepository(Client::class)->findBy(['street' => $street]);
+        if (count($all_clients_where_street_use) > 0) {
+            // $this->addFlash('error', 'Cannot delete street: it is used by clients.');
+            return $this->redirectToRoute('street_show', ['street_id' => $street_id]);
+        }
+
+        $em->remove($street);
+        $em->flush();
+        // $this->addFlash('success', 'Street deleted successfully.');
+        return $this->redirectToRoute('street_new');
+    }
 }
