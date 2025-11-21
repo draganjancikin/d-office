@@ -363,7 +363,7 @@ class ClientController extends AbstractController
             $em->flush();
 
             // $this->addFlash('success', 'Country created successfully!');
-            return $this->redirectToRoute('country_new');
+            return $this->redirectToRoute('country_show', ['country_id' => $country->getId()]);
         }
 
         $all_countries = $em->getRepository(Country::class)->findAll();
@@ -406,6 +406,12 @@ class ClientController extends AbstractController
         }
 
         $country = $em->getRepository(Country::class)->find($country_id);
+        $all_clients_where_country_use = $em->getRepository(Client::class)->findBy(['country' => $country]);
+
+        $allow_to_delete = FALSE;
+        if (count($all_clients_where_country_use) === 0) {
+            $allow_to_delete = TRUE;
+        }
 
         $data = [
             'page' => $this->page,
@@ -418,6 +424,8 @@ class ClientController extends AbstractController
             'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
+            'all_clients_where_country_use' => $all_clients_where_country_use,
+            'allow_to_delete' => $allow_to_delete,
         ];
 
         return $this->render('client/country_view.html.twig', $data);
@@ -471,6 +479,46 @@ class ClientController extends AbstractController
     }
 
     /**
+     * Deletes a country if it is not used by any clients.
+     *
+     * @param int $country_id
+     *   The unique identifier of the country to delete.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   Redirects to the country list or shows an error if not allowed.
+     */
+    #[Route('/countries/{country_id}/delete', name: 'country_delete', requirements: ['country_id' => '\d+'], methods:
+        ['POST', 'GET'])]
+    public function deleteCountry(int $country_id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $country = $em->getRepository(Country::class)->find($country_id);
+        if (!$country) {
+            throw $this->createNotFoundException('Country not found.');
+        }
+
+        $all_clients_where_country_use = $em->getRepository(Client::class)->findBy(['country' => $country]);
+        if (count($all_clients_where_country_use) > 0) {
+            $this->addFlash('error', 'Cannot delete country: it is used by clients.');
+            return $this->redirectToRoute('country_show', ['country_id' => $country_id]);
+        }
+
+        $em->remove($country);
+        $em->flush();
+        // $this->addFlash('success', 'Country deleted successfully.');
+        return $this->redirectToRoute('country_new');
+    }
+
+
+    /**
      * Displays the form for creating a new city.
      *
      * Requires the user to be authenticated (session username set).
@@ -499,7 +547,7 @@ class ClientController extends AbstractController
             $city->setModifiedAt(new \DateTime("now"));
             $em->persist($city);
             $em->flush();
-            return $this->redirectToRoute('city_new');
+            return $this->redirectToRoute('city_show', ['city_id' => $city->getId()]);
         }
 
         $all_cities = $em->getRepository(City::class)->findAll();
@@ -526,7 +574,7 @@ class ClientController extends AbstractController
      * Requires the user to be authenticated (session username set).
      * Retrieves city data and passes it along with user and page metadata to the template.
      *
-     * @param int $id
+     * @param int $city_id
      *   The unique identifier of the city to display.
      * @param Request $request
      *   The HTTP request object.
@@ -536,17 +584,23 @@ class ClientController extends AbstractController
      * @return Response
      *   The rendered city detail view.
      */
-    #[Route('/cities/{id}', name: 'city_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function showCity(int $id, Request $request, EntityManagerInterface $em): Response
+    #[Route('/cities/{city_id}', name: 'city_show', requirements: ['city_id' => '\d+'], methods: ['GET'])]
+    public function showCity(int $city_id, Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $city = $em->find(City::class, $id);
+        $city = $em->find(City::class, $city_id);
         if (!$city) {
             throw $this->createNotFoundException('City not found.');
+        }
+        $all_clients_where_city_use = $em->getRepository(Client::class)->findBy(['city' => $city]);
+
+        $allow_to_delete = FALSE;
+        if (count($all_clients_where_city_use) === 0) {
+            $allow_to_delete = TRUE;
         }
 
         $data = [
@@ -559,6 +613,8 @@ class ClientController extends AbstractController
                 'client' => FALSE,
             ],
             'city' => $city,
+            'all_clients_where_city_use' => $all_clients_where_city_use,
+            'allow_to_delete' => $allow_to_delete,
         ];
 
         return $this->render('client/city_view.html.twig', $data);
@@ -567,7 +623,7 @@ class ClientController extends AbstractController
     /**
      * Edit City form.
      *
-     * @param int $id
+     * @param int $city_id
      *   The unique identifier of the city to edit.
      * @param Request $request
      *   The HTTP request object.
@@ -577,14 +633,14 @@ class ClientController extends AbstractController
      * @return Response
      *   The rendered city edit view or a redirect to the city detail view after editing.
      */
-    #[Route('/cities/{id}/edit', name: 'city_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function editCity(int $id, Request $request, EntityManagerInterface $em): Response
+    #[Route('/cities/{city_id}/edit', name: 'city_edit', requirements: ['$city_id' => '\d+'], methods: ['GET', 'POST'])]
+    public function editCity(int $city_id, Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
-        $city = $em->find(City::class, $id);
+        $city = $em->find(City::class, $city_id);
         if (!$city) {
             throw $this->createNotFoundException('City not found.');
         }
@@ -595,7 +651,7 @@ class ClientController extends AbstractController
             $city->setModifiedByUser($user);
             $city->setModifiedAt(new \DateTime("now"));
             $em->flush();
-            return $this->redirectToRoute('city_show', ['id' => $id]);
+            return $this->redirectToRoute('city_show', ['city_id' => $city_id]);
         }
         return $this->render('client/city_edit.html.twig', [
             'form' => $form->createView(),
@@ -609,6 +665,44 @@ class ClientController extends AbstractController
                 'client' => FALSE,
             ],
         ]);
+    }
+
+    /**
+     * Deletes a city if it is not used by any clients.
+     *
+     * @param int $city_id
+     *   The unique identifier of the city to delete.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   Redirects to the city list or shows an error if not allowed.
+     */
+    #[Route('/cities/{city_id}/delete', name: 'city_delete', requirements: ['city_id' => '\d+'], methods: ['POST', 'GET'])]
+    public function deleteCity(int $city_id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $city = $em->find(City::class, $city_id);
+        if (!$city) {
+            throw $this->createNotFoundException('City not found.');
+        }
+
+        $all_clients_where_city_use = $em->getRepository(Client::class)->findBy(['city' => $city]);
+        if (count($all_clients_where_city_use) > 0) {
+            $this->addFlash('error', 'Cannot delete city: it is used by clients.');
+            return $this->redirectToRoute('city_show', ['city_id' => $city_id]);
+        }
+
+        $em->remove($city);
+        $em->flush();
+        // $this->addFlash('success', 'City deleted successfully.');
+        return $this->redirectToRoute('city_new');
     }
 
     /**
@@ -642,7 +736,7 @@ class ClientController extends AbstractController
             $street->setModifiedAt(new \DateTime('now'));
             $em->persist($street);
             $em->flush();
-            return $this->redirectToRoute('street_new');
+            return $this->redirectToRoute('street_show', ['street_id' => $street->getId()]);
         }
 
         $all_streets = $em->getRepository(Street::class)->findAll();
@@ -669,7 +763,7 @@ class ClientController extends AbstractController
      * Requires the user to be authenticated (session username set).
      * Retrieves street data and passes it along with user and page metadata to the template.
      *
-     * @param int $id
+     * @param int $street_id
      *   The unique identifier of the street to display.
      * @param Request $request
      *   The HTTP request object.
@@ -679,17 +773,23 @@ class ClientController extends AbstractController
      * @return Response
      *   The rendered street detail view.
      */
-    #[Route('/streets/{id}', name: 'street_show', requirements: ['id' => '\\d+'], methods: ['GET'])]
-    public function showStreet(int $id, Request $request, EntityManagerInterface $em): Response
+    #[Route('/streets/{street_id}', name: 'street_show', requirements: ['street_id' => '\\d+'], methods: ['GET'])]
+    public function showStreet(int $street_id, Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $street = $em->find(Street::class, $id);
+        $street = $em->find(Street::class, $street_id);
         if (!$street) {
             throw $this->createNotFoundException('Street not found.');
+        }
+        $all_clients_where_street_use = $em->getRepository(Client::class)->findBy(['street' => $street]);
+
+        $allow_to_delete = FALSE;
+        if (count($all_clients_where_street_use) === 0) {
+            $allow_to_delete = TRUE;
         }
 
         $data = [
@@ -702,6 +802,8 @@ class ClientController extends AbstractController
                 'client' => FALSE,
             ],
             'street' => $street,
+            'all_clients_where_street_use' => $all_clients_where_street_use,
+            'allow_to_delete' => $allow_to_delete,
         ];
 
         return $this->render('client/street_view.html.twig', $data);
@@ -710,7 +812,7 @@ class ClientController extends AbstractController
     /**
      * Edit Street form.
      *
-     * @param int $id
+     * @param int $street_id
      *   The unique identifier of the street to edit.
      * @param Request $request
      *   The HTTP request object.
@@ -720,14 +822,14 @@ class ClientController extends AbstractController
      * @return Response
      *   The rendered street edit view or a redirect to the street detail view after editing.
      */
-    #[Route('/streets/{id}/edit', name: 'street_edit', requirements: ['id' => '\\d+'], methods: ['GET', 'POST'])]
-    public function editStreet(int $id, Request $request, EntityManagerInterface $em): Response
+    #[Route('/streets/{street_id}/edit', name: 'street_edit', requirements: ['street_id' => '\\d+'], methods: ['GET', 'POST'])]
+    public function editStreet(int $street_id, Request $request, EntityManagerInterface $em): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
-        $street = $em->find(Street::class, $id);
+        $street = $em->find(Street::class, $street_id);
         if (!$street) {
             throw $this->createNotFoundException('Street not found.');
         }
@@ -738,7 +840,7 @@ class ClientController extends AbstractController
             $street->setModifiedByUser($user);
             $street->setModifiedAt(new \DateTime("now"));
             $em->flush();
-            return $this->redirectToRoute('street_show', ['id' => $id]);
+            return $this->redirectToRoute('street_show', ['street_id' => $street_id]);
         }
         return $this->render('client/street_edit.html.twig', [
             'form' => $form->createView(),
@@ -754,4 +856,41 @@ class ClientController extends AbstractController
         ]);
     }
 
+    /**
+     * Deletes a street if it is not used by any clients.
+     *
+     * @param int $street_id
+     *   The unique identifier of the street to delete.
+     * @param Request $request
+     *   The HTTP request object.
+     * @param EntityManagerInterface $em
+     *   Doctrine entity manager for database operations.
+     *
+     * @return Response
+     *   Redirects to the street list or shows an error if not allowed.
+     */
+    #[Route('/streets/{street_id}/delete', name: 'street_delete', requirements: ['street_id' => '\d+'], methods: ['POST', 'GET'])]
+    public function deleteStreet(int $street_id, Request $request, EntityManagerInterface $em): Response
+    {
+        session_start();
+        if (!isset($_SESSION['username'])) {
+            return $this->redirectToRoute('login_form');
+        }
+
+        $street = $em->find(Street::class, $street_id);
+        if (!$street) {
+            throw $this->createNotFoundException('Street not found.');
+        }
+
+        $all_clients_where_street_use = $em->getRepository(Client::class)->findBy(['street' => $street]);
+        if (count($all_clients_where_street_use) > 0) {
+            // $this->addFlash('error', 'Cannot delete street: it is used by clients.');
+            return $this->redirectToRoute('street_show', ['street_id' => $street_id]);
+        }
+
+        $em->remove($street);
+        $em->flush();
+        // $this->addFlash('success', 'Street deleted successfully.');
+        return $this->redirectToRoute('street_new');
+    }
 }

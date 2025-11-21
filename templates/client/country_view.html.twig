@@ -4,7 +4,39 @@
 
 {% block body %}
     {% include 'client/tools_menu.html.twig' %}
-    <div class="col-sm-12 col-md-11 col-lg-9 col-xl-6 px-2">
-        {% include 'client/table/country_view.html.twig' %}
+    <div class="col-sm-12 col-md-11 col-lg-9 col-xl-7 px-2">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                Drzava info
+            </div>
+            <div class="card-body pt-2">
+                {% include 'client/table/country_view.html.twig' %}
+            </div>
+            <div class="card-footer">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="/countries/new" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Lista država</a>
+                    <a href="/countries/{{ country.id }}/edit" class="btn btn-sm btn-primary">
+                        <i class="fas fa-edit"></i> Izmeni državu
+                    </a>
+                    {% if allow_to_delete %}
+                    <a href="/countries/{{ country.id }}/delete" class="btn btn-sm btn-danger"
+                       onclick="return confirm('Da li ste sigurni da želite da obrišete ovu državu?');">
+                        <i class="fas fa-trash-alt"></i> Obriši državu
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-11 col-lg-9 col-xl-7 px-2">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                Lista klijenata iz: {{ country.name }}
+            </div>
+            <div class="card-body pt-2">
+        {% include 'client/table/clients_where_country_use.html.twig' %}
+            </div>
+        </div>
     </div>
 {% endblock %}

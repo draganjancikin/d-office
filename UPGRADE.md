@@ -1,3 +1,13 @@
+# Upgrade to 9.5.0
+Enhancements:
+* #430 - After creating a new country, city or street need to return to show (view) page
+* #433 - Add list of clients where Country use on Country view page
+* #434 - Add Delete button on Country view page if Country don't use anywhere
+* #435 - Add list of clients where City use on City view page
+* #436 - Add Delete button on City view page if City don't use anywhere
+* #437 - Add list of clients where Street use on Street view page
+* #438 - Add Delete button on Street view page if Street don't use anywhere
+
 # Upgrade to 9.4.0
 Enhancements:
 * #421 - November system update:

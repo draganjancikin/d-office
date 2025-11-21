@@ -22,10 +22,11 @@ class CountryType extends AbstractType
                 ],
             ])
             ->add('abbr', TextType::class, [
-                'label' => 'Skraćenica',
+                'label' => 'Oznaka',
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Unesite skraćenicu',
+                    'title' => 'Oznaka zemlje',
+                    'placeholder' => 'Unesite oznaku',
                     'class' => 'form-control form-control-sm',
                     'maxlength' => 3,
                 ],
