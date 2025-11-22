@@ -9,8 +9,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/documents/{{ pidb_id }}/articles/add" method="post" role="form">
-                <input type="hidden" name="pidb_id" value="{{ pidb_id }}">
+            <form action="/documents/{{ document_id }}/articles/add" method="post" role="form">
+                <input type="hidden" name="pidb_id" value="{{ document_id }}">
 
                 <div class="modal-body">
 
@@ -70,8 +70,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/documents/{{ pidb_id }}/add-payment" method="post" role="form">
-                <input type="hidden" name="pidb_id" value="{{ pidb_id }}">
+            <form action="/documents/{{ document_id }}/add-payment" method="post" role="form">
+                <input type="hidden" name="pidb_id" value="{{ document_id }}">
                 <input type="hidden" name="client_id" value="{{ pidb_data.client.id }}">
                 <div class="modal-body">
 
@@ -89,10 +89,6 @@
                             </select>
                         </div>
                     </div>
-
-
-
-
 
                     <div class="row mb-2">
                         <label for="transaction_type" class="col-sm-3 col-form-label">Vrsta uplate:</label>

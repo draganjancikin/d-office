@@ -194,7 +194,7 @@ class DocumentController extends AbstractController
 
         $pidb_type_id = $document_data->getType()->getId();
 
-        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
+        [$pidb_tupe, $pidb_tag, $document_style] = match ($pidb_type_id) {
             1 => ["Predračun", "P_", 'info'],
             2 => ["Otpremnica", "O_", 'secondary'],
             4 => ["Povratnica", "POV_", 'warning'],
@@ -227,12 +227,12 @@ class DocumentController extends AbstractController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'pidb_id' => $document_id,
+            'document_id' => $document_id,
             'pidb_data' => $document_data,
             'pidb_type_id' => $pidb_type_id,
             'pidb_type' => $pidb_tupe,
             'pidb_tag' => $pidb_tag,
-            'pidb_style' => $pidb_style,
+            'document_style' => $document_style,
             'client' => $client,
             'all_articles' => $all_articles,
             'kurs' => $kurs,
@@ -260,7 +260,7 @@ class DocumentController extends AbstractController
             'username' => $_SESSION['username'],
         ];
 
-        return $this->render('document/document_view.html.twig', $data);
+        return $this->render('document/view.html.twig', $data);
     }
 
     /**
@@ -289,7 +289,7 @@ class DocumentController extends AbstractController
         $all_articles = $this->entityManager->getRepository(Article::class)->findAll();
 
         $pidb_type_id = $document_data->getType()->getId();
-        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
+        [$pidb_tupe, $pidb_tag, $document_style] = match ($pidb_type_id) {
             1 => ["Predračun", "P_", 'info'],
             2 => ["Otpremnica", "O_", 'secondary'],
             4 => ["Povratnica", "POV_", 'warning'],
@@ -325,12 +325,12 @@ class DocumentController extends AbstractController
             'page' => $this->page,
             'page_title' => $this->page_title,
             'client' => $client,
-            'pidb_id' => $document_id,
+            'document_id' => $document_id,
             'pidb_data' => $document_data,
             'pidb_type_id' => $pidb_type_id,
             'pidb_type' => $pidb_tupe,
             'pidb_tag' => $pidb_tag,
-            'pidb_style' => $pidb_style,
+            'document_style' => $document_style,
             'all_articles' => $all_articles,
             'tools_menu' => [
                 'document' => TRUE,

@@ -8,7 +8,7 @@
             {% if tools_menu.document %}
 
                 {% if tools_menu.view %}
-                    <a href="/documents/{{ pidb_id }}/edit">
+                    <a href="/documents/{{ document_id }}/edit">
                         <button type="button" class="btn btn-sm btn-outline-secondary mx-1"
                                 title="Idi na stranicu za izmenu podataka o dokumentu!">
                             <i class="fas fa-edit"> </i>
@@ -17,7 +17,7 @@
                 {% endif  %}
 
                 {% if tools_menu.edit %}
-                    <a href="/documents/{{ pidb_id }}">
+                    <a href="/documents/{{ document_id }}">
                         <button type="button" class="btn btn-sm btn-outline-secondary mx-1"
                                 title="Idi na stranicu za pregled podataka o dokumentu!">
                             <i class="fas fa-eye"> </i>
@@ -32,12 +32,12 @@
                 </button>
 
                 {# Print proforma buttons #}
-                <a href="/documents/{{ pidb_id }}/print" target="_blank">
+                <a href="/documents/{{ document_id }}/print" target="_blank">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                         <i class="fas fa-print"> </i>
                     </button>
                 </a>
-                <a href="/documents/{{ pidb_id }}/print-w" target="_blank">
+                <a href="/documents/{{ document_id }}/print-w" target="_blank">
                     <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                         <i class="fas fa-print"> </i> w
                     </button>
@@ -45,12 +45,12 @@
 
                 {# Print dispatch buttons #}
                 {% if pidb_type_id == 2 %}
-                    <a href="/documents/{{ pidb_id }}/print-i" target="_blank">
+                    <a href="/documents/{{ document_id }}/print-i" target="_blank">
                         <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                             <i class="fas fa-print"> </i> I
                         </button>
                     </a>
-                    <a href="/documents/{{ pidb_id }}/print-iw" target="_blank">
+                    <a href="/documents/{{ document_id }}/print-iw" target="_blank">
                         <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Štampaj!">
                             <i class="fas fa-print"> </i> IW
                         </button>
@@ -59,7 +59,7 @@
 
                 {# Proforma buttons #}
                 {% if pidb_type_id == 1 %}
-                    <a href="/documents/{{ pidb_id }}/export-proforma-to-dispatch">
+                    <a href="/documents/{{ document_id }}/export-proforma-to-dispatch">
                         <button type="button" class="btn btn-sm btn-outline-secondary mr-1"
                             {% if pidb_data.isArchived %}
                                 title="Predračun je arhiviran i nije ga moguće izvesti u otpremnicu" disabled
@@ -71,7 +71,7 @@
                         </button>
                     </a>
 
-                    <a href="/projects/new?client_id={{ pidb_data.client.id }}&acc_doc_id={{ pidb_id }}">
+                    <a href="/projects/new?client_id={{ pidb_data.client.id }}&acc_doc_id={{ document_id }}">
                         <button type="button" class="btn btn-sm btn-outline-secondary mr-1" title="Novi projekat!">
                             <i class="fas fa-share"> </i> <i class="fas fa-project-diagram"></i>
                         </button>
@@ -106,7 +106,7 @@
                 >
                     <i class="fas fa-hand-holding-usd"></i>
                 </button>
-                <a href="/documents/{{ pidb_id }}/transactions">
+                <a href="/documents/{{ document_id }}/transactions">
                     <button type="submit" class="btn btn-sm btn-outline-secondary mr-1" title="Pregled transakcija">
                         <i class="fas fa-eye"></i> <i class="fas fa-dollar-sign"></i>
                     </button>
