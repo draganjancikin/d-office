@@ -30,11 +30,12 @@
         </td>
     </tr>
     <tr>
-        <td><h2>{{ pidb_type }} broj: {{ '%04d'|format(pidb.getOrdinalNumInYear()) }} - {{ pidb.getCreatedAt().format('m') }}</h2></td>
+        <td><h2>{{ document.type.name }} broj: {{ '%04d'|format(document.getOrdinalNumInYear()) }} - {{ document.getCreatedAt()
+                    .format('m') }}</h2></td>
     </tr>
     <tr>
         <td><br />
-            Datum i mesto izdavanja: {{ pidb.getCreatedAt().format('d M Y') }}.g. Bačka Palanka
+            Datum i mesto izdavanja: {{ document.getCreatedAt().format('d M Y') }}.g. Bačka Palanka
         </td>
     </tr>
 </table>
@@ -42,12 +43,12 @@
 <table border="1">
     <tr>
         <td width="30px" align="center">red.<br />br.</td>
-        <td {{ (pidb.type.id == 2) ? 'width="495px"' : 'width="190px"' }} align="center">
+        <td {{ (document.type.id == 2) ? 'width="495px"' : 'width="190px"' }} align="center">
         naziv proizvoda
         </td>
         <td width="35px" align="center">jed.<br />mere</td>
         <td width="53px" align="center">kol.</td>
-        {% if pidb.type.id == 2 %}
+        {% if document.type.id == 2 %}
         {% else %}
             <td width="70px" align="center">cena po<br />jed. mere</td>
             <td width="37px" align="center">rabat<br />%</td>
@@ -66,7 +67,7 @@
         <tr><td></td></tr>
         <tr>
             <td width="30px" align="center">{{ count }}</td>
-            <td {{ (pidb.type.id == 2) ? 'width="495px"' : 'width="190px"' }}><br />
+            <td {{ (document.type.id == 2) ? 'width="495px"' : 'width="190px"' }}><br />
                 <table>
                     <tr>
                         <td>{{ accounting_document_article_data.article.name }}</td>
@@ -95,7 +96,7 @@
             <td width="53px" align="right">
                 {{ accounting_document_article_data.article.quantity|number_format(2, ',', '.') }}
             </td>
-            {% if pidb.type.id == 2 %}
+            {% if document.type.id == 2 %}
             {% else %}
                 <td width="70px" align="right">
                     {{ accounting_document_article_data.article.price_rsd|number_format(2, ',', '.') }}
@@ -120,7 +121,7 @@
     </table>
 {% endfor %}
 
-{% if pidb.type.id == 2 %}
+{% if document.type.id == 2 %}
 {% else %}
     <table>
         <tr><td width="685px" colspan="10" style="border-bottom-width: inherit;"></td></tr>
@@ -158,11 +159,11 @@
 {% endif %}
 
 <table border="1" style="padding: 5px">
-    <tr><td width="685px">Napomena:<br />{{ pidb.note|nl2br }}</td></tr>
+    <tr><td width="685px">Napomena:<br />{{ document.note|nl2br }}</td></tr>
 </table>
 
 <table>
-{% if pidb.type.id == 2 %}
+{% if document.type.id == 2 %}
     <tr><td></td><td></td><td></td></tr>
     <tr><td></td><td></td><td></td></tr>
     <tr><td>______________________</td><td></td><td align="right">______________________</td></tr>

@@ -70,10 +70,10 @@
             </tr>
             <tr>
                 <td colspan="6">Avans</td>
-                <td class="text-right px-1 input-box-115">{{ avans_rsd|number_format(2, ',', '.') }}</td>
-                <td class="text-right input-box-115">(&#8364; {{ avans_eur|number_format(2, ',', '.') }})</td>
+                <td class="text-right px-1 input-box-115">{{ advance_payment_rsd|number_format(2, ',', '.') }}</td>
+                <td class="text-right input-box-115">(&#8364; {{ advance_payment_eur|number_format(2, ',', '.') }})</td>
             </tr>
-            {% if pidb_type_id == 2 %}
+            {% if document.type.id == 2 %}
                 <tr>
                     <td colspan="6">Uplaćeno</td>
                     <td class="text-right px-1 input-box-115">{{ income_rsd }}</td>
@@ -92,7 +92,7 @@
         <tbody>
             <tr>
                 <td width="100px">Naslov:</td>
-                <td>{{ pidb_data.title }}</td>
+                <td>{{ document.title }}</td>
             </tr>
             <tr>
                 <td>Klijent:</td>
@@ -100,11 +100,11 @@
             </tr>
             <tr>
                 <td>Arhivirano:</td>
-                <td>{{ pidb_data.isArchived ? 'nije' : 'jeste' }}</td>
+                <td>{{ document.isArchived ? 'nije' : 'jeste' }}</td>
             </tr>
             <tr>
                 <td>Napomena:</td>
-                <td>{{ pidb_data.note|nl2br }}</td>
+                <td>{{ document.note|nl2br }}</td>
             </tr>
         </tbody>
     </table>
