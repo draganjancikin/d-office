@@ -33,7 +33,7 @@
                                     <td>{{ proforma.client.name }}</td>
                                     <td>{{ proforma.title }}</td>
                                     <td>
-                                        {% if proforma.id == last_pidb.id %}
+                                        {% if proforma.id == last.id %}
                                             <a onclick="return confirm('Da li ste sigurni da želite da obrišete dokument?');"
                                                href="/documents/{{ proforma.id }}/delete" class="btn btn-mini
                                                btn-danger">
@@ -66,7 +66,7 @@
                                     <td>{{ proforma_archived.client.name }}</td>
                                     <td>{{ proforma_archived.title }}</td>
                                     <td>
-                                        {% if proforma_archived.id == last_pidb.id %}
+                                        {% if proforma_archived.id == last.id %}
                                             <a onclick="return confirm('Da li ste sigurni da želite da obrišete dokument?');"
                                                href="/documents/{{ proforma_archived.id }}/delete" class="btn btn-mini
                                                btn-danger">
@@ -109,7 +109,7 @@
                                 <td>{{ delivery_note.client.name }}</td>
                                 <td>{{ delivery_note.title }}</td>
                                 <td>
-                                    {% if delivery_note.id == last_pidb.id %}
+                                    {% if delivery_note.id == last.id %}
                                         <a onclick="return confirm('Da li ste sigurni da želite da obrišete dokument?');"
                                            href="/documents/{{ delivery_note.id }}/delete" class="btn btn-mini
                                            btn-danger">
@@ -142,7 +142,7 @@
                                     <td>{{ delivery_note_archived.client.name }}</td>
                                     <td>{{ delivery_note_archived.title }}</td>
                                     <td>
-                                        {% if delivery_note_archived.id == last_pidb.id %}
+                                        {% if delivery_note_archived.id == last.id %}
                                             <a onclick="return confirm('Da li ste sigurni da želite da obrišete dokument?');"
                                                href="/documents/{{ delivery_note_archived.id }}/delete" class="btn
                                                btn-mini btn-danger">
@@ -185,7 +185,7 @@
                                 <td>{{ return_note.client.name }}</td>
                                 <td>{{ return_note.title }}</td>
                                 <td>
-                                    {% if return_note.id == last_pidb.id %}
+                                    {% if return_note.id == last.id %}
                                         <a onclick="return confirm('Da li ste sigurni da želite da obrišete dokument?');"
                                            href="/documents/{{ return_note.id }}/delete" class="btn btn-mini
                                            btn-danger">
@@ -219,7 +219,7 @@
                                 <td>{{ return_note_archived.client.name }}</td>
                                 <td>{{ return_note_archived.title }}</td>
                                 <td>
-                                    {% if return_note_archived.id == last_pidb.id %}
+                                    {% if return_note_archived.id == last.id %}
                                         <a onclick="return confirm('Da li ste sigurni da želite da obrišete dokument?');"
                                            href="/documents/{{ return_note_archived.id }}/delete" class="btn btn-mini btn-danger">
                                             <i class="fas fa-trash-alt"></i>

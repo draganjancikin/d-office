@@ -14,9 +14,9 @@
             <div class="card-header p-2">
                 <h6 class="m-0 font-weight-bold text-primary">
                     Transakcije dokumenta:
-                    <a href="/documents/{{ pidb_id }}">
-                        {{ pidb.type.name }}
-                        {{ '%04d'|format(pidb.getOrdinalNumInYear()) }} - {{ pidb.getCreatedAt().format('m') }}
+                    <a href="/documents/{{ document.id }}">
+                        {{ document.type.name }}
+                        {{ '%04d'|format(document.getOrdinalNumInYear()) }} - {{ document.getCreatedAt().format('m') }}
                         {{ client.name }}
                     </a>
                 </h6>
@@ -37,7 +37,7 @@
 
                         <tbody>
                         <tr>
-                            <td class="text-center">{{ pidb.getCreatedAt().format('d-m-Y') }}</td>
+                            <td class="text-center">{{ document.getCreatedAt().format('d-m-Y') }}</td>
                             <td class="text-center"></td>
                             <td class="text-center"></td>
                             <td class="text-right">{{ total|number_format(4, ',', '.') }}</td>
@@ -55,12 +55,12 @@
                                 </td>
                                 <td>
                                     {% if user_role_id == 1 or user_role_id == 2 %}
-                                        <a href="/documents/{{ pidb_id }}/transactions/{{ transaction.id }}/edit"
+                                        <a href="/documents/{{ document.id }}/transactions/{{ transaction.id }}/edit"
                                            class="btn btn-success btn-sm" title="Izmeni transakciju!">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a onClick="return confirm('Da li ste sigurni da želite da obrišete transakciju?');"
-                                           href="/documents/{{ pidb_id }}/transactions/{{ transaction.id }}/delete"
+                                           href="/documents/{{ document.id }}/transactions/{{ transaction.id }}/delete"
                                            title="Brisanje transakcije" class="btn btn-danger btn-sm">
                                             <i class="far fa-trash-alt"></i>
                                         </a>

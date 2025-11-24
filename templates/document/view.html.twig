@@ -8,10 +8,10 @@
         <div class="card border-{{ document_style }} mb-4 shadow-sm">
             <div class="card-header bg-{{ document_style }} p-2">
                 <h6 class="m-0 font-weight-bold text-white">
-                    {{ pidb_type }}
-                    {{ '%04d'|format(pidb_data.getOrdinalNumInYear()) }} - {{ pidb_data.getCreatedAt().format('m') }}
-                    <span class="font-weight-normal">{{ pidb_data.getCreatedAt().format('d-M-Y') }}</span>
-                    <span class="font-weight-normal">{{ pidb_data.title }}</span>
+                    {{ document_type }}
+                    {{ '%04d'|format(document.getOrdinalNumInYear()) }} - {{ document.getCreatedAt().format('m') }}
+                    <span class="font-weight-normal">{{ document.getCreatedAt().format('d-M-Y') }}</span>
+                    <span class="font-weight-normal">{{ document.title }}</span>
                 </h6>
             </div>
             <div class="card-body p-2">
@@ -47,7 +47,7 @@
                     <a href="/documents" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-arrow-left"></i> Povratak na dokumente
                     </a>
-                    <a href="/documents/{{ pidb_data.id }}/edit" class="btn btn-sm btn-primary">
+                    <a href="/documents/{{ document.id }}/edit" class="btn btn-sm btn-primary">
                         <i class="fas fa-edit"></i> Izmeni dokument
                     </a>
                 </div>
