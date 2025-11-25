@@ -24,9 +24,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class MaterialController extends AbstractController
 {
 
-    private EntityManagerInterface $entityManager;
-    private string $page;
-    private string $page_title;
+    private EntityManagerInterface $em;
+    private string $page = 'materials';
+    private string $pageTitle = 'Materijali';
     protected string $stylesheet;
 
     /**
@@ -34,13 +34,11 @@ class MaterialController extends AbstractController
      *
      * Initializes controller properties and loads the application version.
      *
-     * @param EntityManagerInterface $entityManager
+     * @param EntityManagerInterface $em
      *   The Doctrine entity manager for database operations.
      */
-    public function __construct(EntityManagerInterface $entityManager) {
-        $this->entityManager = $entityManager;
-        $this->page = 'materials';
-        $this->page_title = 'Materijali';
+    public function __construct(EntityManagerInterface $em) {
+        $this->em = $em;
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
@@ -52,8 +50,7 @@ class MaterialController extends AbstractController
      * - Loads user preferences and prepares data for the template.
      * - Renders the 'material/index.html.twig' template with the materials and related data.
      *
-     * @return Response
-     *   The HTTP response with the rendered materials list or a redirect to the login page.
+     * @return Response The HTTP response with the rendered materials list or a redirect to the login page.
      */
     #[Route('/materials/', name: 'materials_index', methods: ['GET'])]
     public function index(): Response
@@ -63,19 +60,16 @@ class MaterialController extends AbstractController
             return $this->redirectToRoute('login_form');
         }
 
-        $materials = $this->entityManager->getRepository(Material::class)->getLastMaterials(10);
-        $preferences = $this->entityManager->find(Preferences::class, 1);
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
+        $materials = $this->em->getRepository(Material::class)->getLastMaterials(10);
+        $preferences = $this->em->find(Preferences::class, 1);
+
+        $data = $this->getDefaultData();
+        $data += [
             'materials' => $materials,
             'preferences' => $preferences,
             'tools_menu' => [
               'material' => FALSE,
             ],
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
         ];
 
         return $this->render('material/index.html.twig', $data);
@@ -89,8 +83,7 @@ class MaterialController extends AbstractController
      * - Prepares and passes data to the 'material/material_new.html.twig' template.
      * - Renders the template for creating a new material.
      *
-     * @return Response
-     *   The HTTP response with the rendered new material form or a redirect to the login page.
+     * @return Response The HTTP response with the rendered new material form or a redirect to the login page.
      */
     #[Route('/materials/new', name: 'material_new_form', methods: ['GET'])]
     public function new(): Response
@@ -100,15 +93,11 @@ class MaterialController extends AbstractController
             return $this->redirectToRoute('login_form');
         }
 
-        $units = $this->entityManager->getRepository(Unit::class)->findAll();
+        $units = $this->em->getRepository(Unit::class)->findAll();
 
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
+        $data = $this->getDefaultData();
+        $data += [
             'units' => $units,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
             'tools_menu' => [
                 'material' => FALSE,
             ],
@@ -126,14 +115,13 @@ class MaterialController extends AbstractController
      * - Creates and persists a new Material entity with the provided data.
      * - Redirects to the material details page upon successful creation.
      *
-     * @return Response
-     *   The HTTP response that redirects to the new material's details page or displays an error.
+     * @return Response The HTTP response that redirects to the new material's details page or displays an error.
      */
     #[Route('/materials/create', name: 'material_create', methods: ['POST'])]
     public function create(): Response
     {
         session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+        $user = $this->em->find(User::class, $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -143,17 +131,17 @@ class MaterialController extends AbstractController
             $name = htmlspecialchars($_POST['name']);
         }
 
-        $unit_id = htmlspecialchars($_POST['unit_id']);
-        $unit = $this->entityManager->find(Unit::class, $unit_id);
+        $unitId = htmlspecialchars($_POST['unit_id']);
+        $unit = $this->em->find(Unit::class, $unitId);
         $weight = $_POST['weight'] ? htmlspecialchars($_POST['weight']) : 0;
         $price = $_POST['price'] ? str_replace(",", ".", htmlspecialchars($_POST['price'])) : 0;
         $min_obrac_mera = 0;
         $note = htmlspecialchars($_POST["note"]);
 
         // Check if name already exist in database.
-        $control_name = $this->entityManager->getRepository(Material::class)->findBy( array('name' => $name) );
+        $controlName = $this->em->getRepository(Material::class)->findBy( array('name' => $name) );
 
-        if ($control_name) {
+        if ($controlName) {
             echo "Username already exist in database. Please choose new username!";
             exit(1);
             // die('<script>location.href = "?alert&ob=2" </script>');
@@ -171,8 +159,8 @@ class MaterialController extends AbstractController
         $newMaterial->setCreatedByUser($user);
         $newMaterial->setModifiedAt(new \DateTime("0000-01-01 00:00:00"));
 
-        $this->entityManager->persist($newMaterial);
-        $this->entityManager->flush();
+        $this->em->persist($newMaterial);
+        $this->em->flush();
 
         // Get last id and redirect.
         $new_id = $newMaterial->getId();
@@ -189,11 +177,9 @@ class MaterialController extends AbstractController
      * - Prepares and passes all relevant data to the 'material/material_view.html.twig' template.
      * - Renders the template with the material details.
      *
-     * @param int $material_id
-     *   The ID of the material to display.
+     * @param int $material_id The ID of the material to display.
      *
-     * @return Response
-     *   The HTTP response with the rendered material details or a redirect to the login page.
+     * @return Response The HTTP response with the rendered material details or a redirect to the login page.
      */
     #[Route('/materials/{material_id}', name: 'materials_show', requirements: ['material_id' => '\d+'], methods: ['GET'])]
     public function show(int $material_id): Response
@@ -203,32 +189,25 @@ class MaterialController extends AbstractController
             return $this->redirectToRoute('login_form');
         }
 
-        $material = $this->entityManager->find(Material::class, $material_id);
-        $material_suppliers = $this->entityManager
-            ->getRepository(MaterialSupplier::class)->getMaterialSuppliers($material_id);
-        $material_properties = $this->entityManager
-            ->getRepository(MaterialProperty::class)->getMaterialProperties($material_id);
-        $suppliers = $this->entityManager
-            ->getRepository(Client::class)->findBy(['is_supplier' => 1], ['name' => 'ASC']);
-        $property_list = $this->entityManager->getRepository(Property::class)->findAll();
+        $material = $this->em->find(Material::class, $material_id);
+        $materialSuppliers = $this->em->getRepository(MaterialSupplier::class)->getMaterialSuppliers($material_id);
+        $materialProperties = $this->em->getRepository(MaterialProperty::class)->getMaterialProperties($material_id);
+        $suppliers = $this->em->getRepository(Client::class)->findBy(['is_supplier' => 1], ['name' => 'ASC']);
+        $propertyList = $this->em->getRepository(Property::class)->findAll();
 
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
+        $data = $this->getDefaultData();
+        $data += [
             'material_id' => $material_id,
             'material' => $material,
-            'material_suppliers' => $material_suppliers,
-            'material_properties' => $material_properties,
+            'material_suppliers' => $materialSuppliers,
+            'material_properties' => $materialProperties,
             'suppliers' => $suppliers,
-            'property_list' => $property_list,
+            'property_list' => $propertyList,
             'tools_menu' => [
                 'material' => TRUE,
                 'view' => TRUE,
                 'edit' => FALSE,
             ],
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
         ];
 
         return $this->render('material/material_view.html.twig', $data);
@@ -242,48 +221,39 @@ class MaterialController extends AbstractController
      * - Prepares and passes all relevant data to the 'material/material_edit.html.twig' template.
      * - Renders the template for editing the material.
      *
-     * @param int $material_id
-     *   The ID of the material to edit.
+     * @param int $material_id The ID of the material to edit.
      *
-     * @return Response
-     *   The HTTP response with the rendered edit material form or a redirect to the login page.
+     * @return Response The HTTP response with the rendered edit material form or a redirect to the login page.
      */
     #[Route('/materials/{material_id}/edit', name: 'material_edit_form', methods: ['GET'])]
-    public function edit($material_id): Response
+    public function edit(int $material_id): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $material = $this->entityManager->find(Material::class, $material_id);
-        $material_suppliers = $this->entityManager
-            ->getRepository(MaterialSupplier::class)->getMaterialSuppliers($material_id);
-        $material_properties = $this->entityManager
-            ->getRepository(MaterialProperty::class)->getMaterialProperties($material_id);
-        $units = $this->entityManager->getRepository(Unit::class)->FindAll();
-        $suppliers = $this->entityManager
-            ->getRepository(Client::class)->findBy(['is_supplier' => 1], ['name' => 'ASC']);
-        $property_list = $this->entityManager->getRepository(Property::class)->findAll();
+        $material = $this->em->find(Material::class, $material_id);
+        $materialSuppliers = $this->em->getRepository(MaterialSupplier::class)->getMaterialSuppliers($material_id);
+        $materialProperties = $this->em->getRepository(MaterialProperty::class)->getMaterialProperties($material_id);
+        $units = $this->em->getRepository(Unit::class)->FindAll();
+        $suppliers = $this->em->getRepository(Client::class)->findBy(['is_supplier' => 1], ['name' => 'ASC']);
+        $propertyList = $this->em->getRepository(Property::class)->findAll();
 
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
+        $data = $this->getDefaultData();
+        $data += [
             'material_id' => $material_id,
             'material' => $material,
-            'material_suppliers' => $material_suppliers,
-            'material_properties' => $material_properties,
+            'material_suppliers' => $materialSuppliers,
+            'material_properties' => $materialProperties,
             'units' => $units,
             'suppliers' => $suppliers,
-            'property_list' => $property_list,
+            'property_list' => $propertyList,
             'tools_menu' => [
                 'material' => TRUE,
                 'view' => FALSE,
                 'edit' => TRUE,
             ],
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
         ];
 
         return $this->render('material/material_edit.html.twig', $data);
@@ -299,17 +269,15 @@ class MaterialController extends AbstractController
      * - Persists changes to the database.
      * - Redirects to the material details page upon successful update.
      *
-     * @param int $material_id
-     *   The ID of the material to update.
+     * @param int $material_id The ID of the material to update.
      *
-     * @return Response
-     *   The HTTP response that redirects to the updated material's details page or displays an error.
+     * @return Response The HTTP response that redirects to the updated material's details page or displays an error.
      */
     #[Route('/materials/{material_id}/update', name: 'material_update', methods: ['POST'])]
     public function update(int $material_id): Response
     {
         session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+        $user = $this->em->find(User::class, $_SESSION['user_id']);
 
         if (empty($_POST['name'])) {
             $nameError = 'Ime mora biti upisano';
@@ -319,14 +287,14 @@ class MaterialController extends AbstractController
             $name = htmlspecialchars($_POST['name']);
         }
 
-        $unit_id = $_POST["unit_id"];
-        $unit = $this->entityManager->find(Unit::class, $unit_id);
+        $unitId = $_POST["unit_id"];
+        $unit = $this->em->find(Unit::class, $unitId);
 
         $weight = htmlspecialchars($_POST['weight']);
         $price = str_replace(",", ".", htmlspecialchars($_POST['price']));
         $note = htmlspecialchars($_POST['note']);
 
-        $material = $this->entityManager->find(Material::class, $material_id);
+        $material = $this->em->find(Material::class, $material_id);
 
         if ($material === null) {
             echo "Material with ID: $material_id, does not exist.\n";
@@ -343,7 +311,7 @@ class MaterialController extends AbstractController
 
         $material->setModifiedAt(new \DateTime("now", new \DateTimeZone('GMT+2')));
 
-        $this->entityManager->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
@@ -351,16 +319,14 @@ class MaterialController extends AbstractController
     /**
      * Adds a supplier to a material.
      *
-     * @param int $material_id
-     *   The ID of the material to which the supplier will be added.
+     * @param int $material_id The ID of the material to which the supplier will be added.
      *
      * Expects the following POST parameters:
      *   - supplier_id (int): The ID of the supplier (Client entity) to add. Required.
      *   - note (string): Optional note about the supplier/material relationship.
      *   - price (float, optional): Price value for the supplier/material relationship. Comma or dot as decimal separator.
      *
-     * @return Response
-     *   Redirects to the material details page after adding the supplier.
+     * @return Response Redirects to the material details page after adding the supplier.
      *
      * @throws \Exception If required POST data is missing or invalid.
      */
@@ -368,13 +334,13 @@ class MaterialController extends AbstractController
     public function addSupplier(int $material_id): Response
     {
         session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+        $user = $this->em->find(User::class, $_SESSION['user_id']);
 
-        $material = $this->entityManager->find(Material::class, $material_id);
+        $material = $this->em->find(Material::class, $material_id);
 
-        $supplier_id = htmlspecialchars($_POST['supplier_id']);
-        if ($supplier_id == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
-        $supplier = $this->entityManager->find(Client::class, $supplier_id);
+        $supplierId = htmlspecialchars($_POST['supplier_id']);
+        if ($supplierId == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
+        $supplier = $this->em->find(Client::class, $supplierId);
 
         $note = htmlspecialchars($_POST['note']);
 
@@ -393,8 +359,8 @@ class MaterialController extends AbstractController
         $newMaterialSupplier->setCreatedByUser($user);
         $newMaterialSupplier->setModifiedAt(new \DateTime("now"));
 
-        $this->entityManager->persist($newMaterialSupplier);
-        $this->entityManager->flush();
+        $this->em->persist($newMaterialSupplier);
+        $this->em->flush();
 
         return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
@@ -402,39 +368,37 @@ class MaterialController extends AbstractController
     /**
      * Adds a property to a material.
      *
-     * @param int $material_id
-     *   The ID of the material to which the property will be added.
+     * @param int $material_id The ID of the material to which the property will be added.
      *
      * Expects the following POST parameters:
      *   - property_item_id (int): The ID of the Property entity to add. Required.
      *   - min_size (string|float): The minimum size value for the property. Required.
      *   - max_size (string|float): The maximum size value for the property. Required.
      *
-     * @return Response
-     *   Redirects to the material details page after adding the property.
+     * @return Response Redirects to the material details page after adding the property.
      *
      * @throws \Exception If required POST data is missing or invalid.
      */
     #[Route('/materials/{material_id}/add-property', name: 'material_add_property', methods: ['POST'])]
     public function addProperty(int $material_id): Response
     {
-        $material = $this->entityManager->find(Material::class, $material_id);
+        $material = $this->em->find(Material::class, $material_id);
 
-        $property_item_id = htmlspecialchars($_POST['property_item_id']);
-        $property = $this->entityManager->find(Property::class, $property_item_id);
+        $propertyItemId = htmlspecialchars($_POST['property_item_id']);
+        $property = $this->em->find(Property::class, $propertyItemId);
 
-        $min_size = htmlspecialchars($_POST['min_size']);
-        $max_size = htmlspecialchars($_POST['max_size']);
+        $minSize = htmlspecialchars($_POST['min_size']);
+        $maxSize = htmlspecialchars($_POST['max_size']);
 
         $newMaterialproperty = new MaterialProperty();
 
         $newMaterialproperty->setMaterial($material);
         $newMaterialproperty->setProperty($property);
-        $newMaterialproperty->setMinSize($min_size);
-        $newMaterialproperty->setMaxSize($max_size);
+        $newMaterialproperty->setMinSize($minSize);
+        $newMaterialproperty->setMaxSize($maxSize);
 
-        $this->entityManager->persist($newMaterialproperty);
-        $this->entityManager->flush();
+        $this->em->persist($newMaterialproperty);
+        $this->em->flush();
 
         return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
@@ -459,28 +423,28 @@ class MaterialController extends AbstractController
     public function editSupplier(int $material_id, int $supplier_id): Response
     {
         session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+        $user = $this->em->find(User::class, $_SESSION['user_id']);
 
-        $material = $this->entityManager->find(Material::class, $material_id);
+        $material = $this->em->find(Material::class, $material_id);
 
-        $supplier_id = htmlspecialchars($_POST["supplier_id"]);
-        $supplier = $this->entityManager->find(Client::class, $supplier_id);
+        $supplierId = htmlspecialchars($_POST["supplier_id"]);
+        $supplier = $this->em->find(Client::class, $supplierId);
 
         $note = htmlspecialchars($_POST["note"]);
         $price = $_POST['price'] ? str_replace(",", ".", htmlspecialchars($_POST['price'])) : 0;
 
-        $material_supplier_id = htmlspecialchars($_POST["material_supplier_id"]);
-        $material_supplier = $this->entityManager->find(MaterialSupplier::class, $material_supplier_id);
+        $materialSupplierId = htmlspecialchars($_POST["material_supplier_id"]);
+        $materialSupplier = $this->em->find(MaterialSupplier::class, $materialSupplierId);
 
-        $material_supplier->setMaterial($material);
-        $material_supplier->setSupplier($supplier);
-        $material_supplier->setNote($note);
-        $material_supplier->setPrice($price);
+        $materialSupplier->setMaterial($material);
+        $materialSupplier->setSupplier($supplier);
+        $materialSupplier->setNote($note);
+        $materialSupplier->setPrice($price);
 
-        $material_supplier->setModifiedByUser($user);
-        $material_supplier->setModifiedAt(new \DateTime("now"));
+        $materialSupplier->setModifiedByUser($user);
+        $materialSupplier->setModifiedAt(new \DateTime("now"));
 
-        $this->entityManager->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
@@ -488,23 +452,20 @@ class MaterialController extends AbstractController
     /**
      * Deletes a supplier from a material.
      *
-     * @param int $material_id
-     *   The ID of the material from which the supplier will be removed.
-     * @param int $supplier_id
-     *   The ID of the MaterialSupplier entity to remove.
+     * @param int $material_id The ID of the material from which the supplier will be removed.
+     * @param int $supplier_id The ID of the MaterialSupplier entity to remove.
      *
-     * @return Response
-     *   Redirects to the material details page after deleting the supplier.
+     * @return Response Redirects to the material details page after deleting the supplier.
      *
      * @throws \Exception If the MaterialSupplier entity is not found or cannot be deleted.
      */
     #[Route('/materials/{material_id}/suppliers/{supplier_id}/delete', name: 'material_delete_supplier', methods: ['GET'])]
     public function deleteSupplier(int $material_id, int $supplier_id): Response
     {
-        $material_supplier =  $this->entityManager->find(MaterialSupplier::class, $supplier_id);
+        $materialSupplier =  $this->em->find(MaterialSupplier::class, $supplier_id);
 
-        $this->entityManager->remove($material_supplier);
-        $this->entityManager->flush();
+        $this->em->remove($materialSupplier);
+        $this->em->flush();
 
         return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
@@ -512,24 +473,20 @@ class MaterialController extends AbstractController
     /**
      * Deletes a property from a material.
      *
-     * @param int $material_id
-     *   The ID of the material from which the property will be removed.
-     * @param int $property_id
-     *   The ID of the MaterialProperty entity to remove.
+     * @param int $material_id The ID of the material from which the property will be removed.
+     * @param int $property_id The ID of the MaterialProperty entity to remove.
      *
-     * @return Response
-     *   Redirects to the material details page after deleting the property.
+     * @return Response Redirects to the material details page after deleting the property.
      *
-     * @throws \Exception
-     *   If the MaterialProperty entity is not found or cannot be deleted.
+     * @throws \Exception If the MaterialProperty entity is not found or cannot be deleted.
      */
     #[Route('/materials/{material_id}/properties/{property_id}/delete', name: 'material_delete_property', methods: ['GET'])]
     public function deleteProperty(int $material_id, int $property_id): Response
     {
-        $material_property = $this->entityManager->find(MaterialProperty::class, $property_id);
+        $materialProperty = $this->em->find(MaterialProperty::class, $property_id);
 
-        $this->entityManager->remove($material_property);
-        $this->entityManager->flush();;
+        $this->em->remove($materialProperty);
+        $this->em->flush();;
 
         return $this->redirectToRoute('materials_show', ['material_id' => $material_id]);
     }
@@ -537,14 +494,12 @@ class MaterialController extends AbstractController
     /**
      * Searches for materials by a search term.
      *
-     * @param Request $request
-     *   The HTTP request object. Expects a 'term' query parameter for the search string.
+     * @param Request $request The HTTP request object. Expects a 'term' query parameter for the search string.
      *
      * Query Parameters:
      *   - term (string, optional): The search term to filter materials by name or note. Defaults to an empty string (returns all materials).
      *
-     * @return Response
-     *   Renders the material search results page with the filtered materials and related data.
+     * @return Response Renders the material search results page with the filtered materials and related data.
      */
     #[Route('/materials/search', name: 'materials_search')]
     public function search(Request $request): Response
@@ -556,23 +511,35 @@ class MaterialController extends AbstractController
 
         $term = $request->query->get('term', '');
 
-        $materials= $this->entityManager->getRepository(Material::class)->search($term);
-        $preferences = $this->entityManager->find(Preferences::class, 1);
+        $materials= $this->em->getRepository(Material::class)->search($term);
+        $preferences = $this->em->find(Preferences::class, 1);
 
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
+        $data = $this->getDefaultData();
+        $data += [
             'materials' => $materials,
             'preferences' => $preferences,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
             'tools_menu' => [
                 'material' => FALSE,
             ],
         ];
 
         return $this->render('material/search.html.twig', $data);
+    }
+
+    /**
+     * Returns default data array for views.
+     *
+     * @return array An associative array containing default data for views.
+     */
+    private function getDefaultData(): array
+    {
+        return [
+            'page' => $this->page,
+            'page_title' => $this->pageTitle,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+        ];
     }
 
 }
