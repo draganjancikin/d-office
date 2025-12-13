@@ -348,7 +348,7 @@ class DocumentController extends AbstractController
 
         $this->em->flush();
 
-        return $this->redirectToRoute('document_show', ['id' => $id]);
+        return $this->redirectToRoute('document_edit_form', ['id' => $id]);
     }
 
     /**
@@ -1018,7 +1018,7 @@ class DocumentController extends AbstractController
             $documentArticleProperty->setQuantity($propertyValue);
             $this->em->flush();
         }
-        return $this->redirectToRoute('document_show', ['id' => $id]);
+        return $this->redirectToRoute('document_edit_form', ['id' => $id]);
     }
 
     /**
@@ -1202,7 +1202,7 @@ class DocumentController extends AbstractController
         $this->em->remove($documentArticle);
         $this->em->flush();
 
-        return $this->redirectToRoute('document_show', ['id' => $id]);
+        return $this->redirectToRoute('document_edit_form', ['id' => $id]);
     }
 
     /**
