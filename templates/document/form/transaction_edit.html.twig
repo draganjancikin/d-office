@@ -4,14 +4,14 @@
         <h6 class="m-0 text-dark">Izmena transakcije:</h6>
     </div>
     <div class="card-body p-2">
-        <form action="/documents/{{ pidb_id }}/transactions/{{ transaction.id }}/update"
+        <form action="/documents/{{ document.id }}/transactions/{{ transaction.id }}/update"
               method="post" role="form">
 
             <div class="row mb-2">
                 <label for="article" class="col-sm-3 col-form-label">Dokument:</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control form-control-sm"
-                           value="{{ pidb.type.name }} {{ '%04d'|format(pidb.getOrdinalNumInYear()) }}-{{ pidb
+                           value="{{ document.type.name }} {{ '%04d'|format(document.getOrdinalNumInYear()) }}-{{ document
                                .getCreatedAt().format('m') }} - {{ client.name }}" />
                 </div>
             </div>
@@ -20,11 +20,11 @@
                 <label for="transaction_type" class="col-sm-3 col-form-label">Vrsta transakcije:</label>
                 <div class="col-sm-4">
                     <select class="form-select form-select-sm" name="type_id" id="transaction_type">
-                        {% if pidb.type.id == 1 %}
+                        {% if document.type.id == 1 %}
                             <option value="1">Avans (gotovinski)</option>
                             <option value="2">Avans (virmanski)</option>
                         {% endif %}
-                        {% if pidb.type.id == 2 %}
+                        {% if document.type.id == 2 %}
                         <option value="3">Uplata (gotovinska)</option>
                         <option value="4">Uplata (virmanska)</option>
                         {% endif %}

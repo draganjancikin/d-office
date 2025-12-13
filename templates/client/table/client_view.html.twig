@@ -11,9 +11,9 @@
                 </tr>
                 <tr class="border-bottom">
                     <td class="p-2">Vrsta klijenta</td>
-                    <td class="p-2">{{ client.type }}</td>
+                    <td class="p-2">{{ client.type.name }}</td>
                 </tr>
-                {% if client.type_id == 2 %}
+                {% if client.type.id == 2 %}
                     <tr class="border-bottom">
                         <td class="p-2">PIB</td>
                         <td class="p-2">{{ client.lb == "" ? "-" : client.lb }}</td>
@@ -21,21 +21,21 @@
                 {% endif %}
                 <tr class="border-bottom">
                     <td class="p-2">Naziv</td>
-                    <td class="p-2">{{ client.name }} {% if client.name_note %}({{ client.name_note }}){% endif %}</td>
+                    <td class="p-2">{{ client.name }} {% if client.nameNote %}({{ client.nameNote }}){% endif %}</td>
                 </tr>
                 <tr class="border-bottom">
                     <td class="p-2">Adresa</td>
                     <td class="p-2">
-                        {{ client.street ?: '' }} {{ client.home_number ?: '' }}
-                        {{ client.city ? ', ' ~ client.city : '' }}
-                        {{ client.country ? ', ' ~ client.country : '' }}
-                        {% if client.address_note %}({{ client.address_note }}){% endif %}
+                        {% if client.street %}{{ client.street.name }}{% endif %} {{ client.homeNumber ?: '' }}
+                        {{ client.city ? ', ' ~ client.city.name : '' }}
+                        {{ client.country ? ', ' ~ client.country.name : '' }}
+                        {% if client.addressNote %}({{ client.addressNote }}){% endif %}
                     </td>
                 </tr>
                 <tr class="border-bottom">
                     <td class="p-2">Dobavljač</td>
                     <td class="p-2">
-                        {% if client.is_supplier %}
+                        {% if client.isSupplier %}
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-check2-square" viewBox="0 0 16 16">
                                     <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5z"/>

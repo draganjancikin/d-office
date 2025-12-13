@@ -44,11 +44,13 @@
         </td>
     </tr>
     <tr>
-        <td colspan="3"><h2>{{ pidb_type }} broj: {{ '%04d'|format(pidb.getOrdinalNumInYear()) }} - {{ pidb.getCreatedAt().format('m') }}</h2></td>
+        <td colspan="3">
+            <h2>{{ document.type.name }} broj: {{ '%04d'|format(document.getOrdinalNumInYear()) }} - {{ document.getCreatedAt().format('m') }}</h2>
+        </td>
     </tr>
     <tr>
         <td colspan="3"><br />
-            Datum i mesto izdavanja: {{ pidb.getCreatedAt().format('d M Y') }}.g. Bačka Palanka
+            Datum i mesto izdavanja: {{ document.getCreatedAt().format('d M Y') }}.g. Bačka Palanka
         </td>
     </tr>
 </table>
@@ -156,7 +158,7 @@
         <td colspan="3"></td>
         <td colspan="5" style="border-bottom-width: inherit;">Avans</td>
         <td colspan="2" align="right" style="border-bottom-width: inherit;">
-            {{ avans_rsd|number_format(2, ',', '.') }}
+            {{ advance_payment_rsd|number_format(2, ',', '.') }}
         </td>
         <td></td>
     </tr>
@@ -184,7 +186,7 @@
     </tr>
 </table>
 
-{% if pidb.type.id == 2 %}
+{% if document.type.id == 2 %}
 {% else %}
     <table>
         <tr>
@@ -202,7 +204,7 @@
         <tr>
             <td>Poziv na broj: </td>
             <td style="background-color: #E0E0E0;">
-                {{ '%04d'|format(pidb.getOrdinalNumInYear()) }}-{{ pidb.getCreatedAt().format('m') }}
+                {{ '%04d'|format(document.getOrdinalNumInYear()) }}-{{ document.getCreatedAt().format('m') }}
             </td>
         </tr>
         <tr><td></td></tr>
@@ -210,11 +212,11 @@
 {% endif %}
 
 <table border="1" style="padding: 5px">
-    <tr><td width="690px">Napomena:<br />{{ pidb.note|nl2br }}</td></tr>
+    <tr><td width="690px">Napomena:<br />{{ document.note|nl2br }}</td></tr>
 </table>
 
 <table>
-{% if pidb.type.id == 2 %}
+{% if document.type.id == 2 %}
     <tr><td></td><td></td><td></td></tr>
     <tr><td></td><td></td><td></td></tr>
     <tr><td>______________________</td><td></td><td align="right">______________________</td></tr>

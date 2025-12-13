@@ -9,8 +9,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/documents/{{ pidb_id }}/articles/add" method="post" role="form">
-                <input type="hidden" name="pidb_id" value="{{ pidb_id }}">
+            <form action="/documents/{{ document.id }}/articles/add" method="post" role="form">
+                <input type="hidden" name="pidb_id" value="{{ document.id }}">
 
                 <div class="modal-body">
 
@@ -70,38 +70,34 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/documents/{{ pidb_id }}/add-payment" method="post" role="form">
-                <input type="hidden" name="pidb_id" value="{{ pidb_id }}">
-                <input type="hidden" name="client_id" value="{{ pidb_data.client.id }}">
+            <form action="/documents/{{ document.id }}/add-payment" method="post" role="form">
+                <input type="hidden" name="pidb_id" value="{{ document.id }}">
+                <input type="hidden" name="client_id" value="{{ document.client.id }}">
                 <div class="modal-body">
 
                     <div class="row mb-2">
                         <label for="pidb" class="col-sm-3 col-form-label">Dokument:</label>
                         <div class="col-sm-9">
                             <select class="form-select form-select-sm" name="pidb_id" id="pidb">
-                                <option value="{{ pidb_data.id }}">
-                                    {{ pidb_tag }}
-                                    {{ '%04d'|format(pidb_data.getOrdinalNumInYear()) }}
+                                <option value="{{ document.id }}">
+                                    {{ document_tag }}
+                                    {{ '%04d'|format(document.getOrdinalNumInYear()) }}
                                     -
-                                    {{ pidb_data.getCreatedAt().format('m') }}
-                                    {{ pidb_data.client.name }}
+                                    {{ document.getCreatedAt().format('m') }}
+                                    {{ document.client.name }}
                                 </option>
                             </select>
                         </div>
                     </div>
 
-
-
-
-
                     <div class="row mb-2">
                         <label for="transaction_type" class="col-sm-3 col-form-label">Vrsta uplate:</label>
                         <div class="col-sm-5">
                             <select class="form-select form-select-sm" name="type_id" id="transaction_type">
-                                {% if pidb_type_id == 1 %}
+                                {% if document.type.id == 1 %}
                                     <option value="1">Avans (gotovinski)</option>
                                     <option value="2">Avans (virmanski)</option>
-                                {% elseif pidb_type_id == 2 %}
+                                {% elseif document.type.id == 2 %}
                                     <option value="3">Uplata (gotovinska)</option>
                                     <option value="4">Uplata (virmanska)</option>
                                 {% endif %}

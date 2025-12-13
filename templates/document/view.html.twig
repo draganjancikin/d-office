@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block body %}
+    {% include 'document/tools_menu.html.twig' %}
+    <div class="col-lg-12 col-xl-11 px-2">
+        <div class="card border-{{ document_style }} mb-4 shadow-sm">
+            <div class="card-header bg-{{ document_style }} p-2">
+                <h6 class="m-0 font-weight-bold text-white">
+                    {{ document_type }}
+                    {{ '%04d'|format(document.getOrdinalNumInYear()) }} - {{ document.getCreatedAt().format('m') }}
+                    <span class="font-weight-normal">{{ document.getCreatedAt().format('d-M-Y') }}</span>
+                    <span class="font-weight-normal">{{ document.title }}</span>
+                </h6>
+            </div>
+            <div class="card-body p-2">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3 col-md-2">klijent:</dt>
+                    <dd class="col-sm-9 col-md-10">
+                        <a href="/clients/{{ client.id }}" title="Pregled svih podataka o klijentu: {{ client.name }}">
+                            {{ client.name }}
+                        </a>
+                    </dd>
+                    <dt class="col-sm-3 col-md-2">adresa:</dt>
+                    <dd class="col-sm-9 col-md-10">
+                        {{ client.street ?? '' }} {{ client.home_number }}
+                        {% if client.street and client.city %}, {% endif %}
+                        {{ client.city ?? '' }}
+                        {% if client.city and client.country %}, {% endif %}
+                        {{ client.country ?? '' }}
+                    </dd>
+                    {% for client_contact in client.contacts %}
+                        <dt class="col-sm-3 col-md-2">{{ client_contact.type.name }}:</dt>
+                        <dd class="col-sm-9 col-md-10">
+                            {{ client_contact.body }}
+                            {% if client_contact.note %}
+                                ({{ client_contact.note }})
+                            {% endif %}
+                        </dd>
+                    {% endfor %}
+                </dl>
+                {% include 'document/table/document_view.html.twig' %}
+            </div>
+            <div class="card-footer pl-2">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="/documents" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Povratak na dokumente
+                    </a>
+                    <a href="/documents/{{ document.id }}/edit" class="btn btn-sm btn-primary">
+                        <i class="fas fa-edit"></i> Izmeni dokument
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'document/modals.html.twig' %}
+{% endblock %}

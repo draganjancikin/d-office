@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\AccountingDocument;
 use App\Entity\AccountingDocumentArticle;
 use App\Entity\AccountingDocumentArticleProperty;
-use App\Entity\AccountingDocumentType;
+use App\Entity\AccountingDocumentType as AccountingDocumentTypeEntity;
 use App\Entity\Article;
 use App\Entity\ArticleProperty;
 use App\Entity\Client;
@@ -15,7 +15,7 @@ use App\Entity\PaymentType;
 use App\Entity\Preferences;
 use App\Entity\Project;
 use App\Entity\User;
-use Doctrine\DBAL\Schema\AbstractAsset;
+use App\Form\AccountingDocumentType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,20 +31,19 @@ use TCPDF;
 class DocumentController extends AbstractController
 {
 
-    private EntityManagerInterface $entityManager;
-    private string $page;
-    private string $page_title;
+    private EntityManagerInterface $em;
+    private string $page = 'documents';
+    private string $pageTitle = 'Dokumenti';
     protected string $stylesheet;
 
     /**
      * DocumentController constructor.
      *
-     * @param EntityManagerInterface $entityManager
+     * @param EntityManagerInterface $em The entity manager for database interactions.
      */
-    public function __construct(EntityManagerInterface $entityManager) {
-        $this->entityManager = $entityManager;
-        $this->page_title = 'Dokumenti';
-        $this->page = 'documents';
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
         $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
@@ -54,7 +53,7 @@ class DocumentController extends AbstractController
      * Checks if the user is logged in, retrieves recent proformas, delivery notes, and return receipts, and renders
      * the documents index view.
      *
-     * @return Response
+     * @return Response The HTTP response object.
      */
     #[Route('/documents', name: 'documents_index', methods: ['GET'])]
     public function index(): Response
@@ -64,19 +63,15 @@ class DocumentController extends AbstractController
             return $this->redirectToRoute('login_form');
         }
 
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
+        $data = $this->getDefaultData();
+        $data += [
             'tools_menu' => [
                 'document' => FALSE,
                 'cash_register' => FALSE,
             ],
-            'proformas' => $this->entityManager->getRepository(AccountingDocument::class)->getLast(1, 0, 10),
-            'delivery_notes' => $this->entityManager->getRepository(AccountingDocument::class)->getLast(2, 0, 10),
-            'return_receipts' => $this->entityManager->getRepository(AccountingDocument::class)->getLast(4, 0, 10),
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
+            'proformas' => $this->em->getRepository(AccountingDocument::class)->getLast(1, 0, 10),
+            'delivery_notes' => $this->em->getRepository(AccountingDocument::class)->getLast(2, 0, 10),
+            'return_receipts' => $this->em->getRepository(AccountingDocument::class)->getLast(4, 0, 10),
         ];
 
         return $this->render('document/index.html.twig', $data);
@@ -88,113 +83,70 @@ class DocumentController extends AbstractController
      * Checks if the user is logged in, retrieves optional client and project data, fetches the list of clients, and
      * renders the new document form view.
      *
-     * @param int|null $client_id
-     *   Optional client ID to preselect in the form.
-     * @param int|null $project_id
-     *   Optional project ID to preselect in the form.
+     * @param Request $request The HTTP request object.
      *
-     * @return Response
+     * @return Response The HTTP response object.
      */
-    #[Route('/documents/new', name: 'documents_new_form', methods: ['GET'])]
-    public function new(?int $client_id = NULL, ?int $project_id = NULL): Response
+    #[Route('/documents/new', name: 'documents_new_form', methods: ['GET', 'POST'])]
+    public function new(Request $request): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        if (isset($_GET['project_id'])) {
-            $project_id = htmlspecialchars($_GET['project_id']);
+        $document = new AccountingDocument();
+        $user = $this->em->find(User::class, $_SESSION['user_id']);
+        $document->setCreatedByUser($user);
+
+        $form = $this->createForm(AccountingDocumentType::class);
+
+        if ($request->query->get('client_id')) {
+            $client = $this->em->find(Client::class, $request->query->get('client_id'));
+            $form->get('client')->setData($client);
         }
 
-        if (isset($_GET['client_id'])) {
-            $client_id = htmlspecialchars($_GET['client_id']);
-            $client = $this->entityManager->find(Client::class, $client_id);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $document->setDate(new \DateTime("now"));
+            $document->setOrdinalNumInYear(0);
+            $document->setTitle($form->get('title')->getData());
+            $document->setIsArchived(0);
+
+            $document->setType($form->get('type')->getData());
+            $document->setClient($form->get('client')->getData());
+
+            $noteValue = $form->get('note')->getData();
+            $document->setNote($noteValue !== null ? $noteValue : '');
+
+            $document->setCreatedAt(new \DateTime("now"));
+            $document->setModifiedAt(new \DateTime("now"));
+
+            $this->em->persist($document);
+            $this->em->flush();
+
+            $this->em->getRepository(AccountingDocument::class)->setOrdinalNumInYear($document->getId());
+
+            if ($request->query->get('project_id')) {
+                $project = $this->em->find(Project::class, $request->query->get('project_id'));
+                $project->getAccountingDocuments()->add($document);
+                $this->em->flush();
+            }
+
+            return $this->redirectToRoute('document_edit_form', ['id' => $document->getId()]);
         }
 
-        $clients_list = $this->entityManager->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
-
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'project_id' => $project_id,
-            'client' => $client ?? NULL,
-            'clients_list' => $clients_list,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
+        $data = $this->getDefaultData();
+        $data += [
             'tools_menu' => [
                 'document' => FALSE,
                 'cash_register' => FALSE,
             ],
+            'form' => $form->createView(),
         ];
 
-        return $this->render('document/document_new.html.twig', $data);
-    }
-
-    /**
-     * Handles the creation of a new accounting document.
-     *
-     * Validates user session, processes form data for a new document, persists the document and its associations
-     * (client, type, project), and redirects to the document details page.
-     *
-     * @return Response
-     */
-    #[Route('/documents/create', name: 'documents_create', methods: ['POST'])]
-    public function create(): Response
-    {
-        session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
-
-        $ordinal_num_in_year = 0;
-
-        $client_id = htmlspecialchars($_POST["client_id"]);
-        $client = $this->entityManager->find(Client::class, $client_id);
-
-        $accd_type_id = htmlspecialchars($_POST["pidb_type_id"]);
-        $accd_type = $this->entityManager->find(AccountingDocumentType::class, $accd_type_id);
-
-        $title = htmlspecialchars($_POST["title"]);
-        $note = htmlspecialchars($_POST["note"]);
-
-        // Create a new AccountingDocument.
-        $newAccountingDocument = new AccountingDocument();
-
-        $newAccountingDocument->setOrdinalNumInYear($ordinal_num_in_year);
-        $newAccountingDocument->setDate(new \DateTime("now"));
-        $newAccountingDocument->setIsArchived(0);
-
-        $newAccountingDocument->setType($accd_type);
-        $newAccountingDocument->setClient($client);
-        $newAccountingDocument->setTitle($title);
-        $newAccountingDocument->setNote($note);
-
-        $newAccountingDocument->setCreatedAt(new \DateTime("now"));
-        $newAccountingDocument->setCreatedByUser($user);
-        $newAccountingDocument->setModifiedAt(new \DateTime("1970-01-01 00:00:00"));
-
-        $this->entityManager->persist($newAccountingDocument);
-        $this->entityManager->flush();
-
-        // Get id of last AccountingDocument.
-        $new_accounting_document_id = $newAccountingDocument->getId();
-
-        // Set Ordinal Number In Year.
-        $this->entityManager->getRepository(AccountingDocument::class)->setOrdinalNumInYear($new_accounting_document_id);
-
-        if (isset($_POST["project_id"])) {
-            $project_id = htmlspecialchars($_POST["project_id"]);
-            $project = $this->entityManager->find(Project::class, $project_id);
-
-            $project->getAccountingDocuments()->add($newAccountingDocument);
-
-            $this->entityManager->flush();
-        }
-        else {
-            $project_id = NULL;
-        }
-
-        return $this->redirectToRoute('document_show', ['document_id' => $new_accounting_document_id]);
+        return $this->render('document/new.html.twig', $data);
     }
 
     /**
@@ -203,95 +155,79 @@ class DocumentController extends AbstractController
      * Checks if the user is logged in, retrieves the accounting document and its related data (client, articles,
      * totals, payments, etc.), prepares navigation and financial summary, and renders the document details view.
      *
-     * @param int $document_id
-     *   The ID of the accounting document to display.
+     * @param int $id The ID of the accounting document to display.
      *
-     * @return Response
+     * @return Response The HTTP response object.
      */
-    #[Route('/documents/{document_id}', name: 'document_show', requirements: ['document_id' => '\d+'], methods: ['GET'])]
-    public function show(int $document_id): Response
+    #[Route('/documents/{id}', name: 'document_show', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function show(int $id): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $document_data = $this->entityManager->find(AccountingDocument::class, $document_id);
+        $document = $this->em->find(AccountingDocument::class, $id);
 
-        $client_id = $document_data->getClient()->getId();
-        $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
+        $clientId = $document->getClient()->getId();
+        $client = $this->em->getRepository(Client::class)->getClientData($clientId);
 
-        $all_articles = $this->entityManager->getRepository(Article::class)->findAll();
+        $allArticles = $this->em->getRepository(Article::class)->findAll();
 
-        $pidb_type_id = $document_data->getType()->getId();
+        [$documentType, $documentTag, $documentStyle] = $this->getDocumentTypeData($document->getType()->getId());
 
-        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
-            1 => ["Predračun", "P_", 'info'],
-            2 => ["Otpremnica", "O_", 'secondary'],
-            4 => ["Povratnica", "POV_", 'warning'],
-            default => ["_", "_", 'default'],
-        };
+        $preferences = $this->em->find(Preferences::class, 1);
+        $exchangeRate = $preferences->getKurs();
 
-        $preferences = $this->entityManager->find(Preferences::class, 1);
-        $kurs = $preferences->getKurs();
+        $accountingDocumentArticlesData = $this->getAccountingDocumentArticlesData($id);
 
-        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($document_id);
+        $totalTaxBaseRsd = $this->getAccountingDocumentTotalTaxBaseRSD($id);
+        $totalTaxAmountRsd = $this->getAccountingDocumentTotalTaxAmountRSD($id);
 
-        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($document_id);
-        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($document_id);
+        $totalRsd = $totalTaxBaseRsd + $totalTaxAmountRsd;
 
-        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
+        $previous = $this->em->getRepository(AccountingDocument::class)->getPrevious($id, $document->getType()->getId());
 
-        $previous = $this->entityManager
-          ->getRepository(AccountingDocument::class)->getPrevious($document_id, $document_data->getType()->getId());
+        $next = $this->em->getRepository(AccountingDocument::class)->getNext($id, $document->getType()->getId());
 
-        $next = $this->entityManager
-          ->getRepository(AccountingDocument::class)->getNext($document_id, $document_data->getType()->getId());
+        $advancePaymentEur = $this->em->getRepository(AccountingDocument::class)->getAvans($id);
+        $advancePaymentRsd = $advancePaymentEur * $exchangeRate;
+        $incomeEur = $this->em->getRepository(AccountingDocument::class)->getIncome($id);
+        $incomeRsd = $incomeEur * $exchangeRate;
+        $remainingRsd = $totalRsd - $advancePaymentRsd - $incomeRsd;
+        $remainingEur = ($totalRsd / $exchangeRate) - $advancePaymentEur - $incomeEur;
 
-        $avans_eur = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($document_id);
-        $avans_rsd = $avans_eur * $kurs;
-        $income_eur = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($document_id);
-        $income_rsd = $income_eur * $kurs;
-        $remaining_rsd = $total_rsd - $avans_rsd - $income_rsd;
-        $remaining_eur = ($total_rsd / $kurs) - $avans_eur - $income_eur;
+        $data = $this->getDefaultData();
 
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'pidb_id' => $document_id,
-            'pidb_data' => $document_data,
-            'pidb_type_id' => $pidb_type_id,
-            'pidb_type' => $pidb_tupe,
-            'pidb_tag' => $pidb_tag,
-            'pidb_style' => $pidb_style,
-            'client' => $client,
-            'all_articles' => $all_articles,
-            'kurs' => $kurs,
-            'accounting_document_articles_data' => $accounting_document_articles_data,
+        $data += [
             'tools_menu' => [
                 'document' => TRUE,
                 'view' => TRUE,
                 'edit' => FALSE,
                 'cash_register' => TRUE,
             ],
+            'document' => $document,
+            'document_type' => $documentType,
+            'document_tag' => $documentTag,
+            'document_style' => $documentStyle,
+            'client' => $client,
+            'all_articles' => $allArticles,
+            'accounting_document_articles_data' => $accountingDocumentArticlesData,
             'previous' => $previous,
             'next' => $next,
-            'avans_eur' => $avans_eur,
-            'avans_rsd' => $avans_rsd,
-            'income_eur' => $income_eur,
-            'income_rsd' => $income_rsd,
-            'total_tax_base_rsd' => $total_tax_base_rsd,
-            'total_tax_amount_rsd' => $total_tax_amount_rsd,
-            'total_rsd' => $total_rsd,
-            'total_eur' => $total_rsd / $kurs,
-            'remaining_rsd' => $remaining_rsd,
-            'remaining_eur' => $remaining_eur,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
+            'advance_payment_eur' => $advancePaymentEur,
+            'advance_payment_rsd' => $advancePaymentRsd,
+            'income_eur' => $incomeEur,
+            'income_rsd' => $incomeRsd,
+            'total_tax_base_rsd' => $totalTaxBaseRsd,
+            'total_tax_amount_rsd' => $totalTaxAmountRsd,
+            'total_rsd' => $totalRsd,
+            'total_eur' => $totalRsd / $exchangeRate,
+            'remaining_rsd' => $remainingRsd,
+            'remaining_eur' => $remainingEur,
         ];
 
-        return $this->render('document/document_view.html.twig', $data);
+        return $this->render('document/view.html.twig', $data);
     }
 
     /**
@@ -300,92 +236,78 @@ class DocumentController extends AbstractController
      * Checks if the user is logged in, retrieves the accounting document and its related data (client, articles,
      * totals, payments, etc.), prepares navigation, financial summary, and a list of clients, and renders the document edit view.
      *
-     * @param int $document_id
-     *   The ID of the accounting document to edit.
-     * @return Response
+     * @param int $id The ID of the accounting document to edit.
+     *
+     * @return Response The HTTP response object.
      */
-    #[Route('/documents/{document_id}/edit', name: 'document_edit_form', methods: ['GET'])]
-    public function edit(int $document_id): Response
+    #[Route('/documents/{id}/edit', name: 'document_edit_form', methods: ['GET'])]
+    public function edit(int $id): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $document_data = $this->entityManager->find(AccountingDocument::class, $document_id);
+        $document = $this->em->find(AccountingDocument::class, $id);
 
-        $client_id = $document_data->getClient()->getId();
-        $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
+        $clientId = $document->getClient()->getId();
+        $client = $this->em->getRepository(Client::class)->getClientData($clientId);
 
-        $all_articles = $this->entityManager->getRepository(Article::class)->findAll();
+        $allArticles = $this->em->getRepository(Article::class)->findAll();
 
-        $pidb_type_id = $document_data->getType()->getId();
-        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
-            1 => ["Predračun", "P_", 'info'],
-            2 => ["Otpremnica", "O_", 'secondary'],
-            4 => ["Povratnica", "POV_", 'warning'],
-            default => ["_", "_", 'default'],
-        };
+        [$documentType, $documentTag, $documentStyle] = $this->getDocumentTypeData($document->getType()->getId());
 
-        $preferences = $this->entityManager->find(Preferences::class, 1);
-        $kurs = $preferences->getKurs();
+        $preferences = $this->em->find(Preferences::class, 1);
+        $exchangeRate = $preferences->getKurs();
 
-        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($document_id);
+        $accountingDocumentArticlesData = $this->getAccountingDocumentArticlesData($id);
 
-        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($document_id);
-        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($document_id);
+        $totalTaxBaseRsd = $this->getAccountingDocumentTotalTaxBaseRSD($id);
+        $totalTaxAmountRsd = $this->getAccountingDocumentTotalTaxAmountRSD($id);
 
-        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
+        $totalRsd = $totalTaxBaseRsd + $totalTaxAmountRsd;
 
-        $previous = $this->entityManager
-            ->getRepository(AccountingDocument::class)->getPrevious($document_id, $document_data->getType()->getId());
+        $previous = $this->em->getRepository(AccountingDocument::class)->getPrevious($id, $document->getType()->getId());
 
-        $next = $this->entityManager
-            ->getRepository(AccountingDocument::class)->getNext($document_id, $document_data->getType()->getId());
+        $next = $this->em->getRepository(AccountingDocument::class)->getNext($id, $document->getType()->getId());
 
-        $avans_eur = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($document_id);
-        $avans_rsd = $avans_eur * $kurs;
-        $income_eur = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($document_id);
-        $income_rsd = $income_eur * $kurs;
-        $remaining_rsd = $total_rsd - $avans_rsd - $income_rsd;
-        $remaining_eur = ($total_rsd / $kurs) - $avans_eur - $income_eur;
+        $advancePaymentEur = $this->em->getRepository(AccountingDocument::class)->getAvans($id);
+        $advancePaymentRsd = $advancePaymentEur * $exchangeRate;
+        $incomeEur = $this->em->getRepository(AccountingDocument::class)->getIncome($id);
+        $incomeRsd = $incomeEur * $exchangeRate;
+        $remainingRsd = $totalRsd - $advancePaymentRsd - $incomeRsd;
+        $remainingEur = ($totalRsd / $exchangeRate) - $advancePaymentEur - $incomeEur;
 
-        $clients_list = $this->entityManager->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
+        $clients_list = $this->em->getRepository(Client::class)->findBy([], ['name' => "ASC"]);
 
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
+        $data = $this->getDefaultData();
+        $data += [
             'client' => $client,
-            'pidb_id' => $document_id,
-            'pidb_data' => $document_data,
-            'pidb_type_id' => $pidb_type_id,
-            'pidb_type' => $pidb_tupe,
-            'pidb_tag' => $pidb_tag,
-            'pidb_style' => $pidb_style,
-            'all_articles' => $all_articles,
+            'document' => $document,
+            'document_type' => $documentType,
+            'document_tag' => $documentTag,
+            'document_style' => $documentStyle,
+            'all_articles' => $allArticles,
             'tools_menu' => [
                 'document' => TRUE,
                 'edit' => TRUE,
                 'view' => FALSE,
                 'cash_register' => TRUE,
             ],
-            'accounting_document_articles_data' => $accounting_document_articles_data,
+            'accounting_document_articles_data' => $accountingDocumentArticlesData,
             'previous' => $previous,
             'next' => $next,
-            'avans_eur' => $avans_eur,
-            'avans_rsd' => $avans_eur * $kurs,
-            'income_eur' => $income_eur,
-            'income_rsd' => $income_rsd,
-            'total_tax_base_rsd' => $total_tax_base_rsd,
-            'total_tax_amount_rsd' => $total_tax_amount_rsd,
-            'total_rsd' => $total_rsd,
-            'total_eur' => $total_rsd / $kurs,
-            'remaining_rsd' => $remaining_rsd,
-            'remaining_eur' => $remaining_eur,
+            'advance_payment_eur' => $advancePaymentEur,
+            'advance_payment_rsd' => $advancePaymentEur * $exchangeRate,
+            'income_eur' => $incomeEur,
+            'income_rsd' => $incomeRsd,
+            'total_tax_base_rsd' => $totalTaxBaseRsd,
+            'total_tax_amount_rsd' => $totalTaxAmountRsd,
+            'total_rsd' => $totalRsd,
+            'total_eur' => $totalRsd / $exchangeRate,
+            'remaining_rsd' => $remainingRsd,
+            'remaining_eur' => $remainingEur,
             'clients_list' => $clients_list,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
         ];
 
         return $this->render('document/document_edit.html.twig', $data);
@@ -397,38 +319,36 @@ class DocumentController extends AbstractController
      * Checks user session, retrieves the document and user, processes POST data (title, client, archive status, note),
      * updates the document fields, saves changes, and redirects to the document details page.
      *
-     * @param int $document_id
-     *   The ID of the accounting document to update.
+     * @param int $id The ID of the accounting document to update.
      *
-     * @return Response
+     * @return Response Redirects to the document details page after updating.
      */
-//    #[Route('/documents/{document_id}/update', name: 'document_update', methods: ['POST'])]
-    #[Route('/documents/{document_id}/update', name: 'document_update', requirements: ['document_id' => '\d+'], methods: ['POST'])]
-    public function update(int $document_id): Response
+    #[Route('/documents/{id}/update', name: 'document_update', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function update(int $id): Response
     {
         session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+        $user = $this->em->find(User::class, $_SESSION['user_id']);
 
-        $accounting_document = $this->entityManager->find(AccountingDocument::class, $document_id);
+        $document = $this->em->find(AccountingDocument::class, $id);
 
         $title = htmlspecialchars($_POST["title"]);
 
-        $client_id = htmlspecialchars($_POST["client_id"]);
-        $client = $this->entityManager->find(Client::class, $client_id);
+        $clientId = htmlspecialchars($_POST["client_id"]);
+        $client = $this->em->find(Client::class, $clientId);
 
-        $is_archived = htmlspecialchars($_POST["archived"]);
+        $isArchived = htmlspecialchars($_POST["archived"]);
         $note = htmlspecialchars($_POST["note"]);
 
-        $accounting_document->setTitle($title);
-        $accounting_document->setClient($client);
-        $accounting_document->setIsArchived($is_archived);
-        $accounting_document->setNote($note);
-        $accounting_document->setModifiedByUser($user);
-        $accounting_document->setModifiedAt(new \DateTime("now"));
+        $document->setTitle($title);
+        $document->setClient($client);
+        $document->setIsArchived($isArchived);
+        $document->setNote($note);
+        $document->setModifiedByUser($user);
+        $document->setModifiedAt(new \DateTime("now"));
 
-        $this->entityManager->flush();
+        $this->em->flush();
 
-        return $this->redirectToRoute('document_show', ['document_id' => $document_id]);
+        return $this->redirectToRoute('document_show', ['id' => $id]);
     }
 
     /**
@@ -439,45 +359,41 @@ class DocumentController extends AbstractController
      * related articles and their properties before deleting the document itself. Finally, it redirects to the search
      * page.
      *
-     * @param int $document_id
-     *   The ID of the accounting document to delete.
+     * @param int $id The ID of the accounting document to delete.
      *
-     * @return Response
-     *    Redirects to the search page after deletion or if deletion is not possible.
+     * @return Response Redirects to the search page after deletion or if deletion is not possible.
      *
      * @throws \Doctrine\DBAL\Exception If a database error occurs during the deletion process.
      */
-    #[Route('/documents/{document_id}/delete', name: 'document_delete', methods: ['GET'])]
-    public function delete(int $document_id): Response
+    #[Route('/documents/{id}/delete', name: 'document_delete', methods: ['GET'])]
+    public function delete(int $id): Response
     {
-        $acc_doc_id = $document_id;
-
         // Check if exist AccountingDocument.
-        if ($accounting_document = $this->entityManager->find(AccountingDocument::class, $acc_doc_id)) {
+        if ($document = $this->em->find(AccountingDocument::class, $id)) {
 
             // Check if AccountingDocument have Payments, where PaymentType is Income.
-            if ($this->entityManager->getRepository(AccountingDocument::class)->getPaymentsByIncome($acc_doc_id)) {
+            if ($this->em->getRepository(AccountingDocument::class)->getPaymentsByIncome($id)) {
                 echo "Brisanje dokumenta nije moguće jer postoje uplate vezane za ovaj dokument!";
-                echo "<br><a href='/pidb/{$acc_doc_id}/transactions'>Idi na transakcije dokumenta >></a>";
+                echo "<br><a href='/documents/$id/transactions'>Idi na transakcije dokumenta >></a>";
                 exit();
             }
             else {
                 // Parent Accounting Document update.
                 // Check if parent exist.
-                if ($parent = $accounting_document->getParent()) {
+                if ($parent = $document->getParent()) {
 
                     // Update Payments.
                     // Get all AccountingDocument Payments.
-                    $payments = $accounting_document->getPayments();
+                    $payments = $document->getPayments();
 
                     // Update all payment.
                     foreach ($payments as $payment) {
                         // TODO Dragan: Rešiti bolje konekciju na bazu.
                         $conn = \Doctrine\DBAL\DriverManager::getConnection([
-                            'dbname' => DB_NAME,
-                            'user' => DB_USERNAME,
-                            'password' => DB_PASSWORD,
-                            'host' => DB_SERVER,
+                            'dbname' => $_ENV['DB_NAME'],
+                            'user' => $_ENV['DB_USER'],
+                            'password' => $_ENV['DB_PASSWORD'],
+                            'host' => $_ENV['DB_SERVER'],
                             'driver' => 'mysqli',
                         ]);
                         $queryBuilder = $conn->createQueryBuilder();
@@ -487,17 +403,17 @@ class DocumentController extends AbstractController
                             ->where('payment_id = :payment')
                             ->setParameter('parent', $parent->getId())
                             ->setParameter('payment', $payment->getId());
-                        $result = $queryBuilder ->executeStatement();
+                        $queryBuilder ->executeStatement();
                     }
 
                     // Set Parent to active
                     $parent->setIsArchived(0);
-                    $this->entityManager->flush();
+                    $this->em->flush();
                 }
                 else {
-                    if ( $this->entityManager->getRepository(AccountingDocument::class)->getPaymentsByAvans($acc_doc_id) ){
+                    if ($this->em->getRepository(AccountingDocument::class)->getPaymentsByAvans($id) ){
                         echo "Brisanje dokumenta nije moguće jer postoje avansi vezani za ovaj dokument!<br>";
-                        echo "<a href='/pidb/{$acc_doc_id}/transactions'>Idi na transakcije dokumenta >></a>";
+                        echo "<a href='/documents/$id/transactions'>Idi na transakcije dokumenta >></a>";
                         exit();
                     }
                 }
@@ -505,35 +421,34 @@ class DocumentController extends AbstractController
 
             // Check if exist Articles in AccountingDocument.
             if (
-                $accounting_document__articles = $this->entityManager
-                    ->getRepository(AccountingDocumentArticle::class)->findBy(['accounting_document' => $acc_doc_id], [])
+                $documentArticles = $this->em->getRepository(AccountingDocumentArticle::class)->findBy(['accounting_document' => $id], [])
             ) {
 
                 // Loop through all articles.
-                foreach ($accounting_document__articles as $accounting_document__article) {
+                foreach ($documentArticles as $documentArticle) {
 
                     // Check if exist Properties in AccontingDocument Article.
                     if (
-                        $accounting_document__article__properties = $this->entityManager
-                            ->getRepository(AccountingDocumentArticleProperty::class)
-                            ->findBy(['accounting_document_article' => $accounting_document__article])
+                        $documentArticleProperties =
+                            $this->em->getRepository(AccountingDocumentArticleProperty::class)
+                                ->findBy(['accounting_document_article' => $documentArticle])
                     ) {
                         // Remove AccountingDocument Article Properties.
-                        foreach ($accounting_document__article__properties as $accounting_document__article__property) {
-                            $this->entityManager->remove($accounting_document__article__property);
-                            $this->entityManager->flush();
+                        foreach ($documentArticleProperties as $documentArticleProperty) {
+                            $this->em->remove($documentArticleProperty);
+                            $this->em->flush();
                         }
                     }
 
                     // Delete Article from AccountingDocument.
-                    $this->entityManager->remove($accounting_document__article);
-                    $this->entityManager->flush();
+                    $this->em->remove($documentArticle);
+                    $this->em->flush();
                 }
             }
 
             // Delete AccountingDocument.
-            $this->entityManager->remove($accounting_document);
-            $this->entityManager->flush();
+            $this->em->remove($document);
+            $this->em->flush();
         }
         return $this->redirectToRoute('documents_search', ['term' => '']);
     }
@@ -544,19 +459,17 @@ class DocumentController extends AbstractController
      * Retrieves the document and article, processes form data (pieces, note, etc.), creates and persists a new
      * AccountingDocumentArticle entity, copies article properties, and redirects to the document edit form.
      *
-     * @param int $document_id
-     *   The ID of the accounting document to which the article will be added.
+     * @param int $id The ID of the accounting document to which the article will be added.
      *
-     * @return Response
-     *   Redirects to the document edit form.
+     * @return Response Redirects to the document edit form.
      */
-    #[Route('/documents/{document_id}/articles/add', name: 'document_add_article', methods: ['POST'])]
-    public function addArticle(int $document_id): Response
+    #[Route('/documents/{id}/articles/add', name: 'document_add_article', methods: ['POST'])]
+    public function addArticle(int $id): Response
     {
-        $accounting_document = $this->entityManager->find(AccountingDocument::class, $document_id);
+        $document = $this->em->find(AccountingDocument::class, $id);
 
-        $article_id = htmlspecialchars($_POST["article_id"]);
-        $article = $this->entityManager->find(Article::class, $article_id);
+        $articleId = htmlspecialchars($_POST["article_id"]);
+        $article = $this->em->find(Article::class, $articleId);
 
         $price = $article->getPrice();
         $discount = 0;
@@ -567,44 +480,42 @@ class DocumentController extends AbstractController
             $pieces = htmlspecialchars($_POST["pieces"]);
         }
 
-        $preferences = $this->entityManager->find(Preferences::class, 1);
+        $preferences = $this->em->find(Preferences::class, 1);
         $tax = $preferences->getTax();
 
         $note = htmlspecialchars($_POST["note"]);
 
-        $newAccountingDocumentArticle = new AccountingDocumentArticle();
+        $newDocumentArticle = new AccountingDocumentArticle();
 
-        $newAccountingDocumentArticle->setAccountingDocument($accounting_document);
-        $newAccountingDocumentArticle->setArticle($article);
-        $newAccountingDocumentArticle->setPieces($pieces);
-        $newAccountingDocumentArticle->setPrice($price);
-        $newAccountingDocumentArticle->setDiscount($discount);
-        $newAccountingDocumentArticle->setTax($tax);
-        $newAccountingDocumentArticle->setWeight($weight);
-        $newAccountingDocumentArticle->setNote($note);
+        $newDocumentArticle->setAccountingDocument($document);
+        $newDocumentArticle->setArticle($article);
+        $newDocumentArticle->setPieces($pieces);
+        $newDocumentArticle->setPrice($price);
+        $newDocumentArticle->setDiscount($discount);
+        $newDocumentArticle->setTax($tax);
+        $newDocumentArticle->setWeight($weight);
+        $newDocumentArticle->setNote($note);
 
-        $this->entityManager->persist($newAccountingDocumentArticle);
-        $this->entityManager->flush();
+        $this->em->persist($newDocumentArticle);
+        $this->em->flush();
 
         // Last inserted Accounting Document Article.
         // $last__accounting_document__article_id = $newAccountingDocumentArticle->getId();
 
         // Insert Article properties in table v6__accounting_documents__articles__properties.
-        $article_properties =
-            $this->entityManager
-                ->getRepository(ArticleProperty::class)->getArticleProperties($article->getId());
-        foreach ($article_properties as $article_property) {
+        $articleProperties = $this->em->getRepository(ArticleProperty::class)->getArticleProperties($article->getId());
+        foreach ($articleProperties as $articleProperty) {
             // Insert to table v6__accounting_documents__articles__properties.
-            $newAccountingDocumentArticleProperty = new AccountingDocumentArticleProperty();
+            $newDocumentArticleProperty = new AccountingDocumentArticleProperty();
 
-            $newAccountingDocumentArticleProperty->setAccountingDocumentArticle($newAccountingDocumentArticle);
-            $newAccountingDocumentArticleProperty->setProperty($article_property->getProperty());
-            $newAccountingDocumentArticleProperty->setQuantity(0);
+            $newDocumentArticleProperty->setAccountingDocumentArticle($newDocumentArticle);
+            $newDocumentArticleProperty->setProperty($articleProperty->getProperty());
+            $newDocumentArticleProperty->setQuantity(0);
 
-            $this->entityManager->persist($newAccountingDocumentArticleProperty);
-            $this->entityManager->flush();
+            $this->em->persist($newDocumentArticleProperty);
+            $this->em->flush();
         }
-        return $this->redirectToRoute('document_edit_form', ['document_id' => $document_id]);
+        return $this->redirectToRoute('document_edit_form', ['id' => $id]);
     }
 
     /**
@@ -615,65 +526,54 @@ class DocumentController extends AbstractController
      * generated PDF filename initially includes leading double underscores, which are removed before sending the file
      * to the client.
      *
-     * @param int $document_id
-     *   The ID of the accounting document to print.
+     * @param int $id The ID of the accounting document to print.
      *
-     * @return Response
-     *   The PDF file as a Symfony inline response.
+     * @return Response The PDF file as a Symfony inline response.
      */
-    #[Route('/documents/{document_id}/print', name: 'document_print', methods: ['GET'])]
-    public function printAccountingDocument(int $document_id): Response
+    #[Route('/documents/{id}/print', name: 'document_print', methods: ['GET'])]
+    public function printAccountingDocument(int $id): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $pidb = $this->entityManager->find(AccountingDocument::class, $document_id);
-        $pidb_type = $pidb->getType()->getName();
-        $pidb_type_id = $pidb->getType()->getId();
-        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
-            1 => ["Predračun", "P_", 'info'],
-            2 => ["Otpremnica", "O_", 'secondary'],
-            4 => ["Povratnica", "POV_", 'warning'],
-            default => ["_", "_", 'default'],
-        };
-        $pidb_ordinal_number_in_year = str_pad($pidb->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
-        $pidb_date_month = $pidb->getDate()->format('m');
+        $document = $this->em->find(AccountingDocument::class, $id);
+        $documentType = $document->getType()->getName();
 
-        $client = $this->entityManager->getRepository(Client::class)->getClientData($pidb->getClient()->getId());
+        $documentOrdinalNumberInYear = str_pad($document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
+        $documentDateMonth = $document->getDate()->format('m');
 
-        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
-        $preferences = $this->entityManager->find(Preferences::class, 1);
-        $kurs = $preferences->getKurs();
+        $client = $this->em->getRepository(Client::class)->getClientData($document->getClient()->getId());
 
-        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($document_id);
+        $companyInfo = $this->em->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+        $preferences = $this->em->find(Preferences::class, 1);
+        $exchangeRate = $preferences->getKurs();
 
-        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($document_id);
-        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($document_id);
-        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
+        $documentArticlesSata = $this->getAccountingDocumentArticlesData($id);
 
-        $avans_eur = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($document_id);
-        $avans_rsd = $avans_eur * $kurs;
-        $income_eur = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($document_id);
-        $income_rsd = $income_eur * $kurs;
-        $remaining_rsd = $total_rsd - $avans_rsd - $income_rsd;
-        $remaining_eur = ($total_rsd / $kurs) - $avans_eur - $income_eur;
+        $totalTaxBaseRsd = $this->getAccountingDocumentTotalTaxBaseRSD($id);
+        $totalTaxAmountRsd = $this->getAccountingDocumentTotalTaxAmountRSD($id);
+        $totalRsd = $totalTaxBaseRsd + $totalTaxAmountRsd;
+
+        $advancePaymentEur = $this->em->getRepository(AccountingDocument::class)->getAvans($id);
+        $advancePaymentRsd = $advancePaymentEur * $exchangeRate;
+        $incomeEur = $this->em->getRepository(AccountingDocument::class)->getIncome($id);
+        $incomeRsd = $incomeEur * $exchangeRate;
+        $remainingRsd = $totalRsd - $advancePaymentRsd - $incomeRsd;
+        $remainingEur = ($totalRsd / $exchangeRate) - $advancePaymentEur - $incomeEur;
 
         $data = [
-            'pidb_id' => $document_id,
-            'pidb' => $pidb,
-            'pidb_type' => $pidb_tupe,
-            'company_info' => $company_info,
+            'document' => $document,
+            'company_info' => $companyInfo,
             'client' => $client,
-            'accounting_document_articles_data' => $accounting_document_articles_data,
-            'total_tax_base_rsd' => $total_tax_base_rsd,
-            'total_tax_amount_rsd' => $total_tax_amount_rsd,
-            'total_rsd' => $total_rsd,
-            'avans_eur' => $avans_eur,
-            'avans_rsd' => $avans_rsd,
-            'remaining_rsd' => $remaining_rsd,
-            'remaining_eur' => $remaining_eur,
+            'accounting_document_articles_data' => $documentArticlesSata,
+            'total_tax_base_rsd' => $totalTaxBaseRsd,
+            'total_tax_amount_rsd' => $totalTaxAmountRsd,
+            'total_rsd' => $totalRsd,
+            'advance_payment_rsd' => $advancePaymentRsd,
+            'remaining_rsd' => $remainingRsd,
+            'remaining_eur' => $remainingEur,
         ];
 
       // Render HTML content from a Twig template
@@ -682,14 +582,14 @@ class DocumentController extends AbstractController
       require_once '../config/packages/tcpdf_include.php';
 
       // Create a new TCPDF object / PDF document
-      $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+      $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
       // Set document information
       $pdf->SetCreator(PDF_CREATOR);
-      $pdf->SetAuthor($company_info['name']);
-      $pdf->SetTitle($company_info['name'] . ' - '. $pidb_tupe);
-      $pdf->SetSubject($company_info['name']);
-      $pdf->SetKeywords($company_info['name'] . ', PDF, Proforma, Invoice');
+      $pdf->SetAuthor($companyInfo['name']);
+      $pdf->SetTitle($companyInfo['name'] . ' - '. $documentType);
+      $pdf->SetSubject($companyInfo['name']);
+      $pdf->SetKeywords($companyInfo['name'] . ', PDF, Proforma, Invoice');
 
       // Remove default header/footer.
       $pdf->setPrintHeader(false);
@@ -720,7 +620,7 @@ class DocumentController extends AbstractController
       $pdf->lastPage();
 
       // Output PDF document to browser as a Symfony Response
-      $filename = '__' . $pidb_type . '_' . $pidb_ordinal_number_in_year . '-' . $pidb_date_month . '.pdf';
+      $filename = '__' . $documentType . '_' . $documentOrdinalNumberInYear . '-' . $documentDateMonth . '.pdf';
       $pdfContent = $pdf->Output($filename, 'S');
       // Remove leading __ from filename for the response
       $cleanFilename = ltrim($filename, '_');
@@ -737,56 +637,47 @@ class DocumentController extends AbstractController
      * PDF using TCPDF, and returns it as an inline browser response. The generated PDF filename initially includes
      * leading double underscores, which are removed before sending the file to the client.
      *
-     * @param int $document_id
-     *   The ID of the accounting document to print.
+     * @param int $id The ID of the accounting document to print.
      *
-     * @return Response
-     *   The PDF file as a Symfony inline response.
+     * @return Response The PDF file as a Symfony inline response.
      */
-    #[Route('/documents/{document_id}/print-w', name: 'document_print_w', methods: ['GET'])]
-    public function printAccountingDocumentW(int $document_id): Response
+    #[Route('/documents/{id}/print-w', name: 'document_print_w', methods: ['GET'])]
+    public function printAccountingDocumentW(int $id): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $pidb = $this->entityManager->find(AccountingDocument::class, $document_id);
-        $pidb_type = $pidb->getType()->getName();
-        $pidb_type_id = $pidb->getType()->getId();
-        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
-            1 => ["Predračun", "P_", 'info'],
-            2 => ["Otpremnica", "O_", 'secondary'],
-            4 => ["Povratnica", "POV_", 'warning'],
-            default => ["_", "_", 'default'],
-        };
-        $pidb_ordinal_number_in_year = str_pad($pidb->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
-        $pidb_date_month = $pidb->getDate()->format('m');
-        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
-        $preferences = $this->entityManager->find(Preferences::class, 1);
-        $kurs = $preferences->getKurs();
-        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($document_id);
-        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($document_id);
-        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($document_id);
-        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
+        $document = $this->em->find(AccountingDocument::class, $id);
+        $documentType = $document->getType()->getName();
+
+        $documentOrdinalNumberInYear = str_pad($document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
+        $documentDateMonth = $document->getDate()->format('m');
+        $companyInfo = $this->em->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+        $preferences = $this->em->find(Preferences::class, 1);
+        $exchangeRate = $preferences->getKurs();
+        $documentArticlesData = $this->getAccountingDocumentArticlesData($id);
+        $totalTaxBaseRsd = $this->getAccountingDocumentTotalTaxBaseRSD($id);
+        $totalTaxAmountRsd = $this->getAccountingDocumentTotalTaxAmountRSD($id);
+        $totalRsd = $totalTaxBaseRsd + $totalTaxAmountRsd;
         $data = [
-            'company_info' => $company_info,
-            'pidb' => $pidb,
-            'pidb_type' => $pidb_tupe,
-            'accounting_document_articles_data' => $accounting_document_articles_data,
-            'total_tax_base_rsd' => $total_tax_base_rsd,
-            'total_tax_amount_rsd' => $total_tax_amount_rsd,
-            'total_rsd' => $total_rsd,
-            'total_eur' => $total_rsd / $kurs,
+            'company_info' => $companyInfo,
+            'document' => $document,
+            'accounting_document_articles_data' => $documentArticlesData,
+            'total_tax_base_rsd' => $totalTaxBaseRsd,
+            'total_tax_amount_rsd' => $totalTaxAmountRsd,
+            'total_rsd' => $totalRsd,
+            'total_eur' => $totalRsd / $exchangeRate,
         ];
         $html = $this->renderView('document/print_accounting_document_w.html.twig', $data);
         require_once '../config/packages/tcpdf_include.php';
-        $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor($company_info['name']);
-        $pdf->SetTitle($company_info['name'] . ' - Dokument');
-        $pdf->SetSubject($company_info['name']);
-        $pdf->SetKeywords($company_info['name'] . ', PDF, Proforma, Invoice');
+        $pdf->SetAuthor($companyInfo['name']);
+        $pdf->SetTitle($companyInfo['name'] . ' - Dokument');
+        $pdf->SetSubject($companyInfo['name']);
+        $pdf->SetKeywords($companyInfo['name'] . ', PDF, Proforma, Invoice');
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -797,7 +688,7 @@ class DocumentController extends AbstractController
         $pdf->AddPage();
         $pdf->writeHTML($html, true, false, true, false, '');
         $pdf->lastPage();
-        $filename = '__' . $pidb_type . '_' . $pidb_ordinal_number_in_year . '-' . $pidb_date_month . '.pdf';
+        $filename = '__' . $documentType . '_' . $documentOrdinalNumberInYear . '-' . $documentDateMonth . '.pdf';
         $pdfContent = $pdf->Output($filename, 'S');
         $cleanFilename = ltrim($filename, '_');
         $response = new Response($pdfContent);
@@ -809,66 +700,59 @@ class DocumentController extends AbstractController
     /**
      * Print Accounting Document I.
      *
-     * @param int $pidb_id
+     * @param int $id
+     *
      * @return Response
      */
-    #[Route('/documents/{pidb_id}/print-i', name: 'document_print_i', methods: ['GET'])]
-    public function printAccountingDocumentI(int $pidb_id): Response
+    #[Route('/documents/{id}/print-i', name: 'document_print_i', methods: ['GET'])]
+    public function printAccountingDocumentI(int $id): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $pidb = $this->entityManager->find(AccountingDocument::class, $pidb_id);
-        $pidb_type = $pidb->getType()->getName();
-        $pidb_type_id = $pidb->getType()->getId();
-        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
-            1 => ["Predračun", "P_", 'info'],
-            2 => ["Otpremnica - račun", "O_", 'secondary'],
-            4 => ["Povratnica", "POV_", 'warning'],
-            default => ["_", "_", 'default'],
-        };
-        $pidb_ordinal_number_in_year = str_pad($pidb->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
-        $pidb_date_month = $pidb->getDate()->format('m');
-        $client = $this->entityManager->getRepository(Client::class)->getClientData($pidb->getClient()->getId());
-        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
-        $preferences = $this->entityManager->find(Preferences::class, 1);
-        $kurs = $preferences->getKurs();
-        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
-        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($pidb_id);
-        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($pidb_id);
-        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
-        $avans_eur = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($pidb_id);
-        $avans_rsd = $avans_eur * $kurs;
-        $income_eur = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($pidb_id);
-        $income_rsd = $income_eur * $kurs;
-        $remaining_rsd = $total_rsd - $avans_rsd - $income_rsd;
-        $remaining_eur = ($total_rsd / $kurs) - $avans_eur - $income_eur;
+        $document = $this->em->find(AccountingDocument::class, $id);
+        $documentType = $document->getType()->getName();
+
+        $documentOrdinalNumberInYear = str_pad($document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
+        $documentDateMonth = $document->getDate()->format('m');
+        $client = $this->em->getRepository(Client::class)->getClientData($document->getClient()->getId());
+        $companyInfo = $this->em->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+        $preferences = $this->em->find(Preferences::class, 1);
+        $exchangeRate = $preferences->getKurs();
+        $documentArticlesData = $this->getAccountingDocumentArticlesData($id);
+        $totalTaxBaseRsd = $this->getAccountingDocumentTotalTaxBaseRSD($id);
+        $totalTaxAmountRsd = $this->getAccountingDocumentTotalTaxAmountRSD($id);
+        $totalRsd = $totalTaxBaseRsd + $totalTaxAmountRsd;
+        $advancePaymentEur = $this->em->getRepository(AccountingDocument::class)->getAvans($id);
+        $advancePaymentRsd = $advancePaymentEur * $exchangeRate;
+        $incomeEur = $this->em->getRepository(AccountingDocument::class)->getIncome($id);
+        $incomeRsd = $incomeEur * $exchangeRate;
+        $remainingRsd = $totalRsd - $advancePaymentRsd - $incomeRsd;
+        $remainingEur = ($totalRsd / $exchangeRate) - $advancePaymentEur - $incomeEur;
         $data = [
-            'company_info' => $company_info,
-            'pidb' => $pidb,
-            'pidb_type' => $pidb_tupe,
+            'company_info' => $companyInfo,
+            'document' => $document,
             'client' => $client,
-            'accounting_document_articles_data' => $accounting_document_articles_data,
-            'total_tax_base_rsd' => $total_tax_base_rsd,
-            'total_tax_amount_rsd' => $total_tax_amount_rsd,
-            'total_rsd' => $total_rsd,
-            'total_eur' => $total_rsd / $kurs,
-            'avans_eur' => $avans_eur,
-            'avans_rsd' => $avans_rsd,
-            'income_rsd' => $income_rsd,
-            'remaining_rsd' => $remaining_rsd,
-            'remaining_eur' => $remaining_eur,
+            'accounting_document_articles_data' => $documentArticlesData,
+            'total_tax_base_rsd' => $totalTaxBaseRsd,
+            'total_tax_amount_rsd' => $totalTaxAmountRsd,
+            'total_rsd' => $totalRsd,
+            'total_eur' => $totalRsd / $exchangeRate,
+            'advance_payment_rsd' => $advancePaymentRsd,
+            'income_rsd' => $incomeRsd,
+            'remaining_rsd' => $remainingRsd,
+            'remaining_eur' => $remainingEur,
         ];
         $html = $this->renderView('document/print_accounting_document_i.html.twig', $data);
         require_once '../config/packages/tcpdf_include.php';
-        $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor($company_info['name']);
-        $pdf->SetTitle($company_info['name'] . ' - Dokument');
-        $pdf->SetSubject($company_info['name']);
-        $pdf->SetKeywords($company_info['name'] . ', PDF, Proforma, Invoice');
+        $pdf->SetAuthor($companyInfo['name']);
+        $pdf->SetTitle($companyInfo['name'] . ' - Dokument');
+        $pdf->SetSubject($companyInfo['name']);
+        $pdf->SetKeywords($companyInfo['name'] . ', PDF, Proforma, Invoice');
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -879,7 +763,7 @@ class DocumentController extends AbstractController
         $pdf->AddPage();
         $pdf->writeHTML($html, true, false, true, false, '');
         $pdf->lastPage();
-        $filename = '__' . $pidb_type . '_' . $pidb_ordinal_number_in_year . '-' . $pidb_date_month . '.pdf';
+        $filename = '__' . $documentType . '_' . $documentOrdinalNumberInYear . '-' . $documentDateMonth . '.pdf';
         $pdfContent = $pdf->Output($filename, 'S');
         $cleanFilename = ltrim($filename, '_');
         $response = new Response($pdfContent);
@@ -891,64 +775,56 @@ class DocumentController extends AbstractController
     /**
      * Print Accounting Document IW.
      *
-     * @param int $document_id
+     * @param int $id
      * @return Response
      */
-    #[Route('/documents/{document_id}/print-iw', name: 'document_print_iw', methods: ['GET'])]
-    public function printAccountingDocumentIW(int $document_id): Response
+    #[Route('/documents/{id}/print-iw', name: 'document_print_iw', methods: ['GET'])]
+    public function printAccountingDocumentIW(int $id): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
-        $pidb = $this->entityManager->find(AccountingDocument::class, $document_id);
-        $pidb_type = $pidb->getType()->getName();
-        $pidb_type_id = $pidb->getType()->getId();
-        [$pidb_tupe, $pidb_tag, $pidb_style] = match ($pidb_type_id) {
-            1 => ["Predračun", "P_", 'info'],
-            2 => ["Otpremnica - račun", "O_", 'secondary'],
-            4 => ["Povratnica", "POV_", 'warning'],
-            default => ["_", "_", 'default'],
-        };
-        $pidb_ordinal_number_in_year = str_pad($pidb->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
-        $pidb_date_month = $pidb->getDate()->format('m');
-        $preferences = $this->entityManager->find(Preferences::class, 1);
-        $kurs = $preferences->getKurs();
-        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($document_id);
-        $total_tax_base_rsd = $this->getAccountingDocumentTotalTaxBaseRSD($document_id);
-        $total_tax_amount_rsd = $this->getAccountingDocumentTotalTaxAmountRSD($document_id);
-        $total_rsd = $total_tax_base_rsd + $total_tax_amount_rsd;
-        $avans_eur = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($document_id);
-        $avans_rsd = $avans_eur * $kurs;
-        $income_eur = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($document_id);
-        $income_rsd = $income_eur * $kurs;
-        $remaining_rsd = $total_rsd - $avans_rsd - $income_rsd;
-        $remaining_eur = ($total_rsd / $kurs) - $avans_eur - $income_eur;
+        $companyInfo = $this->em->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+        $document = $this->em->find(AccountingDocument::class, $id);
+        $documentType = $document->getType()->getName();
+
+        $documentOrdinalNumberInYear = str_pad($document->getOrdinalNumInYear(), 4, "0", STR_PAD_LEFT);
+        $documentDateMonth = $document->getDate()->format('m');
+        $preferences = $this->em->find(Preferences::class, 1);
+        $exchangeRate = $preferences->getKurs();
+        $documentArticlesData = $this->getAccountingDocumentArticlesData($id);
+        $totalTaxBaseRsd = $this->getAccountingDocumentTotalTaxBaseRSD($id);
+        $totalTaxAmountRsd = $this->getAccountingDocumentTotalTaxAmountRSD($id);
+        $totalRsd = $totalTaxBaseRsd + $totalTaxAmountRsd;
+        $advancePaymentEur = $this->em->getRepository(AccountingDocument::class)->getAvans($id);
+        $advancePaymentRsd = $advancePaymentEur * $exchangeRate;
+        $incomeEur = $this->em->getRepository(AccountingDocument::class)->getIncome($id);
+        $incomeRsd = $incomeEur * $exchangeRate;
+        $remainingRsd = $totalRsd - $advancePaymentRsd - $incomeRsd;
+        $remainingEur = ($totalRsd / $exchangeRate) - $advancePaymentEur - $incomeEur;
         $data = [
-            'company_info' => $company_info,
-            'pidb' => $pidb,
-            'pidb_type' => $pidb_tupe,
-            'accounting_document_articles_data' => $accounting_document_articles_data,
-            'total_tax_base_rsd' => $total_tax_base_rsd,
-            'total_tax_amount_rsd' => $total_tax_amount_rsd,
-            'total_rsd' => $total_rsd,
-            'total_eur' => $total_rsd / $kurs,
-            'avans_eur' => $avans_eur,
-            'avans_rsd' => $avans_rsd,
-            'income_rsd' => $income_rsd,
-            'remaining_rsd' => $remaining_rsd,
-            'remaining_eur' => $remaining_eur,
+            'company_info' => $companyInfo,
+            'document' => $document,
+            'accounting_document_articles_data' => $documentArticlesData,
+            'total_tax_base_rsd' => $totalTaxBaseRsd,
+            'total_tax_amount_rsd' => $totalTaxAmountRsd,
+            'total_rsd' => $totalRsd,
+            'total_eur' => $totalRsd / $exchangeRate,
+            'advance_payment_rsd' => $advancePaymentRsd,
+            'income_rsd' => $incomeRsd,
+            'remaining_rsd' => $remainingRsd,
+            'remaining_eur' => $remainingEur,
         ];
         $html = $this->renderView('document/print_accounting_document_iw.html.twig', $data);
         require_once '../config/packages/tcpdf_include.php';
-        $pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor($company_info['name']);
-        $pdf->SetTitle($company_info['name'] . ' - Dokument');
-        $pdf->SetSubject($company_info['name']);
-        $pdf->SetKeywords($company_info['name'] . ', PDF, Proforma, Invoice');
+        $pdf->SetAuthor($companyInfo['name']);
+        $pdf->SetTitle($companyInfo['name'] . ' - Dokument');
+        $pdf->SetSubject($companyInfo['name']);
+        $pdf->SetKeywords($companyInfo['name'] . ', PDF, Proforma, Invoice');
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -959,7 +835,7 @@ class DocumentController extends AbstractController
         $pdf->AddPage();
         $pdf->writeHTML($html, true, false, true, false, '');
         $pdf->lastPage();
-        $filename = '__' . $pidb_type . '_' . $pidb_ordinal_number_in_year . '-' . $pidb_date_month . '.pdf';
+        $filename = '__' . $documentType . '_' . $documentOrdinalNumberInYear . '-' . $documentDateMonth . '.pdf';
         $pdfContent = $pdf->Output($filename, 'S');
         $cleanFilename = ltrim($filename, '_');
         $response = new Response($pdfContent);
@@ -969,39 +845,35 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * Export Proforma to Dispatch.
+     * Export Pro-form to Dispatch.
      *
-     * @param int $document_id
-     *   The ID of the proforma document to be exported.
-     * @param EntityManagerInterface $em
-     *   The EntityManagerInterface instance.
+     * @param int $id The ID of the pro-form document to be exported.
      *
      * @return Response
      * @throws \Doctrine\DBAL\Exception
      */
     #[Route(
-        '/documents/{document_id}/export-proforma-to-dispatch',
+        '/documents/{id}/export-proforma-to-dispatch',
         name: 'document_export_proforma_to_dispatch',
         methods: ['GET']
     )]
-    public function exportProformaToDispatch(int $document_id, EntityManagerInterface $em): Response
+    public function exportProformaToDispatch(int $id): Response
     {
         session_start();
-        $user = $em->find(User::class, $_SESSION['user_id']);
+        $user = $this->em->find(User::class, $_SESSION['user_id']);
 
-        $proforma_id = $document_id;
-        $proforma = $em->find(AccountingDocument::class, $proforma_id);
+        $proforma = $this->em->find(AccountingDocument::class, $id);
 
-        $ordinal_num_in_year = 0;
+        $ordinalNumberInYear = 0;
 
         // Save Proforma data to Dispatch.
         $newDispatch = new AccountingDocument();
 
-        $newDispatch->setOrdinalNumInYear($ordinal_num_in_year);
+        $newDispatch->setOrdinalNumInYear($ordinalNumberInYear);
         $newDispatch->setDate(new \DateTime("now"));
         $newDispatch->setIsArchived(0);
 
-        $newDispatch->setType($em->find(AccountingDocumentType::class, 2));
+        $newDispatch->setType($this->em->find(AccountingDocumentTypeEntity::class, 2));
         $newDispatch->setTitle($proforma->getTitle());
         $newDispatch->setClient($proforma->getClient());
         $newDispatch->setParent($proforma);
@@ -1011,14 +883,14 @@ class DocumentController extends AbstractController
         $newDispatch->setCreatedByUser($user);
         $newDispatch->setModifiedAt(new \DateTime("now"));
 
-        $em->persist($newDispatch);
-        $em->flush();
+        $this->em->persist($newDispatch);
+        $this->em->flush();
 
         // Get id of last AccountingDocument.
-        $last_accounting_document_id = $newDispatch->getId();
+        $lastDocumentId = $newDispatch->getId();
 
         // Set Ordinal Number In Year.
-        $em->getRepository(AccountingDocument::class)->setOrdinalNumInYear($last_accounting_document_id);
+        $this->em->getRepository(AccountingDocument::class)->setOrdinalNumInYear($lastDocumentId);
 
         // Get proforma payments.
         $payments = $proforma->getPayments();
@@ -1038,62 +910,62 @@ class DocumentController extends AbstractController
                 ->update('v6__accounting_documents__payments')
                 ->set('accountingdocument_id', ':dispatch')
                 ->where('payment_id = :payment')
-                ->setParameter('dispatch', $last_accounting_document_id)
+                ->setParameter('dispatch', $lastDocumentId)
                 ->setParameter('payment', $payment->getId());
-            $result = $queryBuilder ->executeStatement();
+            $queryBuilder ->executeStatement();
         }
 
-        // Get articles from proforma.
-        $proforma_articles = $em->getRepository(AccountingDocument::class)->getArticles($proforma->getId());
+        // Get articles from pro-form.
+        $proformaArticles = $this->em->getRepository(AccountingDocument::class)->getArticles($proforma->getId());
 
         // Save articles to dispatch.
-        foreach ($proforma_articles as $proforma_article) {
+        foreach ($proformaArticles as $proformaArticle) {
             $newDispatchArticle = new AccountingDocumentArticle();
 
             $newDispatchArticle->setAccountingDocument($newDispatch);
-            $newDispatchArticle->setArticle($proforma_article->getArticle());
-            $newDispatchArticle->setPieces($proforma_article->getPieces());
-            $newDispatchArticle->setPrice($proforma_article->getPrice());
-            $newDispatchArticle->setDiscount($proforma_article->getDiscount());
-            $newDispatchArticle->setTax($proforma_article->getTax());
-            $newDispatchArticle->setWeight($proforma_article->getWeight());
-            $newDispatchArticle->setNote($proforma_article->getNote());
+            $newDispatchArticle->setArticle($proformaArticle->getArticle());
+            $newDispatchArticle->setPieces($proformaArticle->getPieces());
+            $newDispatchArticle->setPrice($proformaArticle->getPrice());
+            $newDispatchArticle->setDiscount($proformaArticle->getDiscount());
+            $newDispatchArticle->setTax($proformaArticle->getTax());
+            $newDispatchArticle->setWeight($proformaArticle->getWeight());
+            $newDispatchArticle->setNote($proformaArticle->getNote());
 
-            $em->persist($newDispatchArticle);
-            $em->flush();
+            $this->em->persist($newDispatchArticle);
+            $this->em->flush();
 
-            // Get $proforma_article properties.
-            $proforma_article_properties =
-                $em->getRepository(AccountingDocumentArticleProperty::class)
-                    ->findBy(array('accounting_document_article' => $proforma_article->getId()), []);
+            // Get $proformaArticle properties.
+            $proformaArticleProperties =
+                $this->em->getRepository(AccountingDocumentArticleProperty::class)
+                    ->findBy(array('accounting_document_article' => $proformaArticle->getId()), []);
 
             // Save $proforma_article properties to $newDispatchArticle.
-            foreach ($proforma_article_properties as $article_property) {
+            foreach ($proformaArticleProperties as $articleProperty) {
                 $newDispatchArticleProperty = new AccountingDocumentArticleProperty();
 
                 $newDispatchArticleProperty->setAccountingDocumentArticle($newDispatchArticle);
-                $newDispatchArticleProperty->setProperty($article_property->getProperty());
-                $newDispatchArticleProperty->setQuantity($article_property->getQuantity());
-                $em->persist($newDispatchArticleProperty);
-                $em->flush();
+                $newDispatchArticleProperty->setProperty($articleProperty->getProperty());
+                $newDispatchArticleProperty->setQuantity($articleProperty->getQuantity());
+                $this->em->persist($newDispatchArticleProperty);
+                $this->em->flush();
             }
         }
 
-        // Set Proforma to archive.
+        // Set Pro-form to archive.
         $proforma->setIsArchived(1);
-        $em->flush();
+        $this->em->flush();
 
-        // Check if proforma belong to any Project
-        $project = $em->getRepository(AccountingDocument::class)->getProjectByAccountingDocument
+        // Check if pro-form belong to any Project
+        $project = $this->em->getRepository(AccountingDocument::class)->getProjectByAccountingDocument
         ($proforma->getId());
 
         if ($project) {
             // Set same project to dispatch.
             $project->getAccountingDocuments()->add($newDispatch);
-            $em->flush();
+            $this->em->flush();
         }
 
-        return $this->redirectToRoute('document_show', ['document_id' => $last_accounting_document_id]);
+        return $this->redirectToRoute('document_show', ['id' => $lastDocumentId]);
     }
 
     /**
@@ -1103,20 +975,15 @@ class DocumentController extends AbstractController
      * AccountingDocumentArticle entity, then updates all related article properties with new values, and finally
      * redirects to the document details page.
      *
-     * @param int $document_id
-     *   The ID of the accounting document containing the article.
-     * @param int $pidb_article_id
-     *   The ID of the article within the accounting document to update.
+     * @param int $id The ID of the accounting document containing the article.
+     * @param int $documentArticleId The ID of the article within the accounting document to update.
      *
-     * @return Response
-     *   Redirects to the document details page.
+     * @return Response Redirects to the document details page.
      */
-    #[Route('/documents/{document_id}/articles/{pidb_article_id}/edit', name: 'edit_article_in_accounting_document',
+    #[Route('/documents/{id}/articles/{documentArticleId}/edit', name: 'edit_article_in_accounting_document',
         methods: ['POST'])]
-    public function editArticleInAccountingDocument(int $document_id, int $pidb_article_id): Response
+    public function editArticleInAccountingDocument(int $id, int $documentArticleId): Response
     {
-        $accounting_document__article_id = $pidb_article_id;
-
         $note = htmlspecialchars($_POST["note"]);
 
         $pieces_1 = htmlspecialchars($_POST["pieces"]);
@@ -1128,33 +995,30 @@ class DocumentController extends AbstractController
         $discounts_1 = htmlspecialchars($_POST["discounts"]);
         $discounts = str_replace(",", ".", $discounts_1);
 
-        $accountingDocumentArticle = $this->entityManager
-            ->find(AccountingDocumentArticle::class, $accounting_document__article_id);
+        $documentArticle = $this->em->find(AccountingDocumentArticle::class, $documentArticleId);
 
-        $accountingDocumentArticle->setNote($note);
-        $accountingDocumentArticle->setPieces($pieces);
-        $accountingDocumentArticle->setPrice($price);
-        $accountingDocumentArticle->setDiscount($discounts);
-        $this->entityManager->flush();
+        $documentArticle->setNote($note);
+        $documentArticle->setPieces($pieces);
+        $documentArticle->setPrice($price);
+        $documentArticle->setDiscount($discounts);
+        $this->em->flush();
 
         // Properties update in table v6__accounting_documents__articles__properties.
-        $accounting_document__article__properties = $this->entityManager
-            ->getRepository(AccountingDocumentArticleProperty::class)
-            ->findBy(['accounting_document_article' => $accounting_document__article_id], []);
-        foreach ($accounting_document__article__properties as $accounting_document__article__property) {
+        $documentArticleProperties = $this->em->getRepository(AccountingDocumentArticleProperty::class)
+            ->findBy(['accounting_document_article' => $documentArticleId], []);
+        foreach ($documentArticleProperties as $documentArticleProperty) {
             // Get property name from $accounting_document__article__property.
-            $property_name = $accounting_document__article__property->getProperty()->getName();
+            $propertyName = $documentArticleProperty->getProperty()->getName();
             // Get property value from $_POST.
-            $property_value = str_replace(".", "", htmlspecialchars($_POST["$property_name"]));
-            $property_value = str_replace(",", ".", htmlspecialchars($property_value));
+            $propertyValue = str_replace(".", "", htmlspecialchars($_POST["$propertyName"]));
+            $propertyValue = str_replace(",", ".", htmlspecialchars($propertyValue));
 
-            $accountingDocumentArticleProperty = $this->entityManager
-                ->find(AccountingDocumentArticleProperty::class, $accounting_document__article__property->getId());
+            $documentArticleProperty = $this->em->find(AccountingDocumentArticleProperty::class, $documentArticleProperty->getId());
 
-            $accountingDocumentArticleProperty->setQuantity($property_value);
-            $this->entityManager->flush();
+            $documentArticleProperty->setQuantity($propertyValue);
+            $this->em->flush();
         }
-        return $this->redirectToRoute('document_show', ['document_id' => $document_id]);
+        return $this->redirectToRoute('document_show', ['id' => $id]);
     }
 
     /**
@@ -1163,27 +1027,24 @@ class DocumentController extends AbstractController
      * Checks if the user is logged in, retrieves the accounting document and the article to be changed, fetches all
      * available articles, determines the style based on document type, and renders the change article form view.
      *
-     * @param int $document_id
-     *   The ID of the accounting document containing the article.
-     * @param int $pidb_article_id
-     *   The ID of the article within the accounting document to change.
+     * @param int $id The ID of the accounting document containing the article.
+     * @param int $article_id The ID of the article within the accounting document to change.
      *
-     * @return Response
-     *   Renders the change article form view.
+     * @return Response Renders the change article form view.
      */
-    #[Route('/documents/{document_id}/articles/{pidb_article_id}/change', name: 'change_article_in_document_form')]
-    public function changeArticleInDocument(int $document_id, int $pidb_article_id): Response
+    #[Route('/documents/{id}/articles/{article_id}/change', name: 'change_article_in_document_form')]
+    public function changeArticleInDocument(int $id, int $article_id): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $pidb_data = $this->entityManager->find(AccountingDocument::class, $document_id);
-        $article_data = $this->entityManager->find(AccountingDocumentArticle::class, $pidb_article_id)->getArticle();
-        $all_articles = $this->entityManager->getRepository(Article::class)->findAll();
+        $document = $this->em->find(AccountingDocument::class, $id);
+        $articleData = $this->em->find(AccountingDocumentArticle::class, $article_id)->getArticle();
+        $allArticles = $this->em->getRepository(Article::class)->findAll();
 
-        switch ($pidb_data->getType()->getId()) {
+        switch ($document->getType()->getId()) {
             case '1':
                 $style = 'info';
                 break;
@@ -1201,18 +1062,13 @@ class DocumentController extends AbstractController
                 break;
         }
 
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'pidb_id' => $document_id,
-            'pidb_data' => $pidb_data,
-            'pidb_article_id' => $pidb_article_id,
-            'article_data' => $article_data,
-            'all_articles' => $all_articles,
+        $data = $this->getDefaultData();
+        $data += [
+            'document' => $document,
+            'document_article_id' => $article_id,
+            'article_data' => $articleData,
+            'all_articles' => $allArticles,
             'style' => $style,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
             'tools_menu' => [
                 'document' => FALSE,
                 'cash_register' => FALSE,
@@ -1229,28 +1085,24 @@ class DocumentController extends AbstractController
      * related fields, inserts new properties for the new article, and saves changes. Redirects to the document edit
      * form.
      *
-     * @param int $document_id
-     *   The ID of the accounting document containing the article.
-     * @param int $pidb_article_id
-     *   The ID of the article within the accounting document to update.
+     * @param int $id The ID of the accounting document containing the article.
+     * @param int $article_id The ID of the article within the accounting document to update.
      *
-     * @return Response
-     *   Redirects to the document edit form.
+     * @return Response Redirects to the document edit form.
      */
-    #[Route('/documents/{document_id}/articles/{pidb_article_id}/update', name: 'update_article_in_accounting_document')]
-    public function updateArticleInAccountingDocument(int $document_id, int $pidb_article_id): Response
+    #[Route('/documents/{id}/articles/{article_id}/update', name: 'update_article_in_accounting_document')]
+    public function updateArticleInAccountingDocument(int $id, int $article_id): Response
     {
-        $accounting_document_id = $document_id;
-        $pidb_article = $this->entityManager->find(AccountingDocumentArticle::class, $pidb_article_id);
+        $documentArticle = $this->em->find(AccountingDocumentArticle::class, $article_id);
 
-        $old_article = $this->entityManager->find(Article::class, $pidb_article->getArticle()->getId());
-        $old_article_id = $old_article->getId();
+        $oldArticle = $this->em->find(Article::class, $documentArticle->getArticle()->getId());
+        $oldArticleId = $oldArticle->getId();
 
-        $new_article_id = htmlspecialchars($_POST["article_id"]);
-        $new_article = $this->entityManager->find(Article::class, $new_article_id);
+        $newArticleId = htmlspecialchars($_POST["article_id"]);
+        $newArticle = $this->em->find(Article::class, $newArticleId);
 
         // First check if article_id in Accounting Document Article changed.
-        if ($old_article_id == $new_article_id){
+        if ($oldArticleId == $newArticleId){
             // Article not changed.
             echo "article not changed";
         }
@@ -1259,44 +1111,42 @@ class DocumentController extends AbstractController
 
             // Remove the Properties of the old Article. (from table v6__accounting_documents__articles__properties)
             if (
-                $accounting_document__article__properties =
-                    $this->entityManager
+                $document__article__properties =
+                    $this->em
                         ->getRepository(AccountingDocumentArticleProperty::class)
-                        ->findBy(array('accounting_document_article' => $pidb_article_id), array())
+                        ->findBy(array('accounting_document_article' => $article_id), array())
             ) {
-                foreach ($accounting_document__article__properties as $accounting_document__article__property) {
+                foreach ($document__article__properties as $document__article__property) {
                     $accountingDocumentArticleProperty =
-                        $this->entityManager
-                          ->find(AccountingDocumentArticleProperty::class, $accounting_document__article__property->getId());
-                    $this->entityManager->remove($accountingDocumentArticleProperty);
-                    $this->entityManager->flush();
+                        $this->em->find(AccountingDocumentArticleProperty::class, $document__article__property->getId());
+                    $this->em->remove($accountingDocumentArticleProperty);
+                    $this->em->flush();
                 }
             }
 
             // change Article from old to new
-            $pidb_article->setArticle($new_article);
-            $pidb_article->setPrice($new_article->getPrice());
-            $pidb_article->setNote("");
-            $pidb_article->setPieces(1);
-            $this->entityManager->flush();
+            $documentArticle->setArticle($newArticle);
+            $documentArticle->setPrice($newArticle->getPrice());
+            $documentArticle->setNote("");
+            $documentArticle->setPieces(1);
+            $this->em->flush();
 
             // Insert Article properties in table v6__accounting_documents__articles__properties.
-            $article_properties = $this->entityManager->getRepository(ArticleProperty::class)->getArticleProperties
-            ($new_article->getId());
-            foreach ($article_properties as $article_property) {
+            $articleProperties = $this->em->getRepository(ArticleProperty::class)->getArticleProperties($newArticle->getId());
+            foreach ($articleProperties as $articleProperty) {
                 // Insert to table v6__accounting_documents__articles__properties.
                 $newAccountingDocumentArticleProperty = new AccountingDocumentArticleProperty();
 
-                $newAccountingDocumentArticleProperty->setAccountingDocumentArticle($pidb_article);
-                $newAccountingDocumentArticleProperty->setProperty($article_property->getProperty());
+                $newAccountingDocumentArticleProperty->setAccountingDocumentArticle($documentArticle);
+                $newAccountingDocumentArticleProperty->setProperty($articleProperty->getProperty());
                 $newAccountingDocumentArticleProperty->setQuantity(0);
 
-                $this->entityManager->persist($newAccountingDocumentArticleProperty);
-                $this->entityManager->flush();
+                $this->em->persist($newAccountingDocumentArticleProperty);
+                $this->em->flush();
             }
 
         }
-        return $this->redirectToRoute('document_edit_form', ['document_id' => $accounting_document_id]);
+        return $this->redirectToRoute('document_edit_form', ['id' => $id]);
     }
 
     /**
@@ -1305,23 +1155,17 @@ class DocumentController extends AbstractController
      * Calls the repository method to duplicate the specified article (and its properties) within the accounting
      * document, then redirects to the document edit form.
      *
-     * @param int $document_id
-     *   The ID of the accounting document containing the article to duplicate.
-     * @param int $pidb_article_id
-     *   The ID of the article within the accounting document to duplicate.
+     * @param int $id The ID of the accounting document containing the article to duplicate.
+     * @param int $article_id The ID of the article within the accounting document to duplicate.
      *
-     * @return Response
-     *  Redirects to the document edit form.
+     * @return Response Redirects to the document edit form.
      */
-    #[Route('/documents/{document_id}/articles/{pidb_article_id}/duplicate', name: 'duplicate_article_in_accounting_document')]
-    public function duplicateArticleInAccountingDocument(int $document_id, int $pidb_article_id): Response
+    #[Route('/documents/{id}/articles/{article_id}/duplicate', name: 'duplicate_article_in_accounting_document')]
+    public function duplicateArticleInAccountingDocument(int $id, int $article_id): Response
     {
-        $accounting_document__article__properties =
-            $this->entityManager
-                ->getRepository(AccountingDocumentArticle::class)
-                ->duplicateArticleInAccountingDocument($pidb_article_id);
+        $this->em->getRepository(AccountingDocumentArticle::class)->duplicateArticleInAccountingDocument($article_id);
 
-        return $this->redirectToRoute('document_edit_form', ['document_id' => $document_id]);
+        return $this->redirectToRoute('document_edit_form', ['id' => $id]);
     }
 
     /**
@@ -1330,39 +1174,35 @@ class DocumentController extends AbstractController
      * Removes all properties associated with the specified article from the join table, then removes the article itself
      * from the accounting document, and finally redirects to the document details page.
      *
-     * @param int $document_id
-     *   The ID of the accounting document containing the article to delete.
-     * @param int $pidb_article_id
-     *   The ID of the article within the accounting document to delete.
+     * @param int $id The ID of the accounting document containing the article to delete.
+     * @param int $article_id The ID of the article within the accounting document to delete.
      *
-     * @return Response
-     *   Redirects to the document details page.
+     * @return Response Redirects to the document details page.
      */
-    #[Route('/documents/{document_id}/articles/{pidb_article_id}/delete', name: 'delete_article_in_accounting_document')]
-    public function deleteArticleInAccountingDocument(int $document_id, int $pidb_article_id): Response
+    #[Route('/documents/{id}/articles/{article_id}/delete', name: 'delete_article_in_accounting_document')]
+    public function deleteArticleInAccountingDocument(int $id, int $article_id): Response
     {
-        $accounting_document__article = $this->entityManager->find(AccountingDocumentArticle::class, $pidb_article_id);
+        $documentArticle = $this->em->find(AccountingDocumentArticle::class, $article_id);
 
         // First remove properties from table v6__accounting_documents__articles__properties.
         if (
-            $accounting_document__article__properties =
-                $this->entityManager
-                    ->getRepository(AccountingDocumentArticleProperty::class)
-                    ->findBy(['accounting_document_article' => $pidb_article_id], [])
+            $documentArticleProperties =
+                $this->em->getRepository(AccountingDocumentArticleProperty::class)
+                    ->findBy(['accounting_document_article' => $article_id], [])
         ) {
-            foreach ($accounting_document__article__properties as $accounting_document__article__property) {
-                $accountingDocumentArticleProperty = $this->entityManager
-                    ->find(AccountingDocumentArticleProperty::class, $accounting_document__article__property->getId());
-                $this->entityManager->remove($accountingDocumentArticleProperty);
-                $this->entityManager->flush();
+            foreach ($documentArticleProperties as $document__article__property) {
+                $accountingDocumentArticleProperty = $this->em
+                    ->find(AccountingDocumentArticleProperty::class, $document__article__property->getId());
+                $this->em->remove($accountingDocumentArticleProperty);
+                $this->em->flush();
             }
         }
 
         // Second remove Article from table v6__accounting_documents__articles
-        $this->entityManager->remove($accounting_document__article);
-        $this->entityManager->flush();
+        $this->em->remove($documentArticle);
+        $this->em->flush();
 
-        return $this->redirectToRoute('document_show', ['document_id' => $document_id]);
+        return $this->redirectToRoute('document_show', ['id' => $id]);
     }
 
     /**
@@ -1371,11 +1211,9 @@ class DocumentController extends AbstractController
      * This method checks user authentication, retrieves the latest transactions up to the specified limit, fetches the
      * related accounting documents for each transaction, and prepares all relevant data for the transactions view.
      *
-     * @param int $limit
-     *   The maximum number of transactions to display (default is 10).
+     * @param int $limit The maximum number of transactions to display (default is 10).
      *
-     * @return Response
-     *   Renders the transactions view with transaction and document data.
+     * @return Response Renders the transactions view with transaction and document data.
      */
     #[Route('/documents/transactions', name: 'transactions_view', methods: ['GET'])]
     public function transactions(int $limit = 10): Response
@@ -1385,24 +1223,20 @@ class DocumentController extends AbstractController
             return $this->redirectToRoute('login_form');
         }
 
-        $transactions = $this->entityManager->getRepository(AccountingDocument::class)->getLastTransactions($limit);
+        $transactions = $this->em->getRepository(AccountingDocument::class)->getLastTransactions($limit);
 
-        $transactions_with_accounting_document = [];
+        $transactionsWithAccountingDocument = [];
         foreach ($transactions as $index => $transaction) {
-            $transactions_with_accounting_document[$index] = [
+            $transactionsWithAccountingDocument[$index] = [
                 'transaction' => $transaction,
-                'accounting_document' => $this->entityManager
+                'accounting_document' => $this->em
                   ->getRepository(AccountingDocument::class)->getAccountingDocumentByTransaction($transaction->getId()),
             ];
         }
 
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'transactions' => $transactions_with_accounting_document,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
+        $data = $this->getDefaultData();
+        $data += [
+            'transactions' => $transactionsWithAccountingDocument,
             'tools_menu' => [
                 'document' => FALSE,
                 'cash_register' => FALSE,
@@ -1417,51 +1251,42 @@ class DocumentController extends AbstractController
      *
      * This method checks user authentication, retrieves the accounting document, client, total amounts, and all related transactions (payments and advances). It calculates the total income, saldo, and determines the saldo class for display. The method then prepares all relevant data and renders the transactions view for the document.
      *
-     * @param int $document_id
-     *   The ID of the accounting document whose transactions are to be displayed.
+     * @param int $id The ID of the accounting document whose transactions are to be displayed.
      *
-     * @return Response
-     *   Renders the transactions view for the specified accounting document.
+     * @return Response Renders the transactions view for the specified accounting document.
      */
-    #[Route('/documents/{document_id}/transactions', name: 'document_transactions', methods: ['GET'])]
-    public function transactionsByDocument(int $document_id): Response
+    #[Route('/documents/{id}/transactions', name: 'document_transactions', methods: ['GET'])]
+    public function transactionsByDocument(int $id): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $pidb = $this->entityManager->find(AccountingDocument::class, $document_id);
-        $client = $this->entityManager->find(Client::class,$pidb->getClient());
-        $total = $this->entityManager
-            ->getRepository(AccountingDocument::class)
-            ->getTotalAmountsByAccountingDocument($document_id);
+        $document = $this->em->find(AccountingDocument::class, $id);
+        $client = $this->em->find(Client::class,$document->getClient());
+        $total = $this->em->getRepository(AccountingDocument::class)->getTotalAmountsByAccountingDocument($id);
 
-        $transactions = $pidb->getPayments();
+        $transactions = $document->getPayments();
 
-        $avans = $this->entityManager->getRepository(AccountingDocument::class)->getAvans($document_id);
-        $income = $this->entityManager->getRepository(AccountingDocument::class)->getIncome($document_id);
-        $total_income = $avans + $income;
-        $saldo = $total - $total_income;
+        $avans = $this->em->getRepository(AccountingDocument::class)->getAvans($id);
+        $income = $this->em->getRepository(AccountingDocument::class)->getIncome($id);
+        $totalIncome = $avans + $income;
+        $saldo = $total - $totalIncome;
 
-        $saldo_class = (round($total, 4) - round($total_income, 4)) <= 0
+        $saldo_class = (round($total, 4) - round($totalIncome, 4)) <= 0
           ? "bg-success"
           : "bg-danger text-white";
 
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'pidb_id' => $document_id,
-            'pidb' => $pidb,
+        $data = $this->getDefaultData();
+        $data += [
+            'document' => $document,
             'client' => $client,
             'total' => $total,
             'transactions' => $transactions,
-            'total_income' => $total_income,
+            'total_income' => $totalIncome,
             'saldo' => $saldo,
             'saldo_class' => $saldo_class,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
             'tools_menu' => [
                 'document' => FALSE,
                 'cash_register' => FALSE,
@@ -1477,36 +1302,29 @@ class DocumentController extends AbstractController
      * This method checks user authentication, retrieves the accounting document, transaction, and client data,
      * prepares all relevant information, and renders the transaction edit form view.
      *
-     * @param int $document_id
-     *   The ID of the accounting document containing the transaction.
-     * @param int $transaction_id
-     *   The ID of the transaction to edit.
+     * @param int $id The ID of the accounting document containing the transaction.
+     * @param int $transaction_id The ID of the transaction to edit.
      *
-     * @return Response
-     *   Renders the transaction edit form view.
+     * @return Response Renders the transaction edit form view.
      */
-    #[Route('/documents/{document_id}/transactions/{transaction_id}/edit', name: 'transaction_edit_form', methods: ['GET'])]
-    public function transactionEdit(int $document_id, int $transaction_id): Response
+    #[Route('/documents/{id}/transactions/{transaction_id}/edit', name: 'transaction_edit_form', methods: ['GET'])]
+    public function transactionEdit(int $id, int $transaction_id): Response
     {
         session_start();
         if (!isset($_SESSION['username'])) {
             return $this->redirectToRoute('login_form');
         }
 
-        $pidb = $this->entityManager->find(AccountingDocument::class, $document_id);
-        $transaction = $this->entityManager->find(Payment::class, $transaction_id);
-        $client_id = $pidb->getClient()->getId();
-        $client = $this->entityManager->getRepository(Client::class)->getClientData($client_id);
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'pidb_id' => $document_id,
-            'pidb' => $pidb,
+        $document = $this->em->find(AccountingDocument::class, $id);
+        $transaction = $this->em->find(Payment::class, $transaction_id);
+        $clientId = $document->getClient()->getId();
+        $client = $this->em->getRepository(Client::class)->getClientData($clientId);
+
+        $data = $this->getDefaultData();
+        $data += [
+            'document' => $document,
             'transaction' => $transaction,
             'client' => $client,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
             'tools_menu' => [
                 'document' => FALSE,
                 'cash_register' => FALSE,
@@ -1522,24 +1340,18 @@ class DocumentController extends AbstractController
      * This method retrieves the transaction and payment type, processes the submitted form data (date, amount, note),
      * updates the transaction fields, saves the changes, and redirects to the document's transactions view.
      *
-     * @param int $document_id
-     *   The ID of the accounting document containing the transaction.
-     * @param int $transaction_id
-     *   The ID of the transaction to update.
+     * @param int $id The ID of the accounting document containing the transaction.
+     * @param int $transaction_id The ID of the transaction to update.
      *
-     * @return Response
-     *   Redirects to the document's transactions view after update.
-     *
-     * @throws \DateMalformedStringException
-     *   If the provided date string is invalid.
+     * @return Response Redirects to the document's transactions view after update.
      */
-    #[Route('/documents/{document_id}/transactions/{transaction_id}/update', name: 'transaction_update', methods: ['POST'])]
-    public function transactionUpdate(int $document_id, int $transaction_id): Response
+    #[Route('/documents/{id}/transactions/{transaction_id}/update', name: 'transaction_update', methods: ['POST'])]
+    public function transactionUpdate(int $id, int $transaction_id): Response
     {
-        $transaction = $this->entityManager->find(Payment::class, $transaction_id);
+        $transaction = $this->em->find(Payment::class, $transaction_id);
 
-        $type_id = htmlspecialchars($_POST["type_id"]);
-        $type = $this->entityManager->find(PaymentType::class, $type_id);
+        $typeId = htmlspecialchars($_POST["type_id"]);
+        $type = $this->em->find(PaymentType::class, $typeId);
 
         $date = date('Y-m-d H:i:s', strtotime($_POST["date"]));
         $amount_1 = htmlspecialchars($_POST["amount"]);
@@ -1551,27 +1363,27 @@ class DocumentController extends AbstractController
         $transaction->setAmount($amount);
         $transaction->setNote($note);
 
-        $this->entityManager->flush();
+        $this->em->flush();
 
-        return $this->redirectToRoute('document_transactions', ['document_id' => $document_id]);
+        return $this->redirectToRoute('document_transactions', ['id' => $id]);
     }
 
     /**
      * Delete transaction.
      *
-     * @param int $document_id
+     * @param int $id
      * @param int $transaction_id
      *
      * @return Response
      */
-    #[Route('/documents/{document_id}/transactions/{transaction_id}/delete', name: 'transaction_delete', methods: ['GET'])]
-    public function transactionDelete(int $document_id, int $transaction_id): Response
+    #[Route('/documents/{id}/transactions/{transaction_id}/delete', name: 'transaction_delete', methods: ['GET'])]
+    public function transactionDelete(int $id, int $transaction_id): Response
     {
-        $transaction = $this->entityManager->find(Payment::class, $transaction_id);
-        $this->entityManager->remove($transaction);
-        $this->entityManager->flush();
+        $transaction = $this->em->find(Payment::class, $transaction_id);
+        $this->em->remove($transaction);
+        $this->em->flush();
 
-        return $this->redirectToRoute('document_transactions', ['document_id' => $document_id]);
+        return $this->redirectToRoute('document_transactions', ['id' => $id]);
     }
 
     /**
@@ -1580,8 +1392,7 @@ class DocumentController extends AbstractController
      * This method checks user authentication, retrieves the current preferences, prepares all relevant data, and
      * renders the preferences edit form view.
      *
-     * @return Response
-     *   Renders the preferences edit form view.
+     * @return Response Renders the preferences edit form view.
      */
     #[Route('/documents/preferences', name: 'preferences_edit_form')]
     public function preferencesEdit(): Response
@@ -1591,14 +1402,11 @@ class DocumentController extends AbstractController
             return $this->redirectToRoute('login_form');
         }
 
-        $preferences = $this->entityManager->find(Preferences::class, 1);
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
+        $preferences = $this->em->find(Preferences::class, 1);
+
+        $data = $this->getDefaultData();
+        $data += [
             'preferences' => $preferences,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
             'tools_menu' => [
                 'document' => FALSE,
                 'cash_register' => FALSE,
@@ -1614,20 +1422,19 @@ class DocumentController extends AbstractController
      * This method processes the POSTed form data, updates the preferences entity with new values, saves the changes,
      * and redirects to the preferences edit form view.
      *
-     * @return Response
-     *   Redirects to the preferences edit form view after update.
+     * @return Response Redirects to the preferences edit form view after update.
      */
     #[Route('/documents/preferences/update', name: 'preferences_update', methods: ['POST'])]
     public function preferencesUpdate(): Response
     {
-        $kurs = str_replace(",", ".", htmlspecialchars($_POST["kurs"]));
+        $exchangeRate = str_replace(",", ".", htmlspecialchars($_POST["exchange_rate"]));
         $tax = str_replace(",", ".", htmlspecialchars($_POST["tax"]));
 
-        $preferences = $this->entityManager->find(Preferences::class, 1);
+        $preferences = $this->em->find(Preferences::class, 1);
 
-        $preferences->setKurs($kurs);
+        $preferences->setKurs($exchangeRate);
         $preferences->setTax($tax);
-        $this->entityManager->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('preferences_edit_form');
     }
@@ -1635,20 +1442,20 @@ class DocumentController extends AbstractController
     /**
      * Add payment to Accounting Document.
      *
-     * @param int $document_id
+     * @param int $id
      *
      * @return Response
      */
-    #[Route('/documents/{document_id}/add-payment', name: 'add_payment_to_accounting_document', methods: ['POST'])]
-    public function addPayment(int $document_id): Response
+    #[Route('/documents/{id}/add-payment', name: 'add_payment_to_accounting_document', methods: ['POST'])]
+    public function addPayment(int $id): Response
     {
         session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
+        $user = $this->em->find(User::class, $_SESSION['user_id']);
 
-        $payment_type_id = htmlspecialchars($_POST["type_id"]);
-        $payment_type = $this->entityManager->find(PaymentType::class, $payment_type_id);
+        $paymentTypeId = htmlspecialchars($_POST["type_id"]);
+        $paymentType = $this->em->find(PaymentType::class, $paymentTypeId);
 
-//        if ($payment_type_id == 5 && $this->entityManager->getRepository(Payment::class)->ifExistFirstCashInput()) {
+//        if ($payment_type_id == 5 && $this->em->getRepository(Payment::class)->ifExistFirstCashInput()) {
 //            // TODO Dragan: Create error message
 //            ?>
 <!--            <p>Već ste uneli početno stanje!</p>-->
@@ -1660,8 +1467,7 @@ class DocumentController extends AbstractController
         // Date from new payment form.
         if (!isset($_POST["date"])) {
             $date = date('Y-m-d H:i:s');
-        }
-        else {
+        } else {
             $date = date('Y-m-d H:i:s', strtotime($_POST["date"]));
         }
 
@@ -1674,9 +1480,9 @@ class DocumentController extends AbstractController
         // Create a new Payment.
         $newPayment = new Payment();
 
-        $newPayment->setType($payment_type);
+        $newPayment->setType($paymentType);
 
-//        if ($payment_type_id == 6 || $payment_type_id == 7) {
+//        if ($paymentTypeId == 6 || $paymentTypeId == 7) {
 //            $amount = "-".$amount;
 //        }
 
@@ -1686,16 +1492,15 @@ class DocumentController extends AbstractController
         $newPayment->setCreatedAt(new \DateTime("now"));
         $newPayment->setCreatedByUser($user);
 
-        $this->entityManager->persist($newPayment);
-        $this->entityManager->flush();
+        $this->em->persist($newPayment);
+        $this->em->flush();
 
-        $accounting_document_id = htmlspecialchars($_POST["pidb_id"]);
-        $accounting_document = $this->entityManager->find(AccountingDocument::class, $accounting_document_id);
+        $accountingDocument = $this->em->find(AccountingDocument::class, $id);
         // Add Payment to AccountingDocument.
-        $accounting_document->getPayments()->add($newPayment);
-        $this->entityManager->flush();
+        $accountingDocument->getPayments()->add($newPayment);
+        $this->em->flush();
 
-        return $this->redirectToRoute('document_show', ['document_id' => $accounting_document_id]);
+        return $this->redirectToRoute('document_show', ['id' => $id]);
     }
 
     /**
@@ -1705,11 +1510,9 @@ class DocumentController extends AbstractController
      * matching documents (including archived and non-archived for each type), and prepares all relevant data for the
      * search results view.
      *
-     * @param Request $request
-     *   The HTTP request containing the search term as a query parameter.
+     * @param Request $request The HTTP request containing the search term as a query parameter.
      *
-     * @return Response
-     *   Renders the search results view with matching documents.
+     * @return Response Renders the search results view with matching documents.
      */
     #[Route('/documents/search', name: 'documents_search')]
     public function search(Request $request): Response
@@ -1721,34 +1524,15 @@ class DocumentController extends AbstractController
 
         $term = $request->query->get('term', '');
 
-        $proformas = $this->entityManager
-            ->getRepository(AccountingDocument::class )->search([1, $term, 0]);
-        $proformas_archived = $this->entityManager
-            ->getRepository(AccountingDocument::class)->search([1, $term, 1]);
-        $delivery_notes = $this->entityManager
-            ->getRepository(AccountingDocument::class)->search([2, $term, 0]);
-        $delivery_notes_archived = $this->entityManager
-            ->getRepository(AccountingDocument::class)->search([2, $term, 1]);
-        $return_notes = $this->entityManager
-            ->getRepository(AccountingDocument::class)->search([4, $term, 0]);
-        $return_notes_archived = $this->entityManager
-            ->getRepository(AccountingDocument::class)->search([4, $term, 1]);
-        $last_pidb = $this->entityManager
-            ->getRepository(AccountingDocument::class)->getLastAccountingDocument();
-
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'proformas' => $proformas,
-            'proformas_archived' => $proformas_archived,
-            'delivery_notes' => $delivery_notes,
-            'delivery_notes_archived' => $delivery_notes_archived,
-            'return_notes' => $return_notes,
-            'return_notes_archived' => $return_notes_archived,
-            'last_pidb' => $last_pidb,
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
+        $data = $this->getDefaultData();
+        $data += [
+            'proformas' => $this->em->getRepository(AccountingDocument::class )->search([1, $term, 0]),
+            'proformas_archived' => $this->em->getRepository(AccountingDocument::class)->search([1, $term, 1]),
+            'delivery_notes' => $this->em->getRepository(AccountingDocument::class)->search([2, $term, 0]),
+            'delivery_notes_archived' => $this->em->getRepository(AccountingDocument::class)->search([2, $term, 1]),
+            'return_notes' => $this->em->getRepository(AccountingDocument::class)->search([4, $term, 0]),
+            'return_notes_archived' => $this->em->getRepository(AccountingDocument::class)->search([4, $term, 1]),
+            'last' => $this->em->getRepository(AccountingDocument::class)->getLastAccountingDocument(),
             'tools_menu' => [
                 'document' => FALSE,
                 'cash_register' => FALSE,
@@ -1759,100 +1543,105 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @param int $pidb_id
+     * Get accounting document articles data.
      *
-     * @return array
+     * @param int $id The ID of the accounting document.
+     *
+     * @return array Returns an array containing detailed data for each article in the accounting document.
      */
-    private function getAccountingDocumentArticlesData(int $pidb_id): array
+    private function getAccountingDocumentArticlesData(int $id): array
     {
-        $preferences = $this->entityManager->find(Preferences::class, 1);
-        $kurs = $preferences->getKurs();
+        $preferences = $this->em->find(Preferences::class, 1);
+        $exchangeRate = $preferences->getKurs();
 
-        $accounting_document_articles = $this->entityManager
-            ->getRepository(AccountingDocument::class)->getArticles($pidb_id);
+        $documentArticles = $this->em->getRepository(AccountingDocument::class)->getArticles($id);
 
-        $accounting_document_articles_data = [];
+        $documentArticlesData = [];
 
-        foreach ($accounting_document_articles as $index => $accounting_document_article) {
+        foreach ($documentArticles as $index => $documentArticle) {
 
-            $accounting_document_article_properties = $this->entityManager
+            $accounting_document_article_properties = $this->em
                 ->getRepository(AccountingDocumentArticleProperty::class)
-                ->findBy(['accounting_document_article' => $accounting_document_article->getId()], []);
+                ->findBy(['accounting_document_article' => $documentArticle->getId()], []);
 
-            $accounting_document_articles_data[$index]['article']['id'] = $accounting_document_article->getId();
-            $accounting_document_articles_data[$index]['article']['pieces'] = $accounting_document_article->getPieces();
-            $accounting_document_articles_data[$index]['article']['name'] = $accounting_document_article->getArticle()->getName();
-            foreach ($accounting_document_article_properties as $property_key => $accounting_document_article_property) {
-                $accounting_document_articles_data[$index]['article']['properties'][$property_key]['name']
+            $documentArticlesData[$index]['article']['id'] = $documentArticle->getId();
+            $documentArticlesData[$index]['article']['pieces'] = $documentArticle->getPieces();
+            $documentArticlesData[$index]['article']['name'] = $documentArticle->getArticle()->getName();
+            foreach ($accounting_document_article_properties as $propertyKey => $accounting_document_article_property) {
+                $documentArticlesData[$index]['article']['properties'][$propertyKey]['name']
                     = $accounting_document_article_property->getProperty()->getName();
-                $accounting_document_articles_data[$index]['article']['properties'][$property_key]['quantity']
+                $documentArticlesData[$index]['article']['properties'][$propertyKey]['quantity']
                     = $accounting_document_article_property->getQuantity();
             }
-            $accounting_document_articles_data[$index]['article']['unit'] = $accounting_document_article->getArticle()
+            $documentArticlesData[$index]['article']['unit'] = $documentArticle->getArticle()
                 ->getUnit()->getName();
-            $accounting_document_articles_data[$index]['article']['quantity'] = $this->entityManager
+            $documentArticlesData[$index]['article']['quantity'] = $this->em
                 ->getRepository(AccountingDocumentArticle::class)
                 ->getQuantity(
-                    $accounting_document_article->getId(),
-                    $accounting_document_article->getArticle()->getMinCalcMeasure(),
-                    $accounting_document_article->getPieces()
+                    $documentArticle->getId(),
+                    $documentArticle->getArticle()->getMinCalcMeasure(),
+                    $documentArticle->getPieces()
                 );
-            $accounting_document_articles_data[$index]['article']['note'] = $accounting_document_article->getNote();
-            $accounting_document_articles_data[$index]['article']['price'] = $accounting_document_article->getPrice();
-            $accounting_document_articles_data[$index]['article']['price_rsd'] = $accounting_document_article->getPrice() * $kurs;
-            $accounting_document_articles_data[$index]['article']['discount'] = $accounting_document_article->getDiscount();
-            $accounting_document_articles_data[$index]['article']['tax_base_rsd'] =  $this->entityManager
+            $documentArticlesData[$index]['article']['note'] = $documentArticle->getNote();
+            $documentArticlesData[$index]['article']['price'] = $documentArticle->getPrice();
+            $documentArticlesData[$index]['article']['price_rsd'] = $documentArticle->getPrice() * $exchangeRate;
+            $documentArticlesData[$index]['article']['discount'] = $documentArticle->getDiscount();
+            $documentArticlesData[$index]['article']['tax_base_rsd'] =  $this->em
                 ->getRepository(AccountingDocumentArticle::class)
                 ->getTaxBase(
-                    $accounting_document_article->getPrice(),
-                    $accounting_document_article->getDiscount(),
-                    $accounting_document_articles_data[$index]['article']['quantity']
-                ) * $kurs;
-            $accounting_document_articles_data[$index]['article']['tax'] = $accounting_document_article->getTax();
-            $accounting_document_articles_data[$index]['article']['tax_amount_rsd'] = $this->entityManager
+                    $documentArticle->getPrice(),
+                    $documentArticle->getDiscount(),
+                    $documentArticlesData[$index]['article']['quantity']
+                ) * $exchangeRate;
+            $documentArticlesData[$index]['article']['tax'] = $documentArticle->getTax();
+            $documentArticlesData[$index]['article']['tax_amount_rsd'] = $this->em
                 ->getRepository(AccountingDocumentArticle::class)
                 ->getTaxAmount(
-                    $accounting_document_articles_data[$index]['article']['tax_base_rsd'],
-                    $accounting_document_articles_data[$index]['article']['tax']
+                    $documentArticlesData[$index]['article']['tax_base_rsd'],
+                    $documentArticlesData[$index]['article']['tax']
                 );
-            $accounting_document_articles_data[$index]['article']['sub_total_rsd'] = $this->entityManager
+            $documentArticlesData[$index]['article']['sub_total_rsd'] = $this->em
                 ->getRepository(AccountingDocumentArticle::class)
                 ->getSubTotal(
-                    $accounting_document_articles_data[$index]['article']['tax_base_rsd'],
-                    $accounting_document_articles_data[$index]['article']['tax_amount_rsd']
+                    $documentArticlesData[$index]['article']['tax_base_rsd'],
+                    $documentArticlesData[$index]['article']['tax_amount_rsd']
                 );
         }
-        return $accounting_document_articles_data;
+        return $documentArticlesData;
     }
 
     /**
-     * @param int $pidb_id
+     * Get accounting document total tax base in RSD.
+     *
+     * @param int $id
      *
      * @return float
      */
-    private function getAccountingDocumentTotalTaxBaseRSD(int $pidb_id): float
+    private function getAccountingDocumentTotalTaxBaseRSD(int $id): float
     {
-        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
-        $total_tax_base_rsd = 0;
-        foreach ($accounting_document_articles_data as $index => $accounting_document_article) {
-            $total_tax_base_rsd += $accounting_document_article['article']['tax_base_rsd'];
+        $documentArticlesData = $this->getAccountingDocumentArticlesData($id);
+        $totalTaxBaseRsd = 0;
+        foreach ($documentArticlesData as $documentArticle) {
+          $totalTaxBaseRsd += $documentArticle['article']['tax_base_rsd'];
         }
-        return $total_tax_base_rsd;
+        return $totalTaxBaseRsd;
     }
 
     /**
-     * @param int $pidb_id
+     * Get accounting document total tax amount in RSD.
+     *
+     * @param int $id
      *
      * @return int|mixed
      */
-    private function getAccountingDocumentTotalTaxAmountRSD(int $pidb_id)
+    private function getAccountingDocumentTotalTaxAmountRSD(int $id)
     {
-        $accounting_document_articles_data = $this->getAccountingDocumentArticlesData($pidb_id);
-        $total_tax_amount_rsd = 0;
-        foreach ($accounting_document_articles_data as $index => $accounting_document_article) {
-            $total_tax_amount_rsd += $accounting_document_article['article']['tax_amount_rsd'];
+      $documentArticlesData = $this->getAccountingDocumentArticlesData($id);
+        $totalTaxAmountRsd = 0;
+        foreach ($documentArticlesData as $index => $documentArticle) {
+          $totalTaxAmountRsd += $documentArticle['article']['tax_amount_rsd'];
         }
-        return $total_tax_amount_rsd;
+        return $totalTaxAmountRsd;
     }
 
     /**
@@ -1862,8 +1651,7 @@ class DocumentController extends AbstractController
      * documents for each transaction, calculates the daily cash saldo, and prepares all relevant data for the cash
      * register view.
      *
-     * @return Response
-     *   Renders the cash register view with transaction and saldo data.
+     * @return Response Renders the cash register view with transaction and saldo data.
      */
     #[Route('/documents/cash-register', name: 'cash_register')]
     public function cashRegister(): Response
@@ -1873,32 +1661,27 @@ class DocumentController extends AbstractController
             return $this->redirectToRoute('login_form');
         }
 
-        $daily_transactions = $this->entityManager
-            ->getRepository(Payment::class)->getDailyCashTransactions();
-        $daily_transactions_with_accounting_document = [];
-        foreach ($daily_transactions as $index => $daily_transaction) {
-            $daily_transactions_with_accounting_document[$index] = [
-                'transaction' => $daily_transaction,
-                'accounting_document' => $this->entityManager
+        $dailyTransactions = $this->em->getRepository(Payment::class)->getDailyCashTransactions();
+        $dailyTransactionsWithAccountingDocument = [];
+        foreach ($dailyTransactions as $index => $dailyTransaction) {
+          $dailyTransactionsWithAccountingDocument[$index] = [
+                'transaction' => $dailyTransaction,
+                'accounting_document' => $this->em
                     ->getRepository(AccountingDocument::class)
-                    ->getAccountingDocumentByTransaction($daily_transaction->getId()),
+                    ->getAccountingDocumentByTransaction($dailyTransaction->getId()),
             ];
         }
 
-        $daily_cash_saldo = $this->entityManager->getRepository(Payment::class)->getDailyCashSaldo();
+        $daily_cash_saldo = $this->em->getRepository(Payment::class)->getDailyCashSaldo();
 
-        $data = [
-            'page' => $this->page,
-            'page_title' => $this->page_title,
-            'daily_transactions' => $daily_transactions_with_accounting_document,
+        $data = $this->getDefaultData();
+        $data += [
+            'daily_transactions' => $dailyTransactionsWithAccountingDocument,
             'daily_cash_saldo' => $daily_cash_saldo,
             'tools_menu' => [
                 'document' => FALSE,
                 'cash_register' => TRUE,
             ],
-            'stylesheet' => $this->stylesheet,
-            'user_role_id' => $_SESSION['user_role_id'],
-            'username' => $_SESSION['username'],
         ];
 
         return $this->render('document/cash_register.html.twig', $data);
@@ -1912,9 +1695,9 @@ class DocumentController extends AbstractController
     #[Route('/documents/cache-in-out', name: 'cache_in_out', methods: ['POST'])]
     public function cacheInOut(): Response
     {
-        $payment_type_id = $_POST["type_id"];
+        $paymentTypeId = $_POST["type_id"];
 
-        if ($payment_type_id == 5 && $this->entityManager->getRepository(Payment::class)->ifExistFirstCashInput()) {
+        if ($paymentTypeId == 5 && $this->em->getRepository(Payment::class)->ifExistFirstCashInput()) {
             // @todo Create error message object or something like that, and
             // display it in the view.
             ?>
@@ -1925,16 +1708,14 @@ class DocumentController extends AbstractController
         }
 
         session_start();
-        $user = $this->entityManager->find(User::class, $_SESSION['user_id']);
-        $payment_type = $this->entityManager->find(PaymentType::class, $payment_type_id);
-
-        $date = date('Y-m-d H:i:s');
+        $user = $this->em->find(User::class, $_SESSION['user_id']);
+        $paymentType = $this->em->find(PaymentType::class, $paymentTypeId);
 
         $amount = htmlspecialchars($_POST["amount"]);
         // Correct decimal separator.
         $amount = str_replace(",", ".", $amount);
 
-        if ($payment_type_id == 6 || $payment_type_id == 7) {
+        if ($paymentTypeId == 6 || $paymentTypeId == 7) {
             $amount = "-".$amount;
         }
 
@@ -1943,16 +1724,16 @@ class DocumentController extends AbstractController
         // Create a new Payment.
         $newPayment = new Payment();
 
-        $newPayment->setType($payment_type);
+        $newPayment->setType($paymentType);
 
         $newPayment->setAmount($amount);
-        $newPayment->setDate(new \DateTime($date));
+        $newPayment->setDate(new \DateTime("now"));
         $newPayment->setNote($note);
         $newPayment->setCreatedAt(new \DateTime("now"));
         $newPayment->setCreatedByUser($user);
 
-        $this->entityManager->persist($newPayment);
-        $this->entityManager->flush();
+        $this->em->persist($newPayment);
+        $this->em->flush();
 
         return $this->redirectToRoute('cash_register');
     }
@@ -1970,26 +1751,26 @@ class DocumentController extends AbstractController
             return $this->redirectToRoute('login_form');
         }
 
-        $company_info = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
+        $companyInfo = $this->entityManager->getRepository(CompanyInfo::class)->getCompanyInfoData(1);
 
         $date = date('Y-m-d');
-        $daily_transactions = $this->entityManager->getRepository(Payment::class)->getDailyCashTransactions($date);
+        $dailyTransactions = $this->em->getRepository(Payment::class)->getDailyCashTransactions($date);
 
-        $daily_transactions_with_accounting_document = [];
-        foreach ($daily_transactions as $index => $daily_transaction) {
-            $daily_transactions_with_accounting_document[$index] = [
-                'transaction' => $daily_transaction,
-                'accounting_document' => $this->entityManager
+        $dailyTransactionsWithAccountingDocument = [];
+        foreach ($dailyTransactions as $index => $dailyTransaction) {
+          $dailyTransactionsWithAccountingDocument[$index] = [
+                'transaction' => $dailyTransaction,
+                'accounting_document' => $this->em
                     ->getRepository(AccountingDocument::class)
-                    ->getAccountingDocumentByTransaction($daily_transaction->getId()),
+                    ->getAccountingDocumentByTransaction($dailyTransaction->getId()),
             ];
         }
 
-        $daily_cash_saldo = $this->entityManager->getRepository('\App\Entity\Payment')->getDailyCashSaldo($date);
+        $daily_cash_saldo = $this->em->getRepository('\App\Entity\Payment')->getDailyCashSaldo($date);
 
         $data = [
-            'company_info' => $company_info,
-            'daily_transactions' => $daily_transactions_with_accounting_document,
+            'company_info' => $companyInfo,
+            'daily_transactions' => $dailyTransactionsWithAccountingDocument,
             'daily_cash_saldo' => $daily_cash_saldo,
             'date' => $date,
         ];
@@ -2004,10 +1785,10 @@ class DocumentController extends AbstractController
 
         // Set document information
         $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor($company_info['name']);
-        $pdf->SetTitle($company_info['name'] . ' - Dokument');
-        $pdf->SetSubject($company_info['name']);
-        $pdf->SetKeywords($company_info['name'] . ', PDF, dnevni izveštaj');
+        $pdf->SetAuthor($companyInfo['name']);
+        $pdf->SetTitle($companyInfo['name'] . ' - Dokument');
+        $pdf->SetSubject($companyInfo['name']);
+        $pdf->SetKeywords($companyInfo['name'] . ', PDF, dnevni izveštaj');
 
         // Remove default header/footer.
         $pdf->setPrintHeader(false);
@@ -2044,6 +1825,41 @@ class DocumentController extends AbstractController
         $response->headers->set('Content-Type', 'application/pdf');
         $response->headers->set('Content-Disposition', 'inline; filename="' . $cleanFilename . '"');
         return $response;
+    }
+
+    /**
+     * Get Document Type Data.
+     *
+     * @param int $documentTypeId
+     *   The document type ID.
+     *
+     * @return string[]
+     *   An array containing the document type name, prefix, and badge class.
+     */
+    private function getDocumentTypeData(int $documentTypeId): array
+    {
+      return match ($documentTypeId) {
+        1 => ["Predračun", "P_", 'info'],
+        2 => ["Otpremnica", "O_", 'secondary'],
+        4 => ["Povratnica", "POV_", 'warning'],
+        default => ["_", "_", 'default'],
+      };
+    }
+
+    /**
+     * Returns default data array for views.
+     *
+     * @return array An associative array containing default data for views.
+     */
+    private function getDefaultData(): array
+    {
+        return [
+            'page' => $this->page,
+            'page_title' => $this->pageTitle,
+            'stylesheet' => $this->stylesheet,
+            'user_role_id' => $_SESSION['user_role_id'],
+            'username' => $_SESSION['username'],
+        ];
     }
 
 }

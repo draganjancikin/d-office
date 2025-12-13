@@ -1,17 +1,17 @@
-<div class="card border-{{ pidb_style }} mb-4">
-    <div class="card-header bg-{{ pidb_style }} p-2">
+<div class="card border-{{ document_style }} mb-4">
+    <div class="card-header bg-{{ document_style }} p-2">
         <h6 class="m-0 font-weight-bold text-white">
-            {{ pidb_type }}
-            {{ '%04d'|format(pidb_data.getOrdinalNumInYear()) }} - {{ pidb_data.getCreatedAt().format('m') }}
-            <span class="font-weight-normal">{{ pidb_data.getCreatedAt().format('d-M-Y') }}</span>
-            <span class="font-weight-normal">{{ pidb_data.title }}</span>
+            {{ document_type }}
+            {{ '%04d'|format(document.getOrdinalNumInYear()) }} - {{ document.getCreatedAt().format('m') }}
+            <span class="font-weight-normal">{{ document.getCreatedAt().format('d-M-Y') }}</span>
+            <span class="font-weight-normal">{{ document.title }}</span>
         </h6>
     </div>
     <div class="card-body p-2">
         <dl class="row mb-0">
             <dt class="col-sm-3 col-md-2">klijent:</dt>
             <dd class="col-sm-9 col-md-10">
-                <a href="/client/{{ client.id }}" title="Pregled svih podataka o klijentu: {{ client.name }}">
+                <a href="/clients/{{ client.id }}" title="Pregled podataka o klijentu: {{ client.name }}">
                     {{ client.name }}
                 </a>
             </dd>
@@ -35,9 +35,9 @@
         </dl>
 
         <div class="table-responsive">
-            <table class="table table-hover" >
-                <thead>
-                    <tr class="table-<?php echo $style; ?>">
+            <table class="table table-hover mb-0">
+                <thead class="table-{{ document_style }}">
+                    <tr>
                         <th class="px-1 text-center">#</th>
                         <th class="px-1">naziv proizvoda</th>
                         <th class="px-1 text-center">jed.<br />mere</th>
@@ -55,12 +55,12 @@
                 {% set count = 0 %}
                 {% for accounting_document_article_data in accounting_document_articles_data %}
                     {% set count = count + 1 %}
-                    <form action="/documents/{{ pidb_id }}/articles/{{ accounting_document_article_data.article.id
+                    <form action="/documents/{{ document.id }}/articles/{{ accounting_document_article_data.article.id
                     }}/edit"
                           class="form-horizontal" role="form"
                           method="post">
                         <input type="hidden" name="article_id" value="{{ accounting_document_article_data.article.id }}" />
-                        <input type="hidden" name="pidb_tip_id" value="{{ pidb_type_id }}" />
+                        <input type="hidden" name="pidb_tip_id" value="{{ document.type.id }}" />
                         <tr>
                             <td class="px-1 text-center">{{ count }}</td>
                             <td class="px-1">
@@ -115,20 +115,17 @@
                                 <button type="submit" class="btn btn-mini btn-outline-success px-1">
                                     <i class="fas fa-save" title="Snimi izmenu"> </i>
                                 </button>
-                                <a href="/documents/{{ pidb_id }}/articles/{{ accounting_document_article_data.article
-                                .id }}/change"
+                                <a href="/documents/{{ document.id }}/articles/{{ accounting_document_article_data.article.id }}/change"
                                    class="btn btn-mini btn-outline-info px-1">
                                     <i class="fas fa-edit" title="Promeni artikal"> </i>
                                 </a>
-                                <a href="/documents/{{ pidb_id }}/articles/{{ accounting_document_article_data
-                                .article.id }}/duplicate"
+                                <a href="/documents/{{ document.id }}/articles/{{ accounting_document_article_data.article.id }}/duplicate"
                                    class="btn btn-mini btn-outline-info px-1">
                                     <i class="fas fa-plus" title="Dupliciraj artikal"> </i>
                                 </a>
 
                                 <a onClick="return confirm('Da li ste sigurni da želite da uklonite artikal iz dokumenta?');"
-                                   href="/documents/{{ pidb_id }}/articles/{{ accounting_document_article_data
-                                   .article.id }}/delete"
+                                   href="/documents/{{ document.id }}/articles/{{ accounting_document_article_data.article.id }}/delete"
                                    class="btn btn-mini btn-outline-danger px-1"
                                 >
                                     <i class="fas fa-trash" title="Obriši artikal"> </i>
@@ -138,60 +135,59 @@
                     </form>
                 {% endfor %}
                 </tbody>
-                <tfoot>
-                    <tr class="table-{{ pidb_style }}">
+                <tfoot class="table-{{ document_style }}">
+                    <tr>
                         <td colspan="3" rowspan="6">
                             <td colspan="3">ukupno poreska osnovica</td>
                             <td class="text-right">{{ total_tax_base_rsd|number_format(2, ',', '.') }}</td>
                         </td>
                         <td colspan="5"></td>
                     </tr>
-                    <tr class="table-{{ pidb_style }}">
+                    <tr>
                         <td colspan="5">ukupno iznos PDV-a</td>
                         <td class="text-right">{{ total_tax_amount_rsd|number_format(2, ',', '.') }}</td>
                         <td colspan="3"></td>
                     </tr>
-                    <tr class="table-{{ pidb_style }}">
+                    <tr>
                         <td colspan="5">UKUPNO</td>
                         <td class="text-right"></td>
                         <td class="text-right">{{ total_rsd|number_format(2, ',', '.') }}</td>
                         <td colspan="2" class="text-right">(&#8364; {{ total_eur|number_format(2, ',', '.') }})</td>
                     </tr>
-                    <tr class="table-{{ pidb_style }}">
+                    <tr>
                         <td colspan="5">Avans</td>
                         <td class="text-right"></td>
-                        <td class="text-right">{{ avans_rsd|number_format(2, ',', '.') }}</td>
-                        <td colspan="2" class="text-right">(&#8364; {{ avans_eur|number_format(4, ',', '.') }})</td>
+                        <td class="text-right">{{ advance_payment_rsd|number_format(2, ',', '.') }}</td>
+                        <td colspan="2" class="text-right">(&#8364; {{ advance_payment_eur|number_format(4, ',', '.') }})</td>
                     </tr>
-                    {% if pidb_type_id == 2 %}
-                    <tr class="table-{{ pidb_style }}">
+                    {% if document.type.id == 2 %}
+                    <tr>
                         <td colspan="5">Uplaćeno</td>
                         <td class="text-right"></td>
                         <td class="text-right">{{ income_rsd }}</td>
                         <td colspan="2" class="text-right">(&#8364; {{ income_rsd }})</td>
                     </tr>
                     {% endif %}
-                    <tr class="table-{{ pidb_style }}">
+                    <tr>
                         <td colspan="5"><strong>OSTALO ZA UPLATU</strong></td>
                         <td class="text-right"></td>
-                        <td class="text-right""><strong>{{ remaining_rsd|number_format(2, ',', '.') }}</strong></td>
+                        <td class="text-right"><strong>{{ remaining_rsd|number_format(2, ',', '.') }}</strong></td>
                         <td colspan="2" class="text-right">(&#8364; {{ remaining_eur|number_format(4, ',', '.') }})</td>
                     </tr>
                 </tfoot>
             </table>
 
+            <form action="/documents/{{ document.id }}/update " method="post">
 
-            <form action="/documents/{{ pidb_id }}/update " method="post">
-
-                <input type="hidden" name="pidb_id" value="{{ pidb_id }}" />
-                <table class="table">
-                    <tr class="table-{{ pidb_style }}">
+                <input type="hidden" name="pidb_id" value="{{ document.id }}" />
+                <table class="table table-{{ document_style }} table-borderless mb-0">
+                    <tr>
                         <td width="110">Naslov:</td>
                         <td colspan="2">
-                            <input class="form-control" type="text" name="title" value="{{ pidb_data.title }}" >
+                            <input class="form-control" type="text" name="title" value="{{ document.title }}" >
                         </td>
                     </tr>
-                    <tr class="table-{{ pidb_style }}">
+                    <tr>
                         <td>Klijent: </td>
                         <td colspan="2">
                             <select class="form-control" name="client_id">
@@ -206,29 +202,29 @@
                             </select>
                         </td>
                     </tr>
-                    <tr class="table-<?php echo $style; ?>">
+                    <tr>
                         <td>Arhivirano:</td>
                         <td>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="archived" id="archived1"
-                                       value="0" {% if pidb_data.isArchived == 0 %}checked="checked"{% endif %} >
+                                       value="0" {% if document.isArchived == 0 %}checked="checked"{% endif %} >
                                 <label class="form-check-label" for="archived1"> nije</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="archived" id="archived2"
-                                       value="1" {% if pidb_data.isArchived == 1 %}checked="checked"{% endif %} >
+                                       value="1" {% if document.isArchived == 1 %}checked="checked"{% endif %} >
                                 <label class="form-check-label" for="archived2"> jeste</label>
                             </div>
                         </td>
                         <td></td>
                     </tr>
-                    <tr class="table-<?php echo $style; ?>">
+                    <tr>
                         <td>Napomena:</td>
                         <td colspan="2">
-                            <textarea class="form-control" rows="3" name="note">{{ pidb_data.note }}</textarea>
+                            <textarea class="form-control" rows="3" name="note">{{ document.note }}</textarea>
                         </td>
                     </tr>
-                    <tr class="table-<?php echo $style; ?>">
+                    <tr>
                         <td></td>
                         <td colspan="2">
                             <button type="submit" class="btn btn-sm btn-success my-1">

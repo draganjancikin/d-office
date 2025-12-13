@@ -1,0 +1,27 @@
+{{ form_start(form) }}
+
+<div class="row mb-2">
+    {{ form_label(form.type) }}
+    <div class="col-sm-4">{{ form_widget(form.type) }}</div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.client) }}
+    <div class="col-sm-4">{{ form_widget(form.client) }}</div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.title) }}
+    <div class="col-sm-8 col-md-8">{{ form_widget(form.title) }}</div>
+</div>
+<div class="row mb-2">
+    {{ form_label(form.note) }}
+    <div class="col-sm-8 col-md-8">{{ form_widget(form.note) }}</div>
+</div>
+<div class="row mb-2 ">
+    <div class="col-sm-4 col-md-3 offset-sm-4 offset-md-3 offset-xl-2">
+        <button type="submit" class="btn btn-sm btn-success" title="Snimi izmene podataka o klijentu!">
+            <i class="fas fa-save"></i> Snimi
+        </button>
+    </div>
+</div>
+
+{{ form_end(form) }}
