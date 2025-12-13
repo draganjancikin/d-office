@@ -1,4 +1,10 @@
 # Upgrade to 9.5.0
+Bugfixes:
+* #451 - Creation of the Client returns error
+Enhancements:
+* #446 - Replace document view form with table
+
+# Upgrade to 9.5.0
 Enhancements:
 * #430 - After creating a new country, city or street need to return to show (view) page
 * #433 - Add list of clients where Country use on Country view page
