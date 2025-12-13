@@ -21,12 +21,12 @@
                 {% endif %}
                 <tr class="border-bottom">
                     <td class="p-2">Naziv</td>
-N                   <td class="p-2">{{ client.name }} {% if client.nameNote %}({{ client.nameNote }}){% endif %}</td>
+                    <td class="p-2">{{ client.name }} {% if client.nameNote %}({{ client.nameNote }}){% endif %}</td>
                 </tr>
                 <tr class="border-bottom">
                     <td class="p-2">Adresa</td>
                     <td class="p-2">
-                        {{ client.street.name ?: '' }} {{ client.homeNumber ?: '' }}
+                        {% if client.street %}{{ client.street.name }}{% endif %} {{ client.homeNumber ?: '' }}
                         {{ client.city ? ', ' ~ client.city.name : '' }}
                         {{ client.country ? ', ' ~ client.country.name : '' }}
                         {% if client.addressNote %}({{ client.addressNote }}){% endif %}
