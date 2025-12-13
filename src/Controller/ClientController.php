@@ -110,7 +110,7 @@ class ClientController extends AbstractController
             $this->em->flush();
 
             // $this->addFlash('success', 'Client created successfully!');
-            return $this->redirectToRoute('client_show', ['client_id' => $client->getId()]);
+            return $this->redirectToRoute('client_show', ['id' => $client->getId()]);
         }
 
         $data = $this->getDefaultData();

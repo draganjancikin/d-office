@@ -9,6 +9,7 @@ use App\Entity\Country;
 use App\Entity\Street;
 use App\Entity\User;
 use App\Repository\ClientRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -62,7 +63,7 @@ class Client
      * @var string
      */
     #[ORM\Column(type: "string", length: 13)]
-    protected $lb;
+    protected string $lb;
 
     /**
      * Supplier flag.
@@ -120,8 +121,7 @@ class Client
     /**
      * Unidirectional - Many users have many contacts
      *
-  //   * @ORM\ManyToMany(targetEntity="Contact")
-  //   * @ORM\JoinTable(name="v6__clients__contacts")
+     * @var Collection
      */
     #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'clients', cascade: ['persist'])]
     #[ORM\JoinTable(
@@ -137,16 +137,16 @@ class Client
      * @var DateTime
      */
     #[ORM\Column(type: "datetime", options: ["default" => "CURRENT_TIMESTAMP"])]
-    protected $created_at;
+    protected DateTime $created_at;
 
     /**
      * Many Clients have been created from One User.
      *
-     * @var int
+     * @var User
      */
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: "created_by_user_id", referencedColumnName: "id")]
-    protected $created_by_user;
+    #[ORM\JoinColumn(name: "created_by_user_id", referencedColumnName: "id", nullable: false)]
+    protected User $created_by_user;
 
     /**
      * Date when the client was modified.
@@ -154,7 +154,7 @@ class Client
      * @var DateTime
      */
     #[ORM\Column(type: "datetime", options: ["default" => "CURRENT_TIMESTAMP"])]
-    protected $modified_at;
+    protected DateTime $modified_at;
 
     /**
      * Many Clients have been updated from One User.
@@ -173,8 +173,8 @@ class Client
         $this->home_number = '';
         $this->address_note = '';
         $this->note = '';
-        $this->created_at = new \DateTime();
-        $this->modified_at = new \DateTime();
+        $this->created_at = new DateTime();
+        $this->modified_at = new DateTime();
     }
 
     public function getId() {
