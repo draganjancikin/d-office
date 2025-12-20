@@ -1,4 +1,12 @@
-# Upgrade to 9.5.0
+# Upgrade to 9.5.2
+Bugfixes:
+* #458 - Export cutting to proforma return error
+* #459 - We can't go to client page from project
+Enhancements:
+* #454 - Return to Document edit page after edit the document or article in document
+* #460 - On the client page, we need to client ordered by client ID
+
+# Upgrade to 9.5.1
 Bugfixes:
 * #451 - Creation of the Client returns error
 Enhancements:
