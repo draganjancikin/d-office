@@ -33,7 +33,8 @@
     "symfony/form": "^7.3",
     "symfony/validator": "^7.3",
     "symfony/asset-mapper": "^7.4",
-    "symfony/asset": "^7.4"
+    "symfony/asset": "^7.4",
+    "twbs/bootstrap": "5.3.*"
   },
   "config": {
     "allow-plugins": {
