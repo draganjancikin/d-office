@@ -754,7 +754,7 @@ class CuttingController extends AbstractController
         $this->entityManager->persist($newProformaArticle);
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('document_show', ['document_id' => $newProforma_id]);
+        return $this->redirectToRoute('document_show', ['id' => $newProforma_id]);
     }
 
     /**
