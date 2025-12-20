@@ -1,6 +1,8 @@
 // Theme add: Call the dataTables jQuery plugin
 $(document).ready(function() {
-  $('table.dataTable').dataTable();
+  $('table.dataTable').dataTable({
+    order: [[0, 'desc']],
+  });
 });
 
 
