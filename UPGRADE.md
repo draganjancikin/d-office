@@ -1,3 +1,17 @@
+# Upgrade to 9.6.0
+Updates:
+* "doctrine/orm" (3.5.7 => 3.6.0)
+* "tecnickcom/tcpdf" (6.10.0 => 6.10.1)
+* "symfony/runtime" (7.3.4 => 7.4.1)
+* "symfony/framework-bundle" (7.3.6 => 7.4.1)
+* "symfony/twig-bundle" (7.3.4 => 7.4.0)
+* "symfony/console" (7.3.6 => 7.4.1)
+* "symfony/yaml" (7.3.5 => 7.4.1)
+* "symfony/dotenv" (7.3.2 => 7.4.0)
+* "symfony/process" (7.3.4 => 7.4.0)
+* "symfony/form" (7.3.6 => 7.4.1)
+* "symfony/validator" (7.3.7 => 7.4.2)
+
 # Upgrade to 9.5.2
 Bugfixes:
 * #458 - Export cutting to proforma return error
