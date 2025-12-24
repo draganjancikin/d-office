@@ -39,7 +39,6 @@ class CuttingController extends AbstractController
         $this->entityManager = $entityManager;
         $this->page_title = 'Krojne liste';
         $this->page = 'cuttings';
-        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
@@ -70,7 +69,6 @@ class CuttingController extends AbstractController
                 'cutting' => FALSE,
             ],
             'cutting_sheets' => $cutting_sheets,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -117,7 +115,6 @@ class CuttingController extends AbstractController
             'clients_list' => $clients_list,
             'client_id' => $client_id,
             'client' => $client ?? NULL,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
@@ -233,7 +230,6 @@ class CuttingController extends AbstractController
             'cutting_sheet_articles' => $cutting_sheet_articles,
             'total_picket_lenght' => $total_picket_lenght / 1000,
             'total_cap' => $total_cap,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -305,7 +301,6 @@ class CuttingController extends AbstractController
             'cutting_sheet_articles' => $cutting_sheet_articles,
             'total_picket_lenght' => $total_picket_lenght / 1000,
             'total_cap' => $total_cap,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -980,7 +975,6 @@ class CuttingController extends AbstractController
             'page_title' => $this->page_title,
             'cuttings' => $cuttings,
             'last_cutting_sheet' => $last_cutting_sheet,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [

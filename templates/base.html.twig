@@ -10,17 +10,17 @@
     <title>{% block title %}{% endblock %}</title>
     {% block stylesheets %}
         <!-- Bootstrap 5.3.8 -->
-        <link rel="stylesheet" href="{{ stylesheet }}/bootstrap-5.3.8/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ asset('libraries/bootstrap-5.3.8/css/bootstrap.min.css') }}">
         <!-- Custom fonts for this template-->
-        <link href="{{ stylesheet }}theme-admin-2/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+        <link href="{{ asset('libraries/theme-admin-2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <!-- Custom styles for this template -->
-        <link href="{{ stylesheet }}theme-admin-2/css/sb-admin-2.min.css" rel="stylesheet">
-        <link href="{{ stylesheet }}css/my-css.css" rel="stylesheet">
+        <link href="{{ asset('libraries/theme-admin-2/css/sb-admin-2.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('libraries/css/my-css.css') }}" rel="stylesheet">
         <!-- Favicon -->
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ stylesheet }}/favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ stylesheet }}/favicon/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ stylesheet }}/favicon/favicon-16x16.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('libraries/favicon/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('libraries/favicon/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('libraries/favicon/favicon-16x16.png') }}">
     {% endblock %}
 
     {% block javascripts %}
@@ -112,21 +112,21 @@
 
 {# Page body footer #}
 {# Bootstrap core JavaScript #}
-<script src="{{ stylesheet }}theme-admin-2/vendor/jquery/jquery.min.js"></script>
-<script src="{{ stylesheet }}theme-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('libraries/theme-admin-2/vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('libraries/theme-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
 {# Core plugin JavaScript #}
-<script src="{{ stylesheet }}theme-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="{{ asset('libraries/theme-admin-2/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
 {# Custom scripts for all pages #}
-<script src="{{ stylesheet }}theme-admin-2/js/sb-admin-2.min.js"></script>
+<script src="{{ asset('libraries/theme-admin-2/js/sb-admin-2.min.js') }}"></script>
 
 {# Page level plugins #}
-<!-- <script src="{{ stylesheet }}theme-admin-2/vendor/chart.js/Chart.min.js"></script> -->
-<script src="{{ stylesheet }}theme-admin-2/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="{{ stylesheet }}theme-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- <script src="{{ asset('libraries/theme-admin-2/vendor/chart.js/Chart.min.js') }}"></script> -->
+<script src="{{ asset('libraries/theme-admin-2/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('libraries/theme-admin-2/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
 {# Additional JS #}
-<script src="{{ stylesheet }}js/add.js"></script>
+<script src="{{ asset('libraries/js/add.js') }}"></script>
 </body>
 </html>
