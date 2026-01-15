@@ -8,6 +8,7 @@ use App\Entity\AccountingDocument;
 use App\Entity\AccountingDocumentType as AccountingDocumentTypeEntity;
 use App\Entity\Client;
 use App\Entity\Project;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,6 +48,10 @@ class AccountingDocumentType extends AbstractType
                 'class' => Client::class,
                 'choice_label' => 'name',
                 'required' => true,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.name', 'ASC'); // A–Z
+                },
             ])
             ->add('title', null, [
                 'label' => 'Naslov',
