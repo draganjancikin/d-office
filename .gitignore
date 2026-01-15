@@ -2,7 +2,6 @@
 /.env.local
 /.env.dev
 /.env.prod
-/.env.prod.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
