@@ -1,3 +1,10 @@
+# Upgrade to 9.6.1
+Bugfixes:
+* #473 - Translate title on print proforma and print dispatch pdf files
+* #477 - Warning: Undefined array key "DB_NAME" when try to export proforma to dispatch
+Enhancements:
+* #475 - Create a new proforma: need to sort client in select field
+
 # Upgrade to 9.6.0
 Updates:
 * "doctrine/orm" (3.5.7 => 3.6.0)
