@@ -1,3 +1,7 @@
+# Upgrade to 9.6.2
+Bugfixes:
+* #480 - Unknown function "asset" in base.html.twig at line 1
+
 # Upgrade to 9.6.1
 Bugfixes:
 * #473 - Translate title on print proforma and print dispatch pdf files
