@@ -44,7 +44,6 @@ class DocumentController extends AbstractController
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
@@ -1856,7 +1855,6 @@ class DocumentController extends AbstractController
         return [
             'page' => $this->page,
             'page_title' => $this->pageTitle,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];

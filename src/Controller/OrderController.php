@@ -41,7 +41,6 @@ class OrderController extends AbstractController
         $this->entityManager = $entityManager;
         $this->page = 'order';
         $this->page_title = 'Narudžbenice';
-        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
@@ -115,7 +114,6 @@ class OrderController extends AbstractController
                 'order' => FALSE,
             ],
             'order_status_classes' => $order_status_classes,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -163,7 +161,6 @@ class OrderController extends AbstractController
             'suppliers' => $suppliers,
             'projects' => $projects,
             'project_data' => $project_data,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             "tools_menu" => [
@@ -300,7 +297,6 @@ class OrderController extends AbstractController
             'total_tax_amount_rsd' => $total_tax_amount_rsd,
             'total_rsd' => $total_rsd,
             'total_eur' => $total_rsd / $kurs,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -372,7 +368,6 @@ class OrderController extends AbstractController
             'total_rsd' => $total_rsd,
             'total_eur' => $total_rsd / $kurs,
             'project_list' => $project_list,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -762,7 +757,6 @@ class OrderController extends AbstractController
             'material_data' => $material_data,
             'materials_by_supplier' => $materials_by_supplier,
             'order_data' => $order_data,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
@@ -1199,7 +1193,6 @@ class OrderController extends AbstractController
             'orders_data' => $orders_data,
             'orders_archived_data' => $orders_archived_data,
             'order_status_classes' => $order_status_classes,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             "tools_menu" => [

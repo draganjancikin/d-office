@@ -43,7 +43,6 @@ class AdminController extends AbstractController
         $this->entityManager = $entityManager;
         $this->page = 'admin';
         $this->page_title = 'Admin';
-        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
@@ -70,7 +69,6 @@ class AdminController extends AbstractController
             'tools_menu' => [
                 'admin' => FALSE,
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -114,7 +112,6 @@ class AdminController extends AbstractController
                     'edit' => FALSE,
                 ],
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -166,7 +163,6 @@ class AdminController extends AbstractController
                     'edit' => FALSE,
                 ],
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -326,7 +322,6 @@ class AdminController extends AbstractController
                 'employees' => TRUE,
               'admin' => FALSE,
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -373,7 +368,6 @@ class AdminController extends AbstractController
                     'edit' => FALSE,
                 ],
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -420,7 +414,6 @@ class AdminController extends AbstractController
                     'edit' => FALSE,
                 ],
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -507,7 +500,6 @@ class AdminController extends AbstractController
             'page' => $this->page . '/employees',
             'page_title' => $this->page_title,
             'employees' => $employees,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [

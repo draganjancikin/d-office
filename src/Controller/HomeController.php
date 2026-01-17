@@ -34,7 +34,6 @@ class HomeController extends AbstractController
         $this->entityManager = $entityManager;
         $this->page = 'home';
         $this->page_title = 'd-Office 2025';
-        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
@@ -64,7 +63,6 @@ class HomeController extends AbstractController
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'user_id' => $_SESSION['user_id'],
-            'stylesheet' => $this->stylesheet,
         ];
 
         return $this->render('home/index.html.twig', $data);
@@ -81,7 +79,6 @@ class HomeController extends AbstractController
         $data = [
             'page_title' => $this->page_title,
             'page' => $this->page,
-            'stylesheet' => $this->stylesheet,
         ];
 
         return $this->render('home/login_form.html.twig', $data);

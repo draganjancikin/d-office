@@ -3,14 +3,23 @@ A web application for office and project management, built with PHP 8.2 and mode
 ## Libraries & Requirements
 
 - **PHP:** 8.2 or higher
-- **Database ORM:** Doctrine ORM ^3.3
+- **Database ORM:**
+  - doctrine/orm ^3.3
+  - doctrine/doctrine-bundle ^2.15
 - **Frontend:** Bootstrap 5.3.8
 - **PDF Generation:** tecnickcom/tcpdf ^6.3
-- **Templating:** twig/twig ^3.0
 - **Framework Components:**
-  - symfony/framework-bundle ^7.3
-  - symfony/twig-bundle ^7.3
-  - symfony/form ^7.3
+  - symfony/runtime ^7.4
+  - symfony/framework-bundle ^7.4
+  - symfony/twig-bundle ^7.4
+  - symfony/console ^7.4
+  - symfony/yaml ^7.4
+  - symfony/dotenv ^7.4
+  - symfony/process ^7.4
+  - symfony/form ^7.4
+  - symfony/validator ^7.4
+- **Development Dependencies:**
+  - symfony/maker-bundle ^1.64
 
 ## Installation
 
