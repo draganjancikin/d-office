@@ -281,7 +281,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         }>,
  *     },
  *     asset_mapper?: bool|array{ // Asset Mapper configuration
- *         enabled?: bool, // Default: true
+ *         enabled?: bool, // Default: false
  *         paths?: array<string, scalar|null>,
  *         excluded_patterns?: list<scalar|null>,
  *         exclude_dotfiles?: bool, // If true, any files starting with "." will be excluded from the asset mapper. // Default: true
@@ -470,7 +470,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *     },
  *     disallow_search_engine_index?: bool, // Enabled by default when debug is enabled. // Default: true
  *     http_client?: bool|array{ // HTTP Client configuration
- *         enabled?: bool, // Default: true
+ *         enabled?: bool, // Default: false
  *         max_host_connections?: int, // The maximum number of connections to a single host.
  *         default_options?: array{
  *             headers?: array<string, mixed>,
