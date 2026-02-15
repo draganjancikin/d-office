@@ -1,3 +1,21 @@
+# Upgrade to 9.7.0
+Enhancements:
+* #485 - Update .env and .gitignore setup
+* #489 - Order materials: Use supplier material name in order
+
+* #499 - February system upadate:
+  - "doctrine/doctrine-bundle" (2.18.1 => 2.18.2)
+  - "doctrine/orm" (3.6.0 => 3.6.2)
+  - "symfony/asset" (7.4.0 => 7.4.4)
+  - "symfony/console" (7.4.1 => 7.4.4)
+  - "symfony/form" (7.4.1 => 7.4.4)
+  - "symfony/framework-bundle" (7.4.1 => 7.4.5)
+  - "symfony/process" (7.4.0 => 7.4.5)
+  - "symfony/maker-bundle" (1.64.0 => 1.65.1)
+  - "symfony/validator" (7.4.2 => 7.4.5)
+  - "symfony/twig-bundle" (7.4.0 => 7.4.4)
+
+
 # Upgrade to 9.6.2
 Bugfixes:
 * #480 - Unknown function "asset" in base.html.twig at line 1
