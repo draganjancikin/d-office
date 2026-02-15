@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -30,18 +31,30 @@ class ClientRepository extends EntityRepository
 
     /**
      * Search method by criteria: name and name note.
-     *
-     * @param string $term
+     * 
+     * Returns array of arrays (not entities) for better performance with large datasets.
+     * 
+     * @param string $term Search term.
+     *   
      *
      * @return array
+     *   Array of clients.
      */
-    public function search($term)
+    public function search($term): array
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('cl')
+        $qb->select(
+            'cl.id',
+            'cl.name',
+            'cl.home_number',
+            's.name AS street_name',
+            'ci.name AS city_name',
+            'co.name AS country_name'
+        )
             ->from('App\Entity\Client', 'cl')
-            ->leftJoin('cl.street', 's', 'WITH', 'cl.street = s.id')
-            ->leftJoin('cl.city', 'c', 'WITH', 'cl.city = c.id')
+            ->leftJoin('cl.street', 's')
+            ->leftJoin('cl.city', 'ci')
+            ->leftJoin('cl.country', 'co')
             ->where(
                 $qb->expr()->orX(
                     $qb->expr()->like('cl.name', $qb->expr()->literal("%$term%")),
@@ -50,9 +63,25 @@ class ClientRepository extends EntityRepository
             )
             ->orderBy('cl.name', 'ASC');
 
-        $query = $qb->getQuery();
-        $clients = $query->getResult();
-        return $clients;
+        $rows = $qb->getQuery()->getResult(AbstractQuery::HYDRATE_SCALAR);
+
+        return array_map(function (array $row) {
+            $homeNumber = $row['cl_home_number'] ?? $row['home_number'] ?? '';
+            $streetName = $row['street_name'] ?? null;
+            $cityName = $row['city_name'] ?? null;
+            $countryName = $row['country_name'] ?? null;
+
+            return [
+                'id' => $row['cl_id'] ?? $row['id'],
+                'name' => $row['cl_name'] ?? $row['name'],
+                'home_number' => $homeNumber,
+                'homeNumber' => $homeNumber,
+                'homenumber' => $homeNumber,
+                'street' => $streetName !== null ? ['name' => $streetName] : null,
+                'city' => $cityName !== null ? ['name' => $cityName] : null,
+                'country' => $countryName !== null ? ['name' => $countryName] : null,
+            ];
+        }, $rows);
     }
 
     /**
