@@ -41,6 +41,7 @@
   },
   "require-dev": {
     "symfony/maker-bundle": "^1.64",
-    "symfony/profiler-pack": "^1.0"
+    "symfony/profiler-pack": "^1.0",
+    "symfony/debug-bundle": "^7.4"
   }
 }
