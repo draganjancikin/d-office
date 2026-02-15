@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\CompanyInfo;
 use App\Entity\Material;
 use App\Entity\MaterialProperty;
+use App\Entity\MaterialSupplier;
 use App\Entity\Order;
 use App\Entity\OrderMaterial;
 use App\Entity\OrderMaterialProperty;
@@ -1025,9 +1026,22 @@ class OrderController extends AbstractController
 
         $materials_on_order_data = [];
         foreach ($materials_on_order as $index => $material_on_order) {
+            $material_suppliers = $this->entityManager
+                ->getRepository(MaterialSupplier::class)
+                ->getByMaterialAndSupplierId(
+                    $material_on_order->getMaterial()->getId(),
+                    $material_on_order->getOrder()->getSupplier()->getId()
+                );
+
+            $supplier_name = ($material_suppliers[0] ?? null)?->getName()
+                ?: $material_on_order->getMaterial()->getName();
+
             $materials_on_order_data[$index]['material']['id'] = $material_on_order->getId();
             $materials_on_order_data[$index]['material']['material']['id'] = $material_on_order->getMaterial()->getId();
             $materials_on_order_data[$index]['material']['name'] = $material_on_order->getMaterial()->getName();
+            $materials_on_order_data[$index]['material']['supplier_name'] = $supplier_name;
+            $materials_on_order_data[$index]['material']['supplier_note'] = ($material_suppliers[0] ?? null)?->getNote();
+
             $materials_on_order_data[$index]['material']['pieces'] = $material_on_order->getPieces();
 
             $material_on_order_properties = $this->entityManager

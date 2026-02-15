@@ -6,6 +6,7 @@
 /public/bundles/
 /var/
 /vendor/
+/config/reference.php
 ###< symfony/framework-bundle ###
 
 # Ignore IDE's files and folders
@@ -13,18 +14,8 @@ RolOffice v4.0.code-workspace
 .vscode/
 .idea/
 
-# Ignore LOCAL enviroments files an folders
-/config/dbConfig.local.php
-
-# Ignore DEV enviroments files an folders
-/config/dbConfig.dev.php
-
 # Ignore LIVE enviroments files an folders
-/config/dbConfig.live.php
 public/upload/
-
-# Ignore enviroments files
-/todos/
 
 # Ignore .sql files
 *.sql
