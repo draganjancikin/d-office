@@ -101,6 +101,7 @@
                         <th class="px-1">#</th>
                         <th class="px-1 text-center">naziv</th>
                         <th class="px-1 text-center">datum izmene</th>
+                        <th class="px-1 text-center">naziv materijala po dobavljaču</th>
                         <th class="px-1 text-center">šifra po dobavljaču</th>
                         <th class="px-1 text-center">cena</th>
                         <th class="px-1"></th>
@@ -130,6 +131,10 @@
                                 <td class="p-1">
                                     <input class="form-control form-control-sm" type="text"
                                            value="{{ material_supplier.getModifiedAt|date('d M Y') }}" disabled>
+                                </td>
+                                <td class="p-1">
+                                    <input class="form-control form-control-sm" type="text" name="name"
+                                           value="{{ material_supplier.getName() }}">
                                 </td>
                                 <td class="p-1">
                                     <input class="form-control form-control-sm" type="text" name="note"

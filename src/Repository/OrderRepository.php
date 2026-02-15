@@ -39,20 +39,17 @@ class OrderRepository extends EntityRepository
      *
      * @param int $order_id
      *
-     * @return array
+     * @return OrderMaterial[]
      */
-    public function getMaterialsOnOrder($order_id) {
-        // Create a QueryBuilder instance.
+    public function getMaterialsOnOrder($order_id): array
+    {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('om')
             ->from('App\Entity\OrderMaterial', 'om')
-            ->join('om.material', 'm', 'om.material = m.id')
-            ->where(
-                $qb->expr()->eq('om.order', $order_id),
-            )
+            ->join('om.material', 'm', 'WITH', 'om.material = m.id')
+            ->where($qb->expr()->eq('om.order', $order_id))
             ->orderBy('om.id', 'ASC');
-        $query = $qb->getQuery();
-        return $query->getResult();
+        return $qb->getQuery()->getResult();
     }
 
     /**

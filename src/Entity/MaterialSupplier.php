@@ -44,6 +44,14 @@ class MaterialSupplier
     protected $supplier;
 
     /**
+     * Material Supplier name.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: 'string', length: 96)]
+    protected $name;
+
+    /**
      * Material Supplier note.
      *
      * @var string
@@ -111,6 +119,14 @@ class MaterialSupplier
 
     public function getSupplier() {
         return $this->supplier;
+    }
+
+    public function setName($name) {
+        $this->name = $name;
+    }
+
+    public function getName() {
+        return $this->name;
     }
 
     public function setNote($note) {
