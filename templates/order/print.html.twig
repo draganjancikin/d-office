@@ -71,7 +71,7 @@
 <table>
     <tr>
         <th class="ordinal_num">red.<br />broj</th>
-        <th width="100px">šifra</th>
+        <th width="100px">šifra<br/>dobavljača</th>
         <th class="article_name">naziv proizvoda</th>
         <th width="45px">jed.<br />mere</th>
         <th width="65px">količina</th>
@@ -84,8 +84,8 @@
 <table border="0" style="font-size:14px">
     <tr>
         <td width="35px" align="center">{{ count }}</td>
-        <td width="100px" class="center"></td>
-        <td width="440px">{{ material_on_order_data.material.name }}
+        <td width="100px" class="center">{{ material_on_order_data.material.supplier_note }}</td>
+        <td width="440px">{{ material_on_order_data.material.supplier_name }}
             {% if material_on_order_data.material.note %}
                 ({{ material_on_order_data.material.note }})
             {% endif %}

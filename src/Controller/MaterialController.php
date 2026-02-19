@@ -39,7 +39,6 @@ class MaterialController extends AbstractController
      */
     public function __construct(EntityManagerInterface $em) {
         $this->em = $em;
-        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
@@ -342,6 +341,7 @@ class MaterialController extends AbstractController
         if ($supplierId == "") die('<script>location.href = "?inc=alert&ob=4" </script>');
         $supplier = $this->em->find(Client::class, $supplierId);
 
+        $name = htmlspecialchars($_POST['name']);
         $note = htmlspecialchars($_POST['note']);
 
         $price = 0;
@@ -353,6 +353,7 @@ class MaterialController extends AbstractController
 
         $newMaterialSupplier->setMaterial($material);
         $newMaterialSupplier->setSupplier($supplier);
+        $newMaterialSupplier->setName($name);
         $newMaterialSupplier->setNote($note);
         $newMaterialSupplier->setPrice($price);
         $newMaterialSupplier->setCreatedAt(new \DateTime("now"));
@@ -430,6 +431,7 @@ class MaterialController extends AbstractController
         $supplierId = htmlspecialchars($_POST["supplier_id"]);
         $supplier = $this->em->find(Client::class, $supplierId);
 
+        $name = htmlspecialchars($_POST["name"]);
         $note = htmlspecialchars($_POST["note"]);
         $price = $_POST['price'] ? str_replace(",", ".", htmlspecialchars($_POST['price'])) : 0;
 
@@ -438,6 +440,7 @@ class MaterialController extends AbstractController
 
         $materialSupplier->setMaterial($material);
         $materialSupplier->setSupplier($supplier);
+        $materialSupplier->setName($name);
         $materialSupplier->setNote($note);
         $materialSupplier->setPrice($price);
 
@@ -536,7 +539,6 @@ class MaterialController extends AbstractController
         return [
             'page' => $this->page,
             'page_title' => $this->pageTitle,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];

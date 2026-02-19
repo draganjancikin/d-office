@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\CompanyInfo;
 use App\Entity\Material;
 use App\Entity\MaterialProperty;
+use App\Entity\MaterialSupplier;
 use App\Entity\Order;
 use App\Entity\OrderMaterial;
 use App\Entity\OrderMaterialProperty;
@@ -41,7 +42,6 @@ class OrderController extends AbstractController
         $this->entityManager = $entityManager;
         $this->page = 'order';
         $this->page_title = 'Narudžbenice';
-        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
@@ -115,7 +115,6 @@ class OrderController extends AbstractController
                 'order' => FALSE,
             ],
             'order_status_classes' => $order_status_classes,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -163,7 +162,6 @@ class OrderController extends AbstractController
             'suppliers' => $suppliers,
             'projects' => $projects,
             'project_data' => $project_data,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             "tools_menu" => [
@@ -300,7 +298,6 @@ class OrderController extends AbstractController
             'total_tax_amount_rsd' => $total_tax_amount_rsd,
             'total_rsd' => $total_rsd,
             'total_eur' => $total_rsd / $kurs,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -372,7 +369,6 @@ class OrderController extends AbstractController
             'total_rsd' => $total_rsd,
             'total_eur' => $total_rsd / $kurs,
             'project_list' => $project_list,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -762,7 +758,6 @@ class OrderController extends AbstractController
             'material_data' => $material_data,
             'materials_by_supplier' => $materials_by_supplier,
             'order_data' => $order_data,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
@@ -1031,9 +1026,22 @@ class OrderController extends AbstractController
 
         $materials_on_order_data = [];
         foreach ($materials_on_order as $index => $material_on_order) {
+            $material_suppliers = $this->entityManager
+                ->getRepository(MaterialSupplier::class)
+                ->getByMaterialAndSupplierId(
+                    $material_on_order->getMaterial()->getId(),
+                    $material_on_order->getOrder()->getSupplier()->getId()
+                );
+
+            $supplier_name = ($material_suppliers[0] ?? null)?->getName()
+                ?: $material_on_order->getMaterial()->getName();
+
             $materials_on_order_data[$index]['material']['id'] = $material_on_order->getId();
             $materials_on_order_data[$index]['material']['material']['id'] = $material_on_order->getMaterial()->getId();
             $materials_on_order_data[$index]['material']['name'] = $material_on_order->getMaterial()->getName();
+            $materials_on_order_data[$index]['material']['supplier_name'] = $supplier_name;
+            $materials_on_order_data[$index]['material']['supplier_note'] = ($material_suppliers[0] ?? null)?->getNote();
+
             $materials_on_order_data[$index]['material']['pieces'] = $material_on_order->getPieces();
 
             $material_on_order_properties = $this->entityManager
@@ -1199,7 +1207,6 @@ class OrderController extends AbstractController
             'orders_data' => $orders_data,
             'orders_archived_data' => $orders_archived_data,
             'order_status_classes' => $order_status_classes,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             "tools_menu" => [

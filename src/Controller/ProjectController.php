@@ -48,7 +48,6 @@ class ProjectController extends AbstractController
         $this->entityManager = $entityManager;
         $this->page = 'project';
         $this->page_title = 'Projekti';
-        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
@@ -183,7 +182,6 @@ class ProjectController extends AbstractController
             ],
             'active_projects_data' => $active_projects_data,
             'inactive_projects_data' => $inactive_projects_data,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -218,7 +216,6 @@ class ProjectController extends AbstractController
             'page' => $this->page,
             'page_title' => $this->page_title,
             'clients_list' => $clients_list,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
@@ -481,7 +478,6 @@ class ProjectController extends AbstractController
                 'view' => TRUE,
                 'edit' => FALSE,
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -529,7 +525,6 @@ class ProjectController extends AbstractController
                 'view' => FALSE,
                 'edit' => TRUE,
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -681,7 +676,6 @@ class ProjectController extends AbstractController
             'project_data' => $project_data,
             'employees_list' => $employees_list,
             'task_notes' => $task_notes,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
@@ -1093,7 +1087,6 @@ class ProjectController extends AbstractController
             'city_name' => $city_name,
             'alert' => $alert,
             'active_projects_data' => $active_projects_data,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
@@ -1618,7 +1611,6 @@ class ProjectController extends AbstractController
             'page_title' => $this->page_title,
             'active_projects_data' => $active_projects_data,
             'inactive_projects_data' => $inactive_projects_data,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
@@ -1708,7 +1700,6 @@ class ProjectController extends AbstractController
             'page' => $this->page,
             'page_title' => $this->page_title,
             'project_advanced_search_list_data' => $project_advanced_search_list_data,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [

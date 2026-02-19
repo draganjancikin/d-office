@@ -37,7 +37,6 @@ class ArticleController extends AbstractController
         $this->entityManager = $entityManager;
         $this->page = 'article';
         $this->page_title = 'Proizvodi';
-        $this->stylesheet = $_ENV['STYLESHEET_PATH'] ?? getenv('STYLESHEET_PATH') ?? '/libraries/';
     }
 
     /**
@@ -73,7 +72,6 @@ class ArticleController extends AbstractController
                 'article' => FALSE,
                 'group' => FALSE,
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -108,7 +106,6 @@ class ArticleController extends AbstractController
             'page_title' => $this->page_title,
             'article_groups' => $article_groups,
             'units' => $units,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
@@ -212,7 +209,6 @@ class ArticleController extends AbstractController
                 'edit' => FALSE,
                 'group' => FALSE,
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -264,7 +260,6 @@ class ArticleController extends AbstractController
                 'edit' => TRUE,
                 'group' => FALSE,
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -432,7 +427,6 @@ class ArticleController extends AbstractController
             'page' => $this->page,
             'page_title' => $this->page_title,
             'article_groups' => $article_groups,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
@@ -465,7 +459,6 @@ class ArticleController extends AbstractController
         $data = [
             'page' => $this->page,
             'page_title' => $this->page_title,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
@@ -540,7 +533,6 @@ class ArticleController extends AbstractController
                 'view' => TRUE,
                 'edit' => FALSE,
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -583,7 +575,6 @@ class ArticleController extends AbstractController
                 'view' => FALSE,
                 'edit' => TRUE,
             ],
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
         ];
@@ -650,7 +641,6 @@ class ArticleController extends AbstractController
             'articles_by_group' => $articles_by_group,
             'article_groups' => $article_groups,
             'preferences' => $preferences,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
@@ -691,7 +681,6 @@ class ArticleController extends AbstractController
             'article_groups' => $article_groups,
             'articles' => $articles,
             'preferences' => $preferences,
-            'stylesheet' => $this->stylesheet,
             'user_role_id' => $_SESSION['user_role_id'],
             'username' => $_SESSION['username'],
             'tools_menu' => [
