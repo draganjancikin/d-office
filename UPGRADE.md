@@ -1,3 +1,9 @@
+# Upgrade to 9.7.1
+Enhancements:
+* #505 - Install symfony/flex (2.10.0)
+  - Install "symfony/profiler-pack" (1.0.6)
+  - Install "symfony/debug-bundle" (7.4.0)
+
 # Upgrade to 9.7.0
 Enhancements:
 * #485 - Update .env and .gitignore setup

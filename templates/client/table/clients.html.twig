@@ -6,11 +6,12 @@
             <td>{{ client.id }}</td>
             <td><a href="/clients/{{ client.id }}">{{ client.name }}</a></td>
             <td>
-                {{ client.street ? client.street.name : '' }} {{ client.homeNumber }}
-                {% if client.street and client.city %}, {% endif %}
-                {{ client.city ? client.city.name : '' }}
-                {% if client.city and client.country %}, {% endif %}
-                {{ client.country ? client.country.name : '' }}
+                {% set addressParts = [
+                    (client.street ? client.street.name ~ ' ' : '') ~ (client.homeNumber|default(''))|trim,
+                    client.city ? client.city.name : null,
+                    client.country ? client.country.name : null
+                ]|filter((v) => v) %}
+                {{ addressParts|join(', ') }}
             </td>
         </tr>
         {% endfor %}

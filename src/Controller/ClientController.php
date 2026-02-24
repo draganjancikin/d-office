@@ -62,12 +62,8 @@ class ClientController extends AbstractController
             return $this->redirectToRoute('login_form');
         }
 
-        if ($request->query->has('search')) {
-            $term = $request->query->get('search', '');
-            $clients= $this->em->getRepository(Client::class)->search($term);
-        } else {
-            $clients = $this->em->getRepository(Client::class)->findAll();
-        }
+        $term = $request->query->get('search', '');
+        $clients= $this->em->getRepository(Client::class)->search($term);
 
         $data = $this->getDefaultData();
         $data['tools_menu'] = [
