@@ -2406,16 +2406,16 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v7.4.5",
+            "version": "v7.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "ad4daa7c38668dcb031e63bc99ea9bd42196a2cb"
+                "reference": "8655bf1076b7a3a346cb11413ffdabff50c7ffcf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/ad4daa7c38668dcb031e63bc99ea9bd42196a2cb",
-                "reference": "ad4daa7c38668dcb031e63bc99ea9bd42196a2cb",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/8655bf1076b7a3a346cb11413ffdabff50c7ffcf",
+                "reference": "8655bf1076b7a3a346cb11413ffdabff50c7ffcf",
                 "shasum": ""
             },
             "require": {
@@ -2450,7 +2450,7 @@
             "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v7.4.5"
+                "source": "https://github.com/symfony/finder/tree/v7.4.6"
             },
             "funding": [
                 {
@@ -2470,7 +2470,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-26T15:07:59+00:00"
+            "time": "2026-01-29T09:40:50+00:00"
         },
         {
             "name": "symfony/flex",
@@ -2650,16 +2650,16 @@
         },
         {
             "name": "symfony/framework-bundle",
-            "version": "v7.4.5",
+            "version": "v7.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/framework-bundle.git",
-                "reference": "dcf89ca6712d9e1b5d3f14dea0e1c2685a05d1cd"
+                "reference": "c94bc78c85d76af67918404a95d44940f66a7c2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/dcf89ca6712d9e1b5d3f14dea0e1c2685a05d1cd",
-                "reference": "dcf89ca6712d9e1b5d3f14dea0e1c2685a05d1cd",
+                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/c94bc78c85d76af67918404a95d44940f66a7c2f",
+                "reference": "c94bc78c85d76af67918404a95d44940f66a7c2f",
                 "shasum": ""
             },
             "require": {
@@ -2682,7 +2682,7 @@
             },
             "conflict": {
                 "doctrine/persistence": "<1.3",
-                "phpdocumentor/reflection-docblock": "<5.2|>=6",
+                "phpdocumentor/reflection-docblock": "<5.2|>=7",
                 "phpdocumentor/type-resolver": "<1.5.1",
                 "symfony/asset": "<6.4",
                 "symfony/asset-mapper": "<6.4",
@@ -2715,7 +2715,7 @@
             "require-dev": {
                 "doctrine/persistence": "^1.3|^2|^3",
                 "dragonmantank/cron-expression": "^3.1",
-                "phpdocumentor/reflection-docblock": "^5.2",
+                "phpdocumentor/reflection-docblock": "^5.2|^6.0",
                 "seld/jsonlint": "^1.10",
                 "symfony/asset": "^6.4|^7.0|^8.0",
                 "symfony/asset-mapper": "^6.4|^7.0|^8.0",
@@ -2784,7 +2784,7 @@
             "description": "Provides a tight integration between Symfony components and the Symfony full-stack framework",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/framework-bundle/tree/v7.4.5"
+                "source": "https://github.com/symfony/framework-bundle/tree/v7.4.7"
             },
             "funding": [
                 {
@@ -2804,7 +2804,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-27T08:59:58+00:00"
+            "time": "2026-03-06T15:39:55+00:00"
         },
         {
             "name": "symfony/http-foundation",
@@ -3979,16 +3979,16 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v7.4.4",
+            "version": "v7.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "0798827fe2c79caeed41d70b680c2c3507d10147"
+                "reference": "238d749c56b804b31a9bf3e26519d93b65a60938"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/0798827fe2c79caeed41d70b680c2c3507d10147",
-                "reference": "0798827fe2c79caeed41d70b680c2c3507d10147",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/238d749c56b804b31a9bf3e26519d93b65a60938",
+                "reference": "238d749c56b804b31a9bf3e26519d93b65a60938",
                 "shasum": ""
             },
             "require": {
@@ -4040,7 +4040,7 @@
                 "url"
             ],
             "support": {
-                "source": "https://github.com/symfony/routing/tree/v7.4.4"
+                "source": "https://github.com/symfony/routing/tree/v7.4.6"
             },
             "funding": [
                 {
@@ -4060,7 +4060,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-12T12:19:02+00:00"
+            "time": "2026-02-25T16:50:00+00:00"
         },
         {
             "name": "symfony/runtime",
