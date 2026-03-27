@@ -20,9 +20,9 @@
                                 <select class="form-select form-select-sm" name="material_id" id="selectMaterial">
                                 <option value="">izaberi materijal</option>
                                     {% for material in materials %}
-                                        <option value="{{ material.getMaterial().getId() }}"
-                                                title="{{ material.getMaterial().getNote() }}">
-                                          {{ material.getMaterial().getName() }}
+                                        <option value="{{ material.getId() }}"
+                                                title="{{ material.getNote() }}">
+                                          {{ material.getName() }}
                                         </option>
                                     {% endfor %}
                                 </select>

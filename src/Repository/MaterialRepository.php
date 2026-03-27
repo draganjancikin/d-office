@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use App\Entity\MaterialSupplier;
+use App\Entity\Material;
 
 class MaterialRepository extends EntityRepository {
 
@@ -57,12 +59,13 @@ class MaterialRepository extends EntityRepository {
     public function getSupplierMaterials($supplier_id) {
         // Create a QueryBuilder instance.
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('ms')
-            ->from('App\Entity\MaterialSupplier', 'ms')
-            ->join('ms.material', 'm', 'WITH', "ms.material = m.id")
+        $qb->select('m')
+            ->from(Material::class, 'm')
+            ->join(MaterialSupplier::class, 'ms', 'WITH', 'ms.material = m')
             ->where(
-                $qb->expr()->eq('ms.supplier', $supplier_id)
+                $qb->expr()->eq('ms.supplier', ':supplier_id')
             )
+            ->setParameter('supplier_id', $supplier_id)
             ->orderBy('m.name', 'ASC');
         $query = $qb->getQuery();
         $materials = $query->getResult();
