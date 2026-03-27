@@ -26,18 +26,18 @@ class MaterialSupplier
     protected $id;
 
     /**
-     * Many Supplier has the One Material.
+     * Many suppliers belong to one material.
      *
-     * @var int
+     * @var Material|null
      */
     #[ORM\ManyToOne(targetEntity: Material::class)]
     #[ORM\JoinColumn(name: 'material_id', referencedColumnName: 'id')]
     protected $material;
 
     /**
-     * Many Materials have the One Supplier.
+     * Many material-supplier rows belong to one supplier.
      *
-     * @var int
+     * @var Client|null
      */
     #[ORM\ManyToOne(targetEntity: Client::class)]
     #[ORM\JoinColumn(name: 'supplier_id', referencedColumnName: 'id')]

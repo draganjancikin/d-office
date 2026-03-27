@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Client;
 use App\Entity\Material;
+use App\Entity\MaterialSupplier;
 use Doctrine\ORM\EntityRepository;
 
 class MaterialSupplierRepository extends EntityRepository
@@ -16,11 +17,12 @@ class MaterialSupplierRepository extends EntityRepository
      */
     public function getMaterialSuppliers($material): array
     {
+        $material = $this->getEntityManager()->getReference(Material::class, (int) $material);
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('ms')
-            ->from('App\Entity\MaterialSupplier', 'ms')
-            ->join('ms.supplier', 'c', 'WITH', 'ms.supplier = c.id')
-            ->where($qb->expr()->eq('ms.material', $material));
+            ->from(MaterialSupplier::class, 'ms')
+            ->where($qb->expr()->eq('ms.material', ':material'))
+            ->setParameter('material', $material);
         return $qb->getQuery()->getResult();
     }
 
@@ -38,7 +40,7 @@ class MaterialSupplierRepository extends EntityRepository
         $supplier = $this->getEntityManager()->getReference(Client::class, $supplier_id);
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('ms.id AS id', 'ms.note AS note')
-            ->from('App\Entity\MaterialSupplier', 'ms')
+            ->from(MaterialSupplier::class, 'ms')
             ->where($qb->expr()->eq('ms.material', ':material'))
             ->andWhere($qb->expr()->eq('ms.supplier', ':supplier'))
             ->setParameter('material', $material)
