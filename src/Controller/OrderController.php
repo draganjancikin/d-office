@@ -1031,14 +1031,13 @@ class OrderController extends AbstractController
                     $material_on_order->getOrder()->getSupplier()->getId()
                 );
 
-            $supplier_name = ($material_suppliers[0] ?? null)?->getName()
-                ?: $material_on_order->getMaterial()->getName();
+            $supplier_name = $material_on_order->getMaterial()->getName();
 
             $materials_on_order_data[$index]['material']['id'] = $material_on_order->getId();
             $materials_on_order_data[$index]['material']['material']['id'] = $material_on_order->getMaterial()->getId();
             $materials_on_order_data[$index]['material']['name'] = $material_on_order->getMaterial()->getName();
             $materials_on_order_data[$index]['material']['supplier_name'] = $supplier_name;
-            $materials_on_order_data[$index]['material']['supplier_note'] = ($material_suppliers[0] ?? null)?->getNote();
+            $materials_on_order_data[$index]['material']['supplier_note'] = $material_suppliers[0]['note'] ?? null;
 
             $materials_on_order_data[$index]['material']['pieces'] = $material_on_order->getPieces();
 

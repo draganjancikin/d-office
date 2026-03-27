@@ -29,6 +29,7 @@ class MaterialSupplierRepository extends EntityRepository
      *
      * @param int $material_id
      * @param int $supplier_id
+     *
      * @return array
      */
     public function getByMaterialAndSupplierId(int $material_id, int $supplier_id): array
@@ -36,13 +37,13 @@ class MaterialSupplierRepository extends EntityRepository
         $material = $this->getEntityManager()->getReference(Material::class, $material_id);
         $supplier = $this->getEntityManager()->getReference(Client::class, $supplier_id);
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('ms')
+        $qb->select('ms.id AS id', 'ms.note AS note')
             ->from('App\Entity\MaterialSupplier', 'ms')
             ->where($qb->expr()->eq('ms.material', ':material'))
             ->andWhere($qb->expr()->eq('ms.supplier', ':supplier'))
             ->setParameter('material', $material)
             ->setParameter('supplier', $supplier);
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getArrayResult();
     }
 
 }
