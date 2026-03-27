@@ -20,8 +20,9 @@
     }
   },
   "require": {
-    "doctrine/orm": "^3.3",
     "doctrine/doctrine-bundle": "^2.15",
+    "doctrine/doctrine-migrations-bundle": "^3.7",
+    "doctrine/orm": "^3.3",
     "tecnickcom/tcpdf": "^6.3",
     "symfony/asset": "^7.4",
     "symfony/console": "^7.4",
@@ -33,8 +34,7 @@
     "symfony/runtime": "^7.4",
     "symfony/twig-bundle": "^7.4",
     "symfony/yaml": "^7.4",
-    "symfony/validator": "^7.4",
-    "doctrine/doctrine-migrations-bundle": "^3.7"
+    "symfony/validator": "^7.4"
   },
   "config": {
     "allow-plugins": {
@@ -43,8 +43,8 @@
     }
   },
   "require-dev": {
-    "symfony/maker-bundle": "^1.64",
     "symfony/debug-bundle": "^7.4",
+    "symfony/maker-bundle": "^1.64",
     "symfony/stopwatch": "^7.4",
     "symfony/web-profiler-bundle": "^7.4"
   },
